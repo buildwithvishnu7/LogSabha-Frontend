@@ -69,7 +69,7 @@ export function Header() {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
         scrolled
-          ? "bg-white/70 backdrop-blur-xl"
+          ? "bg-white/40 backdrop-blur-sm"
           : "bg-white shadow-sm",
       )}
     >
@@ -88,32 +88,70 @@ export function Header() {
 
         {/* Desktop Navigation — visible from xl */}
         <nav className="hidden items-center gap-0.5 xl:flex">
-          {navLinks.map((link) => (
-            <Link key={link.href} to={link.href}>
-              <motion.span
-                className={cn(
-                  "relative px-2.5 py-2 text-[13px] font-medium text-gray-600 transition-colors hover:text-gray-900 xl:px-3 xl:text-sm",
-                  location.pathname === link.href && "text-gray-900",
-                )}
-                whileHover="hover"
-              >
-                {link.label}
+          {navLinks.map((link, i) => (
+            <motion.div
+              key={link.href}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.4,
+                delay: 0.1 + i * 0.05,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+            >
+              <Link to={link.href}>
                 <motion.span
-                  className="absolute bottom-0 left-2.5 right-2.5 h-[2px] bg-amber-500 xl:left-3 xl:right-3"
-                  initial={{ scaleX: 0 }}
-                  variants={{ hover: { scaleX: 1 } }}
-                  style={{ originX: 0 }}
-                  transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                />
-                {location.pathname === link.href && (
+                  className={cn(
+                    "group relative inline-block overflow-hidden rounded-lg px-2.5 py-2 text-[13px] font-medium text-gray-600 xl:px-3 xl:text-sm",
+                    location.pathname === link.href && "text-amber-600",
+                  )}
+                  whileHover="hover"
+                  variants={{
+                    hover: { color: "#d97706" },
+                  }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {/* Background highlight on hover */}
                   <motion.span
-                    className="absolute bottom-0 left-2.5 right-2.5 h-[2px] bg-amber-500 xl:left-3 xl:right-3"
-                    layoutId="activeNav"
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    className="absolute inset-0 -z-10 rounded-lg bg-amber-50"
+                    initial={{ opacity: 0, scale: 0.85 }}
+                    variants={{
+                      hover: { opacity: 1, scale: 1 },
+                    }}
+                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                   />
-                )}
-              </motion.span>
-            </Link>
+
+                  {/* Text with letter-spacing animation */}
+                  <motion.span
+                    className="relative inline-block"
+                    variants={{
+                      hover: { letterSpacing: "0.03em" },
+                    }}
+                    transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    {link.label}
+                  </motion.span>
+
+                  {/* Animated underline — slides in from left */}
+                  <motion.span
+                    className="absolute bottom-0.5 left-2.5 right-2.5 h-[2px] rounded-full bg-amber-500 xl:left-3 xl:right-3"
+                    initial={{ scaleX: 0 }}
+                    variants={{ hover: { scaleX: 1 } }}
+                    style={{ originX: 0 }}
+                    transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                  />
+
+                  {/* Active indicator — animated pill that follows active route */}
+                  {location.pathname === link.href && (
+                    <motion.span
+                      className="absolute bottom-0.5 left-2.5 right-2.5 h-[2px] rounded-full bg-amber-500 xl:left-3 xl:right-3"
+                      layoutId="activeNav"
+                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    />
+                  )}
+                </motion.span>
+              </Link>
+            </motion.div>
           ))}
         </nav>
 
