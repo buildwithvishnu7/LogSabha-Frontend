@@ -3,18 +3,12 @@ import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { Search, Globe, Menu, X, User } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const navLinks = [
-  { label: "Political Analysis", href: "/political-analysis" },
-  { label: "Hindu For Justice", href: "/hindu-for-justice" },
-  { label: "About Us", href: "/about" },
-  { label: "Services", href: "/services" },
-  { label: "News", href: "/news" },
-  { label: "Blog", href: "/blog" },
-  { label: "Contact Us", href: "/contact" },
-];
+import { useGlobalData } from "@/hooks/useGlobalData";
 
 export function Header() {
+  const { data: globalData } = useGlobalData();
+  const navLinks = globalData?.nav.links ?? [];
+  const logoSrc = globalData?.nav.logo ?? "/logo/Logfinalsabha.gif";
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -78,7 +72,7 @@ export function Header() {
         {/* Logo */}
         <Link to="/" className="relative z-10 flex-shrink-0">
           <motion.img
-            src="/logo/Logfinalsabha.gif"
+            src={logoSrc}
             alt="The LogSabha"
             className="h-40 w-auto"
             whileHover={{ scale: 1.05 }}

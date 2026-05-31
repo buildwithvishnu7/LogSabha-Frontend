@@ -1,36 +1,15 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { BackgroundVideo } from "@/components/video/BackgroundVideo";
+import type { HeroData, HeroStat, SideBadge as SideBadgeType } from "@/types";
 
-const heroStats = [
-  { label: "Civil Secretariat", value: "₹540", unit: "Crore" },
-  { label: "17 Projects", value: "₹1,200", unit: "Crore" },
-  { label: "EMR School", value: "₹16", unit: "Crore" },
-  { label: "Infrastructure", value: "₹2,400", unit: "Crore" },
-];
-
-const sideBadges = [
-  {
-    id: "hfj",
-    label: "Hindu for Justice",
-    image: "/logo/HFJ-logo-final-new.gif",
-    href: "/hindu-for-justice",
-    expandedHeight: 250,
-  },
-  {
-    id: "rss",
-    label: "RSS",
-    image: "/logo/rss.gif",
-    href: "#",
-    expandedHeight: 160,
-  },
-];
+// ─── Side Badge ───
 
 function SideBadge({
   badge,
   index,
 }: {
-  badge: (typeof sideBadges)[number];
+  badge: SideBadgeType;
   index: number;
 }) {
   const [hovered, setHovered] = useState(false);
@@ -65,7 +44,6 @@ function SideBadge({
           flexDirection: "column",
         }}
       >
-        {/* Text label — always in DOM, animated via opacity/height */}
         <motion.div
           className="flex flex-col items-center overflow-hidden"
           animate={{
@@ -89,7 +67,6 @@ function SideBadge({
           <div className="mb-2 h-[1px] w-10 bg-amber-500/50" />
         </motion.div>
 
-        {/* Logo — always visible at bottom */}
         <div className="flex h-[70px] w-[70px] flex-shrink-0 items-center justify-center p-2">
           <img
             src={badge.image}
@@ -102,25 +79,30 @@ function SideBadge({
   );
 }
 
-export function StickyBadges() {
+export function StickyBadges({ badges }: { badges: SideBadgeType[] }) {
   return (
     <div className="fixed left-0 top-1/2 z-40 flex -translate-y-1/2 flex-col gap-4">
-      {sideBadges.map((badge, i) => (
+      {badges.map((badge, i) => (
         <SideBadge key={badge.id} badge={badge} index={i} />
       ))}
     </div>
   );
 }
 
-function RotatingStats() {
+// ─── Rotating Stats ───
+
+function RotatingStats({ stats }: { stats: HeroStat[] }) {
   const [currentStat, setCurrentStat] = useState(0);
 
   useEffect(() => {
+    if (stats.length === 0) return;
     const interval = setInterval(() => {
-      setCurrentStat((prev) => (prev + 1) % heroStats.length);
+      setCurrentStat((prev) => (prev + 1) % stats.length);
     }, 3500);
     return () => clearInterval(interval);
-  }, []);
+  }, [stats.length]);
+
+  if (stats.length === 0) return null;
 
   return (
     <div className="absolute right-6 top-[35%] z-10 -translate-y-1/2 text-right sm:right-10 md:right-16 lg:right-20">
@@ -132,17 +114,15 @@ function RotatingStats() {
           exit={{ opacity: 0, y: -30, scale: 0.95 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         >
-          {/* Label */}
           <motion.p
             className="text-sm font-bold tracking-widest text-white uppercase sm:text-base md:text-lg"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.15, duration: 0.5 }}
           >
-            {heroStats[currentStat].label}
+            {stats[currentStat].label}
           </motion.p>
 
-          {/* Value */}
           <motion.div
             className="mt-1 flex items-baseline justify-end gap-2 sm:mt-2"
             initial={{ opacity: 0, x: 30 }}
@@ -150,18 +130,17 @@ function RotatingStats() {
             transition={{ delay: 0.25, duration: 0.5 }}
           >
             <span className="text-3xl font-extrabold text-amber-500 sm:text-4xl md:text-5xl lg:text-6xl">
-              {heroStats[currentStat].value}
+              {stats[currentStat].value}
             </span>
             <span className="text-lg font-bold text-amber-400 sm:text-xl md:text-2xl lg:text-3xl">
-              {heroStats[currentStat].unit}
+              {stats[currentStat].unit}
             </span>
           </motion.div>
         </motion.div>
       </AnimatePresence>
 
-      {/* Dot indicators */}
       <div className="mt-4 flex justify-end gap-1.5 sm:mt-6">
-        {heroStats.map((_, i) => (
+        {stats.map((_, i) => (
           <motion.div
             key={i}
             className="h-1.5 rounded-full"
@@ -180,16 +159,16 @@ function RotatingStats() {
   );
 }
 
-export function HeroSection() {
+// ─── Hero Section ───
+
+export function HeroSection({ data }: { data: HeroData }) {
+  const titleWords = data.title.split(" ");
+
   return (
     <section className="relative h-screen w-full overflow-hidden">
-      {/* Background Video */}
-      <BackgroundVideo
-        src="/videos/hero-bg.mp4"
-        poster="/videos/hero-poster.jpg"
-      />
+      <BackgroundVideo src={data.videoSrc} poster={data.posterSrc} />
 
-      {/* Outer chevron/arrow — saffron overlay */}
+      {/* Outer chevron/arrow */}
       <div
         className="absolute inset-0 z-[1]"
         style={{
@@ -198,7 +177,7 @@ export function HeroSection() {
         }}
       />
 
-      {/* Inner chevron — lighter, creates depth */}
+      {/* Inner chevron */}
       <div
         className="absolute inset-0 z-[1]"
         style={{
@@ -207,18 +186,16 @@ export function HeroSection() {
         }}
       />
 
-      {/* Subtle dark overlay for text readability */}
       <div className="absolute inset-0 z-[1] bg-black/10" />
 
-      {/* Rotating stats — right side */}
-      <RotatingStats />
+      <RotatingStats stats={data.stats} />
 
-      {/* Content — bottom left */}
+      {/* Content */}
       <div
         className="relative z-10 mx-auto flex h-full max-w-[1440px] flex-col justify-end px-4 pb-16 sm:px-6 sm:pb-20 md:pb-24 lg:px-8 xl:px-12"
         style={{ perspective: "1000px" }}
       >
-        {/* Animated heading — 3D flip per word */}
+        {/* 3D heading */}
         <div>
           <motion.h1
             className="text-3xl font-extrabold leading-tight sm:text-4xl md:text-5xl lg:text-6xl"
@@ -226,20 +203,18 @@ export function HeroSection() {
             animate="visible"
             variants={{
               hidden: {},
-              visible: { transition: { staggerChildren: 0.15, delayChildren: 0.3 } },
+              visible: {
+                transition: { staggerChildren: 0.15, delayChildren: 0.3 },
+              },
             }}
           >
-            {["Welcome", "to"].map((word, i) => (
+            {titleWords.map((word, i) => (
               <motion.span
                 key={i}
                 className="mr-3 inline-block text-white lg:mr-4"
                 style={{ transformStyle: "preserve-3d" }}
                 variants={{
-                  hidden: {
-                    y: 80,
-                    rotateX: 90,
-                    opacity: 0,
-                  },
+                  hidden: { y: 80, rotateX: 90, opacity: 0 },
                   visible: {
                     y: 0,
                     rotateX: 0,
@@ -258,12 +233,7 @@ export function HeroSection() {
               className="inline-block bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(245,158,11,0.3)]"
               style={{ transformStyle: "preserve-3d" }}
               variants={{
-                hidden: {
-                  y: 80,
-                  rotateX: 90,
-                  scale: 0.8,
-                  opacity: 0,
-                },
+                hidden: { y: 80, rotateX: 90, scale: 0.8, opacity: 0 },
                 visible: {
                   y: 0,
                   rotateX: 0,
@@ -276,24 +246,32 @@ export function HeroSection() {
                 },
               }}
             >
-              Logsabha
+              {data.titleHighlight}
             </motion.span>
           </motion.h1>
         </div>
 
-        {/* Subtitle with 3D slide + line animation */}
+        {/* Subtitle */}
         <motion.div
           className="mt-3 flex items-center gap-3 sm:mt-4"
           style={{ transformStyle: "preserve-3d" }}
           initial={{ opacity: 0, rotateY: -30, x: -40 }}
           animate={{ opacity: 1, rotateY: 0, x: 0 }}
-          transition={{ delay: 0.9, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          transition={{
+            delay: 0.9,
+            duration: 0.8,
+            ease: [0.16, 1, 0.3, 1],
+          }}
         >
           <motion.div
             className="h-[2px] bg-amber-500"
             initial={{ width: 0 }}
             animate={{ width: 40 }}
-            transition={{ delay: 1.1, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            transition={{
+              delay: 1.1,
+              duration: 0.5,
+              ease: [0.16, 1, 0.3, 1],
+            }}
           />
           <motion.p
             className="text-sm font-medium tracking-wide text-white/90 sm:text-base md:text-lg"
@@ -301,13 +279,13 @@ export function HeroSection() {
             animate={{ opacity: 1, z: 0 }}
             transition={{ delay: 1.2, duration: 0.6 }}
           >
-            Political Research &amp; Analysis Wing of Bharat
+            {data.subtitle}
           </motion.p>
         </motion.div>
 
-        {/* Center watermark logo */}
+        {/* Watermark logo */}
         <motion.img
-          src="/logo/Logfinalsabha.gif"
+          src={data.watermarkLogo}
           alt=""
           aria-hidden="true"
           initial={{ opacity: 0, scale: 0.8 }}
