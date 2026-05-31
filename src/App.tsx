@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "motion/react";
 import { useLenis } from "@/hooks/useLenis";
 import { Header } from "@/components/Header";
+import { StickyBadges } from "@/components/sections/HeroSection";
 import Home from "@/routes/Home";
 import About from "@/routes/About";
 
@@ -24,6 +25,7 @@ function App() {
   return (
     <BrowserRouter>
       <Header />
+      <StickyBadges />
       <AnimatedRoutes />
     </BrowserRouter>
   );

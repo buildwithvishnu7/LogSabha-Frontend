@@ -69,17 +69,10 @@ export function Header() {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
         scrolled
-          ? "bg-white/95 backdrop-blur-md shadow-sm border-b border-amber-500/20"
-          : "bg-transparent",
+          ? "bg-white/70 backdrop-blur-xl"
+          : "bg-white shadow-sm",
       )}
     >
-      {/* Orange accent line at bottom */}
-      <div
-        className={cn(
-          "absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-amber-500 to-transparent transition-opacity duration-500",
-          scrolled ? "opacity-100" : "opacity-0",
-        )}
-      />
 
       <div className="mx-auto flex h-20 max-w-[1440px] items-center justify-between px-4 sm:h-24 sm:px-6 lg:h-28 xl:px-8">
         {/* Logo */}

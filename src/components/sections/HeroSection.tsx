@@ -8,12 +8,14 @@ const sideBadges = [
     label: "Hindu for Justice",
     image: "/logo/HFJ-logo-final-new.gif",
     href: "/hindu-for-justice",
+    expandedHeight: 250,
   },
   {
     id: "rss",
     label: "RSS",
     image: "/logo/rss.gif",
     href: "#",
+    expandedHeight: 160,
   },
 ];
 
@@ -41,53 +43,63 @@ function SideBadge({
       className="relative block"
     >
       <motion.div
-        className="overflow-hidden border-y border-r border-amber-500/30 bg-[#1a1a2e]/90 shadow-xl backdrop-blur-sm"
+        className="border-y border-r border-amber-500/30 bg-[#1a1a2e]/90 shadow-xl backdrop-blur-sm"
         animate={{
-          height: hovered ? 220 : 90,
-          borderTopRightRadius: hovered ? 45 : 45,
-          borderBottomRightRadius: hovered ? 45 : 45,
+          height: hovered ? badge.expandedHeight : 70,
+          borderTopRightRadius: hovered ? 15 : 35,
+          borderBottomRightRadius: hovered ? 15 : 35,
         }}
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        style={{ width: 90, borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+        style={{ width: 70, borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
       >
         <div className="flex h-full w-full flex-col items-center">
-          {/* Logo — always visible, large */}
-          <div className="flex h-[90px] w-[90px] flex-shrink-0 items-center justify-center p-3">
-            <img
-              src={badge.image}
-              alt={badge.label}
-              className="h-16 w-16 rounded-full object-contain"
-            />
-          </div>
-
-          {/* Expanded label on hover — vertical text */}
+          {/* Expanded label on hover — sideways text on TOP */}
           <AnimatePresence>
             {hovered && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ delay: 0.15, duration: 0.25 }}
-                className="flex flex-1 flex-col items-center"
+                transition={{ delay: 0.12, duration: 0.25 }}
+                className="flex flex-1 flex-col items-center pt-4"
               >
-                <div className="h-[1px] w-12 bg-amber-500/50" />
-                <div className="flex flex-1 items-center py-4">
+                <div className="flex flex-1 items-center">
                   <span
-                    className="text-xs font-bold tracking-widest text-white uppercase"
+                    className="whitespace-nowrap text-xs font-bold tracking-wider text-white uppercase"
                     style={{
                       writingMode: "vertical-rl",
-                      textOrientation: "mixed",
+                      transform: "rotate(180deg)",
                     }}
                   >
                     {badge.label}
                   </span>
                 </div>
+                <div className="mb-2 h-[1px] w-10 bg-amber-500/50" />
               </motion.div>
             )}
           </AnimatePresence>
+
+          {/* Logo — always visible at BOTTOM */}
+          <div className="flex h-[70px] w-[70px] flex-shrink-0 items-center justify-center p-2">
+            <img
+              src={badge.image}
+              alt={badge.label}
+              className="h-[50px] w-[50px] rounded-full object-contain"
+            />
+          </div>
         </div>
       </motion.div>
     </motion.a>
+  );
+}
+
+export function StickyBadges() {
+  return (
+    <div className="fixed left-0 top-1/2 z-40 flex -translate-y-1/2 flex-col gap-4">
+      {sideBadges.map((badge, i) => (
+        <SideBadge key={badge.id} badge={badge} index={i} />
+      ))}
+    </div>
   );
 }
 
@@ -100,17 +112,26 @@ export function HeroSection() {
         poster="/videos/hero-poster.jpg"
       />
 
-      {/* Diagonal saffron overlay — top-left to bottom-right */}
+      {/* Outer chevron/arrow — saffron overlay */}
       <div
         className="absolute inset-0 z-[1]"
         style={{
-          background:
-            "linear-gradient(135deg, rgba(194, 120, 40, 0.55) 0%, rgba(194, 120, 40, 0.3) 35%, transparent 60%)",
+          clipPath: "polygon(0 0, 35% 0, 62% 50%, 35% 100%, 0 100%)",
+          backgroundColor: "rgba(194, 120, 40, 0.4)",
+        }}
+      />
+
+      {/* Inner chevron — lighter, creates depth */}
+      <div
+        className="absolute inset-0 z-[1]"
+        style={{
+          clipPath: "polygon(0 0, 42% 0, 68% 50%, 42% 100%, 0 100%)",
+          backgroundColor: "rgba(220, 160, 80, 0.15)",
         }}
       />
 
       {/* Subtle dark overlay for text readability */}
-      <div className="absolute inset-0 z-[1] bg-black/15" />
+      <div className="absolute inset-0 z-[1] bg-black/10" />
 
       {/* Content */}
       <div className="relative z-10 mx-auto flex h-full max-w-[1440px] flex-col justify-end px-4 pb-20 sm:px-6 sm:pb-24 md:pb-28 lg:px-8 xl:px-12">
@@ -146,12 +167,6 @@ export function HeroSection() {
         />
       </div>
 
-      {/* Side floating badges — D-shape, flush left edge */}
-      <div className="absolute left-0 top-1/2 z-10 flex -translate-y-1/2 flex-col gap-4">
-        {sideBadges.map((badge, i) => (
-          <SideBadge key={badge.id} badge={badge} index={i} />
-        ))}
-      </div>
     </section>
   );
 }
