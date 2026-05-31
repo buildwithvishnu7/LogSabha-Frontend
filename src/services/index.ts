@@ -1,0 +1,1 @@
+export { getHomeData } from "./static";

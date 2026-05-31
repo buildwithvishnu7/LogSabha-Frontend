@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  --color-background: #ffffff;
+  --color-foreground: #0a0a0a;
+  --color-card: #ffffff;
+  --color-card-foreground: #0a0a0a;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #0a0a0a;
+  --color-primary: #0a0a0a;
+  --color-primary-foreground: #fafafa;
+  --color-secondary: #f5f5f5;
+  --color-secondary-foreground: #0a0a0a;
+  --color-muted: #f5f5f5;
+  --color-muted-foreground: #737373;
+  --color-accent: #f5f5f5;
+  --color-accent-foreground: #0a0a0a;
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #fafafa;
+  --color-border: #e5e5e5;
+  --color-input: #e5e5e5;
+  --color-ring: #0a0a0a;
+  --color-sidebar-background: #fafafa;
+  --color-sidebar-foreground: #404040;
+  --color-sidebar-primary: #0a0a0a;
+  --color-sidebar-primary-foreground: #fafafa;
+  --color-sidebar-accent: #f5f5f5;
+  --color-sidebar-accent-foreground: #0a0a0a;
+  --color-sidebar-border: #e5e5e5;
+  --color-sidebar-ring: #0a0a0a;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-in-out-circ: cubic-bezier(0.85, 0, 0.15, 1);
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    border-color: var(--color-border);
+  }
+
+  body {
+    font-family: var(--font-sans);
+    color: var(--color-foreground);
+    background-color: var(--color-background);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
