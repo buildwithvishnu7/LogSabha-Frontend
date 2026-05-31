@@ -85,11 +85,11 @@ export function Header() {
           {navLinks.map((link, i) => (
             <motion.div
               key={link.href}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: -20, filter: "blur(8px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               transition={{
-                duration: 0.4,
-                delay: 0.1 + i * 0.05,
+                duration: 0.5,
+                delay: 0.3 + i * 0.08,
                 ease: [0.16, 1, 0.3, 1],
               }}
             >
@@ -115,15 +115,23 @@ export function Header() {
                     transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                   />
 
-                  {/* Text with letter-spacing animation */}
-                  <motion.span
-                    className="relative inline-block"
-                    variants={{
-                      hover: { letterSpacing: "0.03em" },
-                    }}
-                    transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                  >
-                    {link.label}
+                  {/* Text — each letter animates in */}
+                  <motion.span className="relative inline-flex">
+                    {link.label.split("").map((char: string, ci: number) => (
+                      <motion.span
+                        key={ci}
+                        className={char === " " ? "inline-block w-1" : "inline-block"}
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                          duration: 0.3,
+                          delay: 0.5 + i * 0.08 + ci * 0.02,
+                          ease: [0.16, 1, 0.3, 1],
+                        }}
+                      >
+                        {char === " " ? " " : char}
+                      </motion.span>
+                    ))}
                   </motion.span>
 
                   {/* Animated underline — slides in from left */}
