@@ -5,14 +5,28 @@ import type { HeroData, HeroStat, SideBadge as SideBadgeType } from "@/types";
 
 // ─── Side Badge ───
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+  return isMobile;
+}
+
 function SideBadge({
   badge,
   index,
+  alwaysExpanded,
 }: {
   badge: SideBadgeType;
   index: number;
+  alwaysExpanded: boolean;
 }) {
-  const [hovered, setHovered] = useState(false);
+  const [hoverExpanded, setHoverExpanded] = useState(false);
+  const expanded = alwaysExpanded || hoverExpanded;
 
   return (
     <motion.a
@@ -24,20 +38,20 @@ function SideBadge({
         delay: 1 + index * 0.2,
         ease: [0.16, 1, 0.3, 1],
       }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      onMouseEnter={() => setHoverExpanded(true)}
+      onMouseLeave={() => setHoverExpanded(false)}
       className="relative block"
     >
       <motion.div
         className="overflow-hidden border-y border-r border-amber-500/30 bg-[#1a1a2e]/90 shadow-xl backdrop-blur-sm"
         animate={{
-          height: hovered ? badge.expandedHeight : 70,
-          borderTopRightRadius: hovered ? 15 : 35,
-          borderBottomRightRadius: hovered ? 15 : 35,
+          height: expanded ? badge.expandedHeight : 56,
+          borderTopRightRadius: expanded ? 12 : 28,
+          borderBottomRightRadius: expanded ? 12 : 28,
         }}
         transition={{ duration: 0.45, ease: [0.25, 1, 0.5, 1] }}
         style={{
-          width: 70,
+          width: alwaysExpanded ? 56 : 70,
           borderTopLeftRadius: 0,
           borderBottomLeftRadius: 0,
           display: "flex",
@@ -47,15 +61,15 @@ function SideBadge({
         <motion.div
           className="flex flex-col items-center overflow-hidden"
           animate={{
-            flexGrow: hovered ? 1 : 0,
-            opacity: hovered ? 1 : 0,
-            paddingTop: hovered ? 16 : 0,
+            flexGrow: expanded ? 1 : 0,
+            opacity: expanded ? 1 : 0,
+            paddingTop: expanded ? 12 : 0,
           }}
           transition={{ duration: 0.45, ease: [0.25, 1, 0.5, 1] }}
         >
           <div className="flex flex-1 items-center">
             <span
-              className="whitespace-nowrap text-xs font-bold tracking-wider text-white uppercase"
+              className="whitespace-nowrap text-[9px] font-bold tracking-wider text-white uppercase sm:text-[10px] md:text-xs"
               style={{
                 writingMode: "vertical-rl",
                 transform: "rotate(180deg)",
@@ -64,14 +78,17 @@ function SideBadge({
               {badge.label}
             </span>
           </div>
-          <div className="mb-2 h-[1px] w-10 bg-amber-500/50" />
+          <div className="mb-1.5 h-[1px] w-7 bg-amber-500/50 sm:w-8 md:w-10" />
         </motion.div>
 
-        <div className="flex h-[70px] w-[70px] flex-shrink-0 items-center justify-center p-2">
+        <div
+          className="flex flex-shrink-0 items-center justify-center p-1 sm:p-1.5 md:p-2"
+          style={{ height: alwaysExpanded ? 56 : 56, width: "100%" }}
+        >
           <img
             src={badge.image}
             alt={badge.label}
-            className="h-[50px] w-[50px] rounded-full object-contain"
+            className="h-[34px] w-[34px] rounded-full object-contain sm:h-[40px] sm:w-[40px] md:h-[50px] md:w-[50px]"
           />
         </div>
       </motion.div>
@@ -80,12 +97,39 @@ function SideBadge({
 }
 
 export function StickyBadges({ badges }: { badges: SideBadgeType[] }) {
+  const isMobile = useIsMobile();
+
   return (
-    <div className="fixed left-0 top-1/2 z-40 flex -translate-y-1/2 flex-col gap-4">
+    <div className="fixed left-0 top-1/2 z-40 flex -translate-y-1/2 flex-col gap-3 md:gap-4">
       {badges.map((badge, i) => (
-        <SideBadge key={badge.id} badge={badge} index={i} />
+        <SideBadge
+          key={badge.id}
+          badge={badge}
+          index={i}
+          alwaysExpanded={isMobile}
+        />
       ))}
     </div>
+  );
+}
+
+// ─── Sticky Watermark Logo ───
+
+export function StickyWatermark({ src }: { src: string }) {
+  return (
+    <motion.div
+      className="pointer-events-none fixed bottom-4 left-1/2 z-30 -translate-x-1/2 sm:bottom-6"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 0.3, y: 0 }}
+      transition={{ duration: 1, delay: 1.5 }}
+    >
+      <img
+        src={src}
+        alt=""
+        aria-hidden="true"
+        className="h-14 w-auto sm:h-16 md:h-20 lg:h-24"
+      />
+    </motion.div>
   );
 }
 
@@ -105,7 +149,7 @@ function RotatingStats({ stats }: { stats: HeroStat[] }) {
   if (stats.length === 0) return null;
 
   return (
-    <div className="absolute right-6 top-[35%] z-10 -translate-y-1/2 text-right sm:right-10 md:right-16 lg:right-20">
+    <div className="absolute right-3 top-[30%] z-10 -translate-y-1/2 text-right sm:right-6 sm:top-[35%] md:right-10 lg:right-20">
       <AnimatePresence mode="wait">
         <motion.div
           key={currentStat}
@@ -115,7 +159,7 @@ function RotatingStats({ stats }: { stats: HeroStat[] }) {
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         >
           <motion.p
-            className="text-sm font-bold tracking-widest text-white uppercase sm:text-base md:text-lg"
+            className="text-[10px] font-bold tracking-widest text-white uppercase sm:text-sm md:text-base lg:text-lg"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.15, duration: 0.5 }}
@@ -129,10 +173,10 @@ function RotatingStats({ stats }: { stats: HeroStat[] }) {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.25, duration: 0.5 }}
           >
-            <span className="text-3xl font-extrabold text-amber-500 sm:text-4xl md:text-5xl lg:text-6xl">
+            <span className="text-2xl font-extrabold text-amber-500 sm:text-3xl md:text-4xl lg:text-6xl">
               {stats[currentStat].value}
             </span>
-            <span className="text-lg font-bold text-amber-400 sm:text-xl md:text-2xl lg:text-3xl">
+            <span className="text-base font-bold text-amber-400 sm:text-lg md:text-xl lg:text-3xl">
               {stats[currentStat].unit}
             </span>
           </motion.div>
@@ -168,6 +212,15 @@ export function HeroSection({ data }: { data: HeroData }) {
     <section className="relative h-screen w-full overflow-hidden">
       <BackgroundVideo src={data.videoSrc} poster={data.posterSrc} />
 
+      {/* Top vignette — blends with header */}
+      <div className="absolute top-0 left-0 right-0 z-[2] h-40 bg-gradient-to-b from-black/40 via-black/15 to-transparent" />
+
+      {/* Bottom shadow — deep fade into next section */}
+      <div className="absolute bottom-0 left-0 right-0 z-[2] h-48 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+
+      {/* Left/right edge vignette */}
+      <div className="absolute inset-0 z-[2] bg-[radial-gradient(ellipse_at_center,transparent_50%,rgba(0,0,0,0.3)_100%)]" />
+
       {/* Outer chevron/arrow */}
       <div
         className="absolute inset-0 z-[1]"
@@ -192,13 +245,13 @@ export function HeroSection({ data }: { data: HeroData }) {
 
       {/* Content */}
       <div
-        className="relative z-10 mx-auto flex h-full max-w-[1440px] flex-col justify-end px-4 pb-16 sm:px-6 sm:pb-20 md:pb-24 lg:px-8 xl:px-12"
+        className="relative z-10 mx-auto flex h-full max-w-[1440px] flex-col justify-end px-3 pb-12 sm:px-6 sm:pb-16 md:pb-20 lg:px-8 lg:pb-24 xl:px-12"
         style={{ perspective: "1000px" }}
       >
         {/* 3D heading */}
         <div>
           <motion.h1
-            className="text-3xl font-extrabold leading-tight sm:text-4xl md:text-5xl lg:text-6xl"
+            className="text-2xl font-extrabold leading-tight sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl"
             initial="hidden"
             animate="visible"
             variants={{
@@ -274,7 +327,7 @@ export function HeroSection({ data }: { data: HeroData }) {
             }}
           />
           <motion.p
-            className="text-sm font-medium tracking-wide text-white/90 sm:text-base md:text-lg"
+            className="text-xs font-medium tracking-wide text-white/90 sm:text-sm md:text-base lg:text-lg"
             initial={{ opacity: 0, z: -50 }}
             animate={{ opacity: 1, z: 0 }}
             transition={{ delay: 1.2, duration: 0.6 }}
@@ -283,16 +336,6 @@ export function HeroSection({ data }: { data: HeroData }) {
           </motion.p>
         </motion.div>
 
-        {/* Watermark logo */}
-        <motion.img
-          src={data.watermarkLogo}
-          alt=""
-          aria-hidden="true"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 0.25, scale: 1 }}
-          transition={{ duration: 1, delay: 0.8 }}
-          className="absolute bottom-14 left-1/2 h-16 w-auto -translate-x-1/2 sm:bottom-16 sm:h-20 md:h-24 lg:h-28"
-        />
       </div>
     </section>
   );

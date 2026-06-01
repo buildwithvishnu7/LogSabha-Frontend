@@ -68,13 +68,13 @@ export function Header() {
       )}
     >
 
-      <div className="mx-auto flex h-20 max-w-[1440px] items-center justify-between px-4 sm:h-24 sm:px-6 lg:h-28 xl:px-8">
-        {/* Logo */}
-        <Link to="/" className="relative z-10 flex-shrink-0">
+      <div className="mx-auto flex h-14 max-w-[1440px] items-center justify-between px-3 sm:h-16 sm:px-6 md:h-20 lg:h-24 xl:px-8">
+        {/* Logo — centered on mobile, left on desktop */}
+        <Link to="/" className="absolute left-1/2 z-10 -translate-x-1/2 sm:relative sm:left-auto sm:translate-x-0 sm:flex-shrink-0">
           <motion.img
             src={logoSrc}
             alt="The LogSabha"
-            className="h-40 w-auto"
+            className="h-20 w-auto sm:h-14 md:h-20 lg:h-24 xl:h-28"
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
           />

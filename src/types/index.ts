@@ -35,6 +35,33 @@ export interface NavData {
   logo: string;
 }
 
+// ─── Political Landscape Section ───
+export interface StateData {
+  id: string;
+  name: string;
+  seats: number;
+  ndaSeats: number;
+  indiaSeats: number;
+  otherSeats: number;
+}
+
+export interface PlatformStat {
+  icon: string;
+  value: string;
+  label: string;
+}
+
+export interface PoliticalLandscapeData {
+  badge: string;
+  title: string;
+  titleHighlight: string;
+  subtitle: string;
+  backgroundVideo: string;
+  backgroundPoster: string;
+  overallStats: PlatformStat[];
+  states: StateData[];
+}
+
 // ─── Generic Section ───
 export interface SectionData {
   id: string;
@@ -46,6 +73,7 @@ export interface SectionData {
 // ─── Full Page Data ───
 export interface HomePageData {
   hero: HeroData;
+  politicalLandscape: PoliticalLandscapeData;
   sections: SectionData[];
 }
 
