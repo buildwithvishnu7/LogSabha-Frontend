@@ -17,6 +17,15 @@ export function Header() {
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const accountContainerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
+  const hasAnimated = useRef(false);
+
+  useEffect(() => {
+    // Mark initial animation as done after first render
+    const timer = setTimeout(() => {
+      hasAnimated.current = true;
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -97,11 +106,11 @@ export function Header() {
           {navLinks.map((link, i) => (
             <motion.div
               key={link.href}
-              initial={{ opacity: 0, y: -20 }}
+              initial={hasAnimated.current ? false : { opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{
                 duration: 0.5,
-                delay: 0.3 + i * 0.08,
+                delay: hasAnimated.current ? 0 : 0.3 + i * 0.08,
                 ease: [0.16, 1, 0.3, 1],
               }}
             >
