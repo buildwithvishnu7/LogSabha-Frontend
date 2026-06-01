@@ -1,0 +1,15 @@
+﻿
+                  {/* Text — each letter animates in */}
+                  <motion.span className="relative inline-flex">
+                    {link.label.split("").map((char: string, ci: number) => (
+                      <motion.span
+                        key={ci}
+                        className={char === " " ? "inline-block w-1" : "inline-block"}
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                          duration: 0.3,
+                          delay: 0.5 + i * 0.08 + ci * 0.02,
+                          ease: [0.16, 1, 0.3, 1],
+                        }}
+                

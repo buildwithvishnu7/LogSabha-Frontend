@@ -62,5 +62,121 @@ export const homeData: HomePageData = {
       { id: "DL", name: "Delhi", seats: 7, ndaSeats: 7, indiaSeats: 0, otherSeats: 0 },
     ],
   },
+  services: {
+    title: "Our",
+    titleHighlight: "Services",
+    subtitle:
+      "Political consulting services powered by data intelligence and strategic insight.",
+    services: [
+      {
+        id: "campaign-strategy",
+        icon: "target",
+        title: "Campaign Strategy",
+        description:
+          "Data-driven strategic planning to maximize campaign effectiveness and voter engagement across constituencies.",
+        image: "/images/services/campaign-strategy.jpg",
+        stats: [
+          { value: 94, suffix: "%", label: "SUCCESS RATE" },
+          { value: 250, suffix: "+", label: "CAMPAIGNS LED" },
+        ],
+        bulletPoints: [
+          "Strategic roadmap development",
+          "Target audience identification",
+          "Message crafting & positioning",
+        ],
+        learnMoreLink: "/services/campaign-strategy",
+      },
+      {
+        id: "political-analytics",
+        icon: "bar-chart",
+        title: "Political Analytics",
+        description:
+          "Advanced data analytics and predictive modeling for election forecasting and political trend analysis.",
+        image: "/images/services/political-analytics.jpg",
+        stats: [
+          { value: 98, suffix: "%", label: "ACCURACY" },
+          { value: 500, suffix: "+", label: "REPORTS DELIVERED" },
+        ],
+        bulletPoints: [
+          "Election result prediction",
+          "Sentiment analysis & tracking",
+          "Demographic profiling",
+        ],
+        learnMoreLink: "/services/political-analytics",
+      },
+      {
+        id: "voter-outreach",
+        icon: "users",
+        title: "Voter Outreach",
+        description:
+          "Comprehensive voter engagement programs combining grassroots mobilization with digital outreach strategies.",
+        image: "/images/services/voter-outreach.jpg",
+        stats: [
+          { value: 10, suffix: "M+", label: "VOTERS REACHED" },
+          { value: 120, suffix: "+", label: "CONSTITUENCIES" },
+        ],
+        bulletPoints: [
+          "Door-to-door campaign planning",
+          "Community engagement programs",
+          "Volunteer network management",
+        ],
+        learnMoreLink: "/services/voter-outreach",
+      },
+      {
+        id: "media-management",
+        icon: "tv",
+        title: "Media Management",
+        description:
+          "Strategic media planning, crisis communication, and reputation management for political leaders.",
+        image: "/images/services/media-management.jpg",
+        stats: [
+          { value: 85, suffix: "%", label: "POSITIVE COVERAGE" },
+          { value: 1000, suffix: "+", label: "MEDIA PLACEMENTS" },
+        ],
+        bulletPoints: [
+          "Press conference management",
+          "Social media strategy",
+          "Crisis communication response",
+        ],
+        learnMoreLink: "/services/media-management",
+      },
+      {
+        id: "opposition-research",
+        icon: "search",
+        title: "Opposition Research",
+        description:
+          "In-depth opposition analysis and competitive intelligence to stay ahead in the political landscape.",
+        image: "/images/services/opposition-research.jpg",
+        stats: [
+          { value: 200, suffix: "+", label: "PROFILES ANALYZED" },
+          { value: 50, suffix: "+", label: "ELECTIONS COVERED" },
+        ],
+        bulletPoints: [
+          "Candidate vulnerability assessment",
+          "Policy gap analysis",
+          "Historical voting pattern study",
+        ],
+        learnMoreLink: "/services/opposition-research",
+      },
+      {
+        id: "digital-campaigns",
+        icon: "monitor",
+        title: "Digital Campaigns",
+        description:
+          "End-to-end digital campaign execution including social media, ads, and online reputation management.",
+        image: "/images/services/digital-campaigns.jpg",
+        stats: [
+          { value: 50, suffix: "M+", label: "IMPRESSIONS" },
+          { value: 300, suffix: "+", label: "CAMPAIGNS RUN" },
+        ],
+        bulletPoints: [
+          "Social media advertising",
+          "Content creation & distribution",
+          "Online reputation monitoring",
+        ],
+        learnMoreLink: "/services/digital-campaigns",
+      },
+    ],
+  },
   sections: [],
 };

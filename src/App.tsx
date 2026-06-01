@@ -31,9 +31,6 @@ function AppContent() {
       <Header />
       {globalData && <StickyBadges badges={globalData.sideBadges} />}
       <StickyWatermark src="/logo/Logfinalsabha.gif" />
-      {/* Spacer pushes content below the fixed header on load.
-          When user scrolls, sections slide behind the header naturally. */}
-      <div className="h-14 sm:h-16 md:h-20 lg:h-24" />
       <AnimatedRoutes />
     </>
   );

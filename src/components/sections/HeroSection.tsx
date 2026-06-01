@@ -253,7 +253,8 @@ export function HeroSection({ data }: { data: HeroData }) {
           <motion.h1
             className="text-2xl font-extrabold leading-tight sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl"
             initial="hidden"
-            animate="visible"
+            whileInView="visible"
+            viewport={{ margin: "-80px", amount: 0.3 }}
             variants={{
               hidden: {},
               visible: {
@@ -308,29 +309,46 @@ export function HeroSection({ data }: { data: HeroData }) {
         <motion.div
           className="mt-3 flex items-center gap-3 sm:mt-4"
           style={{ transformStyle: "preserve-3d" }}
-          initial={{ opacity: 0, rotateY: -30, x: -40 }}
-          animate={{ opacity: 1, rotateY: 0, x: 0 }}
-          transition={{
-            delay: 0.9,
-            duration: 0.8,
-            ease: [0.16, 1, 0.3, 1],
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ margin: "-80px", amount: 0.3 }}
+          variants={{
+            hidden: { opacity: 0, rotateY: -30, x: -40 },
+            visible: {
+              opacity: 1,
+              rotateY: 0,
+              x: 0,
+              transition: {
+                delay: 0.9,
+                duration: 0.8,
+                ease: [0.16, 1, 0.3, 1],
+              },
+            },
           }}
         >
           <motion.div
             className="h-[2px] bg-amber-500"
-            initial={{ width: 0 }}
-            animate={{ width: 40 }}
-            transition={{
-              delay: 1.1,
-              duration: 0.5,
-              ease: [0.16, 1, 0.3, 1],
+            variants={{
+              hidden: { width: 0 },
+              visible: {
+                width: 40,
+                transition: {
+                  delay: 1.1,
+                  duration: 0.5,
+                  ease: [0.16, 1, 0.3, 1],
+                },
+              },
             }}
           />
           <motion.p
             className="text-xs font-medium tracking-wide text-white/90 sm:text-sm md:text-base lg:text-lg"
-            initial={{ opacity: 0, z: -50 }}
-            animate={{ opacity: 1, z: 0 }}
-            transition={{ delay: 1.2, duration: 0.6 }}
+            variants={{
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: 1,
+                transition: { delay: 1.2, duration: 0.6 },
+              },
+            }}
           >
             {data.subtitle}
           </motion.p>
