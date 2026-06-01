@@ -69,24 +69,43 @@ export function Header() {
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
-        scrolled ? "bg-white shadow-sm" : "bg-transparent",
-      )}
+      className="fixed top-0 left-0 right-0 z-50"
     >
-      {/* Animated bottom border line that sweeps across on scroll */}
+      {/* Parallelogram background shape — slides in from right on scroll */}
       <motion.div
-        className="absolute bottom-0 left-0 h-[1px] bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500"
+        className="absolute inset-0 -z-10 overflow-hidden"
+        initial={false}
+      >
+        <motion.div
+          className="absolute inset-y-0 shadow-lg"
+          style={{
+            clipPath: "polygon(8% 0%, 100% 0%, 100% 100%, 3% 100%)",
+            left: "120px",
+            right: "-20px",
+          }}
+          animate={{
+            x: scrolled ? 0 : "110%",
+            opacity: scrolled ? 1 : 0,
+          }}
+          transition={{ duration: 1.2, ease: [0.25, 1, 0.5, 1] }}
+        >
+          <div className="h-full w-full bg-white" />
+        </motion.div>
+      </motion.div>
+
+      {/* Animated bottom border line */}
+      <motion.div
+        className="absolute bottom-0 left-0 h-[1px] bg-gradient-to-r from-transparent via-amber-500 to-transparent"
         animate={{
-          width: scrolled ? "100%" : "0%",
           opacity: scrolled ? 0.4 : 0,
         }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        style={{ width: "100%" }}
       />
 
       <div className="mx-auto flex h-14 max-w-[1440px] items-center justify-between px-3 sm:h-16 sm:px-6 md:h-20 lg:h-24 xl:px-8">
-        {/* Logo with subtle float animation */}
-        <Link to="/" className="absolute left-1/2 z-10 -translate-x-1/2 sm:relative sm:left-auto sm:translate-x-0 sm:flex-shrink-0">
+        {/* Logo — sits OUTSIDE the parallelogram shape */}
+        <Link to="/" className="relative z-10 absolute left-1/2 -translate-x-1/2 sm:relative sm:left-auto sm:translate-x-0 sm:flex-shrink-0">
           <motion.img
             src={logoSrc}
             alt="The LogSabha"
@@ -127,22 +146,7 @@ export function Header() {
                   }}
                   transition={{ duration: 0.2 }}
                 >
-                  {/* Shimmer sweep on hover */}
-                  <motion.span
-                    className="absolute inset-0 -z-10 rounded-lg"
-                    style={{
-                      background: scrolled
-                        ? "linear-gradient(90deg, transparent, rgba(245,158,11,0.08), transparent)"
-                        : "linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)",
-                    }}
-                    initial={{ x: "-100%" }}
-                    variants={{
-                      hover: { x: "100%" },
-                    }}
-                    transition={{ duration: 0.6, ease: "easeInOut" }}
-                  />
-
-                  {/* Background highlight */}
+                  {/* Background highlight on hover */}
                   <motion.span
                     className={cn(
                       "absolute inset-0 -z-20 rounded-lg",
@@ -155,7 +159,15 @@ export function Header() {
                     transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                   />
 
-                  {link.label}
+                  {/* Shimmer + glow text — continuous animation */}
+                  <span
+                    className={cn(
+                      scrolled ? "nav-text-shimmer-dark" : "nav-text-shimmer-light",
+                    )}
+                    style={{ animationDelay: `${i * 0.4}s, ${i * 0.4}s` }}
+                  >
+                    {link.label}
+                  </span>
 
                   {/* Underline with glow */}
                   <motion.span

@@ -149,7 +149,7 @@ function RotatingStats({ stats }: { stats: HeroStat[] }) {
   if (stats.length === 0) return null;
 
   return (
-    <div className="absolute right-3 top-[30%] z-10 -translate-y-1/2 text-right sm:right-6 sm:top-[35%] md:right-10 lg:right-20">
+    <div className="text-left">
       <AnimatePresence mode="wait">
         <motion.div
           key={currentStat}
@@ -168,7 +168,7 @@ function RotatingStats({ stats }: { stats: HeroStat[] }) {
           </motion.p>
 
           <motion.div
-            className="mt-1 flex items-baseline justify-end gap-2 sm:mt-2"
+            className="mt-1 flex items-baseline gap-2 sm:mt-2"
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.25, duration: 0.5 }}
@@ -183,7 +183,7 @@ function RotatingStats({ stats }: { stats: HeroStat[] }) {
         </motion.div>
       </AnimatePresence>
 
-      <div className="mt-4 flex justify-end gap-1.5 sm:mt-6">
+      <div className="mt-4 flex gap-1.5 sm:mt-6">
         {stats.map((_, i) => (
           <motion.div
             key={i}
@@ -241,15 +241,13 @@ export function HeroSection({ data }: { data: HeroData }) {
 
       <div className="absolute inset-0 z-[1] bg-black/10" />
 
-      <RotatingStats stats={data.stats} />
-
       {/* Content */}
       <div
-        className="relative z-10 mx-auto flex h-full max-w-[1440px] flex-col justify-end px-3 pb-12 sm:px-6 sm:pb-16 md:pb-20 lg:px-8 lg:pb-24 xl:px-12"
+        className="relative z-10 mx-auto flex h-full max-w-[1440px] flex-col items-start justify-end px-3 pb-12 sm:px-6 sm:pb-16 md:pb-20 lg:px-8 lg:pb-24 xl:px-12"
         style={{ perspective: "1000px" }}
       >
         {/* 3D heading */}
-        <div>
+        <div className="max-w-2xl">
           <motion.h1
             className="text-2xl font-extrabold leading-tight sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl"
             initial="hidden"
@@ -265,7 +263,7 @@ export function HeroSection({ data }: { data: HeroData }) {
             {titleWords.map((word, i) => (
               <motion.span
                 key={i}
-                className="mr-3 inline-block text-white lg:mr-4"
+                className="hero-text-shimmer mr-3 inline-block lg:mr-4"
                 style={{ transformStyle: "preserve-3d" }}
                 variants={{
                   hidden: { y: 80, rotateX: 90, opacity: 0 },
@@ -284,7 +282,7 @@ export function HeroSection({ data }: { data: HeroData }) {
               </motion.span>
             ))}
             <motion.span
-              className="inline-block bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(245,158,11,0.3)]"
+              className="hero-text-highlight inline-block"
               style={{ transformStyle: "preserve-3d" }}
               variants={{
                 hidden: { y: 80, rotateX: 90, scale: 0.8, opacity: 0 },
@@ -354,6 +352,10 @@ export function HeroSection({ data }: { data: HeroData }) {
           </motion.p>
         </motion.div>
 
+        {/* Rotating stats — left aligned below subtitle */}
+        <div className="mt-6 max-w-2xl sm:mt-8">
+          <RotatingStats stats={data.stats} />
+        </div>
       </div>
     </section>
   );
