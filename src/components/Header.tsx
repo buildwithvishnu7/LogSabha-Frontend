@@ -109,7 +109,7 @@ export function Header() {
           <motion.img
             src={logoSrc}
             alt="The LogSabha"
-            className="h-20 w-auto sm:h-14 md:h-20 lg:h-24 xl:h-28"
+            className="h-24 w-auto sm:h-16 md:h-24 lg:h-28 xl:h-32"
             animate={{ y: [0, -3, 0] }}
             transition={{
               duration: 4,
@@ -121,7 +121,7 @@ export function Header() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden items-center gap-0.5 xl:flex">
+        <nav className="hidden items-center gap-2 xl:flex xl:gap-3">
           {navLinks.map((link, i) => (
             <motion.div
               key={link.href}
@@ -136,7 +136,7 @@ export function Header() {
               <Link to={link.href}>
                 <motion.span
                   className={cn(
-                    "group relative inline-block overflow-hidden rounded-lg px-2.5 py-2 text-[13px] font-medium transition-colors duration-500 xl:px-3 xl:text-sm",
+                    "group relative inline-block rounded-lg px-2.5 py-2 text-[13px] font-medium transition-colors duration-500 xl:px-3 xl:text-sm",
                     scrolled ? "text-gray-600" : "text-white/90",
                     location.pathname === link.href && "text-amber-600",
                   )}
@@ -146,6 +146,26 @@ export function Header() {
                   }}
                   transition={{ duration: 0.2 }}
                 >
+                  {/* Orbiting border line */}
+                  <span className="pointer-events-none absolute -inset-[2px] rounded-lg">
+                    <span className={cn("absolute inset-0 rounded-lg border", scrolled ? "border-gray-200/50" : "border-white/10")} />
+                    <motion.span
+                      className="absolute inset-[-1px] rounded-lg"
+                      style={{
+                        background:
+                          "conic-gradient(from var(--angle), transparent 0%, transparent 65%, rgba(245,158,11,0.7) 80%, rgba(245,158,11,0.9) 85%, rgba(245,158,11,0.7) 90%, transparent 100%)",
+                        mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+                        maskComposite: "exclude",
+                        WebkitMaskComposite: "xor",
+                        padding: "1.5px",
+                      }}
+                      animate={{
+                        "--angle": ["0deg", "360deg"],
+                      } as Record<string, string[]>}
+                      transition={{ duration: 3, repeat: Infinity, ease: "linear", delay: i * 0.4 }}
+                    />
+                  </span>
+
                   {/* Background highlight on hover */}
                   <motion.span
                     className={cn(
@@ -193,7 +213,7 @@ export function Header() {
         </nav>
 
         {/* Right Section */}
-        <div className="flex items-center gap-1 sm:gap-2">
+        <div className="flex items-center gap-3 sm:gap-4 lg:gap-5">
           {/* Search — with breathing pulse */}
           <div ref={searchContainerRef} className="relative hidden md:block">
             <AnimatePresence mode="wait">
@@ -256,14 +276,22 @@ export function Header() {
                     scrolled ? "text-gray-500 hover:text-gray-800" : "text-white/80 hover:text-white",
                   )}
                 >
-                  {/* Subtle pulse ring */}
+                  {/* Breathing pulse ring — visible on both backgrounds */}
                   <motion.span
                     className={cn(
-                      "absolute inset-0 rounded-full",
-                      scrolled ? "border border-gray-200" : "border border-white/20",
+                      "absolute inset-[-3px] rounded-full",
+                      scrolled ? "border-2 border-amber-500/50" : "border-2 border-white/30",
                     )}
-                    animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0, 0.5] }}
-                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                    animate={{ scale: [1, 1.3, 1], opacity: [0.6, 0, 0.6] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                  />
+                  <motion.span
+                    className={cn(
+                      "absolute inset-[-1px] rounded-full",
+                      scrolled ? "border border-amber-500/30" : "border border-white/20",
+                    )}
+                    animate={{ scale: [1, 1.15, 1], opacity: [0.8, 0.2, 0.8] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
                   />
                   <Search className="h-[18px] w-[18px]" />
                 </motion.button>

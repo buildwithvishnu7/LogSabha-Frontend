@@ -1,10 +1,12 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Users, MapPin, BarChart3, TrendingUp } from "lucide-react";
 import { BackgroundVideo } from "@/components/video/BackgroundVideo";
 import { IndiaMap, StateTooltip } from "@/components/IndiaMap";
-import { ScrollReveal, ScrollRevealText } from "@/components/motion/ScrollReveal";
-import type { PoliticalLandscapeData, StateData } from "@/types";
+import type { HoverInfo } from "@/components/IndiaMap";
+import { ScrollReveal } from "@/components/motion/ScrollReveal";
+import { useCountUp } from "@/hooks/useCountUp";
+import type { PoliticalLandscapeData } from "@/types";
 
 const iconMap: Record<string, React.ReactNode> = {
   users: <Users className="h-5 w-5" />,
@@ -13,36 +15,118 @@ const iconMap: Record<string, React.ReactNode> = {
   "trending-up": <TrendingUp className="h-5 w-5" />,
 };
 
-// ─── Floating Stat Card ───
+// ─── Stat Card: bouncy whole card, count-up numbers, expandable on hover ───
 
 function FloatingStatCard({
   icon,
-  value,
+  numericValue,
+  suffix,
   label,
-  delay,
+  detail,
+  bounceDelay,
   className,
+  expanded,
+  onUserHover,
 }: {
   icon: string;
-  value: string;
+  numericValue: number;
+  suffix: string;
   label: string;
-  delay: number;
+  detail?: string;
+  bounceDelay: number;
   className?: string;
+  expanded?: boolean;
+  onUserHover?: (hovering: boolean) => void;
 }) {
+  const isExpanded = expanded ?? false;
+  const { count, ref, replay } = useCountUp(numericValue, 1500);
+
+  // Replay count when auto-expanded
+  const prevExpanded = useRef(false);
+  useEffect(() => {
+    if (isExpanded && !prevExpanded.current) replay();
+    prevExpanded.current = isExpanded;
+  }, [isExpanded, replay]);
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20, scale: 0.9 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true }}
-      transition={{ delay, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      className={`flex items-center gap-3 rounded-xl border border-white/10 bg-[#1a1a2e]/80 px-4 py-3 shadow-lg backdrop-blur-md ${className ?? ""}`}
+      animate={{ y: [0, -5, 0, 4, 0] }}
+      transition={{
+        duration: 4,
+        repeat: Infinity,
+        ease: "easeInOut",
+        delay: bounceDelay,
+      }}
+      className={className}
     >
-      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500/20 text-amber-500">
-        {iconMap[icon] ?? <BarChart3 className="h-5 w-5" />}
-      </div>
-      <div>
-        <p className="text-lg font-bold text-amber-400 sm:text-xl">{value}</p>
-        <p className="text-[10px] text-white/60 sm:text-xs">{label}</p>
-      </div>
+      <motion.div
+        onMouseEnter={() => { onUserHover?.(true); replay(); }}
+        onMouseLeave={() => onUserHover?.(false)}
+        animate={{
+          scale: isExpanded ? 1.05 : 1,
+          borderColor: isExpanded
+            ? "rgba(245, 158, 11, 0.4)"
+            : "rgba(255, 255, 255, 0.1)",
+        }}
+        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+        className="cursor-default rounded-xl border bg-[#1a1a2e]/80 shadow-lg backdrop-blur-md"
+        style={{
+          boxShadow: isExpanded
+            ? "0 0 20px rgba(245, 158, 11, 0.15)"
+            : "none",
+        }}
+      >
+        <div className="flex items-center gap-3 px-4 py-3">
+          <motion.div
+            className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500/20 text-amber-500"
+            animate={{ rotate: isExpanded ? [0, -10, 10, 0] : 0 }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+          >
+            {iconMap[icon] ?? <BarChart3 className="h-5 w-5" />}
+          </motion.div>
+          <div>
+            <p className="text-lg font-bold text-amber-400 sm:text-xl">
+              <span ref={ref}>{count.toLocaleString()}</span>
+              <span>{suffix}</span>
+            </p>
+            <p className="text-[10px] text-white/60 sm:text-xs">{label}</p>
+          </div>
+        </div>
+
+        {/* Expandable detail */}
+        <AnimatePresence>
+          {isExpanded && detail && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              className="overflow-hidden"
+            >
+              <div className="border-t border-white/5 px-4 py-2">
+                <p className="text-[10px] text-white/40">{detail}</p>
+                <div className="mt-1.5 flex gap-0.5">
+                  {Array.from({ length: 12 }).map((_, i) => (
+                    <motion.div
+                      key={i}
+                      className="h-2 w-2 rounded-[2px]"
+                      style={{
+                        backgroundColor:
+                          i < 8
+                            ? "rgba(245,158,11,0.7)"
+                            : "rgba(245,158,11,0.25)",
+                      }}
+                      initial={{ scale: 0.5 }}
+                      animate={{ scale: 1 }}
+                      transition={{ delay: i * 0.03, duration: 0.15 }}
+                    />
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
     </motion.div>
   );
 }
@@ -52,31 +136,74 @@ function FloatingStatCard({
 function AllianceCard({
   title,
   seats,
-  delay,
   color,
+  bounceDelay,
   className,
+  expanded,
+  onUserHover,
 }: {
   title: string;
   seats: number;
-  delay: number;
   color: string;
+  bounceDelay: number;
   className?: string;
+  expanded?: boolean;
+  onUserHover?: (hovering: boolean) => void;
 }) {
+  const isExpanded = expanded ?? false;
+  const { count, ref, replay } = useCountUp(seats, 1500);
+
+  const prevExpanded = useRef(false);
+  useEffect(() => {
+    if (isExpanded && !prevExpanded.current) replay();
+    prevExpanded.current = isExpanded;
+  }, [isExpanded, replay]);
+
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true }}
-      transition={{ delay, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className={`rounded-xl border border-white/10 bg-[#1a1a2e]/80 px-4 py-3 shadow-lg backdrop-blur-md ${className ?? ""}`}
+      animate={{ y: [0, -4, 0, 3, 0] }}
+      transition={{
+        duration: 4.5,
+        repeat: Infinity,
+        ease: "easeInOut",
+        delay: bounceDelay,
+      }}
+      className={className}
     >
-      <p className="text-[10px] font-medium tracking-wider text-white/50 uppercase">
-        {title}
-      </p>
-      <p className={`text-2xl font-bold ${color}`}>{seats}</p>
-      <p className="text-[10px] text-white/40">seats won</p>
+      <motion.div
+        onMouseEnter={() => { onUserHover?.(true); replay(); }}
+        onMouseLeave={() => onUserHover?.(false)}
+        animate={{
+          scale: isExpanded ? 1.08 : 1,
+          borderColor: isExpanded
+            ? "rgba(245, 158, 11, 0.4)"
+            : "rgba(255, 255, 255, 0.1)",
+        }}
+        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+        className="rounded-xl border bg-[#1a1a2e]/80 px-4 py-3 shadow-lg backdrop-blur-md"
+        style={{
+          boxShadow: isExpanded
+            ? "0 0 20px rgba(245, 158, 11, 0.15)"
+            : "none",
+        }}
+      >
+        <p className="text-[10px] font-medium tracking-wider text-white/50 uppercase">
+          {title}
+        </p>
+        <p className={`text-2xl font-bold ${color}`}>
+          <span ref={ref}>{count.toLocaleString()}</span>
+        </p>
+        <p className="text-[10px] text-white/40">seats won</p>
+      </motion.div>
     </motion.div>
   );
+}
+
+function parseNumeric(val: string): { num: number; suffix: string } {
+  const cleaned = val.replace(/,/g, "");
+  const match = cleaned.match(/^([\d.]+)(.*)$/);
+  if (match) return { num: parseFloat(match[1]), suffix: match[2] };
+  return { num: 0, suffix: val };
 }
 
 // ─── Main Section ───
@@ -86,7 +213,53 @@ export function PoliticalLandscapeSection({
 }: {
   data: PoliticalLandscapeData;
 }) {
-  const [hoveredState, setHoveredState] = useState<StateData | null>(null);
+  const [hoverInfo, setHoverInfo] = useState<HoverInfo | null>(null);
+  const [isUserHovering, setIsUserHovering] = useState(false);
+  const [autoIndex, setAutoIndex] = useState(0);
+
+  // Auto-cycle cards (6 total: 4 stat cards + 2 alliance cards)
+  const TOTAL_CARDS = 6;
+  const [autoCardIndex, setAutoCardIndex] = useState(0);
+  const [isUserHoveringCard, setIsUserHoveringCard] = useState(false);
+
+  useEffect(() => {
+    if (isUserHoveringCard) return;
+    const interval = setInterval(() => {
+      setAutoCardIndex((prev) => (prev + 1) % TOTAL_CARDS);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [isUserHoveringCard]);
+
+  // Auto-cycle through states when user is NOT hovering
+  useEffect(() => {
+    if (isUserHovering || data.states.length === 0) return;
+
+    const interval = setInterval(() => {
+      setAutoIndex((prev) => (prev + 1) % data.states.length);
+    }, 2500);
+
+    return () => clearInterval(interval);
+  }, [isUserHovering, data.states.length]);
+
+  // Build autoHoverInfo from auto-cycling state
+  const autoState = data.states[autoIndex];
+  const activeInfo = isUserHovering ? hoverInfo : autoState ? {
+    state: autoState,
+    // Approximate positions for auto-cycle (will be overridden by real centroid on hover)
+    x: 40 + (autoIndex % 5) * 8,
+    y: 25 + (autoIndex % 4) * 10,
+  } : null;
+  const activeStateId = activeInfo?.state.name ?? null;
+
+  const handleStateHover = (info: HoverInfo | null) => {
+    if (info) {
+      setIsUserHovering(true);
+      setHoverInfo(info);
+    } else {
+      setIsUserHovering(false);
+      setHoverInfo(null);
+    }
+  };
 
   const totalNda = useMemo(
     () => data.states.reduce((sum, s) => sum + s.ndaSeats, 0),
@@ -97,206 +270,232 @@ export function PoliticalLandscapeSection({
     [data.states],
   );
 
+  const stats = data.overallStats.map((s) => {
+    const parsed = parseNumeric(s.value);
+    return { ...s, numericValue: parsed.num, parsedSuffix: parsed.suffix };
+  });
+
   return (
     <section className="relative min-h-screen w-full overflow-hidden bg-[#0c0c1d]">
-      {/* Top shadow — smooth blend from hero section above */}
       <div className="absolute top-0 left-0 right-0 z-[2] h-40 bg-gradient-to-b from-black/80 via-black/40 to-transparent" />
       <div className="absolute top-0 left-0 right-0 z-[2] h-20 bg-gradient-to-b from-[#0c0c1d] to-transparent" />
 
-      {/* Background — flag video */}
-      <BackgroundVideo
-        src={data.backgroundVideo}
-        poster={data.backgroundPoster}
-      />
-
-      {/* Dark overlay */}
+      <BackgroundVideo src={data.backgroundVideo} poster={data.backgroundPoster} />
       <div className="absolute inset-0 z-[1] bg-black/60" />
 
-      {/* Content */}
       <div className="relative z-10 mx-auto flex min-h-screen max-w-[1440px] flex-col justify-center px-4 py-20 sm:px-6 md:flex-row md:items-center md:gap-8 lg:gap-12 lg:px-8 xl:px-12">
-        {/* Left side — text */}
+        {/* Left — text */}
         <div className="flex-1 md:max-w-[480px]">
-          {/* Badge */}
+          {/* Badge with pulsing dot */}
           <ScrollReveal delay={0} direction="left">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5">
-              <span className="h-2 w-2 rounded-full bg-amber-500" />
-              <span className="text-xs font-medium text-amber-400 sm:text-sm">
-                {data.badge}
-              </span>
+              <span className="badge-dot-pulse h-2 w-2 rounded-full bg-amber-500" />
+              <span className="text-xs font-medium text-amber-400 sm:text-sm">{data.badge}</span>
             </div>
           </ScrollReveal>
 
-          {/* Heading — word-by-word reveal */}
-          <ScrollRevealText
-            text={data.title}
-            highlight={data.titleHighlight}
-            delay={0.2}
-            className="text-3xl font-extrabold leading-tight text-white sm:text-4xl lg:text-5xl"
-          />
+          {/* Heading — word-by-word with shimmer + bounce */}
+          <motion.h2
+            className="text-3xl font-extrabold leading-tight sm:text-4xl lg:text-5xl"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ margin: "-80px", amount: 0.3 }}
+            variants={{
+              hidden: {},
+              visible: {
+                transition: { staggerChildren: 0.12, delayChildren: 0.2 },
+              },
+            }}
+          >
+            {data.title.split(" ").map((word, i) => (
+              <motion.span
+                key={i}
+                className="section-heading-shimmer mr-2 inline-block lg:mr-3"
+                variants={{
+                  hidden: { opacity: 0, y: 40, rotateX: 45 },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    rotateX: 0,
+                    transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+                  },
+                }}
+                style={{
+                  animationDelay: `${i * 0.5}s`,
+                }}
+              >
+                {word}
+              </motion.span>
+            ))}
+            <br />
+            {/* Highlight word with bouncing letters */}
+            <motion.span
+              className="inline-block"
+              variants={{
+                hidden: { opacity: 0, y: 40, scale: 0.9 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  scale: 1,
+                  transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
+                },
+              }}
+            >
+              {data.titleHighlight.split("").map((char, ci) => (
+                <motion.span
+                  key={ci}
+                  className="section-highlight-shimmer inline-block"
+                  style={{
+                    animation: char !== " "
+                      ? `letter-bounce 2.5s ease-in-out ${ci * 0.08}s infinite`
+                      : undefined,
+                    width: char === " " ? "0.3em" : undefined,
+                  }}
+                >
+                  {char}
+                </motion.span>
+              ))}
+            </motion.span>
+          </motion.h2>
 
-          {/* Subtitle */}
+          {/* Subtitle with shimmer */}
           <ScrollReveal delay={0.5}>
-            <p className="mt-4 text-sm leading-relaxed text-white/60 sm:text-base lg:text-lg">
+            <p className="section-subtitle-shimmer mt-4 text-sm leading-relaxed sm:text-base lg:text-lg">
               {data.subtitle}
             </p>
           </ScrollReveal>
-
         </div>
 
-        {/* Right side — India map + floating cards + dotted lines */}
+        {/* Right — Map + Cards */}
         <div className="relative mt-12 flex-1 md:mt-0">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3, duration: 0.8 }}
-            className="india-map-wrapper relative mx-auto h-[320px] w-[320px] sm:h-[380px] sm:w-[380px] md:h-[420px] md:w-[420px] lg:h-[520px] lg:w-[520px]"
-          >
-            {/* Map */}
-            <IndiaMap
-              states={data.states}
-              onStateHover={(state) => setHoveredState(state)}
-              hoveredState={hoveredState}
-            />
-
-            {/* SVG dotted connector lines — pointer-events-none */}
-            <svg className="pointer-events-none absolute inset-0 z-10 h-full w-full overflow-visible">
-              <defs>
-                <motion.linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stopColor="rgba(245,158,11,0.6)" />
-                  <stop offset="100%" stopColor="rgba(245,158,11,0.1)" />
-                </motion.linearGradient>
-              </defs>
-              {/* Top-left card → map center-top */}
-              <motion.line
-                x1="8%" y1="12%" x2="38%" y2="25%"
-                stroke="url(#lineGrad)" strokeWidth="1" strokeDasharray="4 4"
-                initial={{ pathLength: 0, opacity: 0 }}
-                whileInView={{ pathLength: 1, opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.6, duration: 0.8 }}
-              />
-              {/* Top-right card → map top-right */}
-              <motion.line
-                x1="92%" y1="12%" x2="65%" y2="22%"
-                stroke="url(#lineGrad)" strokeWidth="1" strokeDasharray="4 4"
-                initial={{ pathLength: 0, opacity: 0 }}
-                whileInView={{ pathLength: 1, opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.7, duration: 0.8 }}
-              />
-              {/* Left card → map center-left */}
-              <motion.line
-                x1="5%" y1="60%" x2="32%" y2="50%"
-                stroke="url(#lineGrad)" strokeWidth="1" strokeDasharray="4 4"
-                initial={{ pathLength: 0, opacity: 0 }}
-                whileInView={{ pathLength: 1, opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.8, duration: 0.8 }}
-              />
-              {/* Bottom-left card → map bottom */}
-              <motion.line
-                x1="22%" y1="92%" x2="42%" y2="75%"
-                stroke="url(#lineGrad)" strokeWidth="1" strokeDasharray="4 4"
-                initial={{ pathLength: 0, opacity: 0 }}
-                whileInView={{ pathLength: 1, opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.9, duration: 0.8 }}
-              />
-              {/* Bottom-right card → map bottom-right */}
-              <motion.line
-                x1="88%" y1="88%" x2="60%" y2="72%"
-                stroke="url(#lineGrad)" strokeWidth="1" strokeDasharray="4 4"
-                initial={{ pathLength: 0, opacity: 0 }}
-                whileInView={{ pathLength: 1, opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 1.0, duration: 0.8 }}
-              />
-              {/* Center card → map center */}
-              <motion.line
-                x1="50%" y1="42%" x2="50%" y2="35%"
-                stroke="url(#lineGrad)" strokeWidth="1" strokeDasharray="4 4"
-                initial={{ pathLength: 0, opacity: 0 }}
-                whileInView={{ pathLength: 1, opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.65, duration: 0.8 }}
-              />
-            </svg>
-
-            {/* Always-visible floating stat cards — pointer-events-none */}
-            <div className="pointer-events-none absolute inset-0 z-20 overflow-visible">
-              {/* Top-left: Lok Sabha Seats */}
-              <FloatingStatCard
-                icon="users"
-                value={data.overallStats[0]?.value ?? "543+"}
-                label={data.overallStats[0]?.label ?? "Lok Sabha Seats"}
-                delay={0.5}
-                className="absolute -left-6 -top-4 sm:-left-8 sm:-top-6"
-              />
-
-              {/* Top-right: NDA Alliance */}
-              <AllianceCard
-                title="NDA Alliance"
-                seats={totalNda}
-                delay={0.6}
-                color="text-green-400"
-                className="absolute -right-6 top-2 sm:-right-10"
-              />
-
-              {/* Center: States Covered */}
-              <FloatingStatCard
-                icon="map-pin"
-                value={data.overallStats[1]?.value ?? "28"}
-                label={data.overallStats[1]?.label ?? "States Covered"}
-                delay={0.65}
-                className="absolute left-[32%] top-[38%]"
-              />
-
-              {/* Left: India Alliance */}
-              <AllianceCard
-                title="India Alliance"
-                seats={totalIndia}
-                delay={0.7}
-                color="text-blue-400"
-                className="absolute -left-6 bottom-[28%] sm:-left-10"
-              />
-
-              {/* Bottom-left: Campaigns */}
-              <FloatingStatCard
-                icon="bar-chart"
-                value={data.overallStats[2]?.value ?? "1,000+"}
-                label={data.overallStats[2]?.label ?? "Campaigns"}
-                delay={0.8}
-                className="absolute bottom-2 left-[10%] sm:bottom-0"
-              />
-
-              {/* Bottom-right: Accuracy */}
-              <FloatingStatCard
-                icon="trending-up"
-                value={data.overallStats[3]?.value ?? "95%"}
-                label={data.overallStats[3]?.label ?? "Accuracy"}
-                delay={0.9}
-                className="absolute -right-6 bottom-6 sm:-right-10 sm:bottom-4"
+          <div className="relative mx-auto h-[320px] w-[320px] sm:h-[380px] sm:w-[380px] md:h-[420px] md:w-[420px] lg:h-[520px] lg:w-[520px]">
+            {/* Map — z-10 so states are hoverable */}
+            <div className="relative z-10 h-full w-full">
+              <IndiaMap
+                states={data.states}
+                onStateHover={handleStateHover}
+                hoveredStateId={activeStateId}
               />
             </div>
 
-            {/* State tooltip — only on hover */}
-            <AnimatePresence>
-              {hoveredState && (
-                <div className="pointer-events-none absolute left-1/2 top-[30%] z-30 -translate-x-1/2 -translate-y-1/2">
-                  <StateTooltip state={hoveredState} />
+            {/* Dotted connector lines */}
+            <svg className="pointer-events-none absolute inset-0 z-[5] h-full w-full overflow-visible">
+              <defs>
+                <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stopColor="rgba(245,158,11,0.6)" />
+                  <stop offset="100%" stopColor="rgba(245,158,11,0.1)" />
+                </linearGradient>
+              </defs>
+              <motion.line x1="8%" y1="10%" x2="35%" y2="22%" stroke="url(#lineGrad)" strokeWidth="1" strokeDasharray="4 4" initial={{ pathLength: 0, opacity: 0 }} whileInView={{ pathLength: 1, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.6, duration: 0.8 }} />
+              <motion.line x1="88%" y1="8%" x2="62%" y2="20%" stroke="url(#lineGrad)" strokeWidth="1" strokeDasharray="4 4" initial={{ pathLength: 0, opacity: 0 }} whileInView={{ pathLength: 1, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.7, duration: 0.8 }} />
+              <motion.line x1="5%" y1="62%" x2="30%" y2="52%" stroke="url(#lineGrad)" strokeWidth="1" strokeDasharray="4 4" initial={{ pathLength: 0, opacity: 0 }} whileInView={{ pathLength: 1, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.8, duration: 0.8 }} />
+              <motion.line x1="18%" y1="92%" x2="38%" y2="75%" stroke="url(#lineGrad)" strokeWidth="1" strokeDasharray="4 4" initial={{ pathLength: 0, opacity: 0 }} whileInView={{ pathLength: 1, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.9, duration: 0.8 }} />
+              <motion.line x1="88%" y1="85%" x2="62%" y2="70%" stroke="url(#lineGrad)" strokeWidth="1" strokeDasharray="4 4" initial={{ pathLength: 0, opacity: 0 }} whileInView={{ pathLength: 1, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 1.0, duration: 0.8 }} />
+            </svg>
+
+            {/* Floating stat cards */}
+            <div className="absolute inset-0 z-20 overflow-visible" style={{ pointerEvents: "none" }}>
+              <div style={{ pointerEvents: "auto" }}>
+                <FloatingStatCard
+                  icon="users"
+                  numericValue={stats[0]?.numericValue ?? 543}
+                  suffix={stats[0]?.parsedSuffix ?? "+"}
+                  label={stats[0]?.label ?? "Lok Sabha Seats"}
+                  detail="Total parliamentary constituencies"
+                  bounceDelay={0}
+                  className="absolute -left-4 -top-6 sm:-left-6 sm:-top-8"
+                  expanded={isUserHoveringCard ? undefined : autoCardIndex === 0}
+                  onUserHover={(h) => setIsUserHoveringCard(h)}
+                />
+              </div>
+
+              <div style={{ pointerEvents: "auto" }}>
+                <div className="absolute -right-4 -top-2 sm:-right-8">
+                  <FloatingStatCard
+                    icon="map-pin"
+                    numericValue={stats[1]?.numericValue ?? 28}
+                    suffix=""
+                    label={stats[1]?.label ?? "States Covered"}
+                    detail="Complete state-level analysis"
+                    bounceDelay={0.8}
+                    expanded={isUserHoveringCard ? undefined : autoCardIndex === 1}
+                    onUserHover={(h) => setIsUserHoveringCard(h)}
+                  />
+                  <div className="mt-2">
+                    <AllianceCard
+                      title="NDA Alliance"
+                      seats={totalNda}
+                      color="text-green-400"
+                      bounceDelay={1.2}
+                      expanded={isUserHoveringCard ? undefined : autoCardIndex === 2}
+                      onUserHover={(h) => setIsUserHoveringCard(h)}
+                    />
+                  </div>
                 </div>
+              </div>
+
+              <div style={{ pointerEvents: "auto" }}>
+                <AllianceCard
+                  title="India Alliance"
+                  seats={totalIndia}
+                  color="text-blue-400"
+                  className="absolute -left-4 bottom-[25%] sm:-left-8"
+                  bounceDelay={1.6}
+                  expanded={isUserHoveringCard ? undefined : autoCardIndex === 3}
+                  onUserHover={(h) => setIsUserHoveringCard(h)}
+                />
+              </div>
+
+              <div style={{ pointerEvents: "auto" }}>
+                <FloatingStatCard
+                  icon="bar-chart"
+                  numericValue={stats[2]?.numericValue ?? 1000}
+                  suffix={stats[2]?.parsedSuffix ?? "+"}
+                  label={stats[2]?.label ?? "Campaigns"}
+                  detail="Successfully managed campaigns"
+                  bounceDelay={2}
+                  className="absolute -bottom-2 left-[5%] sm:bottom-0"
+                  expanded={isUserHoveringCard ? undefined : autoCardIndex === 4}
+                  onUserHover={(h) => setIsUserHoveringCard(h)}
+                />
+              </div>
+
+              <div style={{ pointerEvents: "auto" }}>
+                <FloatingStatCard
+                  icon="trending-up"
+                  numericValue={stats[3]?.numericValue ?? 95}
+                  suffix={stats[3]?.parsedSuffix ?? "%"}
+                  label={stats[3]?.label ?? "Accuracy"}
+                  detail="Prediction accuracy rate"
+                  bounceDelay={2.4}
+                  className="absolute -right-4 bottom-4 sm:-right-8"
+                  expanded={isUserHoveringCard ? undefined : autoCardIndex === 5}
+                  onUserHover={(h) => setIsUserHoveringCard(h)}
+                />
+              </div>
+            </div>
+
+            {/* State tooltip — auto-cycle or user hover */}
+            <AnimatePresence mode="wait">
+              {activeInfo && (
+                <motion.div
+                  key={activeInfo.state.name}
+                  className="pointer-events-none absolute z-30"
+                  style={{
+                    left: `${Math.min(Math.max(activeInfo.x, 10), 55)}%`,
+                    top: `${Math.min(Math.max(activeInfo.y - 5, 5), 50)}%`,
+                  }}
+                >
+                  <StateTooltip state={activeInfo.state} />
+                </motion.div>
               )}
             </AnimatePresence>
-          </motion.div>
+          </div>
         </div>
       </div>
 
-      {/* Bottom shadow — deep fade into next section */}
       <div className="absolute bottom-0 left-0 right-0 z-[2] h-40 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
       <div className="absolute bottom-0 left-0 right-0 z-[2] h-20 bg-gradient-to-t from-[#0c0c1d] to-transparent" />
-
-      {/* Edge vignette for depth */}
       <div className="absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.4)_100%)]" />
     </section>
   );

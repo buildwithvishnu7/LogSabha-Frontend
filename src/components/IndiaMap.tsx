@@ -1,24 +1,28 @@
-import { useState, useEffect, useMemo, memo } from "react";
+import { useState, useEffect, useMemo, useCallback, memo } from "react";
 import { motion } from "motion/react";
-import { geoMercator, geoPath } from "d3-geo";
+import { geoMercator, geoPath, geoCentroid } from "d3-geo";
 import { feature } from "topojson-client";
 import type { Topology } from "topojson-specification";
-import type { FeatureCollection, Geometry } from "geojson";
+import type { FeatureCollection, Geometry, Feature } from "geojson";
 import type { StateData } from "@/types";
 
-// Name mapping: GeoJSON name → our data name
 const NAME_MAP: Record<string, string> = {
   Orissa: "Odisha",
   Uttaranchal: "Uttarakhand",
 };
 
-interface IndiaMapProps {
-  states: StateData[];
-  onStateHover: (state: StateData | null) => void;
-  hoveredState: StateData | null;
+export interface HoverInfo {
+  state: StateData;
+  x: number;
+  y: number;
 }
 
-// Memoized individual state path to prevent unnecessary re-renders
+interface IndiaMapProps {
+  states: StateData[];
+  onStateHover: (info: HoverInfo | null) => void;
+  hoveredStateId: string | null;
+}
+
 const StatePath = memo(function StatePath({
   d,
   isHovered,
@@ -29,20 +33,22 @@ const StatePath = memo(function StatePath({
   d: string;
   isHovered: boolean;
   hasData: boolean;
-  onEnter: () => void;
+  onEnter: (e: React.MouseEvent) => void;
   onLeave: () => void;
 }) {
   return (
     <path
       d={d}
       fill={isHovered ? "#f59e0b" : "#d97706"}
-      fillOpacity={isHovered ? 1 : 0.7}
-      stroke="rgba(26, 26, 46, 0.5)"
-      strokeWidth={0.5}
+      fillOpacity={isHovered ? 1 : 0.65}
+      stroke={isHovered ? "#fbbf24" : "rgba(26, 26, 46, 0.6)"}
+      strokeWidth={isHovered ? 1.5 : 0.5}
       style={{
         cursor: hasData ? "pointer" : "default",
-        transition: "fill 0.2s, fill-opacity 0.2s",
-        filter: isHovered ? "drop-shadow(0 0 6px rgba(245,158,11,0.5))" : "none",
+        transition: "fill 0.2s, fill-opacity 0.2s, stroke 0.2s, stroke-width 0.2s",
+        filter: isHovered
+          ? "drop-shadow(0 0 10px rgba(245,158,11,0.6))"
+          : "none",
       }}
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
@@ -50,7 +56,7 @@ const StatePath = memo(function StatePath({
   );
 });
 
-export function IndiaMap({ states, onStateHover, hoveredState }: IndiaMapProps) {
+export function IndiaMap({ states, onStateHover, hoveredStateId }: IndiaMapProps) {
   const [features, setFeatures] = useState<FeatureCollection<Geometry> | null>(null);
 
   useEffect(() => {
@@ -70,7 +76,6 @@ export function IndiaMap({ states, onStateHover, hoveredState }: IndiaMapProps) 
 
   const pathGenerator = useMemo(() => geoPath().projection(projection), [projection]);
 
-  // Pre-compute paths once when features load
   const computedPaths = useMemo(() => {
     if (!features) return [];
     return features.features.map((f, i) => {
@@ -79,14 +84,36 @@ export function IndiaMap({ states, onStateHover, hoveredState }: IndiaMapProps) 
       const stateData = states.find(
         (s) => s.name.toLowerCase() === normalized.toLowerCase(),
       );
+      // Compute centroid for tooltip positioning
+      const centroid = projection(geoCentroid(f as Feature<Geometry>));
       return {
         key: `${name}-${i}`,
         d: pathGenerator(f) ?? "",
         name: normalized,
         stateData,
+        cx: centroid?.[0] ?? 300,
+        cy: centroid?.[1] ?? 300,
       };
     });
-  }, [features, pathGenerator, states]);
+  }, [features, pathGenerator, states, projection]);
+
+  const handleEnter = useCallback(
+    (item: (typeof computedPaths)[number], e: React.MouseEvent) => {
+      if (!item.stateData) return;
+      // Get position relative to the SVG container
+      const svg = (e.target as SVGElement).closest("svg");
+      if (!svg) return;
+      // Use centroid position mapped to percentage of container
+      const xPct = (item.cx / 600) * 100;
+      const yPct = (item.cy / 600) * 100;
+      onStateHover({
+        state: item.stateData,
+        x: xPct,
+        y: yPct,
+      });
+    },
+    [onStateHover, computedPaths],
+  );
 
   if (!features) {
     return (
@@ -102,9 +129,9 @@ export function IndiaMap({ states, onStateHover, hoveredState }: IndiaMapProps) 
         <StatePath
           key={item.key}
           d={item.d}
-          isHovered={hoveredState?.name === item.stateData?.name}
+          isHovered={hoveredStateId === item.stateData?.name}
           hasData={!!item.stateData}
-          onEnter={() => item.stateData && onStateHover(item.stateData)}
+          onEnter={(e) => handleEnter(item, e)}
           onLeave={() => onStateHover(null)}
         />
       ))}
@@ -112,51 +139,73 @@ export function IndiaMap({ states, onStateHover, hoveredState }: IndiaMapProps) 
   );
 }
 
-// ─── Floating State Tooltip ───
+// ─── State Tooltip — positioned near the hovered state ───
 
 export function StateTooltip({ state }: { state: StateData }) {
+  const voteShare = ((state.ndaSeats / state.seats) * 100).toFixed(1);
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10, scale: 0.9 }}
+      initial={{ opacity: 0, y: 8, scale: 0.92 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: 10, scale: 0.9 }}
+      exit={{ opacity: 0, y: 8, scale: 0.92 }}
       transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-      className="pointer-events-none w-56 rounded-xl border border-amber-500/30 bg-[#1a1a2e]/95 p-4 shadow-2xl backdrop-blur-md"
+      className="pointer-events-none w-60 rounded-xl border border-white/15 bg-[#1a1a2e]/95 p-4 shadow-2xl backdrop-blur-lg"
     >
-      <p className="text-xs font-bold tracking-wider text-amber-500 uppercase">
-        {state.name}
-      </p>
-      <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1.5">
-        <div>
-          <p className="text-[10px] text-white/50">Total Seats</p>
-          <p className="text-lg font-bold text-white">{state.seats}</p>
-        </div>
-        <div>
-          <p className="text-[10px] text-white/50">NDA</p>
-          <p className="text-lg font-bold text-green-400">{state.ndaSeats}</p>
-        </div>
-        <div>
-          <p className="text-[10px] text-white/50">INDIA Alliance</p>
-          <p className="text-lg font-bold text-blue-400">{state.indiaSeats}</p>
-        </div>
-        <div>
-          <p className="text-[10px] text-white/50">Others</p>
-          <p className="text-lg font-bold text-gray-400">{state.otherSeats}</p>
-        </div>
+      <div className="flex items-center justify-between">
+        <p className="text-sm font-bold text-white">{state.name}</p>
+        <span className="rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold text-amber-400">
+          {state.ndaSeats > state.indiaSeats ? "NDA" : "INDIA"}
+        </span>
       </div>
-      <div className="mt-3 flex h-2 w-full overflow-hidden rounded-full bg-white/10">
-        <div
-          className="bg-green-400"
-          style={{ width: `${(state.ndaSeats / state.seats) * 100}%` }}
-        />
-        <div
-          className="bg-blue-400"
-          style={{ width: `${(state.indiaSeats / state.seats) * 100}%` }}
-        />
-        <div
-          className="bg-gray-500"
-          style={{ width: `${(state.otherSeats / state.seats) * 100}%` }}
-        />
+
+      <div className="mt-3 space-y-2">
+        <div className="flex items-center justify-between text-xs">
+          <span className="text-white/50">Lok Sabha Seats</span>
+          <span className="font-bold text-white">{state.seats}</span>
+        </div>
+        <div className="flex items-center justify-between text-xs">
+          <span className="text-white/50">Vote Share</span>
+          <span className="font-bold text-amber-400">{voteShare}%</span>
+        </div>
+        {/* Vote share bar */}
+        <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
+          <motion.div
+            className="h-full rounded-full bg-amber-500"
+            initial={{ width: 0 }}
+            animate={{ width: `${voteShare}%` }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          />
+        </div>
+        {/* Seats bar */}
+        <div className="flex items-center gap-2 text-xs">
+          <span className="text-white/50">Seats</span>
+          <div className="flex-1 h-1.5 overflow-hidden rounded-full bg-white/10">
+            <div className="flex h-full">
+              <motion.div
+                className="h-full bg-green-400"
+                initial={{ width: 0 }}
+                animate={{ width: `${(state.ndaSeats / state.seats) * 100}%` }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+              />
+              <motion.div
+                className="h-full bg-blue-400"
+                initial={{ width: 0 }}
+                animate={{ width: `${(state.indiaSeats / state.seats) * 100}%` }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              />
+              <motion.div
+                className="h-full bg-gray-500"
+                initial={{ width: 0 }}
+                animate={{ width: `${(state.otherSeats / state.seats) * 100}%` }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+              />
+            </div>
+          </div>
+          <span className="font-mono text-[10px] text-white/40">
+            {state.ndaSeats}/{state.seats}
+          </span>
+        </div>
       </div>
     </motion.div>
   );

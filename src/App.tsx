@@ -3,10 +3,7 @@ import { AnimatePresence } from "motion/react";
 import { useLenis } from "@/hooks/useLenis";
 import { useGlobalData } from "@/hooks/useGlobalData";
 import { Header } from "@/components/Header";
-import {
-  StickyBadges,
-  StickyWatermark,
-} from "@/components/sections/HeroSection";
+import { StickyBadges } from "@/components/sections/HeroSection";
 import Home from "@/routes/Home";
 import About from "@/routes/About";
 
@@ -30,7 +27,6 @@ function AppContent() {
     <>
       <Header />
       {globalData && <StickyBadges badges={globalData.sideBadges} />}
-      <StickyWatermark src="/logo/Logfinalsabha.gif" />
       <AnimatedRoutes />
     </>
   );

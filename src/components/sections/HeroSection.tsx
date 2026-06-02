@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
 import { BackgroundVideo } from "@/components/video/BackgroundVideo";
 import type { HeroData, HeroStat, SideBadge as SideBadgeType } from "@/types";
 
@@ -113,22 +113,62 @@ export function StickyBadges({ badges }: { badges: SideBadgeType[] }) {
   );
 }
 
-// ─── Sticky Watermark Logo ───
+// ─── Scroll-linked diagonal logo — merges into header logo ───
 
-export function StickyWatermark({ src }: { src: string }) {
+function ScrollLogo({ src, sectionRef }: { src: string; sectionRef: React.RefObject<HTMLElement | null> }) {
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+
+  // Position: bottom-center → top-left
+  const x = useTransform(scrollYProgress, [0, 1], ["50vw", "5vw"]);
+  const y = useTransform(scrollYProgress, [0, 1], ["75vh", "2vh"]);
+  const scale = useTransform(scrollYProgress, [0, 0.8, 1], [1, 0.5, 0.25]);
+  const opacity = useTransform(scrollYProgress, [0, 0.1, 0.85, 1], [1, 1, 1, 0]);
+
+  // 3D rotations linked to scroll
+  const rotateY = useTransform(scrollYProgress, [0, 0.5, 1], [0, 180, 360]);
+  const rotateX = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 15, -10, 0]);
+
   return (
     <motion.div
-      className="pointer-events-none fixed bottom-4 left-1/2 z-30 -translate-x-1/2 sm:bottom-6"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 0.3, y: 0 }}
-      transition={{ duration: 1, delay: 1.5 }}
+      className="pointer-events-none fixed left-0 top-0 z-[45]"
+      style={{
+        x,
+        y,
+        scale,
+        opacity,
+        translateX: "-50%",
+        translateY: "-50%",
+        perspective: 800,
+      }}
     >
-      <img
-        src={src}
-        alt=""
-        aria-hidden="true"
-        className="h-14 w-auto sm:h-16 md:h-20 lg:h-24"
-      />
+      <motion.div
+        style={{
+          rotateY,
+          rotateX,
+          transformStyle: "preserve-3d",
+        }}
+        className="relative"
+      >
+        {/* Glow behind logo */}
+        <motion.div
+          className="absolute inset-0 rounded-full blur-xl"
+          style={{
+            background: "radial-gradient(circle, rgba(245,158,11,0.4) 0%, transparent 70%)",
+            scale: useTransform(scrollYProgress, [0, 0.5, 1], [1.2, 1.5, 0.8]),
+          }}
+        />
+
+        {/* Logo image */}
+        <img
+          src={src}
+          alt=""
+          aria-hidden="true"
+          className="relative h-28 w-auto drop-shadow-[0_0_20px_rgba(245,158,11,0.5)] sm:h-32 md:h-36 lg:h-44"
+        />
+      </motion.div>
     </motion.div>
   );
 }
@@ -207,9 +247,12 @@ function RotatingStats({ stats }: { stats: HeroStat[] }) {
 
 export function HeroSection({ data }: { data: HeroData }) {
   const titleWords = data.title.split(" ");
+  const sectionRef = useRef<HTMLElement>(null);
 
   return (
-    <section className="relative h-screen w-full overflow-hidden">
+    <section ref={sectionRef} className="relative h-screen w-full overflow-hidden">
+      {/* Logo that moves diagonally into header on scroll */}
+      <ScrollLogo src={data.watermarkLogo} sectionRef={sectionRef} />
       <BackgroundVideo src={data.videoSrc} poster={data.posterSrc} />
 
       {/* Top vignette — blends with header */}

@@ -1,14 +1,12 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
-export function useCountUp(
-  end: number,
-  duration: number = 2000,
-) {
+export function useCountUp(end: number, duration: number = 2000) {
   const [count, setCount] = useState(0);
+  const [trigger, setTrigger] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLSpanElement>(null);
 
-  // Observe visibility — re-triggers every time element enters viewport
+  // Observe viewport visibility — re-triggers on scroll in/out
   useEffect(() => {
     if (!ref.current) return;
 
@@ -16,9 +14,10 @@ export function useCountUp(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
+          setTrigger((t) => t + 1);
         } else {
           setIsVisible(false);
-          setCount(0); // Reset to 0 when out of view
+          setCount(0);
         }
       },
       { threshold: 0.3 },
@@ -28,9 +27,10 @@ export function useCountUp(
     return () => observer.disconnect();
   }, []);
 
-  // Animate count every time isVisible becomes true
+  // Animate count on trigger (scroll into view OR manual replay)
   useEffect(() => {
-    if (!isVisible) return;
+    if (!isVisible && trigger === 0) return;
+    if (trigger === 0) return;
 
     setCount(0);
     let startTime: number | null = null;
@@ -51,7 +51,12 @@ export function useCountUp(
 
     animationFrame = requestAnimationFrame(step);
     return () => cancelAnimationFrame(animationFrame);
-  }, [isVisible, end, duration]);
+  }, [trigger, end, duration]);
 
-  return { count, ref };
+  // Manual replay — call this on hover
+  const replay = useCallback(() => {
+    setTrigger((t) => t + 1);
+  }, []);
+
+  return { count, ref, replay };
 }

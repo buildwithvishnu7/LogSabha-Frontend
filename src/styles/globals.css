@@ -1,150 +1,60 @@
 @import "tailwindcss";
+@import "@fontsource-variable/inter";
 
+/* ─── CSS Custom Property for animated gradients ─── */
 @property --angle {
   syntax: "<angle>";
   initial-value: 0deg;
   inherits: false;
 }
 
-/* Hero main text — continuous shimmer + glow */
-.hero-text-shimmer {
-  background-image: linear-gradient(
-    90deg,
-    #ffffff 0%,
-    #ffffff 30%,
-    #fbbf24 45%,
-    #f59e0b 50%,
-    #fbbf24 55%,
-    #ffffff 70%,
-    #ffffff 100%
-  );
-  background-size: 300% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: hero-shimmer 5s ease-in-out infinite;
-}
-
-.hero-text-highlight {
-  background-image: linear-gradient(
-    90deg,
-    #f59e0b 0%,
-    #f59e0b 25%,
-    #fcd34d 40%,
-    #ffffff 50%,
-    #fcd34d 60%,
-    #f59e0b 75%,
-    #f59e0b 100%
-  );
-  background-size: 300% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: hero-shimmer 4s ease-in-out infinite;
-  filter: drop-shadow(0 0 20px rgba(245, 158, 11, 0.3));
-}
-
-@keyframes hero-shimmer {
-  0% {
-    background-position: 200% center;
-  }
-  100% {
-    background-position: -200% center;
-  }
-}
-
-@keyframes hero-glow {
-  0%, 100% {
-    filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.2));
-  }
-  50% {
-    filter: drop-shadow(0 0 25px rgba(245, 158, 11, 0.5));
-  }
-}
-
-/* Nav text shimmer sweep */
-@keyframes shimmer-sweep {
-  0% {
-    background-position: -200% center;
-  }
-  100% {
-    background-position: 200% center;
-  }
-}
-
-/* Nav text glow pulse */
-@keyframes glow-pulse {
-  0%, 100% {
-    text-shadow: 0 0 0px transparent;
-  }
-  50% {
-    text-shadow: 0 0 8px rgba(245, 158, 11, 0.3);
-  }
-}
-
-.nav-text-shimmer-dark {
-  background-image: linear-gradient(
-    90deg,
-    #4b5563 0%,
-    #4b5563 35%,
-    #d97706 50%,
-    #4b5563 65%,
-    #4b5563 100%
-  );
-  background-size: 200% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: shimmer-sweep 4s ease-in-out infinite, glow-pulse 3s ease-in-out infinite;
-}
-
-.nav-text-shimmer-light {
-  background-image: linear-gradient(
-    90deg,
-    rgba(255,255,255,0.9) 0%,
-    rgba(255,255,255,0.9) 35%,
-    #fbbf24 50%,
-    rgba(255,255,255,0.9) 65%,
-    rgba(255,255,255,0.9) 100%
-  );
-  background-size: 200% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: shimmer-sweep 4s ease-in-out infinite, glow-pulse 3s ease-in-out infinite;
-}
-
-/* Stagger each nav item's animation */
-.nav-text-shimmer-dark:nth-child(1), .nav-text-shimmer-light:nth-child(1) { animation-delay: 0s, 0s; }
-.nav-text-shimmer-dark:nth-child(2), .nav-text-shimmer-light:nth-child(2) { animation-delay: 0.3s, 0.3s; }
-.nav-text-shimmer-dark:nth-child(3), .nav-text-shimmer-light:nth-child(3) { animation-delay: 0.6s, 0.6s; }
-.nav-text-shimmer-dark:nth-child(4), .nav-text-shimmer-light:nth-child(4) { animation-delay: 0.9s, 0.9s; }
-.nav-text-shimmer-dark:nth-child(5), .nav-text-shimmer-light:nth-child(5) { animation-delay: 1.2s, 1.2s; }
-.nav-text-shimmer-dark:nth-child(6), .nav-text-shimmer-light:nth-child(6) { animation-delay: 1.5s, 1.5s; }
-.nav-text-shimmer-dark:nth-child(7), .nav-text-shimmer-light:nth-child(7) { animation-delay: 1.8s, 1.8s; }
+/* ─────────────────────────────────────────────────── */
+/*  GLOBAL THEME                                       */
+/*  Change values here → updates everywhere            */
+/* ─────────────────────────────────────────────────── */
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  /* Typography */
+  --font-sans: "Inter Variable", "Inter", ui-sans-serif, system-ui, sans-serif;
 
+  /* Brand Colors */
+  --color-brand: #f59e0b;
+  --color-brand-light: #fbbf24;
+  --color-brand-dark: #d97706;
+  --color-brand-glow: rgba(245, 158, 11, 0.3);
+
+  /* Surface Colors */
   --color-background: #ffffff;
   --color-foreground: #0a0a0a;
   --color-card: #ffffff;
   --color-card-foreground: #0a0a0a;
   --color-popover: #ffffff;
   --color-popover-foreground: #0a0a0a;
+  --color-muted: #f5f5f5;
+  --color-muted-foreground: #737373;
+  --color-border: #e5e5e5;
+  --color-input: #e5e5e5;
+  --color-ring: #0a0a0a;
+
+  /* Component Colors */
   --color-primary: #0a0a0a;
   --color-primary-foreground: #fafafa;
   --color-secondary: #f5f5f5;
   --color-secondary-foreground: #0a0a0a;
-  --color-muted: #f5f5f5;
-  --color-muted-foreground: #737373;
   --color-accent: #f5f5f5;
   --color-accent-foreground: #0a0a0a;
   --color-destructive: #ef4444;
   --color-destructive-foreground: #fafafa;
-  --color-border: #e5e5e5;
-  --color-input: #e5e5e5;
-  --color-ring: #0a0a0a;
+
+  /* Dark Surfaces (hero, map, badges) */
+  --color-dark-bg: #0c0c1d;
+  --color-dark-surface: #1a1a2e;
+
+  /* Alliance Colors */
+  --color-nda: #4ade80;
+  --color-india-alliance: #60a5fa;
+
+  /* Sidebar */
   --color-sidebar-background: #fafafa;
   --color-sidebar-foreground: #404040;
   --color-sidebar-primary: #0a0a0a;
@@ -154,16 +64,19 @@
   --color-sidebar-border: #e5e5e5;
   --color-sidebar-ring: #0a0a0a;
 
+  /* Animation Easings */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-in-out-circ: cubic-bezier(0.85, 0, 0.15, 1);
 
+  /* Border Radius */
   --radius-sm: 0.25rem;
   --radius-md: 0.375rem;
   --radius-lg: 0.5rem;
   --radius-xl: 0.75rem;
 }
 
+/* ─── Base Styles ─── */
 
 @layer base {
   *,
@@ -179,4 +92,146 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+}
+
+/* ─────────────────────────────────────────────────── */
+/*  ANIMATION CLASSES                                   */
+/*  Reusable animation utilities                        */
+/* ─────────────────────────────────────────────────── */
+
+/* Shared keyframes */
+@keyframes shimmer-sweep {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes shimmer-sweep-reverse {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { text-shadow: 0 0 0px transparent; }
+  50%      { text-shadow: 0 0 8px var(--color-brand-glow); }
+}
+
+/* ─── Hero Text ─── */
+
+.hero-text-shimmer {
+  background-image: linear-gradient(
+    90deg,
+    #ffffff 0%, #ffffff 30%,
+    var(--color-brand-light) 45%, var(--color-brand) 50%, var(--color-brand-light) 55%,
+    #ffffff 70%, #ffffff 100%
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer-sweep-reverse 5s ease-in-out infinite;
+}
+
+.hero-text-highlight {
+  background-image: linear-gradient(
+    90deg,
+    var(--color-brand) 0%, var(--color-brand) 25%,
+    #fcd34d 40%, #ffffff 50%, #fcd34d 60%,
+    var(--color-brand) 75%, var(--color-brand) 100%
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer-sweep-reverse 4s ease-in-out infinite;
+  filter: drop-shadow(0 0 20px var(--color-brand-glow));
+}
+
+/* ─── Nav Text ─── */
+
+.nav-text-shimmer-dark {
+  background-image: linear-gradient(
+    90deg,
+    #4b5563 0%, #4b5563 35%,
+    var(--color-brand-dark) 50%,
+    #4b5563 65%, #4b5563 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer-sweep 4s ease-in-out infinite, glow-pulse 3s ease-in-out infinite;
+}
+
+.nav-text-shimmer-light {
+  background-image: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.9) 35%,
+    var(--color-brand-light) 50%,
+    rgba(255,255,255,0.9) 65%, rgba(255,255,255,0.9) 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer-sweep 4s ease-in-out infinite, glow-pulse 3s ease-in-out infinite;
+}
+
+/* ─── Section text animations (dark backgrounds) ─── */
+
+.section-heading-shimmer {
+  background-image: linear-gradient(
+    90deg,
+    #ffffff 0%, #ffffff 30%,
+    var(--color-brand-light) 45%, var(--color-brand) 50%, var(--color-brand-light) 55%,
+    #ffffff 70%, #ffffff 100%
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer-sweep-reverse 5s ease-in-out infinite;
+}
+
+.section-highlight-shimmer {
+  background-image: linear-gradient(
+    90deg,
+    var(--color-brand) 0%, var(--color-brand) 20%,
+    #fcd34d 40%, #fff 50%, #fcd34d 60%,
+    var(--color-brand) 80%, var(--color-brand) 100%
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer-sweep-reverse 4s ease-in-out infinite;
+  filter: drop-shadow(0 0 15px var(--color-brand-glow));
+}
+
+.section-subtitle-shimmer {
+  background-image: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.6) 35%,
+    rgba(255,255,255,0.9) 50%,
+    rgba(255,255,255,0.6) 65%, rgba(255,255,255,0.6) 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer-sweep 6s ease-in-out infinite;
+}
+
+@keyframes badge-dot-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.8); opacity: 0.4; }
+}
+
+.badge-dot-pulse {
+  animation: badge-dot-pulse 2s ease-in-out infinite;
+}
+
+@keyframes letter-bounce {
+  0%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-6px); }
+  60% { transform: translateY(2px); }
 }
