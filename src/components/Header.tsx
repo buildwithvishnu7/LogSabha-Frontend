@@ -224,8 +224,19 @@ export function Header() {
                   animate={{ width: 240, opacity: 1 }}
                   exit={{ width: 36, opacity: 0.5 }}
                   transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                  className="flex items-center gap-2 overflow-hidden rounded-full border border-amber-500/40 bg-gray-100 px-3 py-1.5 sm:py-2 xl:w-[260px]"
+                  className="relative flex items-center gap-2 overflow-visible rounded-full border border-amber-500/40 bg-gray-100 px-3 py-1.5 sm:py-2 xl:w-[260px]"
                 >
+                  {/* Breathing pulse rings on expanded bar */}
+                  <motion.span
+                    className="absolute inset-[-3px] rounded-full border-2 border-amber-500/50"
+                    animate={{ scale: [1, 1.03, 1], opacity: [0.6, 0, 0.6] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                  />
+                  <motion.span
+                    className="absolute inset-[-1px] rounded-full border border-amber-500/30"
+                    animate={{ scale: [1, 1.02, 1], opacity: [0.8, 0.2, 0.8] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
+                  />
                   <motion.div
                     animate={{ rotate: [0, 15, -15, 0] }}
                     transition={{ duration: 0.4 }}
