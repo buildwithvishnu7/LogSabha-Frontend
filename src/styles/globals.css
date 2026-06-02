@@ -1,6 +1,18 @@
 @import "tailwindcss";
 @import "@fontsource-variable/inter";
 
+/* ─── Continuous icon draw/undraw animation ─── */
+@keyframes iconDraw {
+  0% {
+    stroke-dashoffset: 1;
+    opacity: 0.15;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
 /* ─── CSS Custom Property for animated gradients ─── */
 @property --angle {
   syntax: "<angle>";
@@ -260,3 +272,12 @@
 .smoke-drift-slow   { animation: smoke-drift-slow 12s ease-in-out infinite; }
 .smoke-drift-medium { animation: smoke-drift-medium 8s ease-in-out infinite; }
 .smoke-drift-fast   { animation: smoke-drift-fast 6s ease-in-out infinite; }
+
+/* ─── Scrollbar hiding ─── */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

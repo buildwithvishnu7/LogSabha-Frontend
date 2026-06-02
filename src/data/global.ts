@@ -4,6 +4,7 @@ export const globalData: GlobalData = {
   nav: {
     logo: "/logo/Logfinalsabha.gif",
     links: [
+      { label: "Home", href: "/" },
       { label: "Political Analysis", href: "/political-analysis" },
       { label: "Hindu For Justice", href: "/hindu-for-justice" },
       { label: "About Us", href: "/about" },

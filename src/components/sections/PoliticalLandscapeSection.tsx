@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Users, MapPin, BarChart3, TrendingUp } from "lucide-react";
+import { AnimatedLucideIcon } from "@/components/AnimatedLucideIcon";
 import { BackgroundVideo } from "@/components/video/BackgroundVideo";
 import { IndiaMap, StateTooltip } from "@/components/IndiaMap";
 import type { HoverInfo } from "@/components/IndiaMap";
@@ -9,10 +10,10 @@ import { useCountUp } from "@/hooks/useCountUp";
 import type { PoliticalLandscapeData } from "@/types";
 
 const iconMap: Record<string, React.ReactNode> = {
-  users: <Users className="h-5 w-5" />,
-  "map-pin": <MapPin className="h-5 w-5" />,
-  "bar-chart": <BarChart3 className="h-5 w-5" />,
-  "trending-up": <TrendingUp className="h-5 w-5" />,
+  users: <AnimatedLucideIcon icon={Users} size={20} />,
+  "map-pin": <AnimatedLucideIcon icon={MapPin} size={20} />,
+  "bar-chart": <AnimatedLucideIcon icon={BarChart3} size={20} />,
+  "trending-up": <AnimatedLucideIcon icon={TrendingUp} size={20} />,
 };
 
 // ─── Stat Card: bouncy whole card, count-up numbers, expandable on hover ───
@@ -39,7 +40,7 @@ function FloatingStatCard({
   onUserHover?: (hovering: boolean) => void;
 }) {
   const isExpanded = expanded ?? false;
-  const { count, ref, replay } = useCountUp(numericValue, 1500);
+  const { count, ref, replay } = useCountUp(numericValue, 3000);
 
   // Replay count when auto-expanded
   const prevExpanded = useRef(false);
@@ -82,7 +83,7 @@ function FloatingStatCard({
             animate={{ rotate: isExpanded ? [0, -10, 10, 0] : 0 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
           >
-            {iconMap[icon] ?? <BarChart3 className="h-5 w-5" />}
+            {iconMap[icon] ?? <AnimatedLucideIcon icon={BarChart3} size={20} />}
           </motion.div>
           <div>
             <p className="text-lg font-bold text-amber-400 sm:text-xl">
@@ -151,7 +152,7 @@ function AllianceCard({
   onUserHover?: (hovering: boolean) => void;
 }) {
   const isExpanded = expanded ?? false;
-  const { count, ref, replay } = useCountUp(seats, 1500);
+  const { count, ref, replay } = useCountUp(seats, 3000);
 
   const prevExpanded = useRef(false);
   useEffect(() => {
@@ -220,15 +221,15 @@ export function PoliticalLandscapeSection({
   // Auto-cycle cards (6 total: 4 stat cards + 2 alliance cards)
   const TOTAL_CARDS = 6;
   const [autoCardIndex, setAutoCardIndex] = useState(0);
-  const [isUserHoveringCard, setIsUserHoveringCard] = useState(false);
+  const [hoveredCardIndex, setHoveredCardIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    if (isUserHoveringCard) return;
+    if (hoveredCardIndex !== null) return;
     const interval = setInterval(() => {
       setAutoCardIndex((prev) => (prev + 1) % TOTAL_CARDS);
     }, 3000);
     return () => clearInterval(interval);
-  }, [isUserHoveringCard]);
+  }, [hoveredCardIndex]);
 
   // Auto-cycle through states when user is NOT hovering
   useEffect(() => {
@@ -404,8 +405,8 @@ export function PoliticalLandscapeSection({
                   detail="Total parliamentary constituencies"
                   bounceDelay={0}
                   className="absolute -left-4 -top-6 sm:-left-6 sm:-top-8"
-                  expanded={isUserHoveringCard ? undefined : autoCardIndex === 0}
-                  onUserHover={(h) => setIsUserHoveringCard(h)}
+                  expanded={hoveredCardIndex !== null ? hoveredCardIndex === 0 : autoCardIndex === 0}
+                  onUserHover={(h) => setHoveredCardIndex(h ? 0 : null)}
                 />
               </div>
 
@@ -418,8 +419,8 @@ export function PoliticalLandscapeSection({
                     label={stats[1]?.label ?? "States Covered"}
                     detail="Complete state-level analysis"
                     bounceDelay={0.8}
-                    expanded={isUserHoveringCard ? undefined : autoCardIndex === 1}
-                    onUserHover={(h) => setIsUserHoveringCard(h)}
+                    expanded={hoveredCardIndex !== null ? hoveredCardIndex === 1 : autoCardIndex === 1}
+                    onUserHover={(h) => setHoveredCardIndex(h ? 1 : null)}
                   />
                   <div className="mt-2">
                     <AllianceCard
@@ -427,8 +428,8 @@ export function PoliticalLandscapeSection({
                       seats={totalNda}
                       color="text-green-400"
                       bounceDelay={1.2}
-                      expanded={isUserHoveringCard ? undefined : autoCardIndex === 2}
-                      onUserHover={(h) => setIsUserHoveringCard(h)}
+                      expanded={hoveredCardIndex !== null ? hoveredCardIndex === 2 : autoCardIndex === 2}
+                      onUserHover={(h) => setHoveredCardIndex(h ? 2 : null)}
                     />
                   </div>
                 </div>
@@ -441,8 +442,8 @@ export function PoliticalLandscapeSection({
                   color="text-blue-400"
                   className="absolute -left-4 bottom-[25%] sm:-left-8"
                   bounceDelay={1.6}
-                  expanded={isUserHoveringCard ? undefined : autoCardIndex === 3}
-                  onUserHover={(h) => setIsUserHoveringCard(h)}
+                  expanded={hoveredCardIndex !== null ? hoveredCardIndex === 3 : autoCardIndex === 3}
+                  onUserHover={(h) => setHoveredCardIndex(h ? 3 : null)}
                 />
               </div>
 
@@ -455,8 +456,8 @@ export function PoliticalLandscapeSection({
                   detail="Successfully managed campaigns"
                   bounceDelay={2}
                   className="absolute -bottom-2 left-[5%] sm:bottom-0"
-                  expanded={isUserHoveringCard ? undefined : autoCardIndex === 4}
-                  onUserHover={(h) => setIsUserHoveringCard(h)}
+                  expanded={hoveredCardIndex !== null ? hoveredCardIndex === 4 : autoCardIndex === 4}
+                  onUserHover={(h) => setHoveredCardIndex(h ? 4 : null)}
                 />
               </div>
 
@@ -469,8 +470,8 @@ export function PoliticalLandscapeSection({
                   detail="Prediction accuracy rate"
                   bounceDelay={2.4}
                   className="absolute -right-4 bottom-4 sm:-right-8"
-                  expanded={isUserHoveringCard ? undefined : autoCardIndex === 5}
-                  onUserHover={(h) => setIsUserHoveringCard(h)}
+                  expanded={hoveredCardIndex !== null ? hoveredCardIndex === 5 : autoCardIndex === 5}
+                  onUserHover={(h) => setHoveredCardIndex(h ? 5 : null)}
                 />
               </div>
             </div>

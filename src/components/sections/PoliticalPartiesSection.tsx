@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { motion } from "motion/react";
-import { Users, MapPin, Award, Landmark, Vote, TrendingUp, Map, ChartNoAxesCombined } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+import { Users, MapPin, Award, Landmark, Vote, TrendingUp, Map, ChartNoAxesCombined, ChevronLeft, ChevronRight } from "lucide-react";
+import { AnimatedLucideIcon } from "@/components/AnimatedLucideIcon";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
 import { useCountUp } from "@/hooks/useCountUp";
 
@@ -127,6 +128,81 @@ const PARTIES: PoliticalParty[] = [
     statesRuled: 1,
     president: "M.K. Stalin",
   },
+  {
+    id: "ncp",
+    shortName: "NCP",
+    fullName: "Nationalist Congress Party",
+    established: 1999,
+    logo: "/logo/BSP.svg",
+    backgroundImage: "/images/Image (Indian National Congress).png",
+    themeColor: "#1E88E5",
+    themeColorRgb: "30, 136, 229",
+    description:
+      "A centrist political party committed to nationalism, democracy, and social justice with a strong base in Maharashtra.",
+    lokSabhaSeats: 5,
+    statesRuled: 0,
+    president: "Ajit Pawar",
+  },
+  {
+    id: "jdu",
+    shortName: "JDU",
+    fullName: "Janata Dal (United)",
+    established: 1999,
+    logo: "/logo/BSP.svg",
+    backgroundImage: "/images/Image (Samajwadi Party).png",
+    themeColor: "#43A047",
+    themeColorRgb: "67, 160, 71",
+    description:
+      "Bihar-centric party focused on social justice, secularism, and development under the banner of good governance.",
+    lokSabhaSeats: 12,
+    statesRuled: 1,
+    president: "Nitish Kumar",
+  },
+  {
+    id: "shiv-sena",
+    shortName: "SHS",
+    fullName: "Shiv Sena",
+    established: 1966,
+    logo: "/logo/BSP.svg",
+    backgroundImage: "/images/Image (Bharatiya Janata Party).png",
+    themeColor: "#FF6F00",
+    themeColorRgb: "255, 111, 0",
+    description:
+      "Maharashtra-based party with a strong Marathi identity politics agenda, now split into two factions.",
+    lokSabhaSeats: 7,
+    statesRuled: 0,
+    president: "Eknath Shinde",
+  },
+  {
+    id: "tdp",
+    shortName: "TDP",
+    fullName: "Telugu Desam Party",
+    established: 1982,
+    logo: "/logo/BSP.svg",
+    backgroundImage: "/images/Image (Trinamool Congress).png",
+    themeColor: "#FFCA28",
+    themeColorRgb: "255, 202, 40",
+    description:
+      "Andhra Pradesh's regional party championing Telugu pride, development, and good governance.",
+    lokSabhaSeats: 16,
+    statesRuled: 1,
+    president: "N. Chandrababu Naidu",
+  },
+  {
+    id: "ysrcp",
+    shortName: "YSRCP",
+    fullName: "YSR Congress Party",
+    established: 2011,
+    logo: "/logo/BSP.svg",
+    backgroundImage: "/images/Image (Aam Aadmi Party).png",
+    themeColor: "#0277BD",
+    themeColorRgb: "2, 119, 189",
+    description:
+      "Andhra Pradesh party focused on welfare schemes, social justice, and development for all sections.",
+    lokSabhaSeats: 4,
+    statesRuled: 0,
+    president: "Y.S. Jagan Mohan Reddy",
+  },
 ];
 
 const PLATFORM_STATS = [
@@ -136,46 +212,16 @@ const PLATFORM_STATS = [
   { icon: "accuracy", value: 95, suffix: "%", label: "Data Accuracy" },
 ];
 
+const platformIconMap: Record<string, React.ComponentType<import("lucide-react").LucideProps>> = {
+  parties: Landmark,
+  seats: Vote,
+  states: Map,
+  accuracy: ChartNoAxesCombined,
+};
+
 function AnimatedIcon({ icon }: { icon: string }) {
-  const icons: Record<string, { Icon: React.ElementType; animation: object }> = {
-    parties: {
-      Icon: Landmark,
-      animation: {
-        y: [0, -3, 0],
-        transition: { duration: 2, repeat: Infinity, ease: "easeInOut" },
-      },
-    },
-    seats: {
-      Icon: Vote,
-      animation: {
-        rotate: [0, -8, 8, -4, 0],
-        transition: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
-      },
-    },
-    states: {
-      Icon: Map,
-      animation: {
-        scale: [1, 1.12, 1],
-        transition: { duration: 2, repeat: Infinity, ease: "easeInOut" },
-      },
-    },
-    accuracy: {
-      Icon: ChartNoAxesCombined,
-      animation: {
-        y: [0, -4, 0],
-        rotate: [0, 3, 0],
-        transition: { duration: 1.8, repeat: Infinity, ease: "easeInOut" },
-      },
-    },
-  };
-
-  const { Icon, animation } = icons[icon] ?? { Icon: Landmark, animation: {} };
-
-  return (
-    <motion.div animate={animation}>
-      <Icon className="h-6 w-6" />
-    </motion.div>
-  );
+  const Icon = platformIconMap[icon] ?? Landmark;
+  return <AnimatedLucideIcon icon={Icon} size={24} />;
 }
 
 // ─── Animated Stat Counter ───
@@ -193,7 +239,7 @@ function StatCounter({
   label: string;
   index: number;
 }) {
-  const { count, ref } = useCountUp(value, 2000);
+  const { count, ref } = useCountUp(value, 3500);
 
   return (
     <motion.div
@@ -264,22 +310,24 @@ function PartyStrip({
   isExpanded,
   onHoverStart,
   onHoverEnd,
+  collapsedWidth,
+  expandedWidth,
 }: {
   party: PoliticalParty;
   isExpanded: boolean;
   onHoverStart: () => void;
   onHoverEnd: () => void;
+  collapsedWidth: number;
+  expandedWidth: number;
 }) {
   return (
     <motion.div
       onMouseEnter={onHoverStart}
       onMouseLeave={onHoverEnd}
       className="relative h-full cursor-pointer overflow-hidden rounded-2xl"
-      animate={{ flex: isExpanded ? 4 : 0.7 }}
+      animate={{ width: isExpanded ? expandedWidth : collapsedWidth }}
       transition={{ duration: 0.6, ease: [0.25, 1, 0.5, 1] }}
-      style={{
-        minWidth: 0,
-      }}
+      style={{ flexShrink: 0 }}
     >
       {/* Background image */}
       <motion.img
@@ -432,7 +480,7 @@ function PartyStrip({
           {/* President */}
           <div className="flex items-center gap-2.5">
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10">
-              <Users className="h-4 w-4 text-white/50" />
+              <AnimatedLucideIcon icon={Users} size={16} className="text-white/50" />
             </div>
             <div>
               <p className="text-[10px] text-white/40 uppercase">President</p>
@@ -451,6 +499,21 @@ export function PoliticalPartiesSection() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isUserHovering, setIsUserHovering] = useState(false);
   const autoTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [cardWidths, setCardWidths] = useState({ collapsed: 110, expanded: 440 });
+  const [scrollOffset, setScrollOffset] = useState(0);
+
+  const getMaxScroll = useCallback(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return 0;
+    const gap = window.innerWidth < 640 ? 8 : 12;
+    const totalWidth =
+      (PARTIES.length - 1) * (cardWidths.collapsed + gap) + cardWidths.expanded;
+    return Math.max(0, totalWidth - el.clientWidth);
+  }, [cardWidths]);
+
+  const canScrollLeft = scrollOffset > 5;
+  const canScrollRight = getMaxScroll() > 0 && scrollOffset < getMaxScroll() - 5;
 
   const startAutoPlay = useCallback(() => {
     if (autoTimerRef.current) clearInterval(autoTimerRef.current);
@@ -470,6 +533,45 @@ export function PoliticalPartiesSection() {
       if (autoTimerRef.current) clearInterval(autoTimerRef.current);
     };
   }, [isUserHovering, startAutoPlay]);
+
+  // Responsive card widths
+  useEffect(() => {
+    const update = () => {
+      const w = window.innerWidth;
+      if (w < 640) setCardWidths({ collapsed: 56, expanded: 260 });
+      else if (w < 1024) setCardWidths({ collapsed: 76, expanded: 340 });
+      else setCardWidths({ collapsed: 110, expanded: 440 });
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
+  // Auto-scroll to keep the active card visible
+  useEffect(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+
+    const gap = window.innerWidth < 640 ? 8 : 12;
+    const cardLeftFinal = activeIndex * (cardWidths.collapsed + gap);
+    const cardRightFinal = cardLeftFinal + cardWidths.expanded;
+    const containerWidth = el.clientWidth;
+    const maxScroll = getMaxScroll();
+
+    if (cardRightFinal > scrollOffset + containerWidth - 20) {
+      const target = Math.min(cardRightFinal - containerWidth + 40, maxScroll);
+      setScrollOffset(Math.max(0, target));
+    } else if (cardLeftFinal < scrollOffset + 20) {
+      setScrollOffset(Math.max(0, cardLeftFinal - 40));
+    }
+  }, [activeIndex, cardWidths, scrollOffset, getMaxScroll]);
+
+  const handleScrollClick = (direction: "left" | "right") => {
+    const maxScroll = getMaxScroll();
+    setScrollOffset((prev) =>
+      Math.max(0, Math.min(prev + (direction === "left" ? -300 : 300), maxScroll)),
+    );
+  };
 
   const handleHoverStart = (index: number) => {
     setIsUserHovering(true);
@@ -573,7 +675,7 @@ export function PoliticalPartiesSection() {
         <div className="text-center">
           <ScrollReveal>
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5">
-              <Landmark className="h-4 w-4 text-amber-500" />
+              <AnimatedLucideIcon icon={Landmark} size={16} className="text-amber-500" />
               <span className="text-xs font-semibold tracking-wider text-amber-600 uppercase">
                 Political Landscape
               </span>
@@ -620,16 +722,71 @@ export function PoliticalPartiesSection() {
               boxShadow: "0 4px 30px rgba(0,0,0,0.06)",
             }}
           >
-          <div className="flex h-[380px] gap-2 sm:h-[440px] sm:gap-3 lg:h-[480px]">
-            {PARTIES.map((party, index) => (
-              <PartyStrip
-                key={party.id}
-                party={party}
-                isExpanded={activeIndex === index}
-                onHoverStart={() => handleHoverStart(index)}
-                onHoverEnd={handleHoverEnd}
-              />
-            ))}
+          <div className="relative">
+            <div
+              ref={scrollContainerRef}
+              className="h-[380px] overflow-hidden sm:h-[440px] lg:h-[480px]"
+            >
+              <motion.div
+                className="flex h-full gap-2 sm:gap-3"
+                animate={{ x: -scrollOffset }}
+                transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
+              >
+                {PARTIES.map((party, index) => (
+                  <PartyStrip
+                    key={party.id}
+                    party={party}
+                    isExpanded={activeIndex === index}
+                    onHoverStart={() => handleHoverStart(index)}
+                    onHoverEnd={handleHoverEnd}
+                    collapsedWidth={cardWidths.collapsed}
+                    expandedWidth={cardWidths.expanded}
+                  />
+                ))}
+              </motion.div>
+            </div>
+
+            {/* Bouncy scroll arrows */}
+            <AnimatePresence>
+              {canScrollLeft && (
+                <motion.button
+                  key="arrow-left"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ duration: 0.2 }}
+                  onClick={() => handleScrollClick("left")}
+                  className="absolute left-2 top-1/2 z-30 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-amber-200/50 bg-white/90 shadow-lg backdrop-blur-sm hover:bg-white sm:h-11 sm:w-11"
+                >
+                  <motion.div
+                    animate={{ x: [0, -5, 0] }}
+                    transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    <ChevronLeft className="h-5 w-5 text-amber-600" />
+                  </motion.div>
+                </motion.button>
+              )}
+            </AnimatePresence>
+            <AnimatePresence>
+              {canScrollRight && (
+                <motion.button
+                  key="arrow-right"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ duration: 0.2 }}
+                  onClick={() => handleScrollClick("right")}
+                  className="absolute right-2 top-1/2 z-30 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-amber-200/50 bg-white/90 shadow-lg backdrop-blur-sm hover:bg-white sm:h-11 sm:w-11"
+                >
+                  <motion.div
+                    animate={{ x: [0, 5, 0] }}
+                    transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    <ChevronRight className="h-5 w-5 text-amber-600" />
+                  </motion.div>
+                </motion.button>
+              )}
+            </AnimatePresence>
           </div>
           </div>
         </ScrollReveal>

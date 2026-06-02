@@ -41,21 +41,42 @@ function SideBadge({
       onMouseEnter={() => setHoverExpanded(true)}
       onMouseLeave={() => setHoverExpanded(false)}
       className="relative block"
+      whileHover={{ x: 4 }}
     >
-      <motion.div
-        className="overflow-hidden border-y border-r border-amber-500/30 bg-[#1a1a2e]/90 shadow-xl backdrop-blur-sm"
+      {/* Orbiting border glow */}
+      <motion.span
+        className="pointer-events-none absolute -inset-[2px] rounded-r-[30px]"
+        style={{
+          background:
+            "conic-gradient(from var(--angle), transparent 0%, transparent 65%, rgba(245,158,11,0.8) 80%, rgba(245,158,11,1) 85%, rgba(245,158,11,0.8) 90%, transparent 100%)",
+          mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+          maskComposite: "exclude",
+          WebkitMaskComposite: "xor",
+          padding: "2px",
+          borderTopLeftRadius: 0,
+          borderBottomLeftRadius: 0,
+        }}
         animate={{
-          height: expanded ? badge.expandedHeight : 56,
-          borderTopRightRadius: expanded ? 12 : 28,
-          borderBottomRightRadius: expanded ? 12 : 28,
+          "--angle": ["0deg", "360deg"],
+        } as Record<string, string[]>}
+        transition={{ duration: 3, repeat: Infinity, ease: "linear", delay: index * 0.5 }}
+      />
+
+      <motion.div
+        className="overflow-hidden border-y border-r border-amber-500/40 bg-[#1a1a2e]/90 shadow-xl backdrop-blur-sm"
+        animate={{
+          height: expanded ? badge.expandedHeight : 72,
+          borderTopRightRadius: expanded ? 14 : 30,
+          borderBottomRightRadius: expanded ? 14 : 30,
         }}
         transition={{ duration: 0.45, ease: [0.25, 1, 0.5, 1] }}
         style={{
-          width: alwaysExpanded ? 56 : 70,
+          width: alwaysExpanded ? 72 : 88,
           borderTopLeftRadius: 0,
           borderBottomLeftRadius: 0,
           display: "flex",
           flexDirection: "column",
+          boxShadow: "4px 0 20px rgba(245,158,11,0.15)",
         }}
       >
         <motion.div
@@ -69,7 +90,7 @@ function SideBadge({
         >
           <div className="flex flex-1 items-center">
             <span
-              className="whitespace-nowrap text-[9px] font-bold tracking-wider text-white uppercase sm:text-[10px] md:text-xs"
+              className="whitespace-nowrap text-[10px] font-bold tracking-wider text-white uppercase sm:text-xs md:text-sm"
               style={{
                 writingMode: "vertical-rl",
                 transform: "rotate(180deg)",
@@ -78,17 +99,26 @@ function SideBadge({
               {badge.label}
             </span>
           </div>
-          <div className="mb-1.5 h-[1px] w-7 bg-amber-500/50 sm:w-8 md:w-10" />
+          <div className="mb-1.5 h-[1px] w-8 bg-amber-500/50 sm:w-10 md:w-12" />
         </motion.div>
 
         <div
-          className="flex flex-shrink-0 items-center justify-center p-1 sm:p-1.5 md:p-2"
-          style={{ height: alwaysExpanded ? 56 : 56, width: "100%" }}
+          className="relative flex flex-shrink-0 items-center justify-center p-1.5 sm:p-2 md:p-2.5"
+          style={{ height: alwaysExpanded ? 72 : 72, width: "100%" }}
         >
-          <img
+          {/* Breathing glow behind image */}
+          <motion.div
+            className="absolute inset-2 rounded-full"
+            style={{ background: "radial-gradient(circle, rgba(245,158,11,0.3) 0%, transparent 70%)" }}
+            animate={{ scale: [1, 1.3, 1], opacity: [0.6, 0.2, 0.6] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: index * 0.4 }}
+          />
+          <motion.img
             src={badge.image}
             alt={badge.label}
-            className="h-[34px] w-[34px] rounded-full object-contain sm:h-[40px] sm:w-[40px] md:h-[50px] md:w-[50px]"
+            className="relative h-[44px] w-[44px] rounded-full object-contain sm:h-[52px] sm:w-[52px] md:h-[62px] md:w-[62px]"
+            animate={{ y: [0, -2, 0] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: index * 0.3 }}
           />
         </div>
       </motion.div>
@@ -100,7 +130,7 @@ export function StickyBadges({ badges }: { badges: SideBadgeType[] }) {
   const isMobile = useIsMobile();
 
   return (
-    <div className="fixed left-0 top-1/2 z-40 flex -translate-y-1/2 flex-col gap-3 md:gap-4">
+    <div className="fixed bottom-[12%] left-0 z-40 flex flex-col gap-4 md:gap-5">
       {badges.map((badge, i) => (
         <SideBadge
           key={badge.id}
@@ -123,7 +153,7 @@ function ScrollLogo({ src, sectionRef }: { src: string; sectionRef: React.RefObj
 
   // Position: bottom-center → top-left
   const x = useTransform(scrollYProgress, [0, 1], ["50vw", "5vw"]);
-  const y = useTransform(scrollYProgress, [0, 1], ["75vh", "2vh"]);
+  const y = useTransform(scrollYProgress, [0, 1], ["93vh", "2vh"]);
   const scale = useTransform(scrollYProgress, [0, 0.8, 1], [1, 0.5, 0.25]);
   const opacity = useTransform(scrollYProgress, [0, 0.1, 0.85, 1], [1, 1, 1, 0]);
 

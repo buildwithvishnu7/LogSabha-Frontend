@@ -1,7 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
-import { Search, Globe, Menu, X, User } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import {
+  AnimatedSearchIcon,
+  AnimatedUserIcon,
+  AnimatedGlobeIcon,
+} from "./AnimatedIcons";
 import { cn } from "@/lib/utils";
 import { useGlobalData } from "@/hooks/useGlobalData";
 
@@ -18,6 +23,11 @@ export function Header() {
   const accountContainerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const hasAnimated = useRef(false);
+
+  const isActive = (href: string) => {
+    if (href === "/") return location.pathname === "/";
+    return location.pathname === href || location.pathname.startsWith(href + "/");
+  };
 
   useEffect(() => {
     // Mark initial animation as done after first render
@@ -71,26 +81,15 @@ export function Header() {
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       className="fixed top-0 left-0 right-0 z-50"
     >
-      {/* Parallelogram background shape — slides in from right on scroll */}
+      {/* Full-width background — fades in on scroll */}
       <motion.div
-        className="absolute inset-0 -z-10 overflow-hidden"
-        initial={false}
+        className="absolute inset-0 -z-10 shadow-lg"
+        animate={{
+          opacity: scrolled ? 1 : 0,
+        }}
+        transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
       >
-        <motion.div
-          className="absolute inset-y-0 shadow-lg"
-          style={{
-            clipPath: "polygon(8% 0%, 100% 0%, 100% 100%, 3% 100%)",
-            left: "120px",
-            right: "-20px",
-          }}
-          animate={{
-            x: scrolled ? 0 : "110%",
-            opacity: scrolled ? 1 : 0,
-          }}
-          transition={{ duration: 1.2, ease: [0.25, 1, 0.5, 1] }}
-        >
-          <div className="h-full w-full bg-white" />
-        </motion.div>
+        <div className="h-full w-full bg-white/95 backdrop-blur-md" />
       </motion.div>
 
       {/* Animated bottom border line */}
@@ -138,7 +137,7 @@ export function Header() {
                   className={cn(
                     "group relative inline-block rounded-lg px-2.5 py-2 text-[13px] font-medium transition-colors duration-500 xl:px-3 xl:text-sm",
                     scrolled ? "text-gray-600" : "text-white/90",
-                    location.pathname === link.href && "text-amber-600",
+                    isActive(link.href) && "text-amber-600",
                   )}
                   whileHover="hover"
                   variants={{
@@ -148,16 +147,16 @@ export function Header() {
                 >
                   {/* Orbiting border line */}
                   <span className="pointer-events-none absolute -inset-[2px] rounded-lg">
-                    <span className={cn("absolute inset-0 rounded-lg border", scrolled ? "border-gray-200/50" : "border-white/10")} />
+                    <span className={cn("absolute inset-0 rounded-lg border", scrolled ? "border-gray-300/60" : "border-white/20")} />
                     <motion.span
                       className="absolute inset-[-1px] rounded-lg"
                       style={{
                         background:
-                          "conic-gradient(from var(--angle), transparent 0%, transparent 65%, rgba(245,158,11,0.7) 80%, rgba(245,158,11,0.9) 85%, rgba(245,158,11,0.7) 90%, transparent 100%)",
+                          "conic-gradient(from var(--angle), transparent 0%, transparent 65%, rgba(245,158,11,0.85) 80%, rgba(245,158,11,1) 85%, rgba(245,158,11,0.85) 90%, transparent 100%)",
                         mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
                         maskComposite: "exclude",
                         WebkitMaskComposite: "xor",
-                        padding: "1.5px",
+                        padding: "2px",
                       }}
                       animate={{
                         "--angle": ["0deg", "360deg"],
@@ -166,13 +165,14 @@ export function Header() {
                     />
                   </span>
 
-                  {/* Background highlight on hover */}
+                  {/* Background highlight on hover + active */}
                   <motion.span
                     className={cn(
                       "absolute inset-0 -z-20 rounded-lg",
                       scrolled ? "bg-amber-50" : "bg-white/10",
                     )}
                     initial={{ opacity: 0, scale: 0.85 }}
+                    animate={isActive(link.href) ? { opacity: 1, scale: 1 } : undefined}
                     variants={{
                       hover: { opacity: 1, scale: 1 },
                     }}
@@ -198,7 +198,7 @@ export function Header() {
                     transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                   />
 
-                  {location.pathname === link.href && (
+                  {isActive(link.href) && (
                     <motion.span
                       className="absolute bottom-0.5 left-2.5 right-2.5 h-[2px] rounded-full bg-amber-500 xl:left-3 xl:right-3"
                       layoutId="activeNav"
@@ -228,20 +228,21 @@ export function Header() {
                 >
                   {/* Breathing pulse rings on expanded bar */}
                   <motion.span
-                    className="absolute inset-[-3px] rounded-full border-2 border-amber-500/50"
-                    animate={{ scale: [1, 1.03, 1], opacity: [0.6, 0, 0.6] }}
+                    className="pointer-events-none absolute inset-[-3px] rounded-full border-2 border-amber-500/70"
+                    style={{ boxShadow: "0 0 6px rgba(245,158,11,0.2)" }}
+                    animate={{ scale: [1, 1.04, 1], opacity: [0.8, 0.1, 0.8] }}
                     transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                   />
                   <motion.span
-                    className="absolute inset-[-1px] rounded-full border border-amber-500/30"
-                    animate={{ scale: [1, 1.02, 1], opacity: [0.8, 0.2, 0.8] }}
+                    className="pointer-events-none absolute inset-[-1px] rounded-full border-2 border-amber-500/50"
+                    animate={{ scale: [1, 1.02, 1], opacity: [1, 0.3, 1] }}
                     transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
                   />
                   <motion.div
                     animate={{ rotate: [0, 15, -15, 0] }}
                     transition={{ duration: 0.4 }}
                   >
-                    <Search className="h-4 w-4 flex-shrink-0 text-amber-500" />
+                    <AnimatedSearchIcon size={16} className="flex-shrink-0 text-amber-500" />
                   </motion.div>
                   <motion.input
                     ref={searchInputRef}
@@ -291,20 +292,21 @@ export function Header() {
                   <motion.span
                     className={cn(
                       "absolute inset-[-3px] rounded-full",
-                      scrolled ? "border-2 border-amber-500/50" : "border-2 border-white/30",
+                      scrolled ? "border-2 border-amber-500/70" : "border-2 border-amber-400/50",
                     )}
-                    animate={{ scale: [1, 1.3, 1], opacity: [0.6, 0, 0.6] }}
+                    style={{ boxShadow: scrolled ? "0 0 8px rgba(245,158,11,0.25)" : "0 0 8px rgba(245,158,11,0.15)" }}
+                    animate={{ scale: [1, 1.25, 1], opacity: [0.8, 0.1, 0.8] }}
                     transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                   />
                   <motion.span
                     className={cn(
                       "absolute inset-[-1px] rounded-full",
-                      scrolled ? "border border-amber-500/30" : "border border-white/20",
+                      scrolled ? "border-2 border-amber-500/50" : "border-2 border-amber-400/35",
                     )}
-                    animate={{ scale: [1, 1.15, 1], opacity: [0.8, 0.2, 0.8] }}
+                    animate={{ scale: [1, 1.12, 1], opacity: [1, 0.3, 1] }}
                     transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
                   />
-                  <Search className="h-[18px] w-[18px]" />
+                  <AnimatedSearchIcon size={18} />
                 </motion.button>
               )}
             </AnimatePresence>
@@ -330,17 +332,17 @@ export function Header() {
             {/* Orbiting highlighted border — matches capsule shape exactly */}
             <span className="pointer-events-none absolute -inset-[2px] rounded-full">
               {/* Faint full border */}
-              <span className="absolute inset-0 rounded-full border border-amber-500/15" />
+              <span className="absolute inset-0 rounded-full border border-amber-500/30" />
               {/* Rotating arc highlight */}
               <motion.span
                 className="absolute inset-[-1px] rounded-full"
                 style={{
                   background:
-                    "conic-gradient(from var(--angle), transparent 0%, transparent 70%, rgba(245,158,11,0.6) 85%, rgba(245,158,11,0.8) 90%, rgba(245,158,11,0.6) 95%, transparent 100%)",
+                    "conic-gradient(from var(--angle), transparent 0%, transparent 70%, rgba(245,158,11,0.8) 85%, rgba(245,158,11,1) 90%, rgba(245,158,11,0.8) 95%, transparent 100%)",
                   mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
                   maskComposite: "exclude",
                   WebkitMaskComposite: "xor",
-                  padding: "2px",
+                  padding: "2.5px",
                 }}
                 animate={{
                   "--angle": ["0deg", "360deg"],
@@ -352,7 +354,7 @@ export function Header() {
               animate={{ rotate: 360 }}
               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
             >
-              <Globe className="h-4 w-4" />
+              <AnimatedGlobeIcon size={16} />
             </motion.div>
             <span>EN</span>
             <motion.svg
@@ -394,14 +396,15 @@ export function Header() {
               <svg
                 className="absolute inset-[-3px] h-[calc(100%+6px)] w-[calc(100%+6px)]"
                 viewBox="0 0 44 44"
+                style={{ filter: "drop-shadow(0 0 3px rgba(245,158,11,0.2))" }}
               >
                 <circle
                   cx="22"
                   cy="22"
                   r="20"
                   fill="none"
-                  stroke="rgba(245,158,11,0.15)"
-                  strokeWidth="1.5"
+                  stroke="rgba(245,158,11,0.3)"
+                  strokeWidth="2"
                 />
                 <motion.circle
                   cx="22"
@@ -409,15 +412,15 @@ export function Header() {
                   r="20"
                   fill="none"
                   stroke="rgb(245,158,11)"
-                  strokeWidth="2"
+                  strokeWidth="2.5"
                   strokeLinecap="round"
-                  strokeDasharray="25 100"
+                  strokeDasharray="35 90"
                   animate={{ rotate: 360 }}
                   transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
                   style={{ transformOrigin: "center" }}
                 />
               </svg>
-              <User className="h-[18px] w-[18px]" />
+              <AnimatedUserIcon size={18} />
             </motion.button>
 
             <AnimatePresence>
@@ -434,7 +437,7 @@ export function Header() {
                     className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-left text-sm text-gray-600 transition-colors hover:text-gray-900"
                   >
                     <motion.div whileHover={{ rotate: 15 }}>
-                      <User className="h-4 w-4 text-amber-500" />
+                      <AnimatedUserIcon size={16} className="text-amber-500" />
                     </motion.div>
                     Login
                   </motion.button>
@@ -524,7 +527,7 @@ export function Header() {
                       to={link.href}
                       className={cn(
                         "block border-b border-gray-100 py-3 text-sm font-medium text-gray-600 transition-colors hover:text-amber-600",
-                        location.pathname === link.href && "text-amber-600",
+                        isActive(link.href) && "text-amber-600",
                       )}
                     >
                       {link.label}
@@ -534,7 +537,7 @@ export function Header() {
               </div>
 
               <div className="mt-4 flex items-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-4 py-2.5 md:hidden">
-                <Search className="h-4 w-4 text-gray-400" />
+                <AnimatedSearchIcon size={16} className="text-gray-400" />
                 <input
                   type="text"
                   placeholder="Search elections..."
@@ -546,7 +549,7 @@ export function Header() {
                 className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-full border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-600 lg:hidden"
                 whileTap={{ scale: 0.97 }}
               >
-                <Globe className="h-4 w-4" />
+                <AnimatedGlobeIcon size={16} />
                 <span>EN</span>
               </motion.button>
 

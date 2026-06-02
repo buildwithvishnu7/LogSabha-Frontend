@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
-export function useCountUp(end: number, duration: number = 2000) {
+export function useCountUp(end: number, duration: number = 3500) {
   const [count, setCount] = useState(0);
   const [trigger, setTrigger] = useState(0);
   const [isVisible, setIsVisible] = useState(false);

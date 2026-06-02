@@ -14,15 +14,16 @@ import {
   ScrollReveal,
   ScrollRevealText,
 } from "@/components/motion/ScrollReveal";
+import { AnimatedLucideIcon } from "@/components/AnimatedLucideIcon";
 import type { ServicesData, ServiceItem } from "@/types";
 
 const iconMap: Record<string, React.ReactNode> = {
-  target: <Target className="h-5 w-5" />,
-  "bar-chart": <BarChart3 className="h-5 w-5" />,
-  users: <Users className="h-5 w-5" />,
-  tv: <Tv className="h-5 w-5" />,
-  search: <Search className="h-5 w-5" />,
-  monitor: <Monitor className="h-5 w-5" />,
+  target: <AnimatedLucideIcon icon={Target} size={20} />,
+  "bar-chart": <AnimatedLucideIcon icon={BarChart3} size={20} />,
+  users: <AnimatedLucideIcon icon={Users} size={20} />,
+  tv: <AnimatedLucideIcon icon={Tv} size={20} />,
+  search: <AnimatedLucideIcon icon={Search} size={20} />,
+  monitor: <AnimatedLucideIcon icon={Monitor} size={20} />,
 };
 
 // ─── Animated Counter ───
@@ -36,7 +37,7 @@ function AnimatedStat({
   suffix: string;
   label: string;
 }) {
-  const { count, ref } = useCountUp(value, 2000);
+  const { count, ref } = useCountUp(value, 3500);
 
   return (
     <div>
@@ -86,7 +87,7 @@ function ServiceTab({
               : "bg-gray-100 text-gray-500"
           }`}
         >
-          {iconMap[service.icon] ?? <Target className="h-5 w-5" />}
+          {iconMap[service.icon] ?? <AnimatedLucideIcon icon={Target} size={20} />}
         </div>
         <span
           className={`text-sm font-medium ${
@@ -153,7 +154,7 @@ function ServiceContent({ service }: { service: ServiceItem }) {
         transition={{ duration: 0.2 }}
       >
         Learn more
-        <ArrowRight className="h-4 w-4" />
+        <AnimatedLucideIcon icon={ArrowRight} size={16} />
       </motion.a>
     </motion.div>
   );
