@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion } from "motion/react";
-import { Users, MapPin, Award, Landmark } from "lucide-react";
+import { Users, MapPin, Award, Landmark, Vote, TrendingUp, Map, ChartNoAxesCombined } from "lucide-react";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
 import { useCountUp } from "@/hooks/useCountUp";
 
@@ -28,7 +28,7 @@ const PARTIES: PoliticalParty[] = [
     fullName: "Bharatiya Janata Party",
     established: 1980,
     logo: "/logo/BJP.png.svg",
-    backgroundImage: "/images/parties/bjp-bg.jpg",
+    backgroundImage: "/images/Image (Bharatiya Janata Party).png",
     themeColor: "#FF6B00",
     themeColorRgb: "255, 107, 0",
     description:
@@ -43,7 +43,7 @@ const PARTIES: PoliticalParty[] = [
     fullName: "Indian National Congress",
     established: 1885,
     logo: "/logo/INC.png.svg",
-    backgroundImage: "/images/parties/inc-bg.jpg",
+    backgroundImage: "/images/Image (Indian National Congress).png",
     themeColor: "#00BFFF",
     themeColorRgb: "0, 191, 255",
     description:
@@ -58,7 +58,7 @@ const PARTIES: PoliticalParty[] = [
     fullName: "Aam Aadmi Party",
     established: 2012,
     logo: "/logo/AAP.png.svg",
-    backgroundImage: "/images/parties/aap-bg.jpg",
+    backgroundImage: "/images/Image (Aam Aadmi Party).png",
     themeColor: "#0E8C3A",
     themeColorRgb: "14, 140, 58",
     description:
@@ -73,7 +73,7 @@ const PARTIES: PoliticalParty[] = [
     fullName: "Samajwadi Party",
     established: 1992,
     logo: "/logo/SP.png.svg",
-    backgroundImage: "/images/parties/sp-bg.jpg",
+    backgroundImage: "/images/Image (Samajwadi Party).png",
     themeColor: "#DC2626",
     themeColorRgb: "220, 38, 38",
     description:
@@ -88,7 +88,7 @@ const PARTIES: PoliticalParty[] = [
     fullName: "Bahujan Samaj Party",
     established: 1984,
     logo: "/logo/BSP.svg",
-    backgroundImage: "/images/parties/bsp-bg.jpg",
+    backgroundImage: "/images/Image (Bahujan Samaj Party).png",
     themeColor: "#2563EB",
     themeColorRgb: "37, 99, 235",
     description:
@@ -96,6 +96,36 @@ const PARTIES: PoliticalParty[] = [
     lokSabhaSeats: 0,
     statesRuled: 0,
     president: "Mayawati",
+  },
+  {
+    id: "tmc",
+    shortName: "TMC",
+    fullName: "Trinamool Congress",
+    established: 1998,
+    logo: "/logo/BSP.svg",
+    backgroundImage: "/images/Image (Trinamool Congress).png",
+    themeColor: "#22C55E",
+    themeColorRgb: "34, 197, 94",
+    description:
+      "West Bengal's dominant party advocating for federalism, social welfare, and regional autonomy under strong leadership.",
+    lokSabhaSeats: 29,
+    statesRuled: 1,
+    president: "Mamata Banerjee",
+  },
+  {
+    id: "dmk",
+    shortName: "DMK",
+    fullName: "Dravida Munnetra Kazhagam",
+    established: 1949,
+    logo: "/logo/BSP.svg",
+    backgroundImage: "/images/Image (Dravida Munnetra Kazhagam).png",
+    themeColor: "#EF4444",
+    themeColorRgb: "239, 68, 68",
+    description:
+      "Tamil Nadu's leading Dravidian party championing social justice, rationalism, and linguistic pride.",
+    lokSabhaSeats: 22,
+    statesRuled: 1,
+    president: "M.K. Stalin",
   },
 ];
 
@@ -106,12 +136,47 @@ const PLATFORM_STATS = [
   { icon: "accuracy", value: 95, suffix: "%", label: "Data Accuracy" },
 ];
 
-const statIconMap: Record<string, React.ReactNode> = {
-  parties: <Landmark className="h-5 w-5" />,
-  seats: <Award className="h-5 w-5" />,
-  states: <MapPin className="h-5 w-5" />,
-  accuracy: <Users className="h-5 w-5" />,
-};
+function AnimatedIcon({ icon }: { icon: string }) {
+  const icons: Record<string, { Icon: React.ElementType; animation: object }> = {
+    parties: {
+      Icon: Landmark,
+      animation: {
+        y: [0, -3, 0],
+        transition: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+      },
+    },
+    seats: {
+      Icon: Vote,
+      animation: {
+        rotate: [0, -8, 8, -4, 0],
+        transition: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
+      },
+    },
+    states: {
+      Icon: Map,
+      animation: {
+        scale: [1, 1.12, 1],
+        transition: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+      },
+    },
+    accuracy: {
+      Icon: ChartNoAxesCombined,
+      animation: {
+        y: [0, -4, 0],
+        rotate: [0, 3, 0],
+        transition: { duration: 1.8, repeat: Infinity, ease: "easeInOut" },
+      },
+    },
+  };
+
+  const { Icon, animation } = icons[icon] ?? { Icon: Landmark, animation: {} };
+
+  return (
+    <motion.div animate={animation}>
+      <Icon className="h-6 w-6" />
+    </motion.div>
+  );
+}
 
 // ─── Animated Stat Counter ───
 
@@ -120,29 +185,38 @@ function StatCounter({
   value,
   suffix,
   label,
+  index,
 }: {
   icon: string;
   value: number;
   suffix: string;
   label: string;
+  index: number;
 }) {
   const { count, ref } = useCountUp(value, 2000);
 
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-gray-200/60 bg-white/80 px-4 py-3 shadow-sm backdrop-blur-sm">
-      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500/10 text-amber-500">
-        {statIconMap[icon] ?? <Landmark className="h-5 w-5" />}
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.5, delay: index * 0.1, ease: [0.25, 1, 0.5, 1] }}
+      whileHover={{ y: -4, boxShadow: "0 12px 32px rgba(245, 158, 11, 0.12)" }}
+      className="group flex items-center gap-4 rounded-2xl border border-amber-500/20 bg-white/90 px-5 py-4 shadow-md backdrop-blur-sm transition-colors hover:border-amber-500/40 sm:px-6 sm:py-5"
+    >
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500/15 to-orange-500/10 text-amber-500 ring-1 ring-amber-500/10 sm:h-14 sm:w-14">
+        <AnimatedIcon icon={icon} />
       </div>
       <div>
-        <p className="text-lg font-bold text-gray-900">
+        <p className="text-2xl font-extrabold text-gray-900 sm:text-3xl">
           <span ref={ref}>{count.toLocaleString()}</span>
           <span className="text-amber-500">{suffix}</span>
         </p>
-        <p className="text-[10px] font-medium tracking-wide text-gray-400 uppercase">
+        <p className="text-[11px] font-semibold tracking-wider text-gray-400 uppercase sm:text-xs">
           {label}
         </p>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -201,50 +275,36 @@ function PartyStrip({
       onMouseEnter={onHoverStart}
       onMouseLeave={onHoverEnd}
       className="relative h-full cursor-pointer overflow-hidden rounded-2xl"
-      animate={{ flex: isExpanded ? 4 : 1 }}
+      animate={{ flex: isExpanded ? 4 : 0.7 }}
       transition={{ duration: 0.6, ease: [0.25, 1, 0.5, 1] }}
       style={{
         minWidth: 0,
-        border: isExpanded
-          ? `2px solid rgba(${party.themeColorRgb}, 0.5)`
-          : "2px solid rgba(255,255,255,0.15)",
-        transition: "border-color 0.4s",
       }}
     >
-      {/* Background image + color fallback */}
-      <div className="absolute inset-0">
-        <img
-          src={party.backgroundImage}
-          alt=""
-          className="h-full w-full object-cover"
-          onError={(e) => { e.currentTarget.style.display = "none"; }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background: `linear-gradient(135deg, rgba(${party.themeColorRgb}, 0.4) 0%, rgba(${party.themeColorRgb}, 0.15) 100%)`,
-          }}
-        />
-      </div>
+      {/* Background image */}
+      <motion.img
+        src={party.backgroundImage}
+        alt=""
+        className="absolute inset-0 h-full w-full object-cover"
+        animate={{ scale: isExpanded ? 1 : 1.1 }}
+        transition={{ duration: 0.6, ease: [0.25, 1, 0.5, 1] }}
+      />
 
-      {/* Dark overlay */}
+      {/* Party-colored tint overlay */}
       <motion.div
         className="absolute inset-0"
         animate={{
           background: isExpanded
-            ? "linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.5) 100%)"
-            : "linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.65) 100%)",
+            ? `linear-gradient(to bottom, rgba(${party.themeColorRgb}, 0.3) 0%, rgba(${party.themeColorRgb}, 0.5) 100%)`
+            : "linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.55) 100%)",
         }}
         transition={{ duration: 0.5 }}
       />
 
-      {/* Top accent line — expanded only */}
+      {/* Top accent line */}
       <motion.div
         className="absolute left-0 top-0 z-20 h-[3px]"
-        animate={{
-          width: isExpanded ? "35%" : "0%",
-          opacity: isExpanded ? 1 : 0,
-        }}
+        animate={{ width: isExpanded ? "35%" : "0%", opacity: isExpanded ? 1 : 0 }}
         transition={{ duration: 0.5, delay: isExpanded ? 0.2 : 0 }}
         style={{ backgroundColor: party.themeColor }}
       />
@@ -253,62 +313,57 @@ function PartyStrip({
       <motion.div
         className="absolute z-30 flex items-center justify-center"
         animate={{
-          top: isExpanded ? "calc(12% + 16px)" : 20,
-          left: isExpanded ? 28 : "50%",
+          top: isExpanded ? "calc(10% + 24px)" : 16,
+          left: isExpanded ? 38 : "50%",
           x: isExpanded ? 0 : "-50%",
-          width: isExpanded ? 68 : 64,
-          height: isExpanded ? 68 : 64,
+          width: isExpanded ? 76 : 64,
+          height: isExpanded ? 76 : 64,
           borderRadius: isExpanded ? 18 : 32,
         }}
         transition={{ duration: 0.55, ease: [0.25, 1, 0.5, 1] }}
       >
-        {/* Glass circle bg — fades out on expand */}
+        {/* Glass circle bg — collapsed */}
         <motion.div
           className="absolute inset-0"
           animate={{
             opacity: isExpanded ? 0 : 1,
-            borderRadius: isExpanded ? 18 : 32,
+            borderRadius: isExpanded ? 16 : 36,
           }}
-          transition={{ duration: 0.4 }}
+          transition={{ duration: 0.35 }}
           style={{
-            background: "rgba(255,255,255,0.08)",
-            backdropFilter: "blur(16px)",
-            WebkitBackdropFilter: "blur(16px)",
-            border: "2px solid rgba(255,255,255,0.2)",
-            boxShadow: "0 4px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.15)",
+            background: "rgba(255,255,255,0.06)",
+            border: "2px solid rgba(255,255,255,0.3)",
+            boxShadow: "0 4px 24px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.15)",
           }}
         />
-        {/* White rect bg — fades in on expand */}
+        {/* White rect bg — expanded */}
         <motion.div
           className="absolute inset-0"
           animate={{
             opacity: isExpanded ? 1 : 0,
-            borderRadius: isExpanded ? 18 : 32,
+            borderRadius: isExpanded ? 16 : 36,
           }}
-          transition={{ duration: 0.4, delay: isExpanded ? 0.1 : 0 }}
+          transition={{ duration: 0.35, delay: isExpanded ? 0.08 : 0 }}
           style={{
             background: "rgba(255,255,255,0.95)",
             boxShadow: "0 8px 28px rgba(0,0,0,0.2)",
           }}
         />
-        {/* Logo image */}
+        {/* Logo */}
         <motion.img
           src={party.logo}
           alt={party.shortName}
           className="relative z-10 object-contain"
-          animate={{
-            width: isExpanded ? 44 : 34,
-            height: isExpanded ? 44 : 34,
-          }}
+          animate={{ width: isExpanded ? 52 : 36, height: isExpanded ? 52 : 36 }}
           transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
         />
       </motion.div>
 
-      {/* ── Collapsed: vertical party name at bottom ── */}
+      {/* ── Collapsed: vertical name at bottom ── */}
       <motion.div
         animate={{ opacity: isExpanded ? 0 : 1 }}
         transition={{ duration: 0.15 }}
-        className="absolute inset-x-0 bottom-0 z-10 flex items-end justify-center pb-5"
+        className="absolute inset-x-0 bottom-0 z-10 flex items-end justify-center pb-4"
         style={{
           pointerEvents: isExpanded ? "none" : "auto",
           visibility: isExpanded ? "hidden" : "visible",
@@ -317,95 +372,60 @@ function PartyStrip({
         }}
       >
         <span
-          className="text-sm font-bold tracking-[0.25em] text-white/90 drop-shadow-lg uppercase"
+          className="text-xs font-bold tracking-[0.2em] text-white drop-shadow-lg uppercase"
           style={{ writingMode: "vertical-rl", textOrientation: "mixed" }}
         >
           {party.shortName}
         </span>
       </motion.div>
 
-      {/* ── Expanded: glassmorphism info panel ── */}
+      {/* ── Expanded: transparent glass info panel ── */}
       <motion.div
-        className="absolute inset-x-3 bottom-3 top-[12%] z-10 overflow-hidden rounded-xl sm:inset-x-4 sm:bottom-4"
+        className="absolute z-10 overflow-hidden rounded-xl"
         animate={{
           opacity: isExpanded ? 1 : 0,
-          y: isExpanded ? 0 : 40,
+          y: isExpanded ? 0 : 20,
+          top: isExpanded ? "10%" : "18%",
+          left: isExpanded ? 24 : 24,
+          right: isExpanded ? 24 : 24,
+          bottom: isExpanded ? 24 : 44,
         }}
-        transition={{
-          duration: 0.5,
-          delay: isExpanded ? 0.08 : 0,
-          ease: [0.25, 1, 0.5, 1],
-        }}
+        transition={{ duration: 0.5, delay: isExpanded ? 0.08 : 0, ease: [0.25, 1, 0.5, 1] }}
         style={{
           pointerEvents: isExpanded ? "auto" : "none",
           visibility: isExpanded ? "visible" : "hidden",
           transitionProperty: "visibility",
           transitionDelay: isExpanded ? "0s" : "0.5s",
-          background: "rgba(0, 0, 0, 0.3)",
-          backdropFilter: "blur(28px) saturate(1.5)",
-          WebkitBackdropFilter: "blur(28px) saturate(1.5)",
-          border: "1px solid rgba(255, 255, 255, 0.1)",
-          boxShadow:
-            "inset 0 1px 0 rgba(255,255,255,0.08), 0 8px 32px rgba(0,0,0,0.4)",
+          background: "rgba(0, 0, 0, 0.35)",
+          backdropFilter: "blur(16px)",
+          WebkitBackdropFilter: "blur(16px)",
+          border: `1.5px solid rgba(${party.themeColorRgb}, 0.4)`,
+          boxShadow: `0 0 24px rgba(${party.themeColorRgb}, 0.1), inset 0 1px 0 rgba(255,255,255,0.08)`,
         }}
       >
         <div className="flex h-full flex-col justify-between p-4 sm:p-5">
-          {/* Name + Badge — offset to the right to leave space for the logo */}
-          <div className="pl-[76px] pt-0.5 sm:pl-[84px]">
-            <div className="mb-1 flex items-center gap-2">
-              <span
-                className="text-[10px] font-bold tracking-wider uppercase"
-                style={{ color: party.themeColor }}
-              >
+          {/* Name + Badge — offset right for logo */}
+          <div className="pl-[80px] pt-0.5 sm:pl-[84px]">
+            <div className="mb-1.5 flex items-center gap-2">
+              <span className="text-xs font-bold tracking-wider uppercase" style={{ color: party.themeColor }}>
                 {party.shortName}
               </span>
-              <span className="text-[10px] text-white/40">
-                Est. {party.established}
-              </span>
+              <span className="text-xs text-white/50">Est. {party.established}</span>
             </div>
-            <h3 className="text-xl font-bold leading-tight text-white sm:text-2xl">
-              {party.fullName}
-            </h3>
+            <h3 className="text-xl font-bold leading-tight text-white sm:text-2xl">{party.fullName}</h3>
           </div>
 
-          {/* Description */}
-          <p className="text-xs leading-relaxed text-white/60 sm:text-sm">
-            {party.description}
-          </p>
+          <p className="text-sm leading-relaxed text-white/80 sm:text-base">{party.description}</p>
 
-          {/* Stats row — rolling numbers */}
+          {/* Stats — rolling numbers */}
           <div className="flex gap-3">
-            <div
-              className="rounded-lg px-4 py-2"
-              style={{
-                backgroundColor: `rgba(${party.themeColorRgb}, 0.2)`,
-                border: `1px solid rgba(${party.themeColorRgb}, 0.3)`,
-              }}
-            >
-              <RollingNumber
-                value={party.lokSabhaSeats}
-                isActive={isExpanded}
-                color={party.themeColor}
-              />
-              <p className="text-[9px] font-medium text-white/45 uppercase">
-                Lok Sabha Seats
-              </p>
+            <div className="rounded-lg px-5 py-2.5" style={{ backgroundColor: `rgba(${party.themeColorRgb}, 0.15)`, border: `1px solid rgba(${party.themeColorRgb}, 0.3)` }}>
+              <RollingNumber value={party.lokSabhaSeats} isActive={isExpanded} color={party.themeColor} />
+              <p className="text-[10px] font-medium text-white/50 uppercase">Lok Sabha Seats</p>
             </div>
-            <div
-              className="rounded-lg px-4 py-2"
-              style={{
-                backgroundColor: `rgba(${party.themeColorRgb}, 0.2)`,
-                border: `1px solid rgba(${party.themeColorRgb}, 0.3)`,
-              }}
-            >
-              <RollingNumber
-                value={party.statesRuled}
-                isActive={isExpanded}
-                color={party.themeColor}
-              />
-              <p className="text-[9px] font-medium text-white/45 uppercase">
-                States Ruled
-              </p>
+            <div className="rounded-lg px-5 py-2.5" style={{ backgroundColor: `rgba(${party.themeColorRgb}, 0.15)`, border: `1px solid rgba(${party.themeColorRgb}, 0.3)` }}>
+              <RollingNumber value={party.statesRuled} isActive={isExpanded} color={party.themeColor} />
+              <p className="text-[10px] font-medium text-white/50 uppercase">States Ruled</p>
             </div>
           </div>
 
@@ -415,10 +435,8 @@ function PartyStrip({
               <Users className="h-4 w-4 text-white/50" />
             </div>
             <div>
-              <p className="text-[9px] text-white/35 uppercase">President</p>
-              <p className="text-sm font-semibold text-white">
-                {party.president}
-              </p>
+              <p className="text-[10px] text-white/40 uppercase">President</p>
+              <p className="text-sm font-semibold text-white">{party.president}</p>
             </div>
           </div>
         </div>
@@ -590,9 +608,19 @@ export function PoliticalPartiesSection() {
           </ScrollReveal>
         </div>
 
-        {/* Party Cards Accordion */}
+        {/* Party Cards Accordion — inside outer glass box */}
         <ScrollReveal delay={0.4}>
-          <div className="mx-auto mt-12 flex h-[420px] gap-3 sm:h-[480px] sm:gap-4 lg:mt-16 lg:h-[520px]">
+          <div
+            className="mx-auto mt-12 rounded-2xl p-2 sm:p-3 lg:mt-16"
+            style={{
+              background: "rgba(255,255,255,0.08)",
+              backdropFilter: "blur(8px)",
+              WebkitBackdropFilter: "blur(8px)",
+              border: "1px solid rgba(255,255,255,0.15)",
+              boxShadow: "0 4px 30px rgba(0,0,0,0.06)",
+            }}
+          >
+          <div className="flex h-[380px] gap-2 sm:h-[440px] sm:gap-3 lg:h-[480px]">
             {PARTIES.map((party, index) => (
               <PartyStrip
                 key={party.id}
@@ -603,22 +631,22 @@ export function PoliticalPartiesSection() {
               />
             ))}
           </div>
+          </div>
         </ScrollReveal>
 
         {/* Bottom Stats */}
-        <ScrollReveal delay={0.5}>
-          <div className="mt-12 grid grid-cols-2 gap-3 sm:gap-4 lg:mt-16 lg:grid-cols-4">
-            {PLATFORM_STATS.map((stat) => (
-              <StatCounter
-                key={stat.label}
-                icon={stat.icon}
-                value={stat.value}
-                suffix={stat.suffix}
-                label={stat.label}
-              />
-            ))}
-          </div>
-        </ScrollReveal>
+        <div className="mt-12 grid grid-cols-2 gap-4 sm:gap-5 lg:mt-16 lg:grid-cols-4">
+          {PLATFORM_STATS.map((stat, i) => (
+            <StatCounter
+              key={stat.label}
+              icon={stat.icon}
+              value={stat.value}
+              suffix={stat.suffix}
+              label={stat.label}
+              index={i}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );
