@@ -436,7 +436,7 @@ export function SocialPresenceSection() {
       : SOCIAL_POSTS.filter((p) => p.platform === activeFilter);
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-amber-50/60 via-orange-50/30 to-white py-20 sm:py-24 lg:py-32">
+    <section className="relative overflow-hidden bg-gradient-to-b from-amber-50/60 via-orange-50/30 to-white py-12 sm:py-14 lg:py-18">
       {/* Background decorations */}
       <div className="absolute inset-0 opacity-[0.03]">
         <div

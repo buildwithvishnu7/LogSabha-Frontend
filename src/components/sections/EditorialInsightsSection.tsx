@@ -397,7 +397,7 @@ function ScrollingSidebar({ articles }: { articles: Article[] }) {
 
 export function EditorialInsightsSection() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-white via-amber-50/20 to-white py-20 sm:py-24 lg:py-32">
+    <section className="relative overflow-hidden bg-gradient-to-b from-white via-amber-50/20 to-white py-12 sm:py-14 lg:py-18">
       {/* Background pattern */}
       <div className="absolute inset-0 opacity-[0.025]">
         <div

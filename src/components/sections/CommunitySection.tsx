@@ -587,7 +587,7 @@ function TrendingTopicCard({
 
 export function CommunitySection() {
   return (
-    <section className="relative overflow-hidden bg-white py-20 sm:py-24 lg:py-32">
+    <section className="relative overflow-hidden bg-white py-12 sm:py-14 lg:py-18">
       {/* Dot pattern background */}
       <div className="absolute inset-0 opacity-[0.025]">
         <div

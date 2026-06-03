@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, type ComponentType } from "react";
+import { useRef, useEffect, useState, useMemo, type ComponentType } from "react";
 import { motion, useInView } from "motion/react";
 import { Users, BookOpen, Heart, ArrowRight, Play, Pause } from "lucide-react";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
@@ -164,9 +164,16 @@ function VideoPlayer({ triggered }: { triggered: boolean }) {
     return () => video.removeEventListener("ended", onEnded);
   }, []);
 
+  useEffect(() => {
+    if (triggered && videoRef.current && !isPlaying) {
+      videoRef.current.play().catch(() => {});
+      setIsPlaying(true);
+    }
+  }, [triggered]);
+
   return (
     <motion.div
-      className="relative h-full w-full cursor-pointer overflow-hidden rounded-2xl shadow-2xl shadow-orange-500/20"
+      className="relative h-full w-full cursor-pointer overflow-hidden rounded-xl shadow-2xl shadow-orange-500/20"
       initial={{ opacity: 0, x: 40 }}
       animate={triggered ? { opacity: 1, x: 0 } : { opacity: 0, x: 40 }}
       transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
@@ -176,6 +183,8 @@ function VideoPlayer({ triggered }: { triggered: boolean }) {
       <video
         ref={videoRef}
         className="h-full w-full object-cover"
+        muted
+        loop
         playsInline
         preload="metadata"
         poster=""
@@ -211,26 +220,59 @@ function VideoPlayer({ triggered }: { triggered: boolean }) {
         </motion.div>
       </motion.div>
 
-      {/* Ambient border glow */}
-      {triggered && (
-        <motion.div
-          className="pointer-events-none absolute inset-0 rounded-2xl border-2"
-          animate={{
-            borderColor: [
-              "rgba(249,115,22,0.0)",
-              "rgba(249,115,22,0.4)",
-              "rgba(249,115,22,0.0)",
-            ],
-          }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 2,
-          }}
+    </motion.div>
+  );
+}
+
+// ─── Typewriter Text ───
+
+function TypewriterText({
+  text,
+  triggered,
+  className,
+}: {
+  text: string;
+  triggered: boolean;
+  className?: string;
+}) {
+  const [displayedCount, setDisplayedCount] = useState(0);
+  const chars = useMemo(() => [...text], [text]);
+
+  useEffect(() => {
+    if (!triggered) {
+      setDisplayedCount(0);
+      return;
+    }
+
+    if (displayedCount >= chars.length) return;
+
+    const timeout = setTimeout(() => {
+      setDisplayedCount((c) => c + 1);
+    }, 60);
+
+    return () => clearTimeout(timeout);
+  }, [triggered, displayedCount, chars.length]);
+
+  return (
+    <h3 className={className}>
+      <span>{chars.slice(0, displayedCount).join("")}</span>
+      {triggered && displayedCount < chars.length && (
+        <motion.span
+          className="inline-block w-[2px] translate-y-[1px] bg-gray-800"
+          style={{ height: "1em" }}
+          animate={{ opacity: [1, 0] }}
+          transition={{ duration: 0.6, repeat: Infinity, ease: "steps(2)" }}
         />
       )}
-    </motion.div>
+      {triggered && displayedCount >= chars.length && (
+        <motion.span
+          className="inline-block w-[2px] translate-y-[1px] bg-gray-800"
+          style={{ height: "1em" }}
+          animate={{ opacity: [1, 0] }}
+          transition={{ duration: 0.8, repeat: 3, ease: "steps(2)" }}
+        />
+      )}
+    </h3>
   );
 }
 
@@ -253,6 +295,35 @@ export function RSSSection() {
 
       {/* Main Content — warm background */}
       <div className="relative bg-orange-50/60 py-8 sm:py-10 lg:py-12">
+        {/* Floating ambient particles */}
+        {triggered && (
+          <>
+            {[...Array(6)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="pointer-events-none absolute rounded-full bg-orange-400/15"
+                style={{
+                  width: 6 + i * 4,
+                  height: 6 + i * 4,
+                  left: `${12 + i * 15}%`,
+                  top: `${20 + (i % 3) * 25}%`,
+                }}
+                animate={{
+                  y: [0, -20 - i * 5, 0],
+                  x: [0, (i % 2 === 0 ? 10 : -10), 0],
+                  opacity: [0.2, 0.5, 0.2],
+                }}
+                transition={{
+                  duration: 4 + i * 0.8,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: i * 0.6,
+                }}
+              />
+            ))}
+          </>
+        )}
+
         {/* Subtle left accent line */}
         <motion.div
           className="absolute top-0 left-6 h-full w-1 rounded-full bg-gradient-to-b from-transparent via-orange-400/25 to-transparent sm:left-10 lg:left-16"
@@ -262,13 +333,37 @@ export function RSSSection() {
           style={{ originY: 0 }}
         />
 
+        {/* Ambient glow behind card */}
+        {triggered && (
+          <motion.div
+            className="pointer-events-none absolute top-1/2 left-1/2 h-[300px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-orange-300/10 blur-3xl"
+            animate={{
+              scale: [1, 1.15, 1],
+              opacity: [0.3, 0.6, 0.3],
+            }}
+            transition={{
+              duration: 5,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        )}
+
         <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-10">
           {/* Single white card holding both info + video */}
           <ScrollReveal>
-            <div className="overflow-hidden rounded-2xl bg-white shadow-xl shadow-orange-900/5 ring-1 ring-gray-100">
+            <motion.div
+              className="overflow-hidden rounded-2xl bg-white shadow-2xl shadow-orange-900/10 ring-1 ring-gray-100/80"
+              animate={triggered ? { y: [0, -4, 0] } : undefined}
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            >
               <div className="relative grid lg:grid-cols-[1fr_380px] xl:grid-cols-[1fr_420px]">
                 {/* Left: Info — determines card height */}
-                <div className="relative z-10 p-6 sm:p-8 lg:min-h-[490px] lg:p-10">
+                <div className="relative z-10 p-6 sm:p-8 lg:min-h-[560px] lg:p-10">
                   {/* Logo + Title */}
                   <div className="flex items-center gap-3">
                     <motion.img
@@ -289,10 +384,15 @@ export function RSSSection() {
                       }}
                     />
                     <h2
-                      className="text-2xl font-semibold text-gray-900 sm:text-3xl lg:text-[44px] lg:leading-[55px]"
+                      className="text-2xl font-semibold sm:text-3xl lg:text-[44px] lg:leading-[55px]"
                       style={{
                         fontFamily: "'Cormorant Garamond', serif",
                         letterSpacing: "-0.44px",
+                        background: "linear-gradient(90deg, #111827 40%, #f97316 50%, #111827 60%)",
+                        backgroundSize: "200% 100%",
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                        animation: "rss-title-shimmer 4s ease-in-out infinite",
                       }}
                     >
                       राष्ट्रीय स्वयंसेवक संघ
@@ -300,14 +400,26 @@ export function RSSSection() {
                   </div>
 
                   {/* Tagline */}
-                  <p className="mt-2.5 text-sm font-semibold text-orange-600 sm:text-base">
+                  <motion.p
+                    className="mt-2.5 text-sm font-semibold sm:text-base"
+                    style={{
+                      background: "linear-gradient(90deg, #ea580c, #f97316, #fb923c, #f97316, #ea580c)",
+                      backgroundSize: "200% 100%",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                    }}
+                    animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
+                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                  >
                     वह शुरुआत जिसने भारत को नई दिशा दी
-                  </p>
+                  </motion.p>
 
-                  {/* Subheading */}
-                  <h3 className="mt-3 text-sm font-bold text-gray-800">
-                    RSS की नींव, विचार और संगठन
-                  </h3>
+                  {/* Subheading — Typewriter */}
+                  <TypewriterText
+                    text="RSS की नींव, विचार और संगठन"
+                    triggered={triggered}
+                    className="mt-3 text-sm font-bold text-gray-800"
+                  />
 
                   {/* Description */}
                   <p className="mt-2 text-sm leading-relaxed text-gray-500">
@@ -332,7 +444,15 @@ export function RSSSection() {
                   {/* CTA */}
                   <motion.a
                     href="#"
-                    className="btn-breathing mt-6 inline-flex items-center gap-2 rounded-xl bg-orange-500 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-orange-500/25 transition-colors hover:bg-orange-600"
+                    className="mt-6 inline-flex items-center gap-2 rounded-xl bg-orange-500 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-orange-600"
+                    animate={triggered ? {
+                      boxShadow: [
+                        "0 10px 15px -3px rgba(249,115,22,0.25)",
+                        "0 10px 25px -3px rgba(249,115,22,0.45)",
+                        "0 10px 15px -3px rgba(249,115,22,0.25)",
+                      ],
+                    } : undefined}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                     whileHover={{ x: 4 }}
                     whileTap={{ scale: 0.97 }}
                   >
@@ -342,11 +462,11 @@ export function RSSSection() {
                 </div>
 
                 {/* Right: Video with dark orange background — fills height set by left column */}
-                <div className="relative bg-gradient-to-br from-orange-700 via-orange-800 to-orange-900 p-4 sm:p-5 lg:absolute lg:inset-y-0 lg:right-0 lg:w-[380px] lg:p-6 xl:w-[420px]">
+                <div className="relative bg-gradient-to-br from-orange-700 via-orange-800 to-orange-900 p-1.5 lg:absolute lg:inset-y-0 lg:right-0 lg:w-[380px] lg:p-2 xl:w-[420px]">
                   <VideoPlayer triggered={triggered} />
                 </div>
               </div>
-            </div>
+            </motion.div>
           </ScrollReveal>
         </div>
       </div>

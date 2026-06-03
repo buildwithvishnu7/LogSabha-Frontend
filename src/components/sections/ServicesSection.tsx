@@ -195,7 +195,7 @@ export function ServicesSection({ data }: { data: ServicesData }) {
   }, [isHovering, startAutoPlay]);
 
   return (
-    <section className="relative overflow-hidden bg-white py-14 sm:py-16 lg:py-20">
+    <section className="relative overflow-hidden bg-white py-12 sm:py-14 lg:py-18">
       {/* ── Video background ── */}
       <div className="pointer-events-none absolute inset-0">
         <video

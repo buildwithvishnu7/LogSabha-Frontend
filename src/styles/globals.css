@@ -113,6 +113,11 @@
   100% { background-position: -200% center; }
 }
 
+@keyframes rss-title-shimmer {
+  0%, 100% { background-position: 100% 50%; }
+  50%      { background-position: 0% 50%; }
+}
+
 @keyframes glow-pulse {
   0%, 100% { text-shadow: 0 0 0px transparent; }
   50%      { text-shadow: 0 0 8px var(--color-brand-glow); }

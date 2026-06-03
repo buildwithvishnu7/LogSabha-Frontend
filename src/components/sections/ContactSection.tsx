@@ -226,7 +226,7 @@ export function ContactSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden bg-[#0b1120] py-20 sm:py-24 lg:py-32"
+      className="relative overflow-hidden bg-[#0b1120] py-12 sm:py-14 lg:py-18"
     >
       {/* Geometric grid background */}
       <div className="pointer-events-none absolute inset-0">
