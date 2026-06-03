@@ -284,9 +284,9 @@ export function PoliticalLandscapeSection({
       <BackgroundVideo src={data.backgroundVideo} poster={data.backgroundPoster} />
       <div className="absolute inset-0 z-[1] bg-black/60" />
 
-      <div className="relative z-10 mx-auto flex min-h-screen max-w-[1440px] flex-col justify-center px-4 py-20 sm:px-6 md:flex-row md:items-center md:gap-8 lg:gap-12 lg:px-8 xl:px-12">
+      <div className="relative z-10 mx-auto flex min-h-screen max-w-[1440px] flex-col justify-center px-4 py-16 sm:px-6 sm:py-20 lg:flex-row lg:items-center lg:gap-10 lg:px-8 xl:gap-12 xl:px-12">
         {/* Left — text */}
-        <div className="flex-1 md:max-w-[480px]">
+        <div className="flex-1 lg:max-w-[480px]">
           {/* Badge with pulsing dot */}
           <ScrollReveal delay={0} direction="left">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5">
@@ -368,8 +368,9 @@ export function PoliticalLandscapeSection({
         </div>
 
         {/* Right — Map + Cards */}
-        <div className="relative mt-12 flex-1 md:mt-0">
-          <div className="relative mx-auto h-[320px] w-[320px] sm:h-[380px] sm:w-[380px] md:h-[420px] md:w-[420px] lg:h-[520px] lg:w-[520px]">
+        <div className="relative mt-10 flex-1 sm:mt-12 lg:mt-0">
+          {/* Map container — responsive sizing */}
+          <div className="relative mx-auto aspect-square w-full max-w-[280px] sm:max-w-[380px] md:max-w-[420px] lg:max-w-[520px]">
             {/* Map — z-10 so states are hoverable */}
             <div className="relative z-10 h-full w-full">
               <IndiaMap
@@ -379,8 +380,8 @@ export function PoliticalLandscapeSection({
               />
             </div>
 
-            {/* Dotted connector lines */}
-            <svg className="pointer-events-none absolute inset-0 z-[5] h-full w-full overflow-visible">
+            {/* Dotted connector lines — hidden on mobile */}
+            <svg className="pointer-events-none absolute inset-0 z-[5] hidden h-full w-full overflow-visible sm:block">
               <defs>
                 <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
                   <stop offset="0%" stopColor="rgba(245,158,11,0.6)" />
@@ -394,8 +395,8 @@ export function PoliticalLandscapeSection({
               <motion.line x1="88%" y1="85%" x2="62%" y2="70%" stroke="url(#lineGrad)" strokeWidth="1" strokeDasharray="4 4" initial={{ pathLength: 0, opacity: 0 }} whileInView={{ pathLength: 1, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 1.0, duration: 0.8 }} />
             </svg>
 
-            {/* Floating stat cards */}
-            <div className="absolute inset-0 z-20 overflow-visible" style={{ pointerEvents: "none" }}>
+            {/* Floating stat cards — hidden on mobile, shown sm+ */}
+            <div className="absolute inset-0 z-20 hidden overflow-visible sm:block" style={{ pointerEvents: "none" }}>
               <div style={{ pointerEvents: "auto" }}>
                 <FloatingStatCard
                   icon="users"
@@ -404,14 +405,14 @@ export function PoliticalLandscapeSection({
                   label={stats[0]?.label ?? "Lok Sabha Seats"}
                   detail="Total parliamentary constituencies"
                   bounceDelay={0}
-                  className="absolute -left-4 -top-6 sm:-left-6 sm:-top-8"
+                  className="absolute -left-6 -top-8"
                   expanded={hoveredCardIndex !== null ? hoveredCardIndex === 0 : autoCardIndex === 0}
                   onUserHover={(h) => setHoveredCardIndex(h ? 0 : null)}
                 />
               </div>
 
               <div style={{ pointerEvents: "auto" }}>
-                <div className="absolute -right-4 -top-2 sm:-right-8">
+                <div className="absolute -right-8 -top-2">
                   <FloatingStatCard
                     icon="map-pin"
                     numericValue={stats[1]?.numericValue ?? 28}
@@ -440,7 +441,7 @@ export function PoliticalLandscapeSection({
                   title="India Alliance"
                   seats={totalIndia}
                   color="text-blue-400"
-                  className="absolute -left-4 bottom-[25%] sm:-left-8"
+                  className="absolute -left-8 bottom-[25%]"
                   bounceDelay={1.6}
                   expanded={hoveredCardIndex !== null ? hoveredCardIndex === 3 : autoCardIndex === 3}
                   onUserHover={(h) => setHoveredCardIndex(h ? 3 : null)}
@@ -455,7 +456,7 @@ export function PoliticalLandscapeSection({
                   label={stats[2]?.label ?? "Campaigns"}
                   detail="Successfully managed campaigns"
                   bounceDelay={2}
-                  className="absolute -bottom-2 left-[5%] sm:bottom-0"
+                  className="absolute bottom-0 left-[5%]"
                   expanded={hoveredCardIndex !== null ? hoveredCardIndex === 4 : autoCardIndex === 4}
                   onUserHover={(h) => setHoveredCardIndex(h ? 4 : null)}
                 />
@@ -469,7 +470,7 @@ export function PoliticalLandscapeSection({
                   label={stats[3]?.label ?? "Accuracy"}
                   detail="Prediction accuracy rate"
                   bounceDelay={2.4}
-                  className="absolute -right-4 bottom-4 sm:-right-8"
+                  className="absolute -right-8 bottom-4"
                   expanded={hoveredCardIndex !== null ? hoveredCardIndex === 5 : autoCardIndex === 5}
                   onUserHover={(h) => setHoveredCardIndex(h ? 5 : null)}
                 />
@@ -483,7 +484,7 @@ export function PoliticalLandscapeSection({
                   key={activeInfo.state.name}
                   className="pointer-events-none absolute z-30"
                   style={{
-                    left: `${Math.min(Math.max(activeInfo.x, 10), 55)}%`,
+                    left: `${Math.min(Math.max(activeInfo.x, 5), 45)}%`,
                     top: `${Math.min(Math.max(activeInfo.y - 5, 5), 50)}%`,
                   }}
                 >
@@ -491,6 +492,62 @@ export function PoliticalLandscapeSection({
                 </motion.div>
               )}
             </AnimatePresence>
+          </div>
+
+          {/* Mobile stat grid — shown only on small screens */}
+          <div className="mt-6 grid grid-cols-2 gap-3 sm:hidden">
+            <FloatingStatCard
+              icon="users"
+              numericValue={stats[0]?.numericValue ?? 543}
+              suffix={stats[0]?.parsedSuffix ?? "+"}
+              label={stats[0]?.label ?? "Lok Sabha Seats"}
+              bounceDelay={0}
+              expanded={false}
+              onUserHover={() => {}}
+            />
+            <FloatingStatCard
+              icon="map-pin"
+              numericValue={stats[1]?.numericValue ?? 28}
+              suffix=""
+              label={stats[1]?.label ?? "States Covered"}
+              bounceDelay={0.2}
+              expanded={false}
+              onUserHover={() => {}}
+            />
+            <AllianceCard
+              title="NDA Alliance"
+              seats={totalNda}
+              color="text-green-400"
+              bounceDelay={0.4}
+              expanded={false}
+              onUserHover={() => {}}
+            />
+            <AllianceCard
+              title="India Alliance"
+              seats={totalIndia}
+              color="text-blue-400"
+              bounceDelay={0.6}
+              expanded={false}
+              onUserHover={() => {}}
+            />
+            <FloatingStatCard
+              icon="bar-chart"
+              numericValue={stats[2]?.numericValue ?? 1000}
+              suffix={stats[2]?.parsedSuffix ?? "+"}
+              label={stats[2]?.label ?? "Campaigns"}
+              bounceDelay={0.8}
+              expanded={false}
+              onUserHover={() => {}}
+            />
+            <FloatingStatCard
+              icon="trending-up"
+              numericValue={stats[3]?.numericValue ?? 95}
+              suffix={stats[3]?.parsedSuffix ?? "%"}
+              label={stats[3]?.label ?? "Accuracy"}
+              bounceDelay={1}
+              expanded={false}
+              onUserHover={() => {}}
+            />
           </div>
         </div>
       </div>

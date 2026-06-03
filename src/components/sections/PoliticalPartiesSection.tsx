@@ -248,17 +248,17 @@ function StatCounter({
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.5, delay: index * 0.1, ease: [0.25, 1, 0.5, 1] }}
       whileHover={{ y: -4, boxShadow: "0 12px 32px rgba(245, 158, 11, 0.12)" }}
-      className="group flex items-center gap-4 rounded-2xl border border-amber-500/20 bg-white/90 px-5 py-4 shadow-md backdrop-blur-sm transition-colors hover:border-amber-500/40 sm:px-6 sm:py-5"
+      className="group flex items-center gap-3 rounded-2xl border border-amber-500/20 bg-white/90 px-3 py-3 shadow-md backdrop-blur-sm transition-colors hover:border-amber-500/40 sm:gap-4 sm:px-5 sm:py-4 md:px-6 md:py-5"
     >
-      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500/15 to-orange-500/10 text-amber-500 ring-1 ring-amber-500/10 sm:h-14 sm:w-14">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500/15 to-orange-500/10 text-amber-500 ring-1 ring-amber-500/10 sm:h-12 sm:w-12 md:h-14 md:w-14">
         <AnimatedIcon icon={icon} />
       </div>
-      <div>
-        <p className="text-2xl font-extrabold text-gray-900 sm:text-3xl">
+      <div className="min-w-0">
+        <p className="text-lg font-extrabold text-gray-900 sm:text-2xl md:text-3xl">
           <span ref={ref}>{count.toLocaleString()}</span>
           <span className="text-amber-500">{suffix}</span>
         </p>
-        <p className="text-[11px] font-semibold tracking-wider text-gray-400 uppercase sm:text-xs">
+        <p className="truncate text-[10px] font-semibold tracking-wider text-gray-400 uppercase sm:text-[11px] md:text-xs">
           {label}
         </p>
       </div>
@@ -357,53 +357,32 @@ function PartyStrip({
         style={{ backgroundColor: party.themeColor }}
       />
 
-      {/* ── SINGLE animated logo: glass circle ↔ white rect ── */}
+      {/* ── Collapsed: logo circle ── */}
       <motion.div
         className="absolute z-30 flex items-center justify-center"
         animate={{
-          top: isExpanded ? "calc(10% + 24px)" : 16,
-          left: isExpanded ? 38 : "50%",
-          x: isExpanded ? 0 : "-50%",
-          width: isExpanded ? 76 : 64,
-          height: isExpanded ? 76 : 64,
-          borderRadius: isExpanded ? 18 : 32,
+          top: isExpanded ? -100 : 16,
+          left: "50%",
+          x: "-50%",
+          width: 48,
+          height: 48,
+          borderRadius: 24,
+          opacity: isExpanded ? 0 : 1,
         }}
-        transition={{ duration: 0.55, ease: [0.25, 1, 0.5, 1] }}
+        transition={{ duration: 0.4, ease: [0.25, 1, 0.5, 1] }}
       >
-        {/* Glass circle bg — collapsed */}
-        <motion.div
-          className="absolute inset-0"
-          animate={{
-            opacity: isExpanded ? 0 : 1,
-            borderRadius: isExpanded ? 16 : 36,
-          }}
-          transition={{ duration: 0.35 }}
+        <div
+          className="absolute inset-0 rounded-full"
           style={{
             background: "rgba(255,255,255,0.06)",
             border: "2px solid rgba(255,255,255,0.3)",
             boxShadow: "0 4px 24px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.15)",
           }}
         />
-        {/* White rect bg — expanded */}
-        <motion.div
-          className="absolute inset-0"
-          animate={{
-            opacity: isExpanded ? 1 : 0,
-            borderRadius: isExpanded ? 16 : 36,
-          }}
-          transition={{ duration: 0.35, delay: isExpanded ? 0.08 : 0 }}
-          style={{
-            background: "rgba(255,255,255,0.95)",
-            boxShadow: "0 8px 28px rgba(0,0,0,0.2)",
-          }}
-        />
-        {/* Logo */}
-        <motion.img
+        <img
           src={party.logo}
           alt={party.shortName}
-          className="relative z-10 object-contain"
-          animate={{ width: isExpanded ? 52 : 36, height: isExpanded ? 52 : 36 }}
-          transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
+          className="relative z-10 h-8 w-8 object-contain"
         />
       </motion.div>
 
@@ -433,10 +412,10 @@ function PartyStrip({
         animate={{
           opacity: isExpanded ? 1 : 0,
           y: isExpanded ? 0 : 20,
-          top: isExpanded ? "10%" : "18%",
-          left: isExpanded ? 24 : 24,
-          right: isExpanded ? 24 : 24,
-          bottom: isExpanded ? 24 : 44,
+          top: isExpanded ? "8%" : "18%",
+          left: isExpanded ? 20 : 24,
+          right: isExpanded ? 20 : 24,
+          bottom: isExpanded ? 20 : 44,
         }}
         transition={{ duration: 0.5, delay: isExpanded ? 0.08 : 0, ease: [0.25, 1, 0.5, 1] }}
         style={{
@@ -444,47 +423,62 @@ function PartyStrip({
           visibility: isExpanded ? "visible" : "hidden",
           transitionProperty: "visibility",
           transitionDelay: isExpanded ? "0s" : "0.5s",
-          background: "rgba(0, 0, 0, 0.35)",
-          backdropFilter: "blur(16px)",
-          WebkitBackdropFilter: "blur(16px)",
-          border: `1.5px solid rgba(${party.themeColorRgb}, 0.4)`,
-          boxShadow: `0 0 24px rgba(${party.themeColorRgb}, 0.1), inset 0 1px 0 rgba(255,255,255,0.08)`,
+          background: `linear-gradient(to bottom, rgba(${party.themeColorRgb}, 0.15) 0%, rgba(0, 0, 0, 0.18) 100%)`,
+          backdropFilter: "blur(2px)",
+          WebkitBackdropFilter: "blur(2px)",
+          border: `1.5px solid rgba(255, 255, 255, 0.18)`,
+          boxShadow: `0 0 24px rgba(${party.themeColorRgb}, 0.08), inset 0 1px 0 rgba(255,255,255,0.1)`,
         }}
       >
-        <div className="flex h-full flex-col justify-between p-4 sm:p-5">
-          {/* Name + Badge — offset right for logo */}
-          <div className="pl-[80px] pt-0.5 sm:pl-[84px]">
-            <div className="mb-1.5 flex items-center gap-2">
-              <span className="text-xs font-bold tracking-wider uppercase" style={{ color: party.themeColor }}>
-                {party.shortName}
-              </span>
-              <span className="text-xs text-white/50">Est. {party.established}</span>
+        <div className="flex h-full flex-col justify-between p-3 sm:p-4 md:p-5">
+          {/* Logo inside the glass panel */}
+          <div className="flex items-start gap-3 sm:gap-4">
+            <motion.div
+              className="flex-shrink-0 rounded-2xl bg-white/90 p-2 shadow-lg sm:p-2.5"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={isExpanded ? { scale: 1, opacity: 1 } : { scale: 0.8, opacity: 0 }}
+              transition={{ duration: 0.4, delay: isExpanded ? 0.15 : 0, ease: [0.25, 1, 0.5, 1] }}
+            >
+              <img
+                src={party.logo}
+                alt={party.shortName}
+                className="h-10 w-10 object-contain sm:h-12 sm:w-12"
+              />
+            </motion.div>
+            <div className="min-w-0 pt-0.5">
+              <div className="mb-1 flex items-center gap-1.5 sm:mb-1.5 sm:gap-2">
+                <span className="text-[10px] font-bold tracking-wider uppercase sm:text-xs" style={{ color: party.themeColor }}>
+                  {party.shortName}
+                </span>
+                <span className="text-[10px] text-white/60 sm:text-xs">Est. {party.established}</span>
+              </div>
+              <h3 className="text-base font-bold leading-tight text-white sm:text-xl md:text-2xl">{party.fullName}</h3>
             </div>
-            <h3 className="text-xl font-bold leading-tight text-white sm:text-2xl">{party.fullName}</h3>
           </div>
 
-          <p className="text-sm leading-relaxed text-white/80 sm:text-base">{party.description}</p>
+          <p className="line-clamp-3 text-xs leading-relaxed text-white/80 sm:line-clamp-none sm:text-sm md:text-base">{party.description}</p>
 
           {/* Stats — rolling numbers */}
-          <div className="flex gap-3">
-            <div className="rounded-lg px-5 py-2.5" style={{ backgroundColor: `rgba(${party.themeColorRgb}, 0.15)`, border: `1px solid rgba(${party.themeColorRgb}, 0.3)` }}>
+          <div className="flex gap-2 sm:gap-3">
+            <div className="rounded-lg px-3 py-2 sm:px-5 sm:py-2.5" style={{ backgroundColor: `rgba(${party.themeColorRgb}, 0.15)`, border: `1px solid rgba(${party.themeColorRgb}, 0.3)` }}>
               <RollingNumber value={party.lokSabhaSeats} isActive={isExpanded} color={party.themeColor} />
-              <p className="text-[10px] font-medium text-white/50 uppercase">Lok Sabha Seats</p>
+              <p className="text-[9px] font-medium text-white/50 uppercase sm:text-[10px]">Lok Sabha Seats</p>
             </div>
-            <div className="rounded-lg px-5 py-2.5" style={{ backgroundColor: `rgba(${party.themeColorRgb}, 0.15)`, border: `1px solid rgba(${party.themeColorRgb}, 0.3)` }}>
+            <div className="rounded-lg px-3 py-2 sm:px-5 sm:py-2.5" style={{ backgroundColor: `rgba(${party.themeColorRgb}, 0.15)`, border: `1px solid rgba(${party.themeColorRgb}, 0.3)` }}>
               <RollingNumber value={party.statesRuled} isActive={isExpanded} color={party.themeColor} />
-              <p className="text-[10px] font-medium text-white/50 uppercase">States Ruled</p>
+              <p className="text-[9px] font-medium text-white/50 uppercase sm:text-[10px]">States Ruled</p>
             </div>
           </div>
 
           {/* President */}
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10">
-              <AnimatedLucideIcon icon={Users} size={16} className="text-white/50" />
+          <div className="flex items-center gap-2">
+            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white/10 sm:h-8 sm:w-8">
+              <AnimatedLucideIcon icon={Users} size={14} className="text-white/50 sm:hidden" />
+              <AnimatedLucideIcon icon={Users} size={16} className="hidden text-white/50 sm:block" />
             </div>
             <div>
-              <p className="text-[10px] text-white/40 uppercase">President</p>
-              <p className="text-sm font-semibold text-white">{party.president}</p>
+              <p className="text-[9px] text-white/40 uppercase sm:text-[10px]">President</p>
+              <p className="text-xs font-semibold text-white sm:text-sm">{party.president}</p>
             </div>
           </div>
         </div>
@@ -558,13 +552,16 @@ export function PoliticalPartiesSection() {
     const containerWidth = el.clientWidth;
     const maxScroll = getMaxScroll();
 
-    if (cardRightFinal > scrollOffset + containerWidth - 20) {
-      const target = Math.min(cardRightFinal - containerWidth + 40, maxScroll);
-      setScrollOffset(Math.max(0, target));
-    } else if (cardLeftFinal < scrollOffset + 20) {
-      setScrollOffset(Math.max(0, cardLeftFinal - 40));
-    }
-  }, [activeIndex, cardWidths, scrollOffset, getMaxScroll]);
+    setScrollOffset((prev) => {
+      if (cardRightFinal > prev + containerWidth - 20) {
+        const target = Math.min(cardRightFinal - containerWidth + 40, maxScroll);
+        return Math.max(0, target);
+      } else if (cardLeftFinal < prev + 20) {
+        return Math.max(0, cardLeftFinal - 40);
+      }
+      return prev;
+    });
+  }, [activeIndex, cardWidths, getMaxScroll]);
 
   const handleScrollClick = (direction: "left" | "right") => {
     const maxScroll = getMaxScroll();
@@ -792,7 +789,7 @@ export function PoliticalPartiesSection() {
         </ScrollReveal>
 
         {/* Bottom Stats */}
-        <div className="mt-12 grid grid-cols-2 gap-4 sm:gap-5 lg:mt-16 lg:grid-cols-4">
+        <div className="mt-10 grid grid-cols-2 gap-3 sm:mt-12 sm:gap-4 md:gap-5 lg:mt-16 lg:grid-cols-4">
           {PLATFORM_STATS.map((stat, i) => (
             <StatCounter
               key={stat.label}

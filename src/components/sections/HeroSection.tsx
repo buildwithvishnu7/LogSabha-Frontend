@@ -127,16 +127,14 @@ function SideBadge({
 }
 
 export function StickyBadges({ badges }: { badges: SideBadgeType[] }) {
-  const isMobile = useIsMobile();
-
   return (
-    <div className="fixed bottom-[12%] left-0 z-40 flex flex-col gap-4 md:gap-5">
+    <div className="fixed bottom-[12%] left-0 z-40 hidden flex-col gap-3 lg:flex lg:gap-4 xl:gap-5">
       {badges.map((badge, i) => (
         <SideBadge
           key={badge.id}
           badge={badge}
           index={i}
-          alwaysExpanded={isMobile}
+          alwaysExpanded={false}
         />
       ))}
     </div>

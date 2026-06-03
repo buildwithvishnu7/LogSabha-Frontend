@@ -41,10 +41,10 @@ function AnimatedStat({
 
   return (
     <div>
-      <span ref={ref} className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+      <span ref={ref} className="text-2xl font-extrabold text-gray-900 sm:text-3xl md:text-4xl">
         {count.toLocaleString()}
       </span>
-      <span className="text-3xl font-extrabold text-amber-500 sm:text-4xl">
+      <span className="text-2xl font-extrabold text-amber-500 sm:text-3xl md:text-4xl">
         {suffix}
       </span>
       <p className="mt-1 text-[10px] font-semibold tracking-widest text-gray-400 uppercase sm:text-xs">
@@ -71,7 +71,7 @@ function ServiceTab({
     <ScrollReveal delay={0.1 + index * 0.06} direction="left">
       <motion.button
         onClick={onClick}
-        className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left transition-colors ${
+        className={`flex w-full items-center gap-2.5 whitespace-nowrap rounded-xl px-3 py-2.5 text-left transition-colors sm:gap-3 sm:px-4 sm:py-3 ${
           isActive
             ? "bg-amber-500/10 border border-amber-500/30"
             : "hover:bg-gray-100 border border-transparent"
@@ -119,7 +119,7 @@ function ServiceContent({ service }: { service: ServiceItem }) {
       </p>
 
       {/* Stats with counting animation */}
-      <div className="mt-6 flex gap-8 sm:gap-12">
+      <div className="mt-4 flex gap-6 sm:mt-6 sm:gap-8 md:gap-12">
         {service.stats.map((stat) => (
           <AnimatedStat
             key={stat.label}
@@ -196,9 +196,9 @@ export function ServicesSection({ data }: { data: ServicesData }) {
         </ScrollReveal>
 
         {/* Main content grid */}
-        <div className="mt-10 grid gap-8 lg:mt-14 lg:grid-cols-[280px_1fr_1fr] lg:gap-6 xl:grid-cols-[320px_1fr_1fr] xl:gap-10">
+        <div className="mt-8 grid gap-6 sm:mt-10 sm:gap-8 lg:mt-14 lg:grid-cols-[280px_1fr_1fr] lg:gap-6 xl:grid-cols-[320px_1fr_1fr] xl:gap-10">
           {/* Left: Service tabs */}
-          <div className="flex flex-row gap-2 overflow-x-auto pb-2 lg:flex-col lg:gap-1 lg:overflow-visible lg:pb-0">
+          <div className="scrollbar-hide -mx-4 flex flex-row gap-2 overflow-x-auto px-4 pb-2 sm:-mx-0 sm:px-0 lg:flex-col lg:gap-1 lg:overflow-visible lg:pb-0">
             {data.services.map((service, i) => (
               <ServiceTab
                 key={service.id}

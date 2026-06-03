@@ -150,7 +150,7 @@ export function StateTooltip({ state }: { state: StateData }) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 8, scale: 0.92 }}
       transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-      className="pointer-events-none w-60 rounded-xl border border-white/15 bg-[#1a1a2e]/95 p-4 shadow-2xl backdrop-blur-lg"
+      className="pointer-events-none w-48 rounded-xl border border-white/15 bg-[#1a1a2e]/95 p-3 shadow-2xl backdrop-blur-lg sm:w-60 sm:p-4"
     >
       <div className="flex items-center justify-between">
         <p className="text-sm font-bold text-white">{state.name}</p>

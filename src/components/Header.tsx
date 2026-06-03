@@ -102,13 +102,13 @@ export function Header() {
         style={{ width: "100%" }}
       />
 
-      <div className="mx-auto flex h-14 max-w-[1440px] items-center justify-between px-3 sm:h-16 sm:px-6 md:h-20 lg:h-24 xl:px-8">
+      <div className="mx-auto flex h-14 max-w-[1440px] items-center justify-between px-3 sm:h-16 sm:px-6 md:h-20 lg:h-24 lg:px-8 xl:px-12">
         {/* Logo — sits OUTSIDE the parallelogram shape */}
-        <Link to="/" className="relative z-10 absolute left-1/2 -translate-x-1/2 sm:relative sm:left-auto sm:translate-x-0 sm:flex-shrink-0">
+        <Link to="/" className="relative z-10 flex-shrink-0">
           <motion.img
             src={logoSrc}
             alt="The LogSabha"
-            className="h-24  w-auto sm:h-16 md:h-24 lg:h-28 xl:h-32"
+            className="h-12 w-auto sm:h-14 md:h-20 lg:h-24 xl:h-28"
             animate={{ y: [0, -3, 0] }}
             transition={{
               duration: 4,
