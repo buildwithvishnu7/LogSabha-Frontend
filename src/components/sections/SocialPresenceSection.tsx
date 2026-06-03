@@ -484,15 +484,15 @@ export function SocialPresenceSection() {
             className="mx-auto mt-3 h-[3px] w-12 rounded-full bg-amber-500"
           />
 
-          <ScrollReveal delay={0.4}>
+          {/* <ScrollReveal delay={0.4}>
             <p className="mt-4 max-w-xl text-sm leading-relaxed text-gray-500">
               Stay connected with the latest political updates, analysis, and community discussions across our social channels.
             </p>
-          </ScrollReveal>
+          </ScrollReveal> */}
         </div>
 
         {/* ── Aggregate Stats ── */}
-        <StatsBar />
+        {/* <StatsBar /> */}
 
         {/* ── Platform Filter ── */}
         <ScrollReveal delay={0.5}>

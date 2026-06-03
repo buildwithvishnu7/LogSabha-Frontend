@@ -29,9 +29,9 @@ export default function Home() {
       <PoliticalPartiesSection />
       <CommunitySection />
       <ServicesSection data={data.services} />
+      <RSSSection />
       <DataInsightsSection />
       <EditorialInsightsSection />
-      <RSSSection />
       <SocialPresenceSection />
       <ContactSection />
       <Footer />

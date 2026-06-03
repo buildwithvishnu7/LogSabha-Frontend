@@ -590,6 +590,8 @@ export function PoliticalPartiesSection() {
 
   return (
     <section className="relative overflow-hidden bg-white py-20 sm:py-24 lg:py-32">
+      {/* Top blend from previous dark section */}
+      <div className="absolute top-0 left-0 right-0 z-[2] h-24 bg-gradient-to-b from-[#0c0c1d] via-[#0c0c1d]/30 to-transparent" />
       {/* ── Video background ── */}
       <div className="pointer-events-none absolute inset-0">
         <video
