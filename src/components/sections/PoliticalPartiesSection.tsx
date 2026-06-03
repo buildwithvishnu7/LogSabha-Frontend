@@ -581,90 +581,21 @@ export function PoliticalPartiesSection() {
 
   return (
     <section className="relative overflow-hidden bg-white py-20 sm:py-24 lg:py-32">
-      {/* ── Indian flag smoky background ── */}
+      {/* ── Video background ── */}
       <div className="pointer-events-none absolute inset-0">
-        {/* SVG turbulence filter for organic smoke texture */}
-        <svg className="absolute h-0 w-0">
-          <defs>
-            <filter id="smoke-texture">
-              <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="4" seed="2" result="noise" />
-              <feDisplacementMap in="SourceGraphic" in2="noise" scale="80" xChannelSelector="R" yChannelSelector="G" />
-            </filter>
-            <filter id="smoke-texture-fine">
-              <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="5" seed="7" result="noise" />
-              <feDisplacementMap in="SourceGraphic" in2="noise" scale="50" xChannelSelector="R" yChannelSelector="G" />
-            </filter>
-          </defs>
-        </svg>
-
-        {/* Base warm tint */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(to right, rgba(255, 153, 51, 0.08) 0%, rgba(255, 245, 230, 0.05) 35%, rgba(255,255,255,0) 50%, rgba(230, 255, 230, 0.05) 65%, rgba(19, 136, 8, 0.08) 100%)",
-          }}
-        />
-
-        {/* ── SAFFRON SMOKE — left side ── */}
-        {/* Primary large cloud */}
-        <div className="smoke-drift-slow absolute -left-[5%] -top-[10%] h-[80%] w-[50%] opacity-70"
-          style={{ background: "radial-gradient(ellipse 70% 60% at 30% 40%, rgba(255, 140, 0, 0.6) 0%, rgba(255, 165, 50, 0.3) 40%, transparent 70%)", filter: "url(#smoke-texture) blur(40px)" }}
-        />
-        {/* Secondary warm blob */}
-        <div className="smoke-drift-medium absolute left-[2%] top-[15%] h-[55%] w-[38%] opacity-60"
-          style={{ background: "radial-gradient(ellipse 80% 50% at 40% 50%, rgba(255, 120, 0, 0.55) 0%, rgba(255, 180, 80, 0.2) 50%, transparent 75%)", filter: "url(#smoke-texture-fine) blur(30px)" }}
-        />
-        {/* Deep saffron accent */}
-        <div className="smoke-drift-fast absolute -left-[3%] top-[5%] h-[45%] w-[30%] opacity-75"
-          style={{ background: "radial-gradient(ellipse at 35% 45%, rgba(255, 100, 0, 0.7) 0%, rgba(255, 153, 51, 0.3) 45%, transparent 70%)", filter: "blur(25px)" }}
-        />
-        {/* Lower saffron wisp */}
-        <div className="smoke-drift-slow absolute left-[8%] bottom-[5%] h-[50%] w-[32%] opacity-50"
-          style={{ background: "radial-gradient(ellipse 60% 80% at 50% 60%, rgba(255, 160, 50, 0.45) 0%, rgba(255, 200, 120, 0.15) 50%, transparent 75%)", filter: "url(#smoke-texture) blur(35px)" }}
-        />
-        {/* Bright saffron highlight */}
-        <div className="smoke-drift-medium absolute left-[5%] top-[30%] h-[25%] w-[20%] opacity-55"
-          style={{ background: "radial-gradient(circle at center, rgba(255, 180, 50, 0.6) 0%, rgba(255, 140, 0, 0.2) 50%, transparent 70%)", filter: "blur(20px)" }}
-        />
-        {/* Extra saffron streak top-left */}
-        <div className="smoke-drift-fast absolute -left-[8%] top-[0%] h-[35%] w-[40%] opacity-45"
-          style={{ background: "radial-gradient(ellipse 90% 40% at 20% 30%, rgba(255, 130, 20, 0.5) 0%, transparent 65%)", filter: "url(#smoke-texture-fine) blur(45px)" }}
-        />
-
-        {/* ── WHITE CENTER MIST ── */}
-        <div className="absolute left-[20%] top-[0%] h-full w-[60%] opacity-80"
-          style={{ background: "radial-gradient(ellipse 100% 80% at 50% 50%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 250, 240, 0.5) 40%, transparent 70%)" }}
-        />
-        <div className="smoke-drift-slow absolute left-[28%] top-[20%] h-[60%] w-[44%] opacity-60"
-          style={{ background: "radial-gradient(ellipse at center, rgba(255, 252, 245, 0.7) 0%, transparent 65%)", filter: "blur(50px)" }}
-        />
-
-        {/* ── GREEN SMOKE — right side ── */}
-        {/* Primary large cloud */}
-        <div className="smoke-drift-slow absolute -right-[5%] -top-[5%] h-[75%] w-[45%] opacity-55"
-          style={{ background: "radial-gradient(ellipse 65% 70% at 70% 45%, rgba(19, 136, 8, 0.5) 0%, rgba(50, 180, 50, 0.2) 45%, transparent 72%)", filter: "url(#smoke-texture) blur(40px)" }}
-        />
-        {/* Secondary green blob */}
-        <div className="smoke-drift-medium absolute right-[3%] top-[20%] h-[50%] w-[35%] opacity-50"
-          style={{ background: "radial-gradient(ellipse 75% 55% at 55% 50%, rgba(34, 160, 30, 0.45) 0%, rgba(80, 200, 80, 0.15) 50%, transparent 73%)", filter: "url(#smoke-texture-fine) blur(30px)" }}
-        />
-        {/* Deep green accent */}
-        <div className="smoke-drift-fast absolute right-[0%] bottom-[10%] h-[45%] w-[30%] opacity-60"
-          style={{ background: "radial-gradient(ellipse at 60% 55%, rgba(0, 120, 0, 0.55) 0%, rgba(19, 136, 8, 0.2) 45%, transparent 70%)", filter: "blur(25px)" }}
-        />
-        {/* Light green wisp */}
-        <div className="smoke-drift-slow absolute right-[10%] bottom-[0%] h-[40%] w-[28%] opacity-40"
-          style={{ background: "radial-gradient(ellipse 55% 75% at 50% 65%, rgba(50, 180, 50, 0.4) 0%, rgba(100, 220, 100, 0.1) 50%, transparent 72%)", filter: "url(#smoke-texture) blur(35px)" }}
-        />
-        {/* Bright green highlight */}
-        <div className="smoke-drift-medium absolute right-[8%] top-[35%] h-[20%] w-[18%] opacity-45"
-          style={{ background: "radial-gradient(circle at center, rgba(60, 200, 60, 0.5) 0%, rgba(19, 136, 8, 0.15) 50%, transparent 70%)", filter: "blur(18px)" }}
-        />
-
-        {/* Top/bottom fade to white for clean section transitions */}
-        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-white to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-white to-transparent" />
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 h-full w-full object-cover"
+          poster="/images/tri-bg.jpg"
+        >
+          <source src="/videos/Tri-bg.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-white/60" />
+        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-white to-transparent" />
       </div>
 
       <div className="relative mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8 xl:px-12">

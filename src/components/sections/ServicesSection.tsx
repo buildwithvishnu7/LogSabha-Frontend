@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Target,
@@ -164,20 +164,44 @@ function ServiceContent({ service }: { service: ServiceItem }) {
 
 export function ServicesSection({ data }: { data: ServicesData }) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isHovering, setIsHovering] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const activeService = data.services[activeIndex];
+
+  const startAutoPlay = useCallback(() => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % data.services.length);
+    }, 4000);
+  }, [data.services.length]);
+
+  useEffect(() => {
+    if (!isHovering) startAutoPlay();
+    else if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [isHovering, startAutoPlay]);
 
   return (
     <section className="relative overflow-hidden bg-white py-20 sm:py-24 lg:py-32">
-      {/* Decorative background pattern */}
-      <div className="absolute inset-0 opacity-[0.03]">
-        <div
-          className="h-full w-full"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 1px 1px, rgb(0,0,0) 1px, transparent 0)",
-            backgroundSize: "32px 32px",
-          }}
-        />
+      {/* ── Video background ── */}
+      <div className="pointer-events-none absolute inset-0">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 h-full w-full object-cover"
+        >
+          <source src="/videos/Ashoka-bg.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-white/70" />
+        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-white to-transparent" />
       </div>
 
       <div className="relative mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8 xl:px-12">
@@ -196,7 +220,11 @@ export function ServicesSection({ data }: { data: ServicesData }) {
         </ScrollReveal>
 
         {/* Main content grid */}
-        <div className="mt-8 grid gap-6 sm:mt-10 sm:gap-8 lg:mt-14 lg:grid-cols-[280px_1fr_1fr] lg:gap-6 xl:grid-cols-[320px_1fr_1fr] xl:gap-10">
+        <div
+          className="mt-8 grid gap-6 sm:mt-10 sm:gap-8 lg:mt-14 lg:grid-cols-[280px_1fr_1fr] lg:gap-6 xl:grid-cols-[320px_1fr_1fr] xl:gap-10"
+          onMouseEnter={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
+        >
           {/* Left: Service tabs */}
           <div className="scrollbar-hide -mx-4 flex flex-row gap-2 overflow-x-auto px-4 pb-2 sm:-mx-0 sm:px-0 lg:flex-col lg:gap-1 lg:overflow-visible lg:pb-0">
             {data.services.map((service, i) => (

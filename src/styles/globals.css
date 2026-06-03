@@ -219,6 +219,23 @@
   filter: drop-shadow(0 0 15px var(--color-brand-glow));
 }
 
+/* ─── Community Section Title (light background) ─── */
+
+.community-title-shimmer {
+  background-image: linear-gradient(
+    90deg,
+    var(--color-brand) 0%, var(--color-brand) 25%,
+    var(--color-brand-light) 40%, #fde68a 50%, var(--color-brand-light) 60%,
+    var(--color-brand) 75%, var(--color-brand) 100%
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer-sweep-reverse 4s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px var(--color-brand-glow));
+}
+
 .section-subtitle-shimmer {
   background-image: linear-gradient(
     90deg,
@@ -272,6 +289,76 @@
 .smoke-drift-slow   { animation: smoke-drift-slow 12s ease-in-out infinite; }
 .smoke-drift-medium { animation: smoke-drift-medium 8s ease-in-out infinite; }
 .smoke-drift-fast   { animation: smoke-drift-fast 6s ease-in-out infinite; }
+
+/* ─── Breathing button pulse ─── */
+@keyframes breathing-glow {
+  0%, 100% { box-shadow: 0 8px 15px -3px rgba(245, 158, 11, 0.2); transform: scale(1); }
+  50%      { box-shadow: 0 8px 30px -3px rgba(245, 158, 11, 0.45); transform: scale(1.03); }
+}
+
+.btn-breathing {
+  animation: breathing-glow 2.5s ease-in-out infinite;
+}
+
+.btn-breathing:hover {
+  animation-play-state: paused;
+  transform: scale(1.05);
+  box-shadow: 0 8px 30px -3px rgba(245, 158, 11, 0.5);
+}
+
+/* ─── Moving border (rotating conic-gradient) ─── */
+@keyframes border-rotate {
+  0%   { --angle: 0deg; }
+  100% { --angle: 360deg; }
+}
+
+.moving-border {
+  position: relative;
+  isolation: isolate;
+  border: none !important;
+  background: transparent;
+}
+
+.moving-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  background: conic-gradient(
+    from var(--angle),
+    var(--color-brand) 0%,
+    var(--color-brand-light) 10%,
+    transparent 25%,
+    transparent 75%,
+    var(--color-brand-light) 90%,
+    var(--color-brand) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: border-rotate 3s linear infinite;
+}
+
+.moving-border > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ─── Typewriter cursor blink ─── */
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0; }
+}
+
+.typewriter-cursor {
+  animation: cursor-blink 0.8s step-end infinite;
+}
 
 /* ─── Scrollbar hiding ─── */
 .scrollbar-hide {

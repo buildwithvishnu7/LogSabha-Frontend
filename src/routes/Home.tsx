@@ -3,6 +3,7 @@ import { HeroSection } from "@/components/sections/HeroSection";
 import { PoliticalLandscapeSection } from "@/components/sections/PoliticalLandscapeSection";
 import { PoliticalPartiesSection } from "@/components/sections/PoliticalPartiesSection";
 import { ServicesSection } from "@/components/sections/ServicesSection";
+import { CommunitySection } from "@/components/sections/CommunitySection";
 
 export default function Home() {
   const { data, isLoading } = useHomeData();
@@ -21,6 +22,7 @@ export default function Home() {
       <PoliticalLandscapeSection data={data.politicalLandscape} />
       <PoliticalPartiesSection />
       <ServicesSection data={data.services} />
+      <CommunitySection />
     </>
   );
 }
