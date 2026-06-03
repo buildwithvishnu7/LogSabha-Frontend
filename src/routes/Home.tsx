@@ -6,6 +6,7 @@ import { ServicesSection } from "@/components/sections/ServicesSection";
 import { CommunitySection } from "@/components/sections/CommunitySection";
 import { DataInsightsSection } from "@/components/sections/DataInsightsSection";
 import { RSSSection } from "@/components/sections/RSSSection";
+import { ContactSection } from "@/components/sections/ContactSection";
 import { Footer } from "@/components/Footer";
 
 export default function Home() {
@@ -28,6 +29,7 @@ export default function Home() {
       <DataInsightsSection />
       <RSSSection />
       <CommunitySection />
+      <ContactSection />
       <Footer />
     </>
   );
