@@ -1,79 +1,252 @@
 import { useRef, useEffect, useState } from "react";
-import { motion, useInView, useMotionValue, useTransform, animate } from "motion/react";
-import { PieChart, MapPin, TrendingUp } from "lucide-react";
+import {
+  motion,
+  useInView,
+  useMotionValue,
+  useTransform,
+  animate,
+} from "motion/react";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
-import { AnimatedLucideIcon } from "@/components/AnimatedLucideIcon";
 
 // ─── Data ───
 
 const PARTY_SEATS = [
-  { party: "BJP", seats: 303, color: "#f97316" },
-  { party: "INC", seats: 52, color: "#22c55e" },
-  { party: "DMK", seats: 24, color: "#ef4444" },
+  { party: "BJP", seats: 240, color: "#f97316" },
+  { party: "INC", seats: 99, color: "#22c55e" },
   { party: "TMC", seats: 23, color: "#06b6d4" },
-  { party: "Others", seats: 141, color: "#6b7280" },
+  { party: "DMK", seats: 22, color: "#ec4899" },
+  { party: "Others", seats: 159, color: "#6b7280" },
 ];
-
 const TOTAL_SEATS = 543;
 
-const STATE_DISTRIBUTION = [
-  { state: "Uttar Pradesh", seats: 80, color: "#f97316", dotColor: "#f97316" },
-  { state: "Maharashtra", seats: 48, color: "#f97316", dotColor: "#f97316" },
-  { state: "West Bengal", seats: 42, color: "#06b6d4", dotColor: "#06b6d4" },
-  { state: "Bihar", seats: 40, color: "#f97316", dotColor: "#f97316" },
-  { state: "Tamil Nadu", seats: 39, color: "#ef4444", dotColor: "#ef4444" },
-  { state: "Madhya Pradesh", seats: 29, color: "#f97316", dotColor: "#f97316" },
+const STATE_BAR_DATA = [
+  { state: "UP", bjp: 62, inc: 6, others: 12 },
+  { state: "MH", bjp: 23, inc: 13, others: 12 },
+  { state: "WB", bjp: 12, inc: 1, others: 29 },
+  { state: "TN", bjp: 0, inc: 9, others: 30 },
+  { state: "KA", bjp: 17, inc: 9, others: 2 },
+  { state: "RJ", bjp: 14, inc: 8, others: 3 },
 ];
 
 const HISTORICAL_DATA = [
-  { year: 2009, bjp: 116, inc: 206, others: 221 },
-  { year: 2014, bjp: 282, inc: 44, others: 217 },
-  { year: 2019, bjp: 303, inc: 52, others: 188 },
+  { year: 2004, bjp: 138, inc: 145 },
+  { year: 2009, bjp: 116, inc: 206 },
+  { year: 2014, bjp: 282, inc: 44 },
+  { year: 2019, bjp: 303, inc: 52 },
+  { year: 2024, bjp: 240, inc: 99 },
 ];
 
-// ─── Animated Counter ───
+const BOTTOM_STATS = [
+  {
+    value: 543,
+    decimals: 0,
+    suffix: "",
+    label: "Total Constituencies",
+    change: "+0%",
+    positive: true,
+    color: "#f97316",
+  },
+  {
+    value: 96.8,
+    decimals: 1,
+    suffix: "Cr",
+    label: "Registered Voters",
+    change: "+3.2%",
+    positive: true,
+    color: "#3b82f6",
+  },
+  {
+    value: 65.8,
+    decimals: 1,
+    suffix: "%",
+    label: "Voter Turnout 2024",
+    change: "-1.6%",
+    positive: false,
+    color: "#22c55e",
+  },
+  {
+    value: 47.1,
+    decimals: 1,
+    suffix: "Cr",
+    label: "Women Voters",
+    change: "+4.8%",
+    positive: true,
+    color: "#ec4899",
+  },
+];
+
+// ─── Chart layout constants ───
+
+const BAR = {
+  W: 360,
+  H: 240,
+  ml: 35,
+  mr: 10,
+  mt: 10,
+  mb: 40,
+  yMax: 70,
+  barW: 11,
+  barGap: 3,
+};
+const BAR_CW = BAR.W - BAR.ml - BAR.mr;
+const BAR_CH = BAR.H - BAR.mt - BAR.mb;
+
+const LINE = { W: 360, H: 240, ml: 40, mr: 20, mt: 15, mb: 30, yMax: 330 };
+const LINE_CW = LINE.W - LINE.ml - LINE.mr;
+const LINE_CH = LINE.H - LINE.mt - LINE.mb;
+
+// ─── AnimatedNumber (for donut center) ───
 
 function AnimatedNumber({
   value,
+  decimals = 0,
   delay = 0,
   className = "",
 }: {
   value: number;
+  decimals?: number;
   delay?: number;
   className?: string;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { margin: "-40px" });
   const motionVal = useMotionValue(0);
-  const rounded = useTransform(motionVal, (v) => Math.round(v));
-  const [display, setDisplay] = useState(0);
+  const display = useTransform(motionVal, (v) =>
+    decimals > 0 ? v.toFixed(decimals) : String(Math.round(v))
+  );
+  const [text, setText] = useState(
+    decimals > 0 ? (0).toFixed(decimals) : "0"
+  );
 
   useEffect(() => {
     if (isInView) {
-      const controls = animate(motionVal, value, {
+      const c = animate(motionVal, value, {
         duration: 2.5,
         delay,
         ease: [0.16, 1, 0.3, 1],
       });
-      return controls.stop;
+      return c.stop;
     } else {
       motionVal.set(0);
-      setDisplay(0);
+      setText(decimals > 0 ? (0).toFixed(decimals) : "0");
     }
-  }, [isInView, value, delay, motionVal]);
+  }, [isInView, value, delay, motionVal, decimals]);
 
-  useEffect(() => {
-    return rounded.on("change", (v) => setDisplay(v));
-  }, [rounded]);
+  useEffect(() => display.on("change", setText), [display]);
 
   return (
     <span ref={ref} className={className}>
-      {display}
+      {text}
     </span>
   );
 }
 
-// ─── Animated Donut Chart (SVG) ───
+// ─── Slot Machine Number ───
+
+const SLOT_CYCLES = 2;
+const DIGIT_H = 1.15;
+
+function SlotDigit({
+  target,
+  delay,
+  active,
+}: {
+  target: number;
+  delay: number;
+  active: boolean;
+}) {
+  const total = SLOT_CYCLES * 10 + target;
+  const digits: number[] = [];
+  for (let i = 0; i <= total; i++) digits.push(i % 10);
+
+  return (
+    <span
+      className="relative inline-block overflow-hidden align-bottom"
+      style={{
+        height: `${DIGIT_H}em`,
+        width: "0.65em",
+        fontVariantNumeric: "tabular-nums",
+      }}
+    >
+      <motion.span
+        className="block will-change-transform"
+        initial={{ y: 0 }}
+        animate={
+          active
+            ? { y: `${-total * DIGIT_H}em` }
+            : { y: 0 }
+        }
+        transition={{
+          duration: 1.3 + total * 0.012,
+          delay,
+          ease: [0.16, 1, 0.3, 1],
+        }}
+      >
+        {digits.map((d, i) => (
+          <span
+            key={i}
+            className="block text-center"
+            style={{ height: `${DIGIT_H}em`, lineHeight: `${DIGIT_H}em` }}
+          >
+            {d}
+          </span>
+        ))}
+      </motion.span>
+    </span>
+  );
+}
+
+function SlotMachineNumber({
+  value,
+  decimals = 0,
+  suffix = "",
+  color,
+  baseDelay = 0,
+}: {
+  value: number;
+  decimals?: number;
+  suffix?: string;
+  color: string;
+  baseDelay?: number;
+}) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const isInView = useInView(ref, { margin: "-40px" });
+  const [active, setActive] = useState(false);
+
+  useEffect(() => {
+    setActive(isInView);
+  }, [isInView]);
+
+  const formatted =
+    decimals > 0 ? value.toFixed(decimals) : String(Math.round(value));
+  const chars = formatted.split("");
+
+  return (
+    <span
+      ref={ref}
+      className="inline-flex items-baseline text-2xl font-extrabold sm:text-3xl"
+      style={{ color }}
+    >
+      {chars.map((ch, i) =>
+        /\d/.test(ch) ? (
+          <SlotDigit
+            key={`${i}-${ch}`}
+            target={parseInt(ch)}
+            delay={baseDelay + i * 0.08}
+            active={active}
+          />
+        ) : (
+          <span key={`${i}-${ch}`} className="inline-block w-[0.25em] text-center">
+            {ch}
+          </span>
+        )
+      )}
+      {suffix && <span className="ml-0.5">{suffix}</span>}
+    </span>
+  );
+}
+
+// ─── Donut Chart (SVG, dark theme) ───
 
 function DonutChart({
   triggered,
@@ -82,97 +255,90 @@ function DonutChart({
 }: {
   triggered: boolean;
   hoveredParty: string | null;
-  onHoverParty: (party: string | null) => void;
+  onHoverParty: (p: string | null) => void;
 }) {
-  const radius = 80;
-  const circumference = 2 * Math.PI * radius;
-  let accumulated = 0;
-
-  const segments = PARTY_SEATS.map((p) => {
-    const fraction = p.seats / TOTAL_SEATS;
-    const length = fraction * circumference;
-    const offset = accumulated;
-    accumulated += length;
-    return { ...p, length, offset, fraction };
+  const R = 80;
+  const C = 2 * Math.PI * R;
+  let acc = 0;
+  const segs = PARTY_SEATS.map((p) => {
+    const frac = p.seats / TOTAL_SEATS;
+    const len = frac * C;
+    const off = acc;
+    acc += len;
+    return { ...p, len, off, frac };
   });
 
-  const activeParty = hoveredParty
+  const active = hoveredParty
     ? PARTY_SEATS.find((p) => p.party === hoveredParty)
     : null;
 
   return (
-    <div className="relative mx-auto h-52 w-52 sm:h-56 sm:w-56">
+    <div className="relative mx-auto h-48 w-48 sm:h-52 sm:w-52">
       <svg
         viewBox="0 0 200 200"
         className="h-full w-full -rotate-90"
         onMouseLeave={() => onHoverParty(null)}
       >
-        {/* Background ring */}
         <circle
           cx="100"
           cy="100"
-          r={radius}
+          r={R}
           fill="none"
-          stroke="#f3f4f6"
+          stroke="#1e293b"
           strokeWidth="28"
         />
-        {segments.map((seg, i) => {
-          const isHovered = hoveredParty === seg.party;
-          const isDimmed = hoveredParty !== null && !isHovered;
-
+        {segs.map((s, i) => {
+          const hov = hoveredParty === s.party;
+          const dim = hoveredParty !== null && !hov;
           return (
             <motion.circle
-              key={seg.party}
+              key={s.party}
               cx="100"
               cy="100"
-              r={radius}
+              r={R}
               fill="none"
-              stroke={seg.color}
+              stroke={s.color}
               strokeLinecap="butt"
-              strokeDasharray={`${seg.length} ${circumference - seg.length}`}
-              initial={{ strokeDashoffset: circumference, strokeWidth: 28 }}
+              strokeDasharray={`${s.len} ${C - s.len}`}
+              initial={{ strokeDashoffset: C, strokeWidth: 28 }}
               animate={
                 triggered
                   ? {
-                      strokeDashoffset:
-                        circumference - seg.offset - seg.length,
-                      strokeWidth: isHovered ? 34 : 28,
-                      opacity: isDimmed ? 0.35 : 1,
+                      strokeDashoffset: C - s.off - s.len,
+                      strokeWidth: hov ? 34 : 28,
+                      opacity: dim ? 0.3 : 1,
                     }
-                  : { strokeDashoffset: circumference }
+                  : { strokeDashoffset: C }
               }
               transition={{
                 strokeDashoffset: {
                   duration: 1.8,
-                  delay: 0.3 + i * 0.2,
+                  delay: 0.3 + i * 0.18,
                   ease: [0.16, 1, 0.3, 1],
                 },
-                strokeWidth: { duration: 0.3, ease: "easeOut" },
-                opacity: { duration: 0.3, ease: "easeOut" },
+                strokeWidth: { duration: 0.3 },
+                opacity: { duration: 0.3 },
               }}
               style={{
                 transformOrigin: "100px 100px",
                 cursor: "pointer",
-                filter: isHovered
-                  ? `drop-shadow(0 0 6px ${seg.color})`
-                  : "none",
+                filter: hov ? `drop-shadow(0 0 8px ${s.color})` : "none",
               }}
-              onMouseEnter={() => onHoverParty(seg.party)}
+              onMouseEnter={() => onHoverParty(s.party)}
             />
           );
         })}
-
-        {/* Ambient: rotating highlight arc */}
+        {/* Continuous rotating highlight arc */}
         {triggered && !hoveredParty && (
           <motion.circle
             cx="100"
             cy="100"
-            r={radius}
+            r={R}
             fill="none"
-            stroke="rgba(255,255,255,0.3)"
+            stroke="rgba(255,255,255,0.12)"
             strokeWidth="28"
-            strokeDasharray={`${circumference * 0.08} ${circumference * 0.92}`}
-            animate={{ strokeDashoffset: [0, -circumference] }}
+            strokeDasharray={`${C * 0.08} ${C * 0.92}`}
+            animate={{ strokeDashoffset: [0, -C] }}
             transition={{
               duration: 6,
               repeat: Infinity,
@@ -184,36 +350,19 @@ function DonutChart({
         )}
       </svg>
 
-      {/* Center text — shows hovered party info or total */}
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <motion.span
           className="text-3xl font-extrabold sm:text-4xl"
-          style={{ color: activeParty ? activeParty.color : "#111827" }}
+          style={{ color: active ? active.color : "#f1f5f9" }}
           initial={{ opacity: 0, scale: 0.5 }}
           animate={
-            triggered
-              ? { opacity: 1, scale: hoveredParty ? [1] : [1, 1.04, 1] }
-              : { opacity: 0, scale: 0.5 }
+            triggered ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.5 }
           }
-          transition={
-            triggered
-              ? {
-                  opacity: { duration: 0.8, delay: 1 },
-                  scale: hoveredParty
-                    ? { duration: 0.3 }
-                    : {
-                        duration: 3,
-                        delay: 3,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      },
-                }
-              : { duration: 0.8, delay: 1, ease: [0.16, 1, 0.3, 1] }
-          }
+          transition={{ duration: 0.8, delay: 1 }}
           key={hoveredParty ?? "total"}
         >
-          {activeParty ? (
-            activeParty.seats
+          {active ? (
+            active.seats
           ) : (
             <AnimatedNumber
               value={triggered ? TOTAL_SEATS : 0}
@@ -223,61 +372,34 @@ function DonutChart({
         </motion.span>
         <motion.span
           className="text-[10px] font-semibold tracking-widest uppercase"
-          style={{ color: activeParty ? activeParty.color : "#9ca3af" }}
+          style={{ color: active ? active.color : "#64748b" }}
           initial={{ opacity: 0, y: 8 }}
-          animate={
-            triggered
-              ? {
-                  opacity: hoveredParty ? 1 : [0.5, 1, 0.5],
-                  y: 0,
-                }
-              : { opacity: 0, y: 8 }
-          }
-          transition={
-            triggered
-              ? {
-                  y: { duration: 0.6, delay: 1.3 },
-                  opacity: hoveredParty
-                    ? { duration: 0.3 }
-                    : {
-                        duration: 4,
-                        delay: 3,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      },
-                }
-              : { duration: 0.6, delay: 1.3 }
-          }
-          key={`label-${hoveredParty ?? "total"}`}
+          animate={triggered ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+          transition={{ duration: 0.6, delay: 1.3 }}
+          key={`lbl-${hoveredParty ?? "total"}`}
         >
-          {activeParty ? activeParty.party : "Total Seats"}
+          {active ? active.party : "Total Seats"}
         </motion.span>
       </div>
 
-      {/* Ambient: outer glow ring */}
+      {/* Continuous outer glow ring */}
       {triggered && (
         <motion.div
-          className="pointer-events-none absolute inset-[-8px] rounded-full border-2"
+          className="pointer-events-none absolute inset-[-6px] rounded-full border-2"
           animate={{
-            scale: hoveredParty ? [1, 1.03, 1] : [1, 1.06, 1],
-            opacity: [0.3, 0.6, 0.3],
-            borderColor: hoveredParty
-              ? [
-                  `${activeParty?.color ?? "#f59e0b"}30`,
-                  `${activeParty?.color ?? "#f59e0b"}70`,
-                  `${activeParty?.color ?? "#f59e0b"}30`,
-                ]
-              : [
-                  "rgba(245,158,11,0.15)",
-                  "rgba(245,158,11,0.4)",
-                  "rgba(245,158,11,0.15)",
-                ],
+            scale: [1, 1.04, 1],
+            opacity: [0.2, 0.5, 0.2],
+            borderColor: [
+              "rgba(245,158,11,0.1)",
+              "rgba(245,158,11,0.35)",
+              "rgba(245,158,11,0.1)",
+            ],
           }}
           transition={{
-            duration: hoveredParty ? 2 : 4,
+            duration: 4,
             repeat: Infinity,
             ease: "easeInOut",
-            delay: hoveredParty ? 0 : 2.5,
+            delay: 3,
           }}
         />
       )}
@@ -285,80 +407,265 @@ function DonutChart({
   );
 }
 
-// ─── Animated Horizontal Bar ───
+// ─── Seat Share Card (Donut + Legend) ───
 
-function AnimatedBar({
-  value,
-  max,
-  color,
-  delay,
-  triggered,
-  index,
-}: {
-  value: number;
-  max: number;
-  color: string;
-  delay: number;
-  triggered: boolean;
-  index: number;
-}) {
-  const pct = (value / max) * 100;
-
-  return (
-    <div className="relative h-3 flex-1 overflow-hidden rounded-full bg-gray-100">
-      <motion.div
-        className="absolute inset-y-0 left-0 rounded-full"
-        style={{ backgroundColor: color }}
-        initial={{ width: "0%" }}
-        animate={triggered ? { width: `${pct}%` } : { width: "0%" }}
-        transition={{
-          duration: 1.6,
-          delay,
-          ease: [0.16, 1, 0.3, 1],
-        }}
-      />
-      {/* Continuous shimmer sweep on bar */}
-      {triggered && (
-        <motion.div
-          className="absolute inset-y-0 left-0 rounded-full"
-          style={{
-            width: `${pct}%`,
-            background:
-              "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.45) 50%, transparent 100%)",
-            backgroundSize: "200% 100%",
-          }}
-          animate={{
-            backgroundPosition: ["-100% 0%", "200% 0%"],
-          }}
-          transition={{
-            duration: 2.5,
-            delay: 3 + index * 0.6,
-            repeat: Infinity,
-            repeatDelay: 3 + index * 0.4,
-            ease: "easeInOut",
-          }}
-        />
-      )}
-    </div>
-  );
-}
-
-// ─── State Distribution Card ───
-
-function StateDistributionCard({ triggered }: { triggered: boolean }) {
-  const maxSeats = Math.max(...STATE_DISTRIBUTION.map((s) => s.seats));
-  const topStatesTotal = STATE_DISTRIBUTION.reduce((a, s) => a + s.seats, 0);
+function SeatShareCard({ triggered }: { triggered: boolean }) {
+  const [hovered, setHovered] = useState<string | null>(null);
 
   return (
     <motion.div
-      className="flex h-full flex-col rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6"
+      className="flex h-full flex-col rounded-2xl border border-[#1e293b] bg-[#111827] p-5 sm:p-6"
       animate={
         triggered
           ? {
               borderColor: [
-                "rgba(229,231,235,1)",
-                "rgba(245,158,11,0.3)",
-                "rgba(229,231,235,1)",
+                "#1e293b",
+                "rgba(245,158,11,0.25)",
+                "#1e293b",
+              ],
+            }
+          : {}
+      }
+      transition={{
+        duration: 5,
+        delay: 3,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+      onMouseLeave={() => setHovered(null)}
+    >
+      <div className="mb-3 flex items-center justify-between">
+        <h3 className="text-sm font-bold text-slate-100 sm:text-base">
+          Lok Sabha Seat Share
+        </h3>
+        <span className="rounded-full bg-emerald-500/90 px-2.5 py-0.5 text-[10px] font-bold text-white shadow-lg shadow-emerald-500/20">
+          543 Seats
+        </span>
+      </div>
+
+      <DonutChart
+        triggered={triggered}
+        hoveredParty={hovered}
+        onHoverParty={setHovered}
+      />
+
+      <div className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 border-t border-[#1e293b] pt-3">
+        {PARTY_SEATS.map((p, i) => {
+          const isH = hovered === p.party;
+          const dim = hovered !== null && !isH;
+          return (
+            <motion.div
+              key={p.party}
+              className="flex cursor-pointer items-center gap-1.5"
+              initial={{ opacity: 0 }}
+              animate={
+                triggered ? { opacity: dim ? 0.35 : 1 } : { opacity: 0 }
+              }
+              transition={{ opacity: { duration: 0.3 } }}
+              onMouseEnter={() => setHovered(p.party)}
+            >
+              <motion.span
+                className="inline-block h-2 w-2 rounded-full"
+                style={{ backgroundColor: p.color }}
+                initial={{ scale: 0 }}
+                animate={
+                  triggered ? { scale: isH ? 1.5 : 1 } : { scale: 0 }
+                }
+                transition={{
+                  duration: 0.4,
+                  delay: triggered ? 1.2 + i * 0.1 : 0,
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 15,
+                }}
+              />
+              <span
+                className="text-[10px] font-medium sm:text-xs"
+                style={{ color: isH ? p.color : "#94a3b8" }}
+              >
+                {p.party}: {p.seats}
+              </span>
+            </motion.div>
+          );
+        })}
+      </div>
+    </motion.div>
+  );
+}
+
+// ─── Grouped Bar Chart (SVG) with shimmer ───
+
+function GroupedBarChart({ triggered }: { triggered: boolean }) {
+  const groupW = BAR_CW / STATE_BAR_DATA.length;
+  const clusterW = BAR.barW * 3 + BAR.barGap * 2;
+  const pad = (groupW - clusterW) / 2;
+  const gridVals = [0, 20, 40, 60];
+
+  const toY = (v: number) => BAR.mt + BAR_CH - (v / BAR.yMax) * BAR_CH;
+  const bottom = BAR.mt + BAR_CH;
+
+  const parties = [
+    { key: "bjp" as const, color: "#f97316" },
+    { key: "inc" as const, color: "#06b6d4" },
+    { key: "others" as const, color: "#94a3b8" },
+  ];
+
+  return (
+    <svg
+      viewBox={`0 0 ${BAR.W} ${BAR.H}`}
+      className="h-full w-full"
+      preserveAspectRatio="xMidYMid meet"
+    >
+      {/* Clip paths for shimmer containment */}
+      <defs>
+        <linearGradient id="shimmerUp" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0%" stopColor="rgba(255,255,255,0)" />
+          <stop offset="40%" stopColor="rgba(255,255,255,0.35)" />
+          <stop offset="60%" stopColor="rgba(255,255,255,0.35)" />
+          <stop offset="100%" stopColor="rgba(255,255,255,0)" />
+        </linearGradient>
+        {STATE_BAR_DATA.flatMap((st, si) =>
+          parties.map((p, pi) => {
+            const val = st[p.key];
+            if (val === 0) return null;
+            const h = (val / BAR.yMax) * BAR_CH;
+            const x =
+              BAR.ml + si * groupW + pad + pi * (BAR.barW + BAR.barGap);
+            return (
+              <clipPath key={`bc-${si}-${pi}`} id={`bc-${si}-${pi}`}>
+                <rect
+                  x={x}
+                  y={bottom - h}
+                  width={BAR.barW}
+                  height={h}
+                  rx={2}
+                />
+              </clipPath>
+            );
+          })
+        )}
+      </defs>
+
+      {/* Grid lines */}
+      {gridVals.map((v) => (
+        <g key={v}>
+          <line
+            x1={BAR.ml}
+            y1={toY(v)}
+            x2={BAR.W - BAR.mr}
+            y2={toY(v)}
+            stroke="#1e293b"
+            strokeWidth={v === 0 ? 1 : 0.5}
+            strokeDasharray={v === 0 ? "none" : "4 3"}
+          />
+          <text
+            x={BAR.ml - 5}
+            y={toY(v) + 3}
+            textAnchor="end"
+            fill="#475569"
+            fontSize="9"
+          >
+            {v}
+          </text>
+        </g>
+      ))}
+
+      {/* Bars per state + shimmer overlays */}
+      {STATE_BAR_DATA.map((st, si) => {
+        const gx = BAR.ml + si * groupW;
+        return (
+          <g key={st.state}>
+            {parties.map((p, pi) => {
+              const val = st[p.key];
+              if (val === 0) return null;
+              const h = (val / BAR.yMax) * BAR_CH;
+              const x = gx + pad + pi * (BAR.barW + BAR.barGap);
+              return (
+                <g key={p.key}>
+                  {/* Main bar */}
+                  <motion.rect
+                    x={x}
+                    width={BAR.barW}
+                    rx={2}
+                    fill={p.color}
+                    initial={{ y: bottom, height: 0 }}
+                    animate={
+                      triggered
+                        ? { y: bottom - h, height: h }
+                        : { y: bottom, height: 0 }
+                    }
+                    transition={{
+                      duration: 1.2,
+                      delay: 0.4 + si * 0.12 + pi * 0.06,
+                      ease: [0.16, 1, 0.3, 1],
+                    }}
+                  />
+                  {/* Shimmer sweep moving up */}
+                  {triggered && (
+                    <motion.rect
+                      clipPath={`url(#bc-${si}-${pi})`}
+                      x={x}
+                      width={BAR.barW}
+                      height={10}
+                      rx={2}
+                      fill="url(#shimmerUp)"
+                      initial={{ y: bottom }}
+                      animate={{ y: [bottom, bottom - h - 12] }}
+                      transition={{
+                        duration: 1.2,
+                        delay: 3.5 + si * 0.4 + pi * 0.12,
+                        repeat: Infinity,
+                        repeatDelay: 3 + si * 0.3,
+                        ease: "easeInOut",
+                      }}
+                    />
+                  )}
+                </g>
+              );
+            })}
+            {/* State label */}
+            <text
+              x={gx + groupW / 2}
+              y={bottom + 16}
+              textAnchor="middle"
+              fill="#94a3b8"
+              fontSize="10"
+              fontWeight="500"
+            >
+              {st.state}
+            </text>
+          </g>
+        );
+      })}
+
+      {/* Legend */}
+      {parties.map((p, i) => {
+        const lx = BAR.ml + 10 + i * 75;
+        const ly = BAR.H - 5;
+        return (
+          <g key={p.key}>
+            <circle cx={lx} cy={ly} r={4} fill={p.color} />
+            <text x={lx + 8} y={ly + 3} fill="#94a3b8" fontSize="9">
+              {p.key === "bjp" ? "BJP" : p.key === "inc" ? "INC" : "Others"}
+            </text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+function StateDistributionCard({ triggered }: { triggered: boolean }) {
+  return (
+    <motion.div
+      className="flex h-full flex-col rounded-2xl border border-[#1e293b] bg-[#111827] p-5 sm:p-6"
+      animate={
+        triggered
+          ? {
+              borderColor: [
+                "#1e293b",
+                "rgba(245,158,11,0.25)",
+                "#1e293b",
               ],
             }
           : {}
@@ -370,253 +677,318 @@ function StateDistributionCard({ triggered }: { triggered: boolean }) {
         ease: "easeInOut",
       }}
     >
-      {/* Header */}
-      <div className="mb-5 flex items-center gap-2">
-        <motion.div
-          animate={
-            triggered
-              ? { y: [0, -2, 0], scale: [1, 1.15, 1] }
-              : {}
-          }
-          transition={{
-            duration: 3,
-            delay: 3,
-            repeat: Infinity,
-            repeatDelay: 2,
-            ease: "easeInOut",
-          }}
-        >
-          <AnimatedLucideIcon icon={MapPin} size={18} className="text-amber-500" />
-        </motion.div>
-        <h3 className="text-sm font-bold text-gray-900 sm:text-base">
+      <div className="mb-2 flex items-center justify-between">
+        <h3 className="text-sm font-bold text-slate-100 sm:text-base">
           State-wise Seat Distribution
         </h3>
-      </div>
-
-      {/* Bars */}
-      <div className="flex flex-1 flex-col justify-evenly">
-        {STATE_DISTRIBUTION.map((state, i) => (
-          <div key={state.state} className="flex items-center gap-3">
-            <div className="flex w-28 items-center gap-1.5 sm:w-32">
-              {/* Ambient pulsing dot */}
-              <motion.span
-                className="h-2 w-2 flex-shrink-0 rounded-full"
-                style={{ backgroundColor: state.dotColor }}
-                initial={{ scale: 0 }}
-                animate={
-                  triggered
-                    ? {
-                        scale: [1, 1.4, 1],
-                        boxShadow: [
-                          `0 0 0px ${state.dotColor}00`,
-                          `0 0 6px ${state.dotColor}80`,
-                          `0 0 0px ${state.dotColor}00`,
-                        ],
-                      }
-                    : { scale: 0 }
-                }
-                transition={
-                  triggered
-                    ? {
-                        scale: {
-                          duration: 2.5,
-                          delay: 4 + i * 0.8,
-                          repeat: Infinity,
-                          repeatDelay: 3,
-                          ease: "easeInOut",
-                        },
-                        boxShadow: {
-                          duration: 2.5,
-                          delay: 4 + i * 0.8,
-                          repeat: Infinity,
-                          repeatDelay: 3,
-                          ease: "easeInOut",
-                        },
-                      }
-                    : {
-                        duration: 0.4,
-                        delay: 0.4 + i * 0.12,
-                        ease: [0.16, 1, 0.3, 1],
-                      }
-                }
-              />
-              <motion.span
-                className="truncate text-xs font-medium text-gray-700 sm:text-sm"
-                initial={{ opacity: 0, x: -10 }}
-                animate={
-                  triggered ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }
-                }
-                transition={{
-                  duration: 0.5,
-                  delay: 0.3 + i * 0.12,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-              >
-                {state.state}
-              </motion.span>
-            </div>
-
-            <AnimatedBar
-              value={state.seats}
-              max={maxSeats}
-              color={state.color}
-              delay={0.5 + i * 0.15}
-              triggered={triggered}
-              index={i}
-            />
-
-            <motion.span
-              className="w-8 text-right text-sm font-bold text-gray-900"
-              initial={{ opacity: 0 }}
-              animate={triggered ? { opacity: 1 } : { opacity: 0 }}
-              transition={{
-                duration: 0.4,
-                delay: 0.8 + i * 0.15,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-            >
-              <AnimatedNumber
-                value={triggered ? state.seats : 0}
-                delay={0.5 + i * 0.15}
-              />
-            </motion.span>
-          </div>
-        ))}
-      </div>
-
-      {/* Footer */}
-      <motion.div
-        className="mt-4 flex items-center justify-between border-t border-gray-100 pt-3"
-        initial={{ opacity: 0 }}
-        animate={triggered ? { opacity: 1 } : { opacity: 0 }}
-        transition={{ duration: 0.6, delay: 1.8, ease: [0.16, 1, 0.3, 1] }}
-      >
-        <span className="text-xs text-gray-400">Top 6 States</span>
-        <span className="text-sm font-bold text-gray-900">
-          <AnimatedNumber value={triggered ? topStatesTotal : 0} delay={1.5} />{" "}
-          seats
+        <span className="rounded-full bg-orange-500/90 px-2.5 py-0.5 text-[10px] font-bold text-white shadow-lg shadow-orange-500/20">
+          2024
         </span>
-      </motion.div>
+      </div>
+      <div className="flex-1">
+        <GroupedBarChart triggered={triggered} />
+      </div>
     </motion.div>
   );
 }
 
-// ─── Historical Stacked Bar ───
+// ─── Line Chart (SVG) with traveling dot + pulse rings ───
 
-function HistoricalBar({
-  data,
-  index,
-  triggered,
-}: {
-  data: (typeof HISTORICAL_DATA)[0];
-  index: number;
-  triggered: boolean;
-}) {
-  const total = TOTAL_SEATS;
-  const bjpPct = (data.bjp / total) * 100;
-  const incPct = (data.inc / total) * 100;
-  const othersPct = (data.others / total) * 100;
+function HistoricalLineChart({ triggered }: { triggered: boolean }) {
+  const pts = HISTORICAL_DATA.length;
+  const xStep = LINE_CW / (pts - 1);
+  const toX = (i: number) => LINE.ml + i * xStep;
+  const toY = (v: number) => LINE.mt + LINE_CH - (v / LINE.yMax) * LINE_CH;
+  const bottom = LINE.mt + LINE_CH;
+  const gridVals = [100, 200, 300];
 
-  const baseDelay = 0.6 + index * 0.3;
+  const bjpPath = HISTORICAL_DATA.map(
+    (d, i) => `${i === 0 ? "M" : "L"} ${toX(i)},${toY(d.bjp)}`
+  ).join(" ");
+  const incPath = HISTORICAL_DATA.map(
+    (d, i) => `${i === 0 ? "M" : "L"} ${toX(i)},${toY(d.inc)}`
+  ).join(" ");
+
+  const bjpXs = HISTORICAL_DATA.map((_, i) => toX(i));
+  const bjpYs = HISTORICAL_DATA.map((d) => toY(d.bjp));
+  const incXs = HISTORICAL_DATA.map((_, i) => toX(i));
+  const incYs = HISTORICAL_DATA.map((d) => toY(d.inc));
 
   return (
-    <div className="flex flex-col gap-2">
-      <div className="flex items-center justify-between">
-        <motion.span
-          className="text-sm font-bold text-gray-900"
-          initial={{ opacity: 0, x: -15 }}
-          animate={triggered ? { opacity: 1, x: 0 } : { opacity: 0, x: -15 }}
-          transition={{
-            duration: 0.5,
-            delay: baseDelay,
-            ease: [0.16, 1, 0.3, 1],
-          }}
-        >
-          {data.year}
-        </motion.span>
-        <motion.span
-          className="text-[10px] text-gray-400"
-          initial={{ opacity: 0 }}
-          animate={triggered ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ duration: 0.4, delay: baseDelay + 0.3 }}
-        >
-          Total: {total}
-        </motion.span>
-      </div>
+    <svg
+      viewBox={`0 0 ${LINE.W} ${LINE.H}`}
+      className="h-full w-full"
+      preserveAspectRatio="xMidYMid meet"
+    >
+      <defs>
+        <filter id="glowBjp" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+        <filter id="glowInc" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
 
-      <div className="relative flex h-7 w-full overflow-hidden rounded-lg bg-gray-100 sm:h-8">
-        {/* BJP */}
-        <motion.div
-          className="flex items-center justify-center"
-          style={{ backgroundColor: "#f97316" }}
-          initial={{ width: "0%" }}
-          animate={triggered ? { width: `${bjpPct}%` } : { width: "0%" }}
-          transition={{
-            duration: 1.4,
-            delay: baseDelay + 0.1,
-            ease: [0.16, 1, 0.3, 1],
-          }}
-        />
-        {/* INC */}
-        <motion.div
-          className="flex items-center justify-center"
-          style={{ backgroundColor: "#22c55e" }}
-          initial={{ width: "0%" }}
-          animate={triggered ? { width: `${incPct}%` } : { width: "0%" }}
-          transition={{
-            duration: 1.2,
-            delay: baseDelay + 0.3,
-            ease: [0.16, 1, 0.3, 1],
-          }}
-        />
-        {/* Others */}
-        <motion.div
-          className="flex items-center justify-center"
-          style={{ backgroundColor: "#6b7280" }}
-          initial={{ width: "0%" }}
-          animate={triggered ? { width: `${othersPct}%` } : { width: "0%" }}
-          transition={{
-            duration: 1.0,
-            delay: baseDelay + 0.5,
-            ease: [0.16, 1, 0.3, 1],
-          }}
-        />
-
-        {/* Continuous shimmer sweep across stacked bar */}
-        {triggered && (
-          <motion.div
-            className="pointer-events-none absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%)",
-              backgroundSize: "40% 100%",
-            }}
-            animate={{ backgroundPosition: ["-40% 0%", "140% 0%"] }}
-            transition={{
-              duration: 2.5,
-              delay: 4 + index * 1.2,
-              repeat: Infinity,
-              repeatDelay: 4 + index * 0.5,
-              ease: "easeInOut",
-            }}
+      {/* Horizontal grid */}
+      {gridVals.map((v) => (
+        <g key={v}>
+          <line
+            x1={LINE.ml}
+            y1={toY(v)}
+            x2={LINE.W - LINE.mr}
+            y2={toY(v)}
+            stroke="#1e293b"
+            strokeWidth={0.5}
+            strokeDasharray="4 3"
           />
-        )}
-      </div>
-    </div>
+          <text
+            x={LINE.ml - 6}
+            y={toY(v) + 3}
+            textAnchor="end"
+            fill="#475569"
+            fontSize="9"
+          >
+            {v}
+          </text>
+        </g>
+      ))}
+      {/* Base line */}
+      <line
+        x1={LINE.ml}
+        y1={bottom}
+        x2={LINE.W - LINE.mr}
+        y2={bottom}
+        stroke="#1e293b"
+        strokeWidth={1}
+      />
+
+      {/* Vertical grid + year labels */}
+      {HISTORICAL_DATA.map((d, i) => (
+        <g key={d.year}>
+          <line
+            x1={toX(i)}
+            y1={LINE.mt}
+            x2={toX(i)}
+            y2={bottom}
+            stroke="#1e293b"
+            strokeWidth={0.3}
+            strokeDasharray="3 4"
+          />
+          <text
+            x={toX(i)}
+            y={bottom + 16}
+            textAnchor="middle"
+            fill="#94a3b8"
+            fontSize="10"
+            fontWeight="500"
+          >
+            {d.year}
+          </text>
+        </g>
+      ))}
+
+      {/* BJP line - draw in */}
+      <motion.path
+        d={bjpPath}
+        fill="none"
+        stroke="#f97316"
+        strokeWidth={2.5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={
+          triggered
+            ? { pathLength: 1, opacity: 1 }
+            : { pathLength: 0, opacity: 0 }
+        }
+        transition={{
+          pathLength: { duration: 2, delay: 0.5, ease: [0.16, 1, 0.3, 1] },
+          opacity: { duration: 0.3, delay: 0.5 },
+        }}
+      />
+      {/* INC line - draw in */}
+      <motion.path
+        d={incPath}
+        fill="none"
+        stroke="#06b6d4"
+        strokeWidth={2.5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={
+          triggered
+            ? { pathLength: 1, opacity: 1 }
+            : { pathLength: 0, opacity: 0 }
+        }
+        transition={{
+          pathLength: {
+            duration: 2,
+            delay: 0.7,
+            ease: [0.16, 1, 0.3, 1],
+          },
+          opacity: { duration: 0.3, delay: 0.7 },
+        }}
+      />
+
+      {/* Static data point dots */}
+      {HISTORICAL_DATA.map((d, i) => (
+        <g key={d.year}>
+          <motion.circle
+            cx={toX(i)}
+            cy={toY(d.bjp)}
+            r={4}
+            fill="#f97316"
+            stroke="#111827"
+            strokeWidth={2}
+            initial={{ scale: 0, opacity: 0 }}
+            animate={
+              triggered
+                ? { scale: 1, opacity: 1 }
+                : { scale: 0, opacity: 0 }
+            }
+            transition={{
+              duration: 0.4,
+              delay: 1.6 + i * 0.15,
+              type: "spring",
+              stiffness: 400,
+              damping: 15,
+            }}
+            style={{ transformOrigin: `${toX(i)}px ${toY(d.bjp)}px` }}
+          />
+          <motion.circle
+            cx={toX(i)}
+            cy={toY(d.inc)}
+            r={4}
+            fill="#06b6d4"
+            stroke="#111827"
+            strokeWidth={2}
+            initial={{ scale: 0, opacity: 0 }}
+            animate={
+              triggered
+                ? { scale: 1, opacity: 1 }
+                : { scale: 0, opacity: 0 }
+            }
+            transition={{
+              duration: 0.4,
+              delay: 1.8 + i * 0.15,
+              type: "spring",
+              stiffness: 400,
+              damping: 15,
+            }}
+            style={{ transformOrigin: `${toX(i)}px ${toY(d.inc)}px` }}
+          />
+
+          {/* Pulse ring on each BJP dot */}
+          {triggered && (
+            <motion.circle
+              cx={toX(i)}
+              cy={toY(d.bjp)}
+              fill="none"
+              stroke="#f97316"
+              strokeWidth={1.5}
+              initial={{ r: 4, opacity: 0 }}
+              animate={{ r: [4, 12], opacity: [0.5, 0] }}
+              transition={{
+                duration: 1.8,
+                delay: 3 + i * 0.6,
+                repeat: Infinity,
+                repeatDelay: 2.5,
+                ease: "easeOut",
+              }}
+            />
+          )}
+          {/* Pulse ring on each INC dot */}
+          {triggered && (
+            <motion.circle
+              cx={toX(i)}
+              cy={toY(d.inc)}
+              fill="none"
+              stroke="#06b6d4"
+              strokeWidth={1.5}
+              initial={{ r: 4, opacity: 0 }}
+              animate={{ r: [4, 12], opacity: [0.5, 0] }}
+              transition={{
+                duration: 1.8,
+                delay: 3.3 + i * 0.6,
+                repeat: Infinity,
+                repeatDelay: 2.5,
+                ease: "easeOut",
+              }}
+            />
+          )}
+        </g>
+      ))}
+
+      {/* Traveling glow dot along BJP line */}
+      {triggered && (
+        <motion.circle
+          r={5}
+          fill="#f97316"
+          opacity={0.7}
+          filter="url(#glowBjp)"
+          animate={{ cx: bjpXs, cy: bjpYs }}
+          transition={{
+            duration: 3.5,
+            delay: 4,
+            repeat: Infinity,
+            repeatDelay: 2,
+            ease: "easeInOut",
+          }}
+        />
+      )}
+      {/* Traveling glow dot along INC line */}
+      {triggered && (
+        <motion.circle
+          r={5}
+          fill="#06b6d4"
+          opacity={0.7}
+          filter="url(#glowInc)"
+          animate={{ cx: incXs, cy: incYs }}
+          transition={{
+            duration: 3.5,
+            delay: 4.5,
+            repeat: Infinity,
+            repeatDelay: 2,
+            ease: "easeInOut",
+          }}
+        />
+      )}
+
+      {/* Legend */}
+      {[
+        { label: "BJP", color: "#f97316", x: LINE.ml + 10 },
+        { label: "INC", color: "#06b6d4", x: LINE.ml + 70 },
+      ].map((item) => (
+        <g key={item.label}>
+          <circle cx={item.x} cy={LINE.H - 5} r={4} fill={item.color} />
+          <text x={item.x + 8} y={LINE.H - 2} fill="#94a3b8" fontSize="9">
+            {item.label}
+          </text>
+        </g>
+      ))}
+    </svg>
   );
 }
 
 function HistoricalTrendsCard({ triggered }: { triggered: boolean }) {
   return (
     <motion.div
-      className="flex h-full flex-col rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6"
+      className="flex h-full flex-col rounded-2xl border border-[#1e293b] bg-[#111827] p-5 sm:p-6"
       animate={
         triggered
           ? {
               borderColor: [
-                "rgba(229,231,235,1)",
-                "rgba(245,158,11,0.3)",
-                "rgba(229,231,235,1)",
+                "#1e293b",
+                "rgba(245,158,11,0.25)",
+                "#1e293b",
               ],
             }
           : {}
@@ -628,330 +1000,57 @@ function HistoricalTrendsCard({ triggered }: { triggered: boolean }) {
         ease: "easeInOut",
       }}
     >
-      {/* Header */}
-      <div className="mb-5 flex items-center gap-2">
-        <motion.div
-          animate={
-            triggered
-              ? { y: [0, -3, 0], rotate: [0, 10, -10, 0] }
-              : {}
-          }
-          transition={{
-            duration: 2,
-            delay: 0.5,
-            repeat: Infinity,
-            repeatDelay: 3,
-            ease: "easeInOut",
-          }}
-        >
-          <AnimatedLucideIcon
-            icon={TrendingUp}
-            size={18}
-            className="text-amber-500"
-          />
-        </motion.div>
-        <h3 className="text-sm font-bold text-gray-900 sm:text-base">
+      <div className="mb-2 flex items-center justify-between">
+        <h3 className="text-sm font-bold text-slate-100 sm:text-base">
           Historical Seat Trends
         </h3>
+        <span className="rounded-full bg-rose-500/90 px-2.5 py-0.5 text-[10px] font-bold text-white shadow-lg shadow-rose-500/20">
+          20 Years
+        </span>
       </div>
-
-      {/* Stacked bars */}
-      <div className="flex flex-1 flex-col justify-evenly">
-        {HISTORICAL_DATA.map((data, i) => (
-          <HistoricalBar
-            key={data.year}
-            data={data}
-            index={i}
-            triggered={triggered}
-          />
-        ))}
+      <div className="flex-1">
+        <HistoricalLineChart triggered={triggered} />
       </div>
+    </motion.div>
+  );
+}
 
-      {/* Legend with pulsing dots */}
+// ─── Bottom Stats (colorful slot machine numbers) ───
+
+function StatCard({
+  stat,
+  index,
+}: {
+  stat: (typeof BOTTOM_STATS)[0];
+  index: number;
+}) {
+  return (
+    <ScrollReveal delay={0.15 + index * 0.1}>
       <motion.div
-        className="mt-4 flex items-center justify-center gap-5 border-t border-gray-100 pt-3"
-        initial={{ opacity: 0, y: 10 }}
-        animate={triggered ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-        transition={{ duration: 0.6, delay: 2.2, ease: [0.16, 1, 0.3, 1] }}
+        className="flex flex-col items-center rounded-2xl border border-[#1e293b] bg-[#111827] px-4 py-5 text-center"
+        whileHover={{
+          borderColor: stat.color + "50",
+          boxShadow: `0 0 20px ${stat.color}15`,
+          transition: { duration: 0.3 },
+        }}
       >
-        {[
-          { label: "BJP", color: "#f97316" },
-          { label: "INC", color: "#22c55e" },
-          { label: "Others", color: "#6b7280" },
-        ].map((item, i) => (
-          <div key={item.label} className="flex items-center gap-1.5">
-            <motion.span
-              className="h-2.5 w-2.5 rounded-full"
-              style={{ backgroundColor: item.color }}
-              animate={
-                triggered
-                  ? {
-                      scale: [1, 1.3, 1],
-                      boxShadow: [
-                        `0 0 0px ${item.color}00`,
-                        `0 0 5px ${item.color}60`,
-                        `0 0 0px ${item.color}00`,
-                      ],
-                    }
-                  : {}
-              }
-              transition={{
-                duration: 2,
-                delay: 5 + i * 1.5,
-                repeat: Infinity,
-                repeatDelay: 4,
-                ease: "easeInOut",
-              }}
-            />
-            <span className="text-[10px] font-medium text-gray-500">
-              {item.label}
-            </span>
-          </div>
-        ))}
-      </motion.div>
-    </motion.div>
-  );
-}
-
-// ─── Lok Sabha Seat Share Card ───
-
-function SeatShareCard({ triggered }: { triggered: boolean }) {
-  const [hoveredParty, setHoveredParty] = useState<string | null>(null);
-
-  return (
-    <motion.div
-      className="flex h-full flex-col rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6"
-      animate={
-        triggered
-          ? {
-              borderColor: [
-                "rgba(229,231,235,1)",
-                "rgba(245,158,11,0.3)",
-                "rgba(229,231,235,1)",
-              ],
-            }
-          : {}
-      }
-      transition={{
-        duration: 5,
-        delay: 3,
-        repeat: Infinity,
-        ease: "easeInOut",
-      }}
-      onMouseLeave={() => setHoveredParty(null)}
-    >
-      {/* Header */}
-      <div className="mb-4 flex items-center gap-2">
-        <motion.div
-          animate={
-            triggered
-              ? { rotate: [0, 15, -15, 0], scale: [1, 1.1, 1] }
-              : {}
-          }
-          transition={{
-            duration: 3,
-            delay: 3,
-            repeat: Infinity,
-            repeatDelay: 4,
-            ease: "easeInOut",
-          }}
-        >
-          <AnimatedLucideIcon
-            icon={PieChart}
-            size={18}
-            className="text-amber-500"
-          />
-        </motion.div>
-        <h3 className="text-sm font-bold text-gray-900 sm:text-base">
-          Lok Sabha Seat Share
-        </h3>
-      </div>
-
-      {/* Donut */}
-      <DonutChart
-        triggered={triggered}
-        hoveredParty={hoveredParty}
-        onHoverParty={setHoveredParty}
-      />
-
-      {/* Party legend — interactive */}
-      <div className="mt-5 space-y-2.5">
-        {PARTY_SEATS.map((p, i) => {
-          const isHovered = hoveredParty === p.party;
-          const isDimmed = hoveredParty !== null && !isHovered;
-
-          return (
-            <motion.div
-              key={p.party}
-              className="flex cursor-pointer items-center justify-between rounded-lg px-2 py-1 transition-colors"
-              style={{
-                backgroundColor: isHovered ? `${p.color}10` : "transparent",
-              }}
-              initial={{ opacity: 0, x: -20 }}
-              animate={
-                triggered
-                  ? { opacity: isDimmed ? 0.4 : 1, x: 0 }
-                  : { opacity: 0, x: -20 }
-              }
-              transition={{
-                opacity: { duration: 0.3 },
-                x: {
-                  duration: 0.5,
-                  delay: 1.2 + i * 0.12,
-                  ease: [0.16, 1, 0.3, 1],
-                },
-              }}
-              onMouseEnter={() => setHoveredParty(p.party)}
-            >
-              <div className="flex items-center gap-2">
-                <motion.span
-                  className="h-3 w-3 rounded-full"
-                  style={{
-                    backgroundColor: p.color,
-                    boxShadow: isHovered
-                      ? `0 0 8px ${p.color}90`
-                      : "none",
-                  }}
-                  initial={{ scale: 0 }}
-                  animate={
-                    triggered
-                      ? {
-                          scale: isHovered
-                            ? 1.4
-                            : hoveredParty
-                              ? 1
-                              : [1, 1.35, 1],
-                        }
-                      : { scale: 0 }
-                  }
-                  transition={
-                    triggered
-                      ? isHovered || hoveredParty
-                        ? { duration: 0.25, ease: "easeOut" }
-                        : {
-                            scale: {
-                              duration: 2.5,
-                              delay: 4 + i * 1,
-                              repeat: Infinity,
-                              repeatDelay: 4,
-                              ease: "easeInOut",
-                            },
-                          }
-                      : {
-                          duration: 0.4,
-                          delay: 1.3 + i * 0.12,
-                          type: "spring",
-                          stiffness: 400,
-                          damping: 15,
-                        }
-                  }
-                />
-                <span
-                  className="text-xs font-medium sm:text-sm"
-                  style={{
-                    color: isHovered ? p.color : "#374151",
-                    fontWeight: isHovered ? 700 : 500,
-                  }}
-                >
-                  {p.party}
-                </span>
-              </div>
-              <span
-                className="text-sm font-bold sm:text-base"
-                style={{ color: isHovered ? p.color : "#f59e0b" }}
-              >
-                <AnimatedNumber
-                  value={triggered ? p.seats : 0}
-                  delay={1 + i * 0.15}
-                />
-              </span>
-            </motion.div>
-          );
-        })}
-      </div>
-    </motion.div>
-  );
-}
-
-// ─── Floating Data Symbols ───
-
-const DATA_SYMBOLS = [
-  { id: 0, text: "543", x: "8%", y: "15%", size: "text-lg" },
-  { id: 1, text: "%", x: "85%", y: "20%", size: "text-2xl" },
-  { id: 2, text: "80", x: "15%", y: "75%", size: "text-sm" },
-  { id: 3, text: "#", x: "90%", y: "70%", size: "text-xl" },
-  { id: 4, text: "303", x: "5%", y: "45%", size: "text-base" },
-  { id: 5, text: "+", x: "92%", y: "45%", size: "text-2xl" },
-  { id: 6, text: "28", x: "50%", y: "8%", size: "text-sm" },
-  { id: 7, text: "52", x: "48%", y: "90%", size: "text-sm" },
-];
-
-function FloatingDataSymbols() {
-  return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      {DATA_SYMBOLS.map((s) => (
-        <motion.span
-          key={s.id}
-          className={`absolute font-bold text-amber-500/[0.06] ${s.size}`}
-          style={{ left: s.x, top: s.y }}
-          animate={{
-            y: [0, -20, 0, 15, 0],
-            x: [0, 10, -8, 5, 0],
-            opacity: [0.04, 0.1, 0.05, 0.08, 0.04],
-            rotate: [0, 5, -3, 2, 0],
-          }}
-          transition={{
-            duration: 10 + s.id * 1.5,
-            delay: s.id * 1.2,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        >
-          {s.text}
-        </motion.span>
-      ))}
-    </div>
-  );
-}
-
-// ─── Floating Particles ───
-
-const PARTICLES = Array.from({ length: 20 }, (_, i) => ({
-  id: i,
-  size: 2 + (i % 4),
-  x: `${(i * 17) % 100}%`,
-  y: `${(i * 23) % 100}%`,
-  duration: 8 + (i % 5) * 2,
-  delay: i * 0.4,
-}));
-
-function FloatingParticles() {
-  return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      {PARTICLES.map((p) => (
-        <motion.div
-          key={p.id}
-          className="absolute rounded-full bg-amber-500/20"
-          style={{
-            width: p.size,
-            height: p.size,
-            left: p.x,
-            top: p.y,
-          }}
-          animate={{
-            y: [0, -30, 0, 20, 0],
-            x: [0, 15, -10, 5, 0],
-            opacity: [0.15, 0.4, 0.2, 0.35, 0.15],
-          }}
-          transition={{
-            duration: p.duration,
-            delay: p.delay,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
+        <SlotMachineNumber
+          value={stat.value}
+          decimals={stat.decimals}
+          suffix={stat.suffix}
+          color={stat.color}
+          baseDelay={0.3 + index * 0.12}
         />
-      ))}
-    </div>
+        <span className="mt-1.5 text-xs font-medium text-slate-400 sm:text-sm">
+          {stat.label}
+        </span>
+        <span
+          className={`mt-1 text-[11px] font-semibold ${stat.positive ? "text-emerald-400" : "text-rose-400"}`}
+        >
+          {stat.change}
+        </span>
+      </motion.div>
+    </ScrollReveal>
   );
 }
 
@@ -963,74 +1062,57 @@ export function DataInsightsSection() {
   const [triggered, setTriggered] = useState(false);
 
   useEffect(() => {
-    if (isInView) setTriggered(true);
-    else setTriggered(false);
+    setTriggered(isInView);
   }, [isInView]);
 
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden bg-white py-20 sm:py-24 lg:py-32"
+      className="relative overflow-hidden bg-[#0b1120] py-20 sm:py-24 lg:py-32"
     >
-      {/* ── Video background ── */}
+      {/* Subtle radial glow */}
       <div className="pointer-events-none absolute inset-0">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 h-full w-full object-cover"
-        >
-          <source src="/videos/Stock-bg.mp4" type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-white/80" />
-        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-white to-transparent" />
+        <div className="absolute left-1/2 top-1/4 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-orange-500/[0.03] blur-[120px]" />
+        <div className="absolute bottom-0 left-1/4 h-[400px] w-[400px] rounded-full bg-cyan-500/[0.02] blur-[100px]" />
       </div>
 
-      {/* Floating particles + data symbols */}
-      <FloatingParticles />
-      <FloatingDataSymbols />
-
       <div className="relative mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8 xl:px-12">
-        {/* ── Section Header ── */}
+        {/* ── Header ── */}
         <div className="flex flex-col items-center text-center">
           <ScrollReveal>
-            <span className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-1.5 text-[11px] font-semibold tracking-wider text-amber-600 uppercase">
-              <AnimatedLucideIcon icon={TrendingUp} size={14} />
-              Electoral Analytics
-            </span>
-          </ScrollReveal>
-
-          <ScrollReveal delay={0.15}>
-            <h2 className="community-title-shimmer mt-5 py-1 text-3xl font-extrabold sm:text-4xl lg:text-5xl">
-              Data Insights & Analytics
+            <h2 className="bg-gradient-to-r from-orange-400 via-amber-400 to-orange-500 bg-clip-text text-3xl font-extrabold text-transparent sm:text-4xl lg:text-5xl">
+              Data Insights &amp; Analytics
             </h2>
           </ScrollReveal>
-
-          <ScrollReveal delay={0.3}>
-            <p className="mt-3 max-w-lg text-sm text-gray-500 sm:text-base">
-              Comprehensive electoral data visualization and trends
+          <ScrollReveal delay={0.15}>
+            <p className="mt-4 max-w-xl text-sm text-slate-400 sm:text-base">
+              Interactive 3D-styled data visualizations providing deep insights
+              into India&apos;s electoral landscape.
             </p>
+          </ScrollReveal>
+          <ScrollReveal delay={0.25}>
+            <div className="mt-5 h-[3px] w-12 rounded-full bg-blue-500" />
           </ScrollReveal>
         </div>
 
-        {/* ── Cards Grid ── */}
+        {/* ── Charts Grid ── */}
         <div className="mt-10 grid gap-6 sm:mt-12 lg:mt-16 lg:grid-cols-3">
-          {/* Card 1: Lok Sabha Seat Share */}
           <ScrollReveal delay={0.1} className="h-full">
-            <SeatShareCard triggered={triggered} />
-          </ScrollReveal>
-
-          {/* Card 2: State-wise Distribution */}
-          <ScrollReveal delay={0.2} className="h-full">
             <StateDistributionCard triggered={triggered} />
           </ScrollReveal>
-
-          {/* Card 3: Historical Trends */}
+          <ScrollReveal delay={0.2} className="h-full">
+            <SeatShareCard triggered={triggered} />
+          </ScrollReveal>
           <ScrollReveal delay={0.3} className="h-full">
             <HistoricalTrendsCard triggered={triggered} />
           </ScrollReveal>
+        </div>
+
+        {/* ── Bottom Stats ── */}
+        <div className="mt-8 grid grid-cols-2 gap-4 sm:mt-10 md:grid-cols-4">
+          {BOTTOM_STATS.map((stat, i) => (
+            <StatCard key={stat.label} stat={stat} index={i} />
+          ))}
         </div>
       </div>
     </section>
