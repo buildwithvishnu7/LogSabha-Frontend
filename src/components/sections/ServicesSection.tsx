@@ -231,12 +231,12 @@ export function ServicesSection({ data }: { data: ServicesData }) {
 
         {/* Main content grid */}
         <div
-          className="mt-8 grid gap-6 sm:mt-10 sm:gap-8 lg:mt-14 lg:grid-cols-[300px_1.2fr_1fr] lg:gap-8 xl:grid-cols-[340px_1.2fr_1fr] xl:gap-12"
+          className="mt-8 grid gap-6 sm:mt-10 sm:gap-8 lg:mt-14 lg:grid-cols-[300px_1.2fr_1fr] lg:items-stretch lg:gap-8 xl:grid-cols-[340px_1.2fr_1fr] xl:gap-12"
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => setIsHovering(false)}
         >
-          {/* Left: Service tabs */}
-          <div className="scrollbar-hide -mx-4 flex flex-row gap-2 overflow-x-auto px-4 pb-2 sm:-mx-0 sm:px-0 lg:flex-col lg:gap-1 lg:overflow-visible lg:pb-0">
+          {/* Left: Service tabs — distribute evenly across full height */}
+          <div className="scrollbar-hide -mx-4 flex flex-row gap-2 overflow-x-auto px-4 pb-2 sm:-mx-0 sm:px-0 lg:flex-col lg:justify-between lg:gap-0 lg:overflow-visible lg:pb-0">
             {data.services.map((service, i) => (
               <ServiceTab
                 key={service.id}
@@ -287,8 +287,8 @@ export function ServicesSection({ data }: { data: ServicesData }) {
             </AnimatePresence>
           </ScrollReveal>
 
-          {/* Right: Content panel */}
-          <ScrollReveal delay={0.3} direction="right" className="flex flex-col justify-center">
+          {/* Right: Content panel — fill grid cell height */}
+          <ScrollReveal delay={0.3} direction="right" className="flex h-full flex-col justify-center">
             <AnimatePresence mode="wait">
               <ServiceContent service={activeService} />
             </AnimatePresence>
