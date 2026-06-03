@@ -18,7 +18,9 @@ import {
   ScrollReveal,
   ScrollRevealLine,
 } from "@/components/motion/ScrollReveal";
-import { AnimatedLucideIcon } from "@/components/AnimatedLucideIcon";
+import { LoopingIcon } from "@/components/LoopingIcon";
+import UsersIcon from "@/components/ui/users-icon";
+import MessageCircleIcon from "@/components/ui/message-circle-icon";
 
 // ─── Static Data ───
 
@@ -603,7 +605,7 @@ export function CommunitySection() {
         <div className="flex flex-col items-center text-center">
           <ScrollReveal>
             <span className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-1.5 text-[11px] font-semibold tracking-wider text-amber-600 uppercase">
-              <AnimatedLucideIcon icon={Users} size={14} animation="float" />
+              <LoopingIcon icon={UsersIcon} size={14} interval={4500} />
               Community Forum
             </span>
           </ScrollReveal>
@@ -633,11 +635,11 @@ export function CommunitySection() {
             <ScrollReveal>
               <div className="mb-5 flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <AnimatedLucideIcon
-                    icon={MessageCircle}
+                  <LoopingIcon
+                    icon={MessageCircleIcon}
                     size={18}
-                    className="text-gray-400"
-                    animation="type"
+                    color="#9ca3af"
+                    interval={3500}
                   />
                   <h3 className="text-lg font-bold text-gray-900">
                     Recent Posts
@@ -722,7 +724,7 @@ export function CommunitySection() {
                     animate={{ scale: [1, 1.02, 1], opacity: [1, 0.3, 1] }}
                     transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
                   />
-                  <AnimatedLucideIcon icon={Users} size={16} animation="float" />
+                  <LoopingIcon icon={UsersIcon} size={16} interval={4000} />
                   Join Now
                 </motion.button>
               </div>

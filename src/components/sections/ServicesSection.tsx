@@ -1,28 +1,26 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import {
-  Target,
-  BarChart3,
-  Users,
-  Tv,
-  Search,
-  Monitor,
-  ArrowRight,
-} from "lucide-react";
+import { Tv, Monitor } from "lucide-react";
 import { useCountUp } from "@/hooks/useCountUp";
 import {
   ScrollReveal,
   ScrollRevealText,
 } from "@/components/motion/ScrollReveal";
 import { AnimatedLucideIcon } from "@/components/AnimatedLucideIcon";
+import { LoopingIcon } from "@/components/LoopingIcon";
+import TargetIcon from "@/components/ui/target-icon";
+import ChartBarIcon from "@/components/ui/chart-bar-icon";
+import UsersIcon from "@/components/ui/users-icon";
+import MagnifierIcon from "@/components/ui/magnifier-icon";
+import ArrowNarrowRightIcon from "@/components/ui/arrow-narrow-right-icon";
 import type { ServicesData, ServiceItem } from "@/types";
 
 const iconMap: Record<string, React.ReactNode> = {
-  target: <AnimatedLucideIcon icon={Target} size={20} animation="breathe" />,
-  "bar-chart": <AnimatedLucideIcon icon={BarChart3} size={20} animation="pulse" />,
-  users: <AnimatedLucideIcon icon={Users} size={20} animation="float" />,
+  target: <LoopingIcon icon={TargetIcon} size={20} interval={4000} />,
+  "bar-chart": <LoopingIcon icon={ChartBarIcon} size={20} interval={3500} delay={500} />,
+  users: <LoopingIcon icon={UsersIcon} size={20} interval={4500} delay={300} />,
   tv: <AnimatedLucideIcon icon={Tv} size={20} animation="flicker" />,
-  search: <AnimatedLucideIcon icon={Search} size={20} animation="scan" />,
+  search: <LoopingIcon icon={MagnifierIcon} size={20} interval={3000} delay={800} />,
   monitor: <AnimatedLucideIcon icon={Monitor} size={20} animation="scan" />,
 };
 
@@ -90,7 +88,7 @@ function ServiceTab({
             color: isActive ? "white" : "rgb(107 114 128)",
           }}
         >
-          {iconMap[service.icon] ?? <AnimatedLucideIcon icon={Target} size={20} animation="breathe" />}
+          {iconMap[service.icon] ?? <LoopingIcon icon={TargetIcon} size={20} interval={4000} />}
         </div>
         <span
           className="relative text-base font-semibold transition-colors duration-500"
@@ -156,7 +154,7 @@ function ServiceContent({ service }: { service: ServiceItem }) {
         transition={{ duration: 0.2 }}
       >
         Learn more
-        <AnimatedLucideIcon icon={ArrowRight} size={16} animation="slide-right" />
+        <ArrowNarrowRightIcon size={16} />
       </motion.a>
     </motion.div>
   );

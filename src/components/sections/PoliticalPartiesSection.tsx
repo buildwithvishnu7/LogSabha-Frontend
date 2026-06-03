@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Users, MapPin, Award, Landmark, Vote, TrendingUp, Map, ChartNoAxesCombined, ChevronLeft, ChevronRight } from "lucide-react";
 import { AnimatedLucideIcon } from "@/components/AnimatedLucideIcon";
+import { LoopingIcon } from "@/components/LoopingIcon";
+import UsersIcon from "@/components/ui/users-icon";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
 import { useCountUp } from "@/hooks/useCountUp";
 
@@ -480,8 +482,8 @@ function PartyStrip({
           {/* President */}
           <div className="flex items-center gap-2">
             <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white/10 sm:h-8 sm:w-8">
-              <AnimatedLucideIcon icon={Users} size={14} className="text-white/50 sm:hidden" animation="float" />
-              <AnimatedLucideIcon icon={Users} size={16} className="hidden text-white/50 sm:block" animation="float" />
+              <LoopingIcon icon={UsersIcon} size={14} color="rgba(255,255,255,0.5)" className="sm:hidden" interval={4000} />
+              <LoopingIcon icon={UsersIcon} size={16} color="rgba(255,255,255,0.5)" className="hidden sm:block" interval={4000} />
             </div>
             <div>
               <p className="text-[9px] text-white/40 uppercase sm:text-[10px]">President</p>
@@ -727,7 +729,7 @@ export function PoliticalPartiesSection() {
         </ScrollReveal>
 
         {/* Bottom Stats */}
-        <div className="mt-10 grid grid-cols-2 gap-3 sm:mt-12 sm:gap-4 md:gap-5 lg:mt-16 lg:grid-cols-4">
+        {/* <div className="mt-10 grid grid-cols-2 gap-3 sm:mt-12 sm:gap-4 md:gap-5 lg:mt-16 lg:grid-cols-4">
           {PLATFORM_STATS.map((stat, i) => (
             <StatCounter
               key={stat.label}
@@ -738,7 +740,7 @@ export function PoliticalPartiesSection() {
               index={i}
             />
           ))}
-        </div>
+        </div> */}
       </div>
     </section>
   );

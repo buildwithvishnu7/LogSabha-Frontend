@@ -11,7 +11,8 @@ import {
   ScrollReveal,
   ScrollRevealLine,
 } from "@/components/motion/ScrollReveal";
-import { AnimatedLucideIcon } from "@/components/AnimatedLucideIcon";
+import { LoopingIcon } from "@/components/LoopingIcon";
+import BookIcon from "@/components/ui/book-icon";
 
 // ─── Data ───
 
@@ -413,7 +414,7 @@ export function EditorialInsightsSection() {
         <div className="flex flex-col items-center text-center">
           <ScrollReveal>
             <span className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-1.5 text-[11px] font-semibold tracking-wider text-amber-600 uppercase">
-              <AnimatedLucideIcon icon={BookOpen} size={14} animation="flip" />
+              <LoopingIcon icon={BookIcon} size={14} interval={4000} />
               Blog & Articles
             </span>
           </ScrollReveal>

@@ -27,11 +27,11 @@ export default function Home() {
       <HeroSection data={data.hero} />
       <PoliticalLandscapeSection data={data.politicalLandscape} />
       <PoliticalPartiesSection />
+      <CommunitySection />
       <ServicesSection data={data.services} />
       <DataInsightsSection />
       <EditorialInsightsSection />
       <RSSSection />
-      <CommunitySection />
       <SocialPresenceSection />
       <ContactSection />
       <Footer />

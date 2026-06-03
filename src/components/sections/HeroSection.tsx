@@ -65,7 +65,7 @@ function SideBadge({
       <motion.div
         className="overflow-hidden border-y border-r border-amber-500/40 bg-[#1a1a2e]/90 shadow-xl backdrop-blur-sm"
         animate={{
-          height: expanded ? badge.expandedHeight : 52,
+          height: expanded ? badge.expandedHeight : 60,
           borderTopRightRadius: expanded ? 14 : 26,
           borderBottomRightRadius: expanded ? 14 : 26,
         }}
@@ -128,7 +128,7 @@ function SideBadge({
 
 export function StickyBadges({ badges }: { badges: SideBadgeType[] }) {
   return (
-    <div className="fixed bottom-[12%] left-0 z-40 hidden flex-col gap-3 lg:flex lg:gap-4 xl:gap-5">
+    <div className="fixed bottom-[15%] left-0 z-40 hidden flex-col gap-3 lg:flex lg:gap-4 xl:gap-5">
       {badges.map((badge, i) => (
         <SideBadge
           key={badge.id}
@@ -149,9 +149,9 @@ function ScrollLogo({ src, sectionRef }: { src: string; sectionRef: React.RefObj
     offset: ["start start", "end start"],
   });
 
-  // Position: bottom-center → top-left
+  // Position: half-visible at bottom-center → top-left
   const x = useTransform(scrollYProgress, [0, 1], ["50vw", "5vw"]);
-  const y = useTransform(scrollYProgress, [0, 1], ["93vh", "2vh"]);
+  const y = useTransform(scrollYProgress, [0, 1], ["100vh", "2vh"]);
   const scale = useTransform(scrollYProgress, [0, 0.8, 1], [1, 0.5, 0.25]);
   const opacity = useTransform(scrollYProgress, [0, 0.1, 0.85, 1], [1, 1, 1, 0]);
 
@@ -194,7 +194,7 @@ function ScrollLogo({ src, sectionRef }: { src: string; sectionRef: React.RefObj
           src={src}
           alt=""
           aria-hidden="true"
-          className="relative h-28 w-auto drop-shadow-[0_0_20px_rgba(245,158,11,0.5)] sm:h-32 md:h-36 lg:h-44"
+          className="relative h-36 w-auto drop-shadow-[0_0_20px_rgba(245,158,11,0.5)] sm:h-40 md:h-48 lg:h-56"
         />
       </motion.div>
     </motion.div>

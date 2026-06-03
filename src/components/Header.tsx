@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, forwardRef, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { Menu, X } from "lucide-react";
@@ -9,6 +9,72 @@ import {
 } from "./AnimatedIcons";
 import { cn } from "@/lib/utils";
 import { useGlobalData } from "@/hooks/useGlobalData";
+
+// ─── Typewriter placeholder search input ───
+const PLACEHOLDER_PHRASES = [
+  "Search elections...",
+  "Search candidates...",
+  "Search parties...",
+  "Search constituencies...",
+  "Search policies...",
+];
+
+const TypewriterInput = forwardRef<
+  HTMLInputElement,
+  { onKeyDown?: (e: React.KeyboardEvent) => void }
+>(({ onKeyDown }, ref) => {
+  const [placeholder, setPlaceholder] = useState("");
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const currentPhrase = PLACEHOLDER_PHRASES[phraseIndex];
+
+    const timeout = setTimeout(
+      () => {
+        if (!isDeleting) {
+          // Typing
+          setPlaceholder(currentPhrase.slice(0, charIndex + 1));
+          setCharIndex((c) => c + 1);
+
+          if (charIndex + 1 === currentPhrase.length) {
+            // Pause at end, then start deleting
+            setTimeout(() => setIsDeleting(true), 1500);
+          }
+        } else {
+          // Deleting
+          setPlaceholder(currentPhrase.slice(0, charIndex - 1));
+          setCharIndex((c) => c - 1);
+
+          if (charIndex <= 1) {
+            setIsDeleting(false);
+            setPhraseIndex((p) => (p + 1) % PLACEHOLDER_PHRASES.length);
+            setCharIndex(0);
+          }
+        }
+      },
+      isDeleting ? 40 : 80,
+    );
+
+    return () => clearTimeout(timeout);
+  }, [charIndex, isDeleting, phraseIndex]);
+
+  return (
+    <motion.input
+      ref={ref}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ delay: 0.15, duration: 0.2 }}
+      type="text"
+      placeholder={placeholder + "│"}
+      className="w-full bg-transparent text-sm text-gray-900 placeholder-gray-400 outline-none"
+      onKeyDown={onKeyDown}
+    />
+  );
+});
+TypewriterInput.displayName = "TypewriterInput";
 
 export function Header() {
   const { data: globalData } = useGlobalData();
@@ -120,8 +186,8 @@ export function Header() {
           <motion.img
             src={logoSrc}
             alt="The LogSabha"
-            className="h-14 w-auto sm:h-16 md:h-24 lg:h-28 xl:h-32"
-            animate={{ y: [0, -3, 0] }}
+            className="mt-2 h-16 w-auto sm:h-20 md:h-28 lg:mt-3 lg:h-32 xl:h-40"
+            animate={{ y: [0, 3, 0] }}
             transition={{
               duration: 4,
               repeat: Infinity,
@@ -157,10 +223,10 @@ export function Header() {
                   }}
                   transition={{ duration: 0.2 }}
                 >
-                  {/* Border — static for inactive, orbiting animation for active */}
-                  <span className="pointer-events-none absolute -inset-[2px] rounded-lg">
-                    <span className={cn("absolute inset-0 rounded-lg border", scrolled ? "border-gray-300/60" : "border-white/20")} />
-                    {isActive(link.href) && (
+                  {/* Border — only on active tab with orbiting animation */}
+                  {isActive(link.href) && (
+                    <span className="pointer-events-none absolute -inset-[2px] rounded-lg">
+                      <span className={cn("absolute inset-0 rounded-lg border", scrolled ? "border-gray-300/60" : "border-white/20")} />
                       <motion.span
                         className="absolute inset-[-1px] rounded-lg"
                         style={{
@@ -176,8 +242,8 @@ export function Header() {
                         } as Record<string, string[]>}
                         transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
                       />
-                    )}
-                  </span>
+                    </span>
+                  )}
 
                   {/* Background highlight on hover + active */}
                   <motion.span
@@ -235,10 +301,10 @@ export function Header() {
                 <motion.div
                   key="search-bar"
                   initial={{ width: 36, opacity: 0.5 }}
-                  animate={{ width: 240, opacity: 1 }}
+                  animate={{ width: 180, opacity: 1 }}
                   exit={{ width: 36, opacity: 0.5 }}
                   transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                  className="relative flex items-center gap-2 overflow-visible rounded-full border border-amber-500/40 bg-gray-100 px-3 py-1.5 sm:py-2 xl:w-[260px]"
+                  className="relative flex items-center gap-2 overflow-visible rounded-full border border-amber-500/40 bg-gray-100 px-3 py-1.5 sm:py-2"
                 >
                   {/* Breathing pulse rings on expanded bar */}
                   <motion.span
@@ -258,16 +324,9 @@ export function Header() {
                   >
                     <AnimatedSearchIcon size={16} className="flex-shrink-0 text-amber-500" />
                   </motion.div>
-                  <motion.input
+                  <TypewriterInput
                     ref={searchInputRef}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ delay: 0.15, duration: 0.2 }}
-                    type="text"
-                    placeholder="Search elections..."
-                    className="w-full bg-transparent text-sm text-gray-900 placeholder-gray-400 outline-none"
-                    onKeyDown={(e) => {
+                    onKeyDown={(e: React.KeyboardEvent) => {
                       if (e.key === "Escape") setSearchOpen(false);
                     }}
                   />

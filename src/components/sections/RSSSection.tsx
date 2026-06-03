@@ -1,8 +1,12 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, type ComponentType } from "react";
 import { motion, useInView } from "motion/react";
 import { Users, BookOpen, Heart, ArrowRight, Play, Pause } from "lucide-react";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
-import { AnimatedLucideIcon } from "@/components/AnimatedLucideIcon";
+import { LoopingIcon } from "@/components/LoopingIcon";
+import UsersIcon from "@/components/ui/users-icon";
+import BookIcon from "@/components/ui/book-icon";
+import HeartIcon from "@/components/ui/heart-icon";
+import type { AnimatedIconHandle, AnimatedIconProps } from "@/components/ui/types";
 
 // ─── Ticker Data ───
 
@@ -57,24 +61,30 @@ function Ticker() {
 const PILLARS = [
   {
     icon: Users,
+    animatedIcon: UsersIcon,
     label: "स्वयंसेवक",
     color: "#f97316",
     bgColor: "bg-orange-50",
     borderColor: "border-orange-200",
+    loopInterval: 4000,
   },
   {
     icon: BookOpen,
+    animatedIcon: BookIcon,
     label: "विचारधारा",
     color: "#22c55e",
     bgColor: "bg-green-50",
     borderColor: "border-green-200",
+    loopInterval: 4500,
   },
   {
     icon: Heart,
+    animatedIcon: HeartIcon,
     label: "सेवा भाव",
     color: "#8b5cf6",
     bgColor: "bg-purple-50",
     borderColor: "border-purple-200",
+    loopInterval: 3000,
   },
 ];
 
@@ -115,12 +125,12 @@ function PillarCard({
           ease: "easeInOut",
         }}
       >
-        <AnimatedLucideIcon
-          icon={pillar.icon}
+        <LoopingIcon
+          icon={pillar.animatedIcon}
           size={20}
-          className="text-current"
-          style={{ color: pillar.color }}
-          animation={pillar.icon === Users ? "float" : pillar.icon === Heart ? "pulse" : "flip"}
+          color={pillar.color}
+          interval={pillar.loopInterval}
+          delay={300 + index * 500}
         />
       </motion.div>
       <span className="text-xs font-semibold text-gray-700 sm:text-sm">

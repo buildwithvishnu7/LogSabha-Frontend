@@ -1,7 +1,11 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Users, MapPin, BarChart3, TrendingUp } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 import { AnimatedLucideIcon } from "@/components/AnimatedLucideIcon";
+import { LoopingIcon } from "@/components/LoopingIcon";
+import UsersIcon from "@/components/ui/users-icon";
+import MapPinIcon from "@/components/ui/map-pin-icon";
+import ChartBarIcon from "@/components/ui/chart-bar-icon";
 import { BackgroundVideo } from "@/components/video/BackgroundVideo";
 import { IndiaMap, StateTooltip } from "@/components/IndiaMap";
 import type { HoverInfo } from "@/components/IndiaMap";
@@ -10,9 +14,9 @@ import { useCountUp } from "@/hooks/useCountUp";
 import type { PoliticalLandscapeData } from "@/types";
 
 const iconMap: Record<string, React.ReactNode> = {
-  users: <AnimatedLucideIcon icon={Users} size={20} animation="float" />,
-  "map-pin": <AnimatedLucideIcon icon={MapPin} size={20} animation="bounce" />,
-  "bar-chart": <AnimatedLucideIcon icon={BarChart3} size={20} animation="pulse" />,
+  users: <LoopingIcon icon={UsersIcon} size={20} interval={4000} />,
+  "map-pin": <LoopingIcon icon={MapPinIcon} size={20} interval={3000} delay={200} />,
+  "bar-chart": <LoopingIcon icon={ChartBarIcon} size={20} interval={3500} delay={500} />,
   "trending-up": <AnimatedLucideIcon icon={TrendingUp} size={20} animation="flicker" />,
 };
 
@@ -83,7 +87,7 @@ function FloatingStatCard({
             animate={{ rotate: isExpanded ? [0, -10, 10, 0] : 0 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
           >
-            {iconMap[icon] ?? <AnimatedLucideIcon icon={BarChart3} size={20} animation="breathe" />}
+            {iconMap[icon] ?? <LoopingIcon icon={ChartBarIcon} size={20} interval={3500} />}
           </motion.div>
           <div>
             <p className="text-lg font-bold text-amber-400 sm:text-xl">
