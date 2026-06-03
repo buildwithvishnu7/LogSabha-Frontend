@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, useInView } from "motion/react";
 import { Users, MapPin, Award, Landmark, Vote, TrendingUp, Map, ChartNoAxesCombined, ChevronLeft, ChevronRight } from "lucide-react";
 import { AnimatedLucideIcon } from "@/components/AnimatedLucideIcon";
 import { LoopingIcon } from "@/components/LoopingIcon";
@@ -254,7 +254,7 @@ function StatCounter({
     <motion.div
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
+      viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.5, delay: index * 0.1, ease: [0.25, 1, 0.5, 1] }}
       whileHover={{ y: -4, boxShadow: "0 12px 32px rgba(245, 158, 11, 0.12)" }}
       className="group flex items-center gap-3 rounded-2xl border border-amber-500/20 bg-white/90 px-3 py-3 shadow-md backdrop-blur-sm transition-colors hover:border-amber-500/40 sm:gap-4 sm:px-5 sm:py-4 md:px-6 md:py-5"
@@ -499,6 +499,14 @@ function PartyStrip({
 // ─── Main Section ───
 
 export function PoliticalPartiesSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
+  const [triggered, setTriggered] = useState(false);
+
+  useEffect(() => {
+    if (isInView) setTriggered(true);
+  }, [isInView]);
+
   const [activeIndex, setActiveIndex] = useState(0);
   const [isUserHovering, setIsUserHovering] = useState(false);
   const autoTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -526,7 +534,7 @@ export function PoliticalPartiesSection() {
   }, []);
 
   useEffect(() => {
-    if (!isUserHovering) {
+    if (triggered && !isUserHovering) {
       startAutoPlay();
     } else if (autoTimerRef.current) {
       clearInterval(autoTimerRef.current);
@@ -535,7 +543,7 @@ export function PoliticalPartiesSection() {
     return () => {
       if (autoTimerRef.current) clearInterval(autoTimerRef.current);
     };
-  }, [isUserHovering, startAutoPlay]);
+  }, [triggered, isUserHovering, startAutoPlay]);
 
   // Responsive card widths
   useEffect(() => {
@@ -589,7 +597,7 @@ export function PoliticalPartiesSection() {
   };
 
   return (
-    <section className="relative overflow-hidden bg-white py-12 sm:py-14 lg:py-18">
+    <section ref={sectionRef} className="relative overflow-hidden bg-white py-12 sm:py-14 lg:py-18">
       {/* Top blend from previous dark section */}
       <div className="absolute top-0 left-0 right-0 z-[2] h-24 bg-gradient-to-b from-[#0c0c1d] via-[#0c0c1d]/30 to-transparent" />
       {/* ── Video background ── */}

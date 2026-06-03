@@ -109,7 +109,7 @@ function AnimatedNumber({
   className?: string;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { margin: "-40px" });
+  const isInView = useInView(ref, { once: true, amount: 0.5 });
   const motionVal = useMotionValue(0);
   const display = useTransform(motionVal, (v) =>
     decimals > 0 ? v.toFixed(decimals) : String(Math.round(v))
@@ -210,7 +210,7 @@ function SlotMachineNumber({
   baseDelay?: number;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { margin: "-40px" });
+  const isInView = useInView(ref, { once: true, amount: 0.5 });
   const [active, setActive] = useState(false);
 
   useEffect(() => {
@@ -1058,7 +1058,7 @@ function StatCard({
 
 export function DataInsightsSection() {
   const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { margin: "-100px", amount: 0.15 });
+  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
   const [triggered, setTriggered] = useState(false);
   const [animKey, setAnimKey] = useState(0);
 

@@ -211,7 +211,7 @@ function SlotMachineNumber({
   className?: string;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { margin: "-40px" });
+  const isInView = useInView(ref, { once: true, amount: 0.5 });
   const [triggered, setTriggered] = useState(false);
 
   useEffect(() => {

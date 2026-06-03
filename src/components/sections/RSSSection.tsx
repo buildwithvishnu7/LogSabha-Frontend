@@ -280,12 +280,11 @@ function TypewriterText({
 
 export function RSSSection() {
   const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { margin: "-100px", amount: 0.15 });
+  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
   const [triggered, setTriggered] = useState(false);
 
   useEffect(() => {
     if (isInView) setTriggered(true);
-    else setTriggered(false);
   }, [isInView]);
 
   return (

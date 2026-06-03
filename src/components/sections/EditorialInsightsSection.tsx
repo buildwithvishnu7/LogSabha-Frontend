@@ -145,7 +145,7 @@ function FeaturedCard({ article }: { article: Article }) {
         transition={{ duration: 0.3 }}
         initial="hidden"
         whileInView="visible"
-        viewport={{ margin: "200px", amount: 0.05 }}
+        viewport={{ once: true, amount: 0.2 }}
       >
         {/* Image */}
         <div className="relative flex-1 overflow-hidden">
@@ -445,7 +445,7 @@ export function EditorialInsightsSection() {
           className="mt-12 grid gap-6 lg:mt-16 lg:grid-cols-[1fr_420px] xl:grid-cols-[1fr_460px]"
           initial="hidden"
           whileInView="visible"
-          viewport={{ margin: "200px", amount: 0.05 }}
+          viewport={{ once: true, amount: 0.2 }}
           variants={{
             hidden: { opacity: 0 },
             visible: {
