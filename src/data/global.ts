@@ -20,14 +20,14 @@ export const globalData: GlobalData = {
       label: "Hindu for Justice",
       image: "/logo/HFJ-logo-final-new.gif",
       href: "/hindu-for-justice",
-      expandedHeight: 250,
+      expandedHeight: 190,
     },
     {
       id: "rss",
       label: "RSS",
       image: "/logo/rss.gif",
       href: "#",
-      expandedHeight: 160,
+      expandedHeight: 120,
     },
   ],
 };

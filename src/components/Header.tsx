@@ -81,15 +81,27 @@ export function Header() {
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       className="fixed top-0 left-0 right-0 z-50"
     >
-      {/* Full-width background — fades in on scroll */}
+      {/* Full-width background — glassmorphism initially, solid on scroll */}
       <motion.div
-        className="absolute inset-0 -z-10 shadow-lg"
+        className="absolute inset-0 -z-10"
         animate={{
-          opacity: scrolled ? 1 : 0,
+          opacity: 1,
         }}
         transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
       >
-        <div className="h-full w-full bg-white/95 backdrop-blur-md" />
+        <motion.div
+          className="h-full w-full backdrop-blur-md"
+          animate={{
+            backgroundColor: scrolled ? "rgba(255, 255, 255, 0.95)" : "rgba(255, 255, 255, 0.08)",
+            boxShadow: scrolled
+              ? "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)"
+              : "0 0 0 0 rgba(0, 0, 0, 0)",
+          }}
+          transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
+          style={{
+            borderBottom: scrolled ? "none" : "1px solid rgba(255, 255, 255, 0.12)",
+          }}
+        />
       </motion.div>
 
       {/* Animated bottom border line */}
@@ -145,24 +157,26 @@ export function Header() {
                   }}
                   transition={{ duration: 0.2 }}
                 >
-                  {/* Orbiting border line */}
+                  {/* Border — static for inactive, orbiting animation for active */}
                   <span className="pointer-events-none absolute -inset-[2px] rounded-lg">
                     <span className={cn("absolute inset-0 rounded-lg border", scrolled ? "border-gray-300/60" : "border-white/20")} />
-                    <motion.span
-                      className="absolute inset-[-1px] rounded-lg"
-                      style={{
-                        background:
-                          "conic-gradient(from var(--angle), transparent 0%, transparent 65%, rgba(245,158,11,0.85) 80%, rgba(245,158,11,1) 85%, rgba(245,158,11,0.85) 90%, transparent 100%)",
-                        mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-                        maskComposite: "exclude",
-                        WebkitMaskComposite: "xor",
-                        padding: "2px",
-                      }}
-                      animate={{
-                        "--angle": ["0deg", "360deg"],
-                      } as Record<string, string[]>}
-                      transition={{ duration: 3, repeat: Infinity, ease: "linear", delay: i * 0.4 }}
-                    />
+                    {isActive(link.href) && (
+                      <motion.span
+                        className="absolute inset-[-1px] rounded-lg"
+                        style={{
+                          background:
+                            "conic-gradient(from var(--angle), transparent 0%, transparent 65%, rgba(245,158,11,0.85) 80%, rgba(245,158,11,1) 85%, rgba(245,158,11,0.85) 90%, transparent 100%)",
+                          mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+                          maskComposite: "exclude",
+                          WebkitMaskComposite: "xor",
+                          padding: "2px",
+                        }}
+                        animate={{
+                          "--angle": ["0deg", "360deg"],
+                        } as Record<string, string[]>}
+                        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                      />
+                    )}
                   </span>
 
                   {/* Background highlight on hover + active */}

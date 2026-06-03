@@ -65,13 +65,13 @@ function SideBadge({
       <motion.div
         className="overflow-hidden border-y border-r border-amber-500/40 bg-[#1a1a2e]/90 shadow-xl backdrop-blur-sm"
         animate={{
-          height: expanded ? badge.expandedHeight : 72,
-          borderTopRightRadius: expanded ? 14 : 30,
-          borderBottomRightRadius: expanded ? 14 : 30,
+          height: expanded ? badge.expandedHeight : 52,
+          borderTopRightRadius: expanded ? 14 : 26,
+          borderBottomRightRadius: expanded ? 14 : 26,
         }}
         transition={{ duration: 0.45, ease: [0.25, 1, 0.5, 1] }}
         style={{
-          width: alwaysExpanded ? 72 : 88,
+          width: alwaysExpanded ? 52 : 62,
           borderTopLeftRadius: 0,
           borderBottomLeftRadius: 0,
           display: "flex",
@@ -103,8 +103,8 @@ function SideBadge({
         </motion.div>
 
         <div
-          className="relative flex flex-shrink-0 items-center justify-center p-1.5 sm:p-2 md:p-2.5"
-          style={{ height: alwaysExpanded ? 72 : 72, width: "100%" }}
+          className="relative flex flex-shrink-0 items-center justify-center p-1"
+          style={{ height: alwaysExpanded ? 52 : 52, width: "100%" }}
         >
           {/* Breathing glow behind image */}
           <motion.div
@@ -116,7 +116,7 @@ function SideBadge({
           <motion.img
             src={badge.image}
             alt={badge.label}
-            className="relative h-[44px] w-[44px] rounded-full object-contain sm:h-[52px] sm:w-[52px] md:h-[62px] md:w-[62px]"
+            className="relative h-[34px] w-[34px] rounded-full object-contain sm:h-[38px] sm:w-[38px] md:h-[42px] md:w-[42px]"
             animate={{ y: [0, -2, 0] }}
             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: index * 0.3 }}
           />
