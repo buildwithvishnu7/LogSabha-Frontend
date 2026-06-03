@@ -7,6 +7,8 @@ import { CommunitySection } from "@/components/sections/CommunitySection";
 import { DataInsightsSection } from "@/components/sections/DataInsightsSection";
 import { RSSSection } from "@/components/sections/RSSSection";
 import { ContactSection } from "@/components/sections/ContactSection";
+import { SocialPresenceSection } from "@/components/sections/SocialPresenceSection";
+import { EditorialInsightsSection } from "@/components/sections/EditorialInsightsSection";
 import { Footer } from "@/components/Footer";
 
 export default function Home() {
@@ -27,8 +29,10 @@ export default function Home() {
       <PoliticalPartiesSection />
       <ServicesSection data={data.services} />
       <DataInsightsSection />
+      <EditorialInsightsSection />
       <RSSSection />
       <CommunitySection />
+      <SocialPresenceSection />
       <ContactSection />
       <Footer />
     </>
