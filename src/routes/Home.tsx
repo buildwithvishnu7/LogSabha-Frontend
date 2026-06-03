@@ -1,6 +1,7 @@
 import { useHomeData } from "@/hooks/useHomeData";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { PoliticalLandscapeSection } from "@/components/sections/PoliticalLandscapeSection";
+import { LiveCoverageSection } from "@/components/sections/LiveCoverageSection";
 import { PoliticalPartiesSection } from "@/components/sections/PoliticalPartiesSection";
 import { ServicesSection } from "@/components/sections/ServicesSection";
 import { CommunitySection } from "@/components/sections/CommunitySection";
@@ -26,6 +27,7 @@ export default function Home() {
     <>
       <HeroSection data={data.hero} />
       <PoliticalLandscapeSection data={data.politicalLandscape} />
+      <LiveCoverageSection />
       <PoliticalPartiesSection />
       <CommunitySection />
       <ServicesSection data={data.services} />
