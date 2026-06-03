@@ -1060,9 +1060,15 @@ export function DataInsightsSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { margin: "-100px", amount: 0.15 });
   const [triggered, setTriggered] = useState(false);
+  const [animKey, setAnimKey] = useState(0);
 
   useEffect(() => {
-    setTriggered(isInView);
+    if (isInView) {
+      setAnimKey((k) => k + 1);
+      setTriggered(true);
+    } else {
+      setTriggered(false);
+    }
   }, [isInView]);
 
   return (
@@ -1096,7 +1102,7 @@ export function DataInsightsSection() {
         </div>
 
         {/* ── Charts Grid ── */}
-        <div className="mt-10 grid gap-6 sm:mt-12 lg:mt-16 lg:grid-cols-3">
+        <div key={animKey} className="mt-10 grid gap-6 sm:mt-12 lg:mt-16 lg:grid-cols-3">
           <ScrollReveal delay={0.1} className="h-full">
             <StateDistributionCard triggered={triggered} />
           </ScrollReveal>
