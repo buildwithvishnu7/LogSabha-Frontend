@@ -7,6 +7,7 @@ import { ServicesSection } from "@/components/sections/ServicesSection";
 import { CommunitySection } from "@/components/sections/CommunitySection";
 import { DataInsightsSection } from "@/components/sections/DataInsightsSection";
 import { RSSSection } from "@/components/sections/RSSSection";
+import { LogSabhaStorySection } from "@/components/sections/LogSabhaStorySection";
 import { ContactSection } from "@/components/sections/ContactSection";
 import { SocialPresenceSection } from "@/components/sections/SocialPresenceSection";
 import { EditorialInsightsSection } from "@/components/sections/EditorialInsightsSection";
@@ -32,6 +33,7 @@ export default function Home() {
       <CommunitySection />
       <ServicesSection data={data.services} />
       <RSSSection />
+      <LogSabhaStorySection />
       <DataInsightsSection />
       <EditorialInsightsSection />
       <SocialPresenceSection />

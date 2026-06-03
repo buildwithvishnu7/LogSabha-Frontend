@@ -244,7 +244,13 @@ function TypewriterText({
       return;
     }
 
-    if (displayedCount >= chars.length) return;
+    // After fully typed, pause then restart
+    if (displayedCount >= chars.length) {
+      const restartTimeout = setTimeout(() => {
+        setDisplayedCount(0);
+      }, 2500);
+      return () => clearTimeout(restartTimeout);
+    }
 
     const timeout = setTimeout(() => {
       setDisplayedCount((c) => c + 1);
@@ -256,20 +262,12 @@ function TypewriterText({
   return (
     <h3 className={className}>
       <span>{chars.slice(0, displayedCount).join("")}</span>
-      {triggered && displayedCount < chars.length && (
+      {triggered && (
         <motion.span
           className="inline-block w-[2px] translate-y-[1px] bg-gray-800"
           style={{ height: "1em" }}
           animate={{ opacity: [1, 0] }}
           transition={{ duration: 0.6, repeat: Infinity, ease: "steps(2)" }}
-        />
-      )}
-      {triggered && displayedCount >= chars.length && (
-        <motion.span
-          className="inline-block w-[2px] translate-y-[1px] bg-gray-800"
-          style={{ height: "1em" }}
-          animate={{ opacity: [1, 0] }}
-          transition={{ duration: 0.8, repeat: 3, ease: "steps(2)" }}
         />
       )}
     </h3>
@@ -351,14 +349,8 @@ export function RSSSection() {
         <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-10">
           {/* Single white card holding both info + video */}
           <ScrollReveal>
-            <motion.div
+            <div
               className="overflow-hidden rounded-2xl bg-white shadow-2xl shadow-orange-900/10 ring-1 ring-gray-100/80"
-              animate={triggered ? { y: [0, -4, 0] } : undefined}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
             >
               <div className="relative grid lg:grid-cols-[1fr_380px] xl:grid-cols-[1fr_420px]">
                 {/* Left: Info — determines card height */}
@@ -383,15 +375,10 @@ export function RSSSection() {
                       }}
                     />
                     <h2
-                      className="text-2xl font-semibold sm:text-3xl lg:text-[44px] lg:leading-[55px]"
+                      className="text-2xl font-semibold text-gray-900 sm:text-3xl lg:text-[44px] lg:leading-[55px]"
                       style={{
                         fontFamily: "'Cormorant Garamond', serif",
                         letterSpacing: "-0.44px",
-                        background: "linear-gradient(90deg, #111827 40%, #f97316 50%, #111827 60%)",
-                        backgroundSize: "200% 100%",
-                        WebkitBackgroundClip: "text",
-                        WebkitTextFillColor: "transparent",
-                        animation: "rss-title-shimmer 4s ease-in-out infinite",
                       }}
                     >
                       राष्ट्रीय स्वयंसेवक संघ
@@ -465,7 +452,7 @@ export function RSSSection() {
                   <VideoPlayer triggered={triggered} />
                 </div>
               </div>
-            </motion.div>
+            </div>
           </ScrollReveal>
         </div>
       </div>

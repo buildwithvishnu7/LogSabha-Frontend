@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, useInView } from "motion/react";
 import { Tv, Monitor } from "lucide-react";
 import { useCountUp } from "@/hooks/useCountUp";
 import {
@@ -163,6 +163,14 @@ function ServiceContent({ service }: { service: ServiceItem }) {
 // ─── Main Section ───
 
 export function ServicesSection({ data }: { data: ServicesData }) {
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
+  const [triggered, setTriggered] = useState(false);
+
+  useEffect(() => {
+    if (isInView) setTriggered(true);
+  }, [isInView]);
+
   const [activeIndex, setActiveIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -184,7 +192,7 @@ export function ServicesSection({ data }: { data: ServicesData }) {
   );
 
   useEffect(() => {
-    if (!isHovering) startAutoPlay();
+    if (triggered && !isHovering) startAutoPlay();
     else if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
@@ -192,24 +200,37 @@ export function ServicesSection({ data }: { data: ServicesData }) {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [isHovering, startAutoPlay]);
+  }, [triggered, isHovering, startAutoPlay]);
 
   return (
-    <section className="relative overflow-hidden bg-white py-12 sm:py-14 lg:py-18">
-      {/* ── Video background ── */}
-      <div className="pointer-events-none absolute inset-0">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 h-full w-full object-cover"
-        >
-          <source src="/videos/Ashoka-bg.mp4" type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-white/70" />
-        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-white to-transparent" />
+    <section ref={sectionRef} className="relative overflow-hidden bg-white py-12 sm:py-14 lg:py-18">
+      {/* ── Circuit board pattern background (Hero Patterns) ── */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        {/* Base gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-50/80 via-white to-orange-50/60" />
+
+        {/* Circuit board pattern from heropatterns.com */}
+        <div className="absolute inset-0 bg-svc-circuit-board" />
+
+        {/* Floating gradient orbs */}
+        {triggered && (
+          <>
+            <motion.div
+              className="absolute top-[15%] left-[10%] h-48 w-48 rounded-full bg-amber-200/20 blur-3xl"
+              animate={{ x: [0, 30, 0], y: [0, -20, 0], opacity: [0.15, 0.3, 0.15] }}
+              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <motion.div
+              className="absolute right-[8%] bottom-[20%] h-56 w-56 rounded-full bg-orange-200/15 blur-3xl"
+              animate={{ x: [0, -25, 0], y: [0, 15, 0], opacity: [0.1, 0.25, 0.1] }}
+              transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+            />
+          </>
+        )}
+
+        {/* Edge fades */}
+        <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-white to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white to-transparent" />
       </div>
 
       <div className="relative mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8 xl:px-12">
