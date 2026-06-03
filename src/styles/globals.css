@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "@fontsource-variable/inter";
+@import "@fontsource/cormorant-garamond/600.css";
 
 /* ─── Continuous icon draw/undraw animation ─── */
 @keyframes iconDraw {
@@ -367,4 +368,51 @@
 }
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+/* ─── Footer shimmer text ─── */
+@keyframes footer-text-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.footer-shimmer-text {
+  background: linear-gradient(
+    90deg,
+    #fff 0%,
+    #fff 40%,
+    #f59e0b 50%,
+    #fff 60%,
+    #fff 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: footer-text-shimmer 4s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+.footer-shimmer-text span {
+  -webkit-text-fill-color: transparent;
+}
+
+/* ─── Footer newsletter border shimmer ─── */
+@keyframes footer-border-shimmer {
+  0%   { opacity: 0; left: -30%; }
+  50%  { opacity: 1; }
+  100% { opacity: 0; left: 110%; }
+}
+
+.footer-shimmer-border::after {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -30%;
+  width: 30%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.6), transparent);
+  animation: footer-border-shimmer 3.5s ease-in-out infinite;
+  animation-delay: 3s;
+  border-radius: 9999px;
 }

@@ -108,7 +108,7 @@ export function Header() {
           <motion.img
             src={logoSrc}
             alt="The LogSabha"
-            className="h-12 w-auto sm:h-14 md:h-20 lg:h-24 xl:h-28"
+            className="h-14 w-auto sm:h-16 md:h-24 lg:h-28 xl:h-32"
             animate={{ y: [0, -3, 0] }}
             transition={{
               duration: 4,

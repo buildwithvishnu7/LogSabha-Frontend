@@ -41,13 +41,13 @@ function AnimatedStat({
 
   return (
     <div>
-      <span ref={ref} className="text-3xl font-extrabold text-gray-900 sm:text-4xl lg:text-5xl">
+      <span ref={ref} className="text-2xl font-extrabold text-gray-900 sm:text-3xl lg:text-4xl">
         {count.toLocaleString()}
       </span>
-      <span className="text-3xl font-extrabold text-amber-500 sm:text-4xl lg:text-5xl">
+      <span className="text-2xl font-extrabold text-amber-500 sm:text-3xl lg:text-4xl">
         {suffix}
       </span>
-      <p className="mt-1.5 text-[10px] font-semibold tracking-widest text-gray-400 uppercase sm:text-xs">
+      <p className="mt-1 text-[10px] font-semibold tracking-widest text-gray-400 uppercase sm:text-xs">
         {label}
       </p>
     </div>
@@ -71,7 +71,7 @@ function ServiceTab({
     <ScrollReveal delay={0.1 + index * 0.06} direction="left">
       <motion.button
         onClick={onClick}
-        className="relative flex w-full items-center gap-3 whitespace-nowrap rounded-xl px-4 py-3 text-left sm:gap-4 sm:px-5 sm:py-4"
+        className="relative flex w-full items-center gap-3 whitespace-nowrap rounded-xl px-4 py-2.5 text-left sm:gap-4 sm:px-5 sm:py-3"
         whileHover={{ x: isActive ? 0 : 4 }}
         whileTap={{ scale: 0.98 }}
         transition={{ duration: 0.2 }}
@@ -121,7 +121,7 @@ function ServiceContent({ service }: { service: ServiceItem }) {
       </p>
 
       {/* Stats with counting animation */}
-      <div className="mt-6 flex gap-8 sm:mt-8 sm:gap-10 md:gap-14">
+      <div className="mt-4 flex gap-8 sm:mt-5 sm:gap-10 md:gap-14">
         {service.stats.map((stat) => (
           <AnimatedStat
             key={stat.label}
@@ -133,7 +133,7 @@ function ServiceContent({ service }: { service: ServiceItem }) {
       </div>
 
       {/* Bullet points */}
-      <ul className="mt-8 space-y-3">
+      <ul className="mt-5 space-y-2.5">
         {service.bulletPoints.map((point, i) => (
           <motion.li
             key={point}
@@ -151,7 +151,7 @@ function ServiceContent({ service }: { service: ServiceItem }) {
       {/* Learn more link */}
       <motion.a
         href={service.learnMoreLink}
-        className="mt-8 inline-flex items-center gap-2 text-base font-semibold text-amber-600 hover:text-amber-700"
+        className="mt-5 inline-flex items-center gap-2 text-base font-semibold text-amber-600 hover:text-amber-700"
         whileHover={{ x: 4 }}
         transition={{ duration: 0.2 }}
       >
@@ -197,7 +197,7 @@ export function ServicesSection({ data }: { data: ServicesData }) {
   }, [isHovering, startAutoPlay]);
 
   return (
-    <section className="relative overflow-hidden bg-white py-20 sm:py-24 lg:py-32">
+    <section className="relative overflow-hidden bg-white py-14 sm:py-16 lg:py-20">
       {/* ── Video background ── */}
       <div className="pointer-events-none absolute inset-0">
         <video
@@ -215,37 +215,37 @@ export function ServicesSection({ data }: { data: ServicesData }) {
       </div>
 
       <div className="relative mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8 xl:px-12">
-        {/* Section header */}
-        <ScrollRevealText
-          text={data.title}
-          highlight={data.titleHighlight}
-          className="text-3xl font-extrabold text-gray-900 sm:text-4xl lg:text-5xl"
-          highlightClassName="bg-gradient-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent"
-          delay={0}
-        />
-        <ScrollReveal delay={0.3}>
-          <p className="mt-4 max-w-xl text-base text-gray-500 sm:text-lg">
-            {data.subtitle}
-          </p>
-        </ScrollReveal>
-
-        {/* Main content grid */}
+        {/* Main content grid — title lives inside left column so image spans full height */}
         <div
-          className="mt-8 grid gap-6 sm:mt-10 sm:gap-8 lg:mt-14 lg:grid-cols-[300px_1.2fr_1fr] lg:items-stretch lg:gap-8 xl:grid-cols-[340px_1.2fr_1fr] xl:gap-12"
+          className="grid gap-6 sm:gap-8 lg:grid-cols-[280px_1.2fr_1fr] lg:items-stretch lg:gap-8 xl:grid-cols-[320px_1.2fr_1fr] xl:gap-10"
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => setIsHovering(false)}
         >
-          {/* Left: Service tabs — distribute evenly across full height */}
-          <div className="scrollbar-hide -mx-4 flex flex-row gap-2 overflow-x-auto px-4 pb-2 sm:-mx-0 sm:px-0 lg:flex-col lg:justify-between lg:gap-0 lg:overflow-visible lg:pb-0">
-            {data.services.map((service, i) => (
-              <ServiceTab
-                key={service.id}
-                service={service}
-                isActive={i === activeIndex}
-                onClick={() => handleTabClick(i)}
-                index={i}
-              />
-            ))}
+          {/* Left: Header + Service tabs */}
+          <div className="flex flex-col">
+            <ScrollRevealText
+              text={data.title}
+              highlight={data.titleHighlight}
+              className="text-3xl font-extrabold text-gray-900 sm:text-4xl lg:text-5xl"
+              highlightClassName="bg-gradient-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent"
+              delay={0}
+            />
+            <ScrollReveal delay={0.3}>
+              <p className="mt-3 max-w-xl text-sm text-gray-500 sm:text-base">
+                {data.subtitle}
+              </p>
+            </ScrollReveal>
+            <div className="scrollbar-hide -mx-4 mt-5 flex flex-row gap-2 overflow-x-auto px-4 pb-2 sm:-mx-0 sm:mt-6 sm:px-0 lg:flex-1 lg:flex-col lg:justify-between lg:gap-0 lg:overflow-visible lg:pb-0">
+              {data.services.map((service, i) => (
+                <ServiceTab
+                  key={service.id}
+                  service={service}
+                  isActive={i === activeIndex}
+                  onClick={() => handleTabClick(i)}
+                  index={i}
+                />
+              ))}
+            </div>
           </div>
 
           {/* Center: Image */}
@@ -257,7 +257,7 @@ export function ServicesSection({ data }: { data: ServicesData }) {
                 animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
                 exit={{ opacity: 0, scale: 0.96, filter: "blur(6px)" }}
                 transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                className="relative h-[320px] overflow-hidden rounded-2xl bg-gray-100 sm:h-[420px] lg:h-full lg:min-h-[500px]"
+                className="relative h-[280px] overflow-hidden rounded-2xl bg-gray-100 sm:h-[360px] lg:h-full"
               >
                 <img
                   src={activeService.image}

@@ -284,13 +284,21 @@ const TYPEWRITER_PHRASES = [
   "Explore parliamentary proceedings...",
 ];
 
-function TypewriterText({ className = "" }: { className?: string }) {
+function TypewriterText({
+  phrases,
+  className = "",
+}: {
+  phrases?: string[];
+  className?: string;
+}) {
+  const itemsRef = useRef(phrases ?? TYPEWRITER_PHRASES);
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
-    const phrase = TYPEWRITER_PHRASES[phraseIndex];
+    const items = itemsRef.current;
+    const phrase = items[phraseIndex];
     let timeout: ReturnType<typeof setTimeout>;
 
     if (!isDeleting && charIndex < phrase.length) {
@@ -301,13 +309,13 @@ function TypewriterText({ className = "" }: { className?: string }) {
       timeout = setTimeout(() => setCharIndex((c) => c - 1), 35);
     } else {
       setIsDeleting(false);
-      setPhraseIndex((p) => (p + 1) % TYPEWRITER_PHRASES.length);
+      setPhraseIndex((p) => (p + 1) % items.length);
     }
 
     return () => clearTimeout(timeout);
   }, [charIndex, isDeleting, phraseIndex]);
 
-  const text = TYPEWRITER_PHRASES[phraseIndex].slice(0, charIndex);
+  const text = itemsRef.current[phraseIndex].slice(0, charIndex);
 
   return (
     <span className={className}>
@@ -696,13 +704,26 @@ export function CommunitySection() {
                   </div>
                 </div>
 
-                {/* Join Now button */}
-                <button
-                  className="btn-breathing mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-amber-500 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-amber-600"
+                {/* Join Now button — breathing pulse rings like search icon */}
+                <motion.button
+                  className="relative mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-amber-500 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-amber-600"
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
                 >
+                  <motion.span
+                    className="pointer-events-none absolute inset-[-3px] rounded-xl border-2 border-amber-500/70"
+                    style={{ boxShadow: "0 0 8px rgba(245,158,11,0.25)" }}
+                    animate={{ scale: [1, 1.04, 1], opacity: [0.8, 0.1, 0.8] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                  />
+                  <motion.span
+                    className="pointer-events-none absolute inset-[-1px] rounded-xl border-2 border-amber-500/50"
+                    animate={{ scale: [1, 1.02, 1], opacity: [1, 0.3, 1] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
+                  />
                   <AnimatedLucideIcon icon={Users} size={16} />
                   Join Now
-                </button>
+                </motion.button>
               </div>
             </ScrollReveal>
 
@@ -711,8 +732,15 @@ export function CommunitySection() {
               <div className="flex h-full flex-col rounded-2xl border-2 border-amber-400/60 bg-white p-5">
                 <div className="mb-4 flex items-center gap-2">
                   <Hash className="h-5 w-5 text-amber-500" />
-                  <h3 className="text-base font-bold text-gray-900">
-                    What's India Talking About?
+                  <h3 className="h-6 text-base font-bold text-gray-900">
+                    <TypewriterText
+                      phrases={[
+                        "What's India Talking About?",
+                        "Trending in Politics Today",
+                        "Top Discussions Right Now",
+                        "India's Hottest Debates",
+                      ]}
+                    />
                   </h3>
                 </div>
 

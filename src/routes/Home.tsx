@@ -4,6 +4,9 @@ import { PoliticalLandscapeSection } from "@/components/sections/PoliticalLandsc
 import { PoliticalPartiesSection } from "@/components/sections/PoliticalPartiesSection";
 import { ServicesSection } from "@/components/sections/ServicesSection";
 import { CommunitySection } from "@/components/sections/CommunitySection";
+import { DataInsightsSection } from "@/components/sections/DataInsightsSection";
+import { RSSSection } from "@/components/sections/RSSSection";
+import { Footer } from "@/components/Footer";
 
 export default function Home() {
   const { data, isLoading } = useHomeData();
@@ -22,7 +25,10 @@ export default function Home() {
       <PoliticalLandscapeSection data={data.politicalLandscape} />
       <PoliticalPartiesSection />
       <ServicesSection data={data.services} />
+      <DataInsightsSection />
+      <RSSSection />
       <CommunitySection />
+      <Footer />
     </>
   );
 }
