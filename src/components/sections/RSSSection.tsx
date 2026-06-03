@@ -120,6 +120,7 @@ function PillarCard({
           size={20}
           className="text-current"
           style={{ color: pillar.color }}
+          animation={pillar.icon === Users ? "float" : pillar.icon === Heart ? "pulse" : "flip"}
         />
       </motion.div>
       <span className="text-xs font-semibold text-gray-700 sm:text-sm">

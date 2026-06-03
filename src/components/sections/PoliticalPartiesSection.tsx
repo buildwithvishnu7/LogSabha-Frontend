@@ -219,9 +219,16 @@ const platformIconMap: Record<string, React.ComponentType<import("lucide-react")
   accuracy: ChartNoAxesCombined,
 };
 
+const platformAnimationMap: Record<string, import("@/lib/icon-animations").IconAnimation> = {
+  parties: "breathe",
+  seats: "bounce",
+  states: "float",
+  accuracy: "pulse",
+};
+
 function AnimatedIcon({ icon }: { icon: string }) {
   const Icon = platformIconMap[icon] ?? Landmark;
-  return <AnimatedLucideIcon icon={Icon} size={24} />;
+  return <AnimatedLucideIcon icon={Icon} size={24} animation={platformAnimationMap[icon] ?? "breathe"} />;
 }
 
 // ─── Animated Stat Counter ───
@@ -473,8 +480,8 @@ function PartyStrip({
           {/* President */}
           <div className="flex items-center gap-2">
             <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white/10 sm:h-8 sm:w-8">
-              <AnimatedLucideIcon icon={Users} size={14} className="text-white/50 sm:hidden" />
-              <AnimatedLucideIcon icon={Users} size={16} className="hidden text-white/50 sm:block" />
+              <AnimatedLucideIcon icon={Users} size={14} className="text-white/50 sm:hidden" animation="float" />
+              <AnimatedLucideIcon icon={Users} size={16} className="hidden text-white/50 sm:block" animation="float" />
             </div>
             <div>
               <p className="text-[9px] text-white/40 uppercase sm:text-[10px]">President</p>
@@ -603,7 +610,7 @@ export function PoliticalPartiesSection() {
         <div className="text-center">
           <ScrollReveal>
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5">
-              <AnimatedLucideIcon icon={Landmark} size={16} className="text-amber-500" />
+              <AnimatedLucideIcon icon={Landmark} size={16} className="text-amber-500" animation="breathe" />
               <span className="text-xs font-semibold tracking-wider text-amber-600 uppercase">
                 Political Landscape
               </span>

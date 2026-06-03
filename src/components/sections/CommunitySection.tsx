@@ -603,7 +603,7 @@ export function CommunitySection() {
         <div className="flex flex-col items-center text-center">
           <ScrollReveal>
             <span className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-1.5 text-[11px] font-semibold tracking-wider text-amber-600 uppercase">
-              <AnimatedLucideIcon icon={Users} size={14} />
+              <AnimatedLucideIcon icon={Users} size={14} animation="float" />
               Community Forum
             </span>
           </ScrollReveal>
@@ -637,6 +637,7 @@ export function CommunitySection() {
                     icon={MessageCircle}
                     size={18}
                     className="text-gray-400"
+                    animation="type"
                   />
                   <h3 className="text-lg font-bold text-gray-900">
                     Recent Posts
@@ -721,7 +722,7 @@ export function CommunitySection() {
                     animate={{ scale: [1, 1.02, 1], opacity: [1, 0.3, 1] }}
                     transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
                   />
-                  <AnimatedLucideIcon icon={Users} size={16} />
+                  <AnimatedLucideIcon icon={Users} size={16} animation="float" />
                   Join Now
                 </motion.button>
               </div>

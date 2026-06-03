@@ -18,12 +18,12 @@ import { AnimatedLucideIcon } from "@/components/AnimatedLucideIcon";
 import type { ServicesData, ServiceItem } from "@/types";
 
 const iconMap: Record<string, React.ReactNode> = {
-  target: <AnimatedLucideIcon icon={Target} size={20} />,
-  "bar-chart": <AnimatedLucideIcon icon={BarChart3} size={20} />,
-  users: <AnimatedLucideIcon icon={Users} size={20} />,
-  tv: <AnimatedLucideIcon icon={Tv} size={20} />,
-  search: <AnimatedLucideIcon icon={Search} size={20} />,
-  monitor: <AnimatedLucideIcon icon={Monitor} size={20} />,
+  target: <AnimatedLucideIcon icon={Target} size={20} animation="breathe" />,
+  "bar-chart": <AnimatedLucideIcon icon={BarChart3} size={20} animation="pulse" />,
+  users: <AnimatedLucideIcon icon={Users} size={20} animation="float" />,
+  tv: <AnimatedLucideIcon icon={Tv} size={20} animation="flicker" />,
+  search: <AnimatedLucideIcon icon={Search} size={20} animation="scan" />,
+  monitor: <AnimatedLucideIcon icon={Monitor} size={20} animation="scan" />,
 };
 
 // ─── Animated Counter ───
@@ -90,7 +90,7 @@ function ServiceTab({
             color: isActive ? "white" : "rgb(107 114 128)",
           }}
         >
-          {iconMap[service.icon] ?? <AnimatedLucideIcon icon={Target} size={20} />}
+          {iconMap[service.icon] ?? <AnimatedLucideIcon icon={Target} size={20} animation="breathe" />}
         </div>
         <span
           className="relative text-base font-semibold transition-colors duration-500"
@@ -156,7 +156,7 @@ function ServiceContent({ service }: { service: ServiceItem }) {
         transition={{ duration: 0.2 }}
       >
         Learn more
-        <AnimatedLucideIcon icon={ArrowRight} size={16} />
+        <AnimatedLucideIcon icon={ArrowRight} size={16} animation="slide-right" />
       </motion.a>
     </motion.div>
   );

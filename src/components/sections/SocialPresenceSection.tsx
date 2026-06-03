@@ -465,7 +465,7 @@ export function SocialPresenceSection() {
         <div className="flex flex-col items-center text-center">
           <ScrollReveal>
             <span className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-1.5 text-[11px] font-semibold tracking-wider text-amber-600 uppercase">
-              <AnimatedLucideIcon icon={Share2} size={14} />
+              <AnimatedLucideIcon icon={Share2} size={14} animation="wave" />
               Social Media
             </span>
           </ScrollReveal>

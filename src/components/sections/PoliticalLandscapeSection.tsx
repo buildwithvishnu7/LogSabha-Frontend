@@ -10,10 +10,10 @@ import { useCountUp } from "@/hooks/useCountUp";
 import type { PoliticalLandscapeData } from "@/types";
 
 const iconMap: Record<string, React.ReactNode> = {
-  users: <AnimatedLucideIcon icon={Users} size={20} />,
-  "map-pin": <AnimatedLucideIcon icon={MapPin} size={20} />,
-  "bar-chart": <AnimatedLucideIcon icon={BarChart3} size={20} />,
-  "trending-up": <AnimatedLucideIcon icon={TrendingUp} size={20} />,
+  users: <AnimatedLucideIcon icon={Users} size={20} animation="float" />,
+  "map-pin": <AnimatedLucideIcon icon={MapPin} size={20} animation="bounce" />,
+  "bar-chart": <AnimatedLucideIcon icon={BarChart3} size={20} animation="pulse" />,
+  "trending-up": <AnimatedLucideIcon icon={TrendingUp} size={20} animation="flicker" />,
 };
 
 // ─── Stat Card: bouncy whole card, count-up numbers, expandable on hover ───
@@ -83,7 +83,7 @@ function FloatingStatCard({
             animate={{ rotate: isExpanded ? [0, -10, 10, 0] : 0 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
           >
-            {iconMap[icon] ?? <AnimatedLucideIcon icon={BarChart3} size={20} />}
+            {iconMap[icon] ?? <AnimatedLucideIcon icon={BarChart3} size={20} animation="breathe" />}
           </motion.div>
           <div>
             <p className="text-lg font-bold text-amber-400 sm:text-xl">
