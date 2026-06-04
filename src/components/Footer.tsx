@@ -149,7 +149,7 @@ function FooterTicker() {
       >
         {items.map((word, i) => (
           <span key={i} className="flex items-center">
-            <span className="px-6 text-[11px] font-bold tracking-[0.3em] text-white/10">
+            <span className="px-6 text-[11px] font-bold tracking-[0.3em] text-white/60">
               {word}
             </span>
             <span className="h-1 w-1 rounded-full bg-amber-500/20" />
@@ -201,7 +201,7 @@ export function Footer() {
 
   return (
     <footer className="relative overflow-hidden bg-[#0c0f1a]">
-      <FooterTicker />
+      {/* <FooterTicker /> */}
 
       {/* Persistent effects — always running */}
       <ShimmerSweep />
@@ -249,7 +249,7 @@ export function Footer() {
               </span>
             </Link>
 
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-gray-400">
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-white">
               India's premier political analysis and campaign strategy platform.
               Delivering data-driven insights for informed political decisions.
             </p>
@@ -258,7 +258,7 @@ export function Footer() {
             <div className="mt-6 space-y-3">
               <motion.a
                 href="mailto:info@logsabha.com"
-                className="flex items-center gap-3 text-sm text-gray-400 transition-colors hover:text-amber-400"
+                className="flex items-center gap-3 text-sm text-white transition-colors hover:text-amber-400"
                 whileHover={{ x: 3 }}
               >
                 <Mail className="h-4 w-4 flex-shrink-0 text-amber-500/60" />
@@ -266,14 +266,14 @@ export function Footer() {
               </motion.a>
               <motion.a
                 href="tel:+919876543210"
-                className="flex items-center gap-3 text-sm text-gray-400 transition-colors hover:text-amber-400"
+                className="flex items-center gap-3 text-sm text-white transition-colors hover:text-amber-400"
                 whileHover={{ x: 3 }}
               >
                 <Phone className="h-4 w-4 flex-shrink-0 text-amber-500/60" />
                 +91 98765 43210
               </motion.a>
               <motion.div
-                className="flex items-center gap-3 text-sm text-gray-400"
+                className="flex items-center gap-3 text-sm text-white"
               >
                 <MapPin className="h-4 w-4 flex-shrink-0 text-amber-500/60" />
                 New Delhi, India
@@ -312,7 +312,7 @@ export function Footer() {
                     >
                       <Link
                         to={link.href}
-                        className="group inline-flex items-center gap-1 text-sm text-gray-400 transition-colors hover:text-amber-400"
+                        className="group inline-flex items-center gap-1 text-sm text-white transition-colors hover:text-amber-400"
                       >
                         {link.label}
                         <ArrowUpRight className="h-3 w-3 opacity-0 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
@@ -339,7 +339,7 @@ export function Footer() {
           transition={{ duration: 0.6, delay: 0.4 }}
         >
           {/* Copyright */}
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-white">
             &copy; {new Date().getFullYear()} Logsabha. All rights reserved.
           </p>
 
@@ -350,7 +350,7 @@ export function Footer() {
                 <a
                   key={text}
                   href="#"
-                  className="text-xs text-gray-500 transition-colors hover:text-amber-400"
+                  className="text-xs text-white transition-colors hover:text-amber-400"
                 >
                   {text}
                 </a>
@@ -366,14 +366,14 @@ export function Footer() {
                   key={social.label}
                   href={social.href}
                   aria-label={social.label}
-                  className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 text-gray-400 transition-colors hover:bg-amber-500/10 hover:text-amber-400"
+                  className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 text-white transition-colors hover:bg-amber-500/10 hover:text-amber-400"
                   whileHover={{ y: -2, scale: 1.1 }}
                 >
                   {social.icon}
                 </motion.a>
               ))}
             </div>
-            <div className="flex items-center gap-1.5 text-xs text-gray-500">
+            <div className="flex items-center gap-1.5 text-xs text-white">
               <span className="flex gap-px">
                 <span className="h-2.5 w-3 rounded-sm bg-orange-500" />
                 <span className="h-2.5 w-3 rounded-sm bg-white" />

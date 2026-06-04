@@ -16,7 +16,7 @@ const CONTACT_INFO = [
   {
     icon: MapPin,
     label: "Office Address",
-    lines: ["LogSabha Pvt Ltd", "Connaught Place, New Delhi", "Delhi 110001, India"],
+    lines: ["LogSabha Pvt Ltd", "Connaught Place, New Delhi", "110001, India"],
     color: "#f97316",
   },
   {
@@ -33,12 +33,12 @@ const CONTACT_INFO = [
     color: "#22c55e",
     href: "mailto:info@logsabha.com",
   },
-  {
-    icon: Clock,
-    label: "Office Hours",
-    lines: ["Mon – Fri: 9:00 AM – 6:00 PM", "Sat: 10:00 AM – 2:00 PM"],
-    color: "#a855f7",
-  },
+  // {
+  //   icon: Clock,
+  //   label: "Office Hours",
+  //   lines: ["Mon – Fri: 9:00 AM – 6:00 PM", "Sat: 10:00 AM – 2:00 PM"],
+  //   color: "#a855f7",
+  // },
 ];
 
 const TYPEWRITER_PHRASES = [
@@ -420,7 +420,7 @@ export function ContactSection() {
             </div>
 
             {/* Social links */}
-            <ScrollReveal delay={0.6} direction="right">
+            {/* <ScrollReveal delay={0.6} direction="right">
               <div className="mt-2 flex items-center gap-3">
                 <span className="text-xs font-semibold tracking-wide text-slate-500 uppercase">
                   Follow Us
@@ -461,7 +461,7 @@ export function ContactSection() {
                   </motion.a>
                 ))}
               </div>
-            </ScrollReveal>
+            </ScrollReveal> */}
           </div>
         </div>
       </div>

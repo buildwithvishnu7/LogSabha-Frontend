@@ -214,12 +214,21 @@ export function FounderEditorialSection() {
       {/* ── Dark candle-lit background ── */}
       <div className="pointer-events-none absolute inset-0">
         {/* Candle background image */}
-        <img
+        {/* <img
           src="/images/candle.jpg"
           alt=""
           className="absolute inset-0 h-full w-full object-cover"
-        />
-
+        /> */}
+       <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 h-full w-full object-cover"
+          poster="/images/tri-bg.jpg"
+        >
+          <source src="/videos/candle-bg.mp4" type="video/mp4" />
+        </video>
         {/* Dark overlay to keep text readable */}
         <div className="absolute inset-0 bg-black/60" />
 
