@@ -230,8 +230,10 @@ export function Footer() {
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           >
             <Link to="/" className="inline-flex items-center gap-3">
-              <motion.div
-                className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500 text-sm font-black text-white"
+              <motion.img
+                src="/logo/Logfinalsabha.gif"
+                alt="LogSabha"
+                className="h-20 w-20 rounded-xl object-contain"
                 whileHover={{ rotate: [0, -5, 5, 0], scale: 1.05 }}
                 animate={{
                   boxShadow: [
@@ -241,9 +243,7 @@ export function Footer() {
                   ],
                 }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-              >
-                LS
-              </motion.div>
+              />
               <span className="footer-shimmer-text text-xl font-bold text-white">
                 Log<span className="text-amber-500">sabha</span>
               </span>
