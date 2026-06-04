@@ -275,7 +275,56 @@ function StatCounter({
   );
 }
 
-// ─── Scroll-wheel digit roller ───
+// ─── Slot Machine Digit Drum ───
+
+const SLOT_CYCLES = 2;
+const DIGIT_H = 1.15;
+
+function SlotDigit({
+  target,
+  delay,
+  active,
+}: {
+  target: number;
+  delay: number;
+  active: boolean;
+}) {
+  const total = SLOT_CYCLES * 10 + target;
+  const digits: number[] = [];
+  for (let i = 0; i <= total; i++) digits.push(i % 10);
+
+  return (
+    <span
+      className="relative inline-block overflow-hidden align-bottom"
+      style={{
+        height: `${DIGIT_H}em`,
+        width: "0.65em",
+        fontVariantNumeric: "tabular-nums",
+      }}
+    >
+      <motion.span
+        className="block will-change-transform"
+        initial={{ y: 0 }}
+        animate={active ? { y: `${-total * DIGIT_H}em` } : { y: 0 }}
+        transition={{
+          duration: 1.3 + total * 0.012,
+          delay,
+          ease: [0.16, 1, 0.3, 1],
+        }}
+      >
+        {digits.map((d, i) => (
+          <span
+            key={i}
+            className="block text-center"
+            style={{ height: `${DIGIT_H}em`, lineHeight: `${DIGIT_H}em` }}
+          >
+            {d}
+          </span>
+        ))}
+      </motion.span>
+    </span>
+  );
+}
 
 function RollingNumber({
   value,
@@ -286,28 +335,27 @@ function RollingNumber({
   isActive: boolean;
   color: string;
 }) {
-  const digits = String(value).split("");
+  const chars = String(value).split("");
+
   return (
-    <div className="flex overflow-hidden" style={{ color }}>
-      {digits.map((digit, i) => (
-        <motion.div
-          key={`${i}-${digit}`}
-          className="relative text-2xl font-extrabold leading-none sm:text-3xl"
-          initial={{ y: 30, opacity: 0 }}
-          animate={
-            isActive
-              ? { y: 0, opacity: 1 }
-              : { y: 30, opacity: 0 }
-          }
-          transition={{
-            duration: 0.6,
-            delay: isActive ? 0.3 + i * 0.08 : 0,
-            ease: [0.16, 1, 0.3, 1],
-          }}
-        >
-          {digit}
-        </motion.div>
-      ))}
+    <div
+      className="flex text-2xl font-extrabold leading-none sm:text-3xl"
+      style={{ color }}
+    >
+      {chars.map((ch, i) =>
+        /\d/.test(ch) ? (
+          <SlotDigit
+            key={`${i}-${ch}`}
+            target={parseInt(ch)}
+            delay={0.3 + i * 0.08}
+            active={isActive}
+          />
+        ) : (
+          <span key={`${i}-${ch}`} className="inline-block w-[0.25em] text-center">
+            {ch}
+          </span>
+        ),
+      )}
     </div>
   );
 }
@@ -432,11 +480,11 @@ function PartyStrip({
           visibility: isExpanded ? "visible" : "hidden",
           transitionProperty: "visibility",
           transitionDelay: isExpanded ? "0s" : "0.5s",
-          background: `linear-gradient(to bottom, rgba(${party.themeColorRgb}, 0.15) 0%, rgba(0, 0, 0, 0.18) 100%)`,
-          backdropFilter: "blur(2px)",
-          WebkitBackdropFilter: "blur(2px)",
-          border: `1.5px solid rgba(255, 255, 255, 0.18)`,
-          boxShadow: `0 0 24px rgba(${party.themeColorRgb}, 0.08), inset 0 1px 0 rgba(255,255,255,0.1)`,
+          background: `linear-gradient(to bottom, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.65) 100%)`,
+          backdropFilter: "blur(16px)",
+          WebkitBackdropFilter: "blur(16px)",
+          border: `1.5px solid rgba(255, 255, 255, 0.15)`,
+          boxShadow: `0 0 24px rgba(${party.themeColorRgb}, 0.15), inset 0 1px 0 rgba(255,255,255,0.08)`,
         }}
       >
         <div className="flex h-full flex-col justify-between p-3 sm:p-4 md:p-5">
@@ -461,21 +509,21 @@ function PartyStrip({
                 </span>
                 <span className="text-[10px] text-white/60 sm:text-xs">Est. {party.established}</span>
               </div>
-              <h3 className="text-base font-bold leading-tight text-white sm:text-xl md:text-2xl">{party.fullName}</h3>
+              <h3 className="text-base font-bold leading-tight text-white drop-shadow-md sm:text-xl md:text-2xl">{party.fullName}</h3>
             </div>
           </div>
 
-          <p className="line-clamp-3 text-xs leading-relaxed text-white/80 sm:line-clamp-none sm:text-sm md:text-base">{party.description}</p>
+          <p className="line-clamp-3 text-xs leading-relaxed text-white/90 drop-shadow-sm sm:line-clamp-none sm:text-sm md:text-base">{party.description}</p>
 
           {/* Stats — rolling numbers */}
           <div className="flex gap-2 sm:gap-3">
-            <div className="rounded-lg px-3 py-2 sm:px-5 sm:py-2.5" style={{ backgroundColor: `rgba(${party.themeColorRgb}, 0.15)`, border: `1px solid rgba(${party.themeColorRgb}, 0.3)` }}>
+            <div className="rounded-lg px-3 py-2 sm:px-5 sm:py-2.5" style={{ backgroundColor: `rgba(${party.themeColorRgb}, 0.2)`, border: `1px solid rgba(${party.themeColorRgb}, 0.4)` }}>
               <RollingNumber value={party.lokSabhaSeats} isActive={isExpanded} color={party.themeColor} />
-              <p className="text-[9px] font-medium text-white/50 uppercase sm:text-[10px]">Lok Sabha Seats</p>
+              <p className="text-[9px] font-semibold tracking-wider text-white/70 uppercase sm:text-[10px]">Lok Sabha Seats</p>
             </div>
-            <div className="rounded-lg px-3 py-2 sm:px-5 sm:py-2.5" style={{ backgroundColor: `rgba(${party.themeColorRgb}, 0.15)`, border: `1px solid rgba(${party.themeColorRgb}, 0.3)` }}>
+            <div className="rounded-lg px-3 py-2 sm:px-5 sm:py-2.5" style={{ backgroundColor: `rgba(${party.themeColorRgb}, 0.2)`, border: `1px solid rgba(${party.themeColorRgb}, 0.4)` }}>
               <RollingNumber value={party.statesRuled} isActive={isExpanded} color={party.themeColor} />
-              <p className="text-[9px] font-medium text-white/50 uppercase sm:text-[10px]">States Ruled</p>
+              <p className="text-[9px] font-semibold tracking-wider text-white/70 uppercase sm:text-[10px]">States Ruled</p>
             </div>
           </div>
 
@@ -486,8 +534,8 @@ function PartyStrip({
               <LoopingIcon icon={UsersIcon} size={16} color="rgba(255,255,255,0.5)" className="hidden sm:block" interval={4000} />
             </div>
             <div>
-              <p className="text-[9px] text-white/40 uppercase sm:text-[10px]">President</p>
-              <p className="text-xs font-semibold text-white sm:text-sm">{party.president}</p>
+              <p className="text-[9px] font-medium tracking-wider text-white/60 uppercase sm:text-[10px]">President</p>
+              <p className="text-xs font-semibold text-white drop-shadow-sm sm:text-sm">{party.president}</p>
             </div>
           </div>
         </div>

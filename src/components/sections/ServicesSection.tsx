@@ -180,7 +180,7 @@ export function ServicesSection({ data }: { data: ServicesData }) {
     if (timerRef.current) clearInterval(timerRef.current);
     timerRef.current = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % data.services.length);
-    }, 2000);
+    }, 4000);
   }, [data.services.length]);
 
   const handleTabClick = useCallback(
