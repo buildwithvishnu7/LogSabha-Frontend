@@ -1,28 +1,62 @@
-import { useRef, useState, useEffect, useMemo } from "react";
-import { motion, useInView, AnimatePresence } from "motion/react";
+import { useRef, useState, useEffect } from "react";
+import { motion, useInView } from "motion/react";
 import { Users, FileText, TrendingUp } from "lucide-react";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
 
-// ─── Slot Machine Counter ───
+// ─── Slot Machine Drum Digit (spins through 0-9 twice then lands) ───
 
-function SlotMachineDigit({ digit, duration }: { digit: string; duration: number }) {
+const SLOT_CYCLES = 2;
+const DIGIT_H = 1.15;
+
+function SlotDigit({
+  target,
+  delay,
+  active,
+}: {
+  target: number;
+  delay: number;
+  active: boolean;
+}) {
+  const total = SLOT_CYCLES * 10 + target;
+  const digits: number[] = [];
+  for (let i = 0; i <= total; i++) digits.push(i % 10);
+
   return (
-    <span className="relative inline-block h-[1.2em] w-[0.65em] overflow-hidden align-bottom">
-      <AnimatePresence mode="popLayout">
-        <motion.span
-          key={digit}
-          className="absolute inset-0 flex items-center justify-center"
-          initial={{ y: "100%", opacity: 0, filter: "blur(4px)" }}
-          animate={{ y: "0%", opacity: 1, filter: "blur(0px)" }}
-          exit={{ y: "-100%", opacity: 0, filter: "blur(4px)" }}
-          transition={{ duration: duration / 1000, ease: [0.16, 1, 0.3, 1] }}
-        >
-          {digit}
-        </motion.span>
-      </AnimatePresence>
+    <span
+      className="relative inline-block overflow-hidden align-bottom"
+      style={{
+        height: `${DIGIT_H}em`,
+        width: "0.65em",
+        fontVariantNumeric: "tabular-nums",
+      }}
+    >
+      <motion.span
+        className="block will-change-transform"
+        initial={{ y: 0 }}
+        animate={
+          active ? { y: `${-total * DIGIT_H}em` } : { y: 0 }
+        }
+        transition={{
+          duration: 1.3 + total * 0.012,
+          delay,
+          ease: [0.16, 1, 0.3, 1],
+        }}
+      >
+        {digits.map((d, i) => (
+          <span
+            key={i}
+            className="block text-center"
+            style={{ height: `${DIGIT_H}em`, lineHeight: `${DIGIT_H}em` }}
+          >
+            {d}
+          </span>
+        ))}
+      </motion.span>
     </span>
   );
 }
+
+// ─── Slot Machine Stat Card ───
 
 function SlotMachineStat({
   endValue,
@@ -41,35 +75,25 @@ function SlotMachineStat({
   triggered: boolean;
   delay: number;
 }) {
-  const [displayValue, setDisplayValue] = useState(0);
-  const digits = useMemo(() => String(displayValue).split(""), [displayValue]);
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: false, amount: 0.5 });
+  const [active, setActive] = useState(false);
 
   useEffect(() => {
-    if (!triggered) return;
+    if (isInView && triggered) {
+      setActive(false);
+      requestAnimationFrame(() => setActive(true));
+    } else {
+      setActive(false);
+    }
+  }, [isInView, triggered]);
 
-    const startTime = performance.now();
-    const duration = 2500;
-    let raf: number;
-
-    const tick = (now: number) => {
-      const elapsed = now - startTime - delay;
-      if (elapsed < 0) {
-        raf = requestAnimationFrame(tick);
-        return;
-      }
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setDisplayValue(Math.floor(eased * endValue));
-      if (progress < 1) raf = requestAnimationFrame(tick);
-      else setDisplayValue(endValue);
-    };
-
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [triggered, endValue, delay]);
+  const formatted = String(Math.round(endValue));
+  const chars = formatted.split("");
 
   return (
     <motion.div
+      ref={ref}
       className="flex flex-col items-center gap-2 rounded-2xl border border-white/20 bg-white/10 px-6 py-5 backdrop-blur-md sm:px-8 sm:py-6"
       initial={{ opacity: 0, y: 30, scale: 0.9 }}
       animate={triggered ? { opacity: 1, y: 0, scale: 1 } : {}}
@@ -84,13 +108,22 @@ function SlotMachineStat({
       >
         <Icon className="h-5 w-5" style={{ color: iconColor }} />
       </motion.div>
-      <div className="flex items-baseline">
-        <span className="text-2xl font-extrabold text-amber-400 sm:text-3xl">
-          {digits.map((d, i) => (
-            <SlotMachineDigit key={`${i}-${d}`} digit={d} duration={400} />
-          ))}
-        </span>
-        <span className="text-2xl font-extrabold text-amber-400 sm:text-3xl">{suffix}</span>
+      <div className="flex items-baseline text-2xl font-extrabold text-amber-400 sm:text-3xl">
+        {chars.map((ch, i) =>
+          /\d/.test(ch) ? (
+            <SlotDigit
+              key={`${i}-${ch}`}
+              target={parseInt(ch)}
+              delay={delay / 1000 + i * 0.08}
+              active={active}
+            />
+          ) : (
+            <span key={`${i}-${ch}`} className="inline-block w-[0.25em] text-center">
+              {ch}
+            </span>
+          )
+        )}
+        <span className="ml-0.5">{suffix}</span>
       </div>
       <span className="text-xs font-semibold tracking-wider text-white/70 uppercase sm:text-sm">
         {label}

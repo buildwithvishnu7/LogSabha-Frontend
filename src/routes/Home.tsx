@@ -10,6 +10,7 @@ import { RSSSection } from "@/components/sections/RSSSection";
 import { LogSabhaStorySection } from "@/components/sections/LogSabhaStorySection";
 import { ContactSection } from "@/components/sections/ContactSection";
 import { SocialPresenceSection } from "@/components/sections/SocialPresenceSection";
+import { FounderEditorialSection } from "@/components/sections/FounderEditorialSection";
 import { EditorialInsightsSection } from "@/components/sections/EditorialInsightsSection";
 import { Footer } from "@/components/Footer";
 
@@ -35,6 +36,7 @@ export default function Home() {
       <RSSSection />
       <LogSabhaStorySection />
       <DataInsightsSection />
+      <FounderEditorialSection />
       <EditorialInsightsSection />
       <SocialPresenceSection />
       <ContactSection />

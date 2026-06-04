@@ -210,11 +210,17 @@ function SlotMachineNumber({
   baseDelay?: number;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { once: true, amount: 0.5 });
+  const isInView = useInView(ref, { once: false, amount: 0.5 });
   const [active, setActive] = useState(false);
 
   useEffect(() => {
-    setActive(isInView);
+    if (isInView) {
+      // Reset then re-activate so the slot spins from the top every visit
+      setActive(false);
+      requestAnimationFrame(() => setActive(true));
+    } else {
+      setActive(false);
+    }
   }, [isInView]);
 
   const formatted =
@@ -300,29 +306,43 @@ function DonutChart({
               stroke={s.color}
               strokeLinecap="butt"
               strokeDasharray={`${s.len} ${C - s.len}`}
-              initial={{ strokeDashoffset: C, strokeWidth: 28 }}
+              initial={{ strokeDashoffset: C }}
               animate={
                 triggered
                   ? {
-                      strokeDashoffset: C - s.off - s.len,
-                      strokeWidth: hov ? 34 : 28,
-                      opacity: dim ? 0.3 : 1,
+                      strokeDashoffset: [
+                        C,
+                        C - s.off - s.len,
+                        C - s.off - s.len,
+                        C,
+                        C,
+                      ],
                     }
                   : { strokeDashoffset: C }
               }
-              transition={{
-                strokeDashoffset: {
-                  duration: 1.8,
-                  delay: 0.3 + i * 0.18,
-                  ease: [0.16, 1, 0.3, 1],
-                },
-                strokeWidth: { duration: 0.3 },
-                opacity: { duration: 0.3 },
-              }}
+              transition={
+                triggered
+                  ? {
+                      strokeDashoffset: {
+                        duration: 8,
+                        times: [0, 0.22, 0.6, 0.82, 1],
+                        repeat: Infinity,
+                        delay: i * 0.2,
+                        ease: "easeInOut",
+                      },
+                    }
+                  : { duration: 0.3 }
+              }
               style={{
+                strokeWidth: hov ? 38 : 28,
+                opacity: dim ? 0.3 : 1,
                 transformOrigin: "100px 100px",
                 cursor: "pointer",
-                filter: hov ? `drop-shadow(0 0 8px ${s.color})` : "none",
+                filter: hov
+                  ? `drop-shadow(0 0 12px ${s.color}) drop-shadow(0 0 4px ${s.color})`
+                  : "none",
+                transition:
+                  "stroke-width 0.25s ease, opacity 0.3s ease, filter 0.25s ease",
               }}
               onMouseEnter={() => onHoverParty(s.party)}
             />
@@ -493,9 +513,14 @@ function SeatShareCard({ triggered }: { triggered: boolean }) {
   );
 }
 
-// ─── Grouped Bar Chart (SVG) with shimmer ───
+// ─── Grouped Bar Chart (SVG) — continuous build + hover ───
 
 function GroupedBarChart({ triggered }: { triggered: boolean }) {
+  const [hoveredBar, setHoveredBar] = useState<{
+    si: number;
+    pi: number;
+  } | null>(null);
+
   const groupW = BAR_CW / STATE_BAR_DATA.length;
   const clusterW = BAR.barW * 3 + BAR.barGap * 2;
   const pad = (groupW - clusterW) / 2;
@@ -515,37 +540,8 @@ function GroupedBarChart({ triggered }: { triggered: boolean }) {
       viewBox={`0 0 ${BAR.W} ${BAR.H}`}
       className="h-full w-full"
       preserveAspectRatio="xMidYMid meet"
+      onMouseLeave={() => setHoveredBar(null)}
     >
-      {/* Clip paths for shimmer containment */}
-      <defs>
-        <linearGradient id="shimmerUp" x1="0" y1="1" x2="0" y2="0">
-          <stop offset="0%" stopColor="rgba(255,255,255,0)" />
-          <stop offset="40%" stopColor="rgba(255,255,255,0.35)" />
-          <stop offset="60%" stopColor="rgba(255,255,255,0.35)" />
-          <stop offset="100%" stopColor="rgba(255,255,255,0)" />
-        </linearGradient>
-        {STATE_BAR_DATA.flatMap((st, si) =>
-          parties.map((p, pi) => {
-            const val = st[p.key];
-            if (val === 0) return null;
-            const h = (val / BAR.yMax) * BAR_CH;
-            const x =
-              BAR.ml + si * groupW + pad + pi * (BAR.barW + BAR.barGap);
-            return (
-              <clipPath key={`bc-${si}-${pi}`} id={`bc-${si}-${pi}`}>
-                <rect
-                  x={x}
-                  y={bottom - h}
-                  width={BAR.barW}
-                  height={h}
-                  rx={2}
-                />
-              </clipPath>
-            );
-          })
-        )}
-      </defs>
-
       {/* Grid lines */}
       {gridVals.map((v) => (
         <g key={v}>
@@ -570,7 +566,7 @@ function GroupedBarChart({ triggered }: { triggered: boolean }) {
         </g>
       ))}
 
-      {/* Bars per state + shimmer overlays */}
+      {/* Bars per state — continuous build loop with hover highlight + lift */}
       {STATE_BAR_DATA.map((st, si) => {
         const gx = BAR.ml + si * groupW;
         return (
@@ -580,47 +576,59 @@ function GroupedBarChart({ triggered }: { triggered: boolean }) {
               if (val === 0) return null;
               const h = (val / BAR.yMax) * BAR_CH;
               const x = gx + pad + pi * (BAR.barW + BAR.barGap);
+              const isHov =
+                hoveredBar?.si === si && hoveredBar?.pi === pi;
+              const isDimmed = hoveredBar !== null && !isHov;
+
               return (
-                <g key={p.key}>
-                  {/* Main bar */}
+                <motion.g
+                  key={p.key}
+                  onMouseEnter={() => setHoveredBar({ si, pi })}
+                  animate={{ y: isHov ? -6 : 0 }}
+                  transition={{ duration: 0.25, ease: "easeOut" }}
+                  style={{ cursor: "pointer" }}
+                >
+                  {/* Main bar — continuous grow/hold/shrink loop */}
                   <motion.rect
                     x={x}
                     width={BAR.barW}
                     rx={2}
                     fill={p.color}
-                    initial={{ y: bottom, height: 0 }}
                     animate={
                       triggered
-                        ? { y: bottom - h, height: h }
+                        ? {
+                            y: [
+                              bottom,
+                              bottom - h,
+                              bottom - h,
+                              bottom,
+                              bottom,
+                            ],
+                            height: [0, h, h, 0, 0],
+                          }
                         : { y: bottom, height: 0 }
                     }
-                    transition={{
-                      duration: 1.2,
-                      delay: 0.4 + si * 0.12 + pi * 0.06,
-                      ease: [0.16, 1, 0.3, 1],
+                    transition={
+                      triggered
+                        ? {
+                            duration: 7,
+                            times: [0, 0.2, 0.65, 0.85, 1],
+                            repeat: Infinity,
+                            delay: si * 0.15 + pi * 0.06,
+                            ease: "easeInOut",
+                          }
+                        : { duration: 0.3 }
+                    }
+                    style={{
+                      filter: isHov
+                        ? `brightness(1.4) drop-shadow(0 0 8px ${p.color})`
+                        : "none",
+                      opacity: isDimmed ? 0.3 : 1,
+                      transition:
+                        "filter 0.25s ease, opacity 0.3s ease",
                     }}
                   />
-                  {/* Shimmer sweep moving up */}
-                  {triggered && (
-                    <motion.rect
-                      clipPath={`url(#bc-${si}-${pi})`}
-                      x={x}
-                      width={BAR.barW}
-                      height={10}
-                      rx={2}
-                      fill="url(#shimmerUp)"
-                      initial={{ y: bottom }}
-                      animate={{ y: [bottom, bottom - h - 12] }}
-                      transition={{
-                        duration: 1.2,
-                        delay: 3.5 + si * 0.4 + pi * 0.12,
-                        repeat: Infinity,
-                        repeatDelay: 3 + si * 0.3,
-                        ease: "easeInOut",
-                      }}
-                    />
-                  )}
-                </g>
+                </motion.g>
               );
             })}
             {/* State label */}
@@ -795,7 +803,7 @@ function HistoricalLineChart({ triggered }: { triggered: boolean }) {
         </g>
       ))}
 
-      {/* BJP line - draw in */}
+      {/* BJP line — continuous draw/erase loop */}
       <motion.path
         d={bjpPath}
         fill="none"
@@ -806,15 +814,25 @@ function HistoricalLineChart({ triggered }: { triggered: boolean }) {
         initial={{ pathLength: 0, opacity: 0 }}
         animate={
           triggered
-            ? { pathLength: 1, opacity: 1 }
+            ? {
+                pathLength: [0, 1, 1, 0, 0],
+                opacity: [0, 1, 1, 1, 0],
+              }
             : { pathLength: 0, opacity: 0 }
         }
-        transition={{
-          pathLength: { duration: 2, delay: 0.5, ease: [0.16, 1, 0.3, 1] },
-          opacity: { duration: 0.3, delay: 0.5 },
-        }}
+        transition={
+          triggered
+            ? {
+                duration: 8,
+                times: [0, 0.25, 0.6, 0.82, 1],
+                repeat: Infinity,
+                delay: 0.3,
+                ease: "easeInOut",
+              }
+            : { duration: 0.3 }
+        }
       />
-      {/* INC line - draw in */}
+      {/* INC line — continuous draw/erase loop */}
       <motion.path
         d={incPath}
         fill="none"
@@ -825,20 +843,26 @@ function HistoricalLineChart({ triggered }: { triggered: boolean }) {
         initial={{ pathLength: 0, opacity: 0 }}
         animate={
           triggered
-            ? { pathLength: 1, opacity: 1 }
+            ? {
+                pathLength: [0, 1, 1, 0, 0],
+                opacity: [0, 1, 1, 1, 0],
+              }
             : { pathLength: 0, opacity: 0 }
         }
-        transition={{
-          pathLength: {
-            duration: 2,
-            delay: 0.7,
-            ease: [0.16, 1, 0.3, 1],
-          },
-          opacity: { duration: 0.3, delay: 0.7 },
-        }}
+        transition={
+          triggered
+            ? {
+                duration: 8,
+                times: [0, 0.25, 0.6, 0.82, 1],
+                repeat: Infinity,
+                delay: 0.5,
+                ease: "easeInOut",
+              }
+            : { duration: 0.3 }
+        }
       />
 
-      {/* Static data point dots */}
+      {/* Data point dots — continuous appear/disappear with the lines */}
       {HISTORICAL_DATA.map((d, i) => (
         <g key={d.year}>
           <motion.circle
@@ -851,16 +875,23 @@ function HistoricalLineChart({ triggered }: { triggered: boolean }) {
             initial={{ scale: 0, opacity: 0 }}
             animate={
               triggered
-                ? { scale: 1, opacity: 1 }
+                ? {
+                    scale: [0, 1, 1, 0, 0],
+                    opacity: [0, 1, 1, 0, 0],
+                  }
                 : { scale: 0, opacity: 0 }
             }
-            transition={{
-              duration: 0.4,
-              delay: 1.6 + i * 0.15,
-              type: "spring",
-              stiffness: 400,
-              damping: 15,
-            }}
+            transition={
+              triggered
+                ? {
+                    duration: 8,
+                    times: [0, 0.25, 0.6, 0.82, 1],
+                    repeat: Infinity,
+                    delay: 0.3 + i * 0.06,
+                    ease: "easeInOut",
+                  }
+                : { duration: 0.3 }
+            }
             style={{ transformOrigin: `${toX(i)}px ${toY(d.bjp)}px` }}
           />
           <motion.circle
@@ -873,16 +904,23 @@ function HistoricalLineChart({ triggered }: { triggered: boolean }) {
             initial={{ scale: 0, opacity: 0 }}
             animate={
               triggered
-                ? { scale: 1, opacity: 1 }
+                ? {
+                    scale: [0, 1, 1, 0, 0],
+                    opacity: [0, 1, 1, 0, 0],
+                  }
                 : { scale: 0, opacity: 0 }
             }
-            transition={{
-              duration: 0.4,
-              delay: 1.8 + i * 0.15,
-              type: "spring",
-              stiffness: 400,
-              damping: 15,
-            }}
+            transition={
+              triggered
+                ? {
+                    duration: 8,
+                    times: [0, 0.25, 0.6, 0.82, 1],
+                    repeat: Infinity,
+                    delay: 0.5 + i * 0.06,
+                    ease: "easeInOut",
+                  }
+                : { duration: 0.3 }
+            }
             style={{ transformOrigin: `${toX(i)}px ${toY(d.inc)}px` }}
           />
 

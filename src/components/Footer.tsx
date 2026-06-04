@@ -326,39 +326,7 @@ export function Footer() {
         </div>
 
         {/* Newsletter — shimmer border */}
-        <motion.div
-          className="footer-shimmer-border relative mt-12 overflow-hidden rounded-2xl border border-white/5 bg-white/[0.03] p-6 backdrop-blur-sm sm:p-8"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={VIEW_ONCE}
-          transition={{ duration: 0.7, delay: 0.3 }}
-        >
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h3 className="text-base font-semibold text-white">
-                Stay updated with political insights
-              </h3>
-              <p className="mt-1 text-sm text-gray-400">
-                Get weekly analysis and data reports delivered to your inbox.
-              </p>
-            </div>
-            <div className="flex gap-2">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-gray-500 outline-none transition-colors focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/20"
-              />
-              <motion.button
-                className="flex items-center gap-2 rounded-xl bg-amber-500 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-amber-600"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                Subscribe
-                <ArrowRight className="h-4 w-4" />
-              </motion.button>
-            </div>
-          </div>
-        </motion.div>
+  
 
         <AnimatedDivider />
 

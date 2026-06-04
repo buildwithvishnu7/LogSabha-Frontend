@@ -90,6 +90,7 @@ interface SocialPost {
 }
 
 const SOCIAL_POSTS: SocialPost[] = [
+  // ── Twitter (3 posts) ──
   {
     id: "tw-1",
     platform: "twitter",
@@ -102,6 +103,29 @@ const SOCIAL_POSTS: SocialPost[] = [
     shares: "4.1K",
   },
   {
+    id: "tw-2",
+    platform: "twitter",
+    handle: "@logsabha",
+    timeAgo: "1d ago",
+    image: "/images/social/twitter-post-2.jpg",
+    caption: "State election results are in! Our prediction model achieved 96% accuracy across all constituencies. Full analysis thread below.",
+    likes: "15.1K",
+    comments: "4.6K",
+    shares: "7.2K",
+  },
+  {
+    id: "tw-3",
+    platform: "twitter",
+    handle: "@logsabha",
+    timeAgo: "2d ago",
+    image: "/images/social/twitter-post.jpg",
+    caption: "Exit polls vs actual results — a deep dive into what the data got right and where the models diverged. Thread below.",
+    likes: "8.9K",
+    comments: "1.8K",
+    shares: "3.5K",
+  },
+  // ── Instagram (3 posts) ──
+  {
     id: "ig-1",
     platform: "instagram",
     handle: "@logsabha",
@@ -112,6 +136,29 @@ const SOCIAL_POSTS: SocialPost[] = [
     comments: "1.5K",
     shares: "892",
   },
+  {
+    id: "ig-2",
+    platform: "instagram",
+    handle: "@logsabha",
+    timeAgo: "1d ago",
+    image: "/images/social/instagram-post.jpg",
+    caption: "Behind the scenes at LogSabha HQ — our analysts breaking down real-time constituency data during election night.",
+    likes: "22.3K",
+    comments: "2.1K",
+    shares: "1.3K",
+  },
+  {
+    id: "ig-3",
+    platform: "instagram",
+    handle: "@logsabha",
+    timeAgo: "3d ago",
+    image: "/images/social/instagram-post.jpg",
+    caption: "Infographic: How India votes — a visual breakdown of voter demographics across 543 constituencies.",
+    likes: "31.5K",
+    comments: "3.4K",
+    shares: "2.7K",
+  },
+  // ── YouTube (3 posts) ──
   {
     id: "yt-1",
     platform: "youtube",
@@ -125,6 +172,31 @@ const SOCIAL_POSTS: SocialPost[] = [
     views: "1.2M",
   },
   {
+    id: "yt-2",
+    platform: "youtube",
+    handle: "@logsabha",
+    timeAgo: "2d ago",
+    image: "/images/social/youtube-post.jpg",
+    caption: "Election Analysis 2026: State-by-State Breakdown | LogSabha Special Report",
+    likes: "32.1K",
+    comments: "5.4K",
+    shares: "9.8K",
+    views: "890K",
+  },
+  {
+    id: "yt-3",
+    platform: "youtube",
+    handle: "@logsabha",
+    timeAgo: "5d ago",
+    image: "/images/social/youtube-post.jpg",
+    caption: "How Data Analytics is Revolutionizing Indian Elections — Documentary",
+    likes: "56.7K",
+    comments: "11.2K",
+    shares: "21.4K",
+    views: "2.5M",
+  },
+  // ── Facebook (3 posts) ──
+  {
     id: "fb-1",
     platform: "facebook",
     handle: "LogSabha Official",
@@ -135,6 +207,29 @@ const SOCIAL_POSTS: SocialPost[] = [
     comments: "3.2K",
     shares: "6.7K",
   },
+  {
+    id: "fb-2",
+    platform: "facebook",
+    handle: "LogSabha Official",
+    timeAgo: "1d ago",
+    image: "/images/social/facebook-post.jpg",
+    caption: "Our latest survey reveals shifting voter sentiments in 5 key states ahead of upcoming assembly elections.",
+    likes: "14.6K",
+    comments: "2.8K",
+    shares: "5.1K",
+  },
+  {
+    id: "fb-3",
+    platform: "facebook",
+    handle: "LogSabha Official",
+    timeAgo: "4d ago",
+    image: "/images/social/facebook-post.jpg",
+    caption: "Join us this Saturday for a live Facebook discussion on the impact of digital campaigning in rural India.",
+    likes: "11.2K",
+    comments: "1.9K",
+    shares: "3.8K",
+  },
+  // ── LinkedIn (3 posts) ──
   {
     id: "li-1",
     platform: "linkedin",
@@ -147,17 +242,30 @@ const SOCIAL_POSTS: SocialPost[] = [
     shares: "3.4K",
   },
   {
-    id: "tw-2",
-    platform: "twitter",
-    handle: "@logsabha",
-    timeAgo: "1d ago",
-    image: "/images/social/twitter-post-2.jpg",
-    caption: "State election results are in! Our prediction model achieved 96% accuracy across all constituencies. Full analysis thread below.",
-    likes: "15.1K",
-    comments: "4.6K",
-    shares: "7.2K",
+    id: "li-2",
+    platform: "linkedin",
+    handle: "LogSabha",
+    timeAgo: "3d ago",
+    image: "/images/social/linkedin-post.jpg",
+    caption: "We're hiring! LogSabha is looking for data scientists and political analysts to join our growing team. Apply now.",
+    likes: "7.3K",
+    comments: "845",
+    shares: "2.1K",
+  },
+  {
+    id: "li-3",
+    platform: "linkedin",
+    handle: "LogSabha",
+    timeAgo: "6d ago",
+    image: "/images/social/linkedin-post.jpg",
+    caption: "Case study: How our predictive models helped a national party optimize their ground campaign in 120+ constituencies.",
+    likes: "12.4K",
+    comments: "1.6K",
+    shares: "4.9K",
   },
 ];
+
+const POSTS_PER_FILTER = 3;
 
 // ─── Slot Counter for Stats ───
 
@@ -430,10 +538,11 @@ function StatsBar() {
 export function SocialPresenceSection() {
   const [activeFilter, setActiveFilter] = useState("all");
 
-  const filteredPosts =
+  const filteredPosts = (
     activeFilter === "all"
       ? SOCIAL_POSTS
-      : SOCIAL_POSTS.filter((p) => p.platform === activeFilter);
+      : SOCIAL_POSTS.filter((p) => p.platform === activeFilter)
+  ).slice(0, POSTS_PER_FILTER);
 
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-amber-50/60 via-orange-50/30 to-white py-12 sm:py-14 lg:py-18">
@@ -517,7 +626,7 @@ export function SocialPresenceSection() {
         </div>
 
         {/* ── CTA ── */}
-        <ScrollReveal delay={0.2}>
+        {/* <ScrollReveal delay={0.2}>
           <div className="mt-14 flex justify-center">
             <motion.a
               href="#"
@@ -534,7 +643,7 @@ export function SocialPresenceSection() {
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </motion.a>
           </div>
-        </ScrollReveal>
+        </ScrollReveal> */}
       </div>
     </section>
   );
