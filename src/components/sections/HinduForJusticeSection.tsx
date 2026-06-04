@@ -232,7 +232,7 @@ export function HinduForJusticeSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden bg-amber-50/40 py-12 sm:py-14 lg:py-18"
+      className="relative overflow-hidden bg-amber-50/40 py-8 sm:py-10 lg:py-12"
     >
       {/* ── Background ── */}
       <div className="pointer-events-none absolute inset-0">

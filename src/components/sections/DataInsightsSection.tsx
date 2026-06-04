@@ -803,7 +803,7 @@ function HistoricalLineChart({ triggered }: { triggered: boolean }) {
         </g>
       ))}
 
-      {/* BJP line — continuous draw/erase loop */}
+      {/* BJP line — draws once on scroll */}
       <motion.path
         d={bjpPath}
         fill="none"
@@ -814,25 +814,16 @@ function HistoricalLineChart({ triggered }: { triggered: boolean }) {
         initial={{ pathLength: 0, opacity: 0 }}
         animate={
           triggered
-            ? {
-                pathLength: [0, 1, 1, 0, 0],
-                opacity: [0, 1, 1, 1, 0],
-              }
+            ? { pathLength: 1, opacity: 1 }
             : { pathLength: 0, opacity: 0 }
         }
         transition={
           triggered
-            ? {
-                duration: 8,
-                times: [0, 0.25, 0.6, 0.82, 1],
-                repeat: Infinity,
-                delay: 0.3,
-                ease: "easeInOut",
-              }
+            ? { duration: 1.5, delay: 0.3, ease: "easeInOut" }
             : { duration: 0.3 }
         }
       />
-      {/* INC line — continuous draw/erase loop */}
+      {/* INC line — draws once on scroll */}
       <motion.path
         d={incPath}
         fill="none"
@@ -843,21 +834,12 @@ function HistoricalLineChart({ triggered }: { triggered: boolean }) {
         initial={{ pathLength: 0, opacity: 0 }}
         animate={
           triggered
-            ? {
-                pathLength: [0, 1, 1, 0, 0],
-                opacity: [0, 1, 1, 1, 0],
-              }
+            ? { pathLength: 1, opacity: 1 }
             : { pathLength: 0, opacity: 0 }
         }
         transition={
           triggered
-            ? {
-                duration: 8,
-                times: [0, 0.25, 0.6, 0.82, 1],
-                repeat: Infinity,
-                delay: 0.5,
-                ease: "easeInOut",
-              }
+            ? { duration: 1.5, delay: 0.5, ease: "easeInOut" }
             : { duration: 0.3 }
         }
       />
@@ -875,21 +857,12 @@ function HistoricalLineChart({ triggered }: { triggered: boolean }) {
             initial={{ scale: 0, opacity: 0 }}
             animate={
               triggered
-                ? {
-                    scale: [0, 1, 1, 0, 0],
-                    opacity: [0, 1, 1, 0, 0],
-                  }
+                ? { scale: 1, opacity: 1 }
                 : { scale: 0, opacity: 0 }
             }
             transition={
               triggered
-                ? {
-                    duration: 8,
-                    times: [0, 0.25, 0.6, 0.82, 1],
-                    repeat: Infinity,
-                    delay: 0.3 + i * 0.06,
-                    ease: "easeInOut",
-                  }
+                ? { duration: 0.4, delay: 0.3 + i * 0.15, ease: "easeOut" }
                 : { duration: 0.3 }
             }
             style={{ transformOrigin: `${toX(i)}px ${toY(d.bjp)}px` }}
@@ -904,21 +877,12 @@ function HistoricalLineChart({ triggered }: { triggered: boolean }) {
             initial={{ scale: 0, opacity: 0 }}
             animate={
               triggered
-                ? {
-                    scale: [0, 1, 1, 0, 0],
-                    opacity: [0, 1, 1, 0, 0],
-                  }
+                ? { scale: 1, opacity: 1 }
                 : { scale: 0, opacity: 0 }
             }
             transition={
               triggered
-                ? {
-                    duration: 8,
-                    times: [0, 0.25, 0.6, 0.82, 1],
-                    repeat: Infinity,
-                    delay: 0.5 + i * 0.06,
-                    ease: "easeInOut",
-                  }
+                ? { duration: 0.4, delay: 0.5 + i * 0.15, ease: "easeOut" }
                 : { duration: 0.3 }
             }
             style={{ transformOrigin: `${toX(i)}px ${toY(d.inc)}px` }}
@@ -1097,22 +1061,12 @@ function StatCard({
 export function DataInsightsSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
-  const [triggered, setTriggered] = useState(false);
-  const [animKey, setAnimKey] = useState(0);
-
-  useEffect(() => {
-    if (isInView) {
-      setAnimKey((k) => k + 1);
-      setTriggered(true);
-    } else {
-      setTriggered(false);
-    }
-  }, [isInView]);
+  const triggered = isInView;
 
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden bg-gray-50 py-12 sm:py-14 lg:py-18"
+      className="relative overflow-hidden bg-gray-50 py-8 sm:py-10 lg:py-12"
     >
       {/* Subtle radial glow */}
       <div className="pointer-events-none absolute inset-0">
@@ -1140,7 +1094,7 @@ export function DataInsightsSection() {
         </div>
 
         {/* ── Charts Grid ── */}
-        <div key={animKey} className="mt-10 grid gap-6 sm:mt-12 lg:mt-16 lg:grid-cols-3">
+        <div className="mt-6 grid gap-5 sm:mt-8 lg:mt-10 lg:grid-cols-3">
           <ScrollReveal delay={0.1} className="h-full">
             <StateDistributionCard triggered={triggered} />
           </ScrollReveal>
@@ -1153,7 +1107,7 @@ export function DataInsightsSection() {
         </div>
 
         {/* ── Bottom Stats ── */}
-        <div className="mt-8 grid grid-cols-2 gap-4 sm:mt-10 md:grid-cols-4">
+        <div className="mt-6 grid grid-cols-2 gap-4 sm:mt-8 md:grid-cols-4">
           {BOTTOM_STATS.map((stat, i) => (
             <StatCard key={stat.label} stat={stat} index={i} />
           ))}

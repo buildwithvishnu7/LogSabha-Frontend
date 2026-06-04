@@ -230,7 +230,7 @@ function SpeechCard({
 
 export function LiveCoverageSection() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-white via-amber-50/20 to-white py-10 sm:py-12 lg:py-16">
+    <section className="relative overflow-hidden bg-gradient-to-b from-white via-amber-50/20 to-white py-8 sm:py-10 lg:py-12">
       {/* Subtle background pattern */}
       <div className="absolute inset-0 opacity-[0.02]">
         <div

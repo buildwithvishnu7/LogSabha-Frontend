@@ -209,12 +209,23 @@ function FeaturedCard({ article }: { article: Article }) {
           {/* Read More */}
           <motion.a
             href="#"
-            className="mt-5 inline-flex w-fit items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-amber-500/20 transition-shadow hover:shadow-lg hover:shadow-amber-500/30"
+            className="relative mt-5 inline-flex w-fit items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-amber-500/20 transition-shadow hover:shadow-lg hover:shadow-amber-500/30"
             custom={4}
             variants={textReveal}
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
           >
+            <motion.span
+              className="pointer-events-none absolute inset-[-3px] rounded-xl border-2 border-amber-500/70"
+              style={{ boxShadow: "0 0 8px rgba(245,158,11,0.25)" }}
+              animate={{ scale: [1, 1.06, 1], opacity: [0.8, 0, 0.8] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <motion.span
+              className="pointer-events-none absolute inset-[-1px] rounded-xl border-2 border-amber-500/50"
+              animate={{ scale: [1, 1.03, 1], opacity: [1, 0.2, 1] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
+            />
             Read More
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
           </motion.a>
@@ -397,7 +408,7 @@ function ScrollingSidebar({ articles }: { articles: Article[] }) {
 
 export function EditorialInsightsSection() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-white via-amber-50/20 to-white py-12 sm:py-14 lg:py-18">
+    <section className="relative overflow-hidden bg-gradient-to-b from-white via-amber-50/20 to-white py-8 sm:py-10 lg:py-12">
       {/* Background pattern */}
       <div className="absolute inset-0 opacity-[0.025]">
         <div
@@ -442,7 +453,7 @@ export function EditorialInsightsSection() {
 
         {/* ── Content Grid ── */}
         <motion.div
-          className="mt-12 grid gap-6 lg:mt-16 lg:grid-cols-[1fr_420px] xl:grid-cols-[1fr_460px]"
+          className="mt-8 grid gap-5 lg:mt-10 lg:grid-cols-[1fr_420px] xl:grid-cols-[1fr_460px]"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}

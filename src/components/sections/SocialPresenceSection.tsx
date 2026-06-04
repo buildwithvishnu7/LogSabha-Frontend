@@ -509,7 +509,7 @@ const AGGREGATE_STATS = [
 function StatsBar() {
   return (
     <ScrollReveal delay={0.3}>
-      <div className="mx-auto mt-10 grid max-w-4xl grid-cols-2 gap-4 sm:grid-cols-4">
+      <div className="mx-auto mt-6 grid max-w-4xl grid-cols-2 gap-4 sm:grid-cols-4">
         {AGGREGATE_STATS.map((stat, i) => (
           <motion.div
             key={stat.label}
@@ -545,7 +545,7 @@ export function SocialPresenceSection() {
   ).slice(0, POSTS_PER_FILTER);
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-amber-50/60 via-orange-50/30 to-white py-12 sm:py-14 lg:py-18">
+    <section className="relative overflow-hidden bg-gradient-to-b from-amber-50/60 via-orange-50/30 to-white py-8 sm:py-10 lg:py-12">
       {/* Background decorations */}
       <div className="absolute inset-0 opacity-[0.03]">
         <div
@@ -605,13 +605,13 @@ export function SocialPresenceSection() {
 
         {/* ── Platform Filter ── */}
         <ScrollReveal delay={0.5}>
-          <div className="mt-12">
+          <div className="mt-8">
             <PlatformFilter active={activeFilter} onChange={setActiveFilter} />
           </div>
         </ScrollReveal>
 
         {/* ── Posts Grid ── */}
-        <div className="mt-10">
+        <div className="mt-6">
           <AnimatePresence mode="popLayout">
             <motion.div
               key={activeFilter}

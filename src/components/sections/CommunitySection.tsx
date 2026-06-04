@@ -587,7 +587,7 @@ function TrendingTopicCard({
 
 export function CommunitySection() {
   return (
-    <section className="relative overflow-hidden bg-white py-12 sm:py-14 lg:py-18">
+    <section className="relative overflow-hidden bg-white py-8 sm:py-10 lg:py-12">
       {/* Dot pattern background */}
       <div className="absolute inset-0 opacity-[0.025]">
         <div
@@ -629,7 +629,7 @@ export function CommunitySection() {
         </div>
 
         {/* ── Main Content Grid ── */}
-        <div className="mt-10 grid gap-8 lg:mt-14 lg:grid-cols-[1fr_380px] xl:grid-cols-[1fr_400px]">
+        <div className="mt-6 grid gap-6 lg:mt-8 lg:grid-cols-[1fr_380px] xl:grid-cols-[1fr_400px]">
           {/* Left: Recent Posts */}
           <div>
             <ScrollReveal>

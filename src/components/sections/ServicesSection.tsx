@@ -130,17 +130,32 @@ function ServiceContent({ service }: { service: ServiceItem }) {
         ))}
       </div>
 
-      {/* Bullet points */}
-      <ul className="mt-5 space-y-2.5">
+      {/* Bullet points — slide in from left with stagger */}
+      <ul className="mt-5 space-y-2.5 overflow-hidden">
         {service.bulletPoints.map((point, i) => (
           <motion.li
             key={point}
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3 + i * 0.1, duration: 0.4 }}
+            initial={{ opacity: 0, x: -40, filter: "blur(4px)" }}
+            animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+            transition={{
+              delay: 0.4 + i * 0.15,
+              duration: 0.6,
+              ease: [0.16, 1, 0.3, 1],
+            }}
             className="flex items-center gap-3 text-base text-gray-700"
           >
-            <span className="h-2 w-2 flex-shrink-0 rounded-full bg-amber-500" />
+            <motion.span
+              className="h-2 w-2 flex-shrink-0 rounded-full bg-amber-500"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{
+                delay: 0.55 + i * 0.15,
+                duration: 0.35,
+                type: "spring",
+                stiffness: 400,
+                damping: 15,
+              }}
+            />
             {point}
           </motion.li>
         ))}
@@ -203,7 +218,7 @@ export function ServicesSection({ data }: { data: ServicesData }) {
   }, [triggered, isHovering, startAutoPlay]);
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-white py-12 sm:py-14 lg:py-18">
+    <section ref={sectionRef} className="relative overflow-hidden bg-white py-8 sm:py-10 lg:py-12">
       {/* ── Circuit board pattern background (Hero Patterns) ── */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         {/* Base gradient */}

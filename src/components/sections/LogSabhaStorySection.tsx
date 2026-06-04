@@ -283,7 +283,7 @@ export function LogSabhaStorySection() {
       )}
 
       {/* Content */}
-      <div className="relative z-10 mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 lg:px-10 lg:py-24">
+      <div className="relative z-10 mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-12 lg:px-10 lg:py-14">
         {/* Title */}
         <motion.h2
           className="mb-10 text-center text-3xl font-extrabold sm:text-4xl lg:text-5xl"
@@ -300,7 +300,7 @@ export function LogSabhaStorySection() {
         <QuoteBox triggered={triggered} />
 
         {/* Stats */}
-        <div className="mt-10 flex flex-wrap justify-center gap-4 sm:gap-6 lg:gap-8">
+        <div className="mt-6 flex flex-wrap justify-center gap-4 sm:gap-6 lg:gap-8">
           {STATS.map((stat, i) => (
             <SlotMachineStat
               key={stat.label}

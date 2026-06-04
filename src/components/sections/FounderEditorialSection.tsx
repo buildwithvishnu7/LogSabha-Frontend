@@ -209,7 +209,7 @@ export function FounderEditorialSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden bg-[#0f0a04] py-14 sm:py-18 lg:py-22"
+      className="relative overflow-hidden bg-[#0f0a04] py-10 sm:py-12 lg:py-14"
     >
       {/* ── Dark candle-lit background ── */}
       <div className="pointer-events-none absolute inset-0">
@@ -313,12 +313,7 @@ export function FounderEditorialSection() {
             />
           ))}
 
-        {/* Candle flames along the bottom */}
-        <CandleFlame x="10%" size={24} delay={0} />
-        <CandleFlame x="30%" size={20} delay={0.5} />
-        <CandleFlame x="50%" size={28} delay={0.2} />
-        <CandleFlame x="70%" size={22} delay={0.7} />
-        <CandleFlame x="88%" size={26} delay={0.4} />
+
       </div>
 
       {/* ── Content ── */}
@@ -370,7 +365,7 @@ export function FounderEditorialSection() {
         </ScrollReveal>
 
         {/* Article Cards */}
-        <div className="mt-10 grid gap-5 sm:mt-12 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+        <div className="mt-6 grid gap-4 sm:mt-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
           {ARTICLES.map((article, i) => (
             <ArticleCard
               key={article.id}
@@ -383,13 +378,25 @@ export function FounderEditorialSection() {
 
         {/* Read More CTA */}
         <ScrollReveal delay={0.5}>
-          <div className="mt-10 flex justify-center sm:mt-12">
+          <div className="mt-6 flex justify-center sm:mt-8">
             <motion.a
               href="#"
               className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full border border-amber-500/50 bg-gradient-to-r from-amber-600/20 to-orange-600/20 px-8 py-3 text-sm font-semibold text-amber-400 backdrop-blur-sm transition-all hover:border-amber-400 hover:text-white"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}
             >
+              {/* Pulse rings */}
+              <motion.span
+                className="pointer-events-none absolute inset-[-3px] rounded-full border-2 border-amber-500/60"
+                style={{ boxShadow: "0 0 8px rgba(245,158,11,0.2)" }}
+                animate={{ scale: [1, 1.06, 1], opacity: [0.7, 0, 0.7] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              />
+              <motion.span
+                className="pointer-events-none absolute inset-[-1px] rounded-full border-2 border-amber-500/40"
+                animate={{ scale: [1, 1.03, 1], opacity: [1, 0.2, 1] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
+              />
               {/* Moving border glow */}
               <motion.span
                 className="pointer-events-none absolute inset-0 rounded-full"

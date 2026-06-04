@@ -226,7 +226,7 @@ export function ContactSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden bg-[#0b1120] py-12 sm:py-14 lg:py-18"
+      className="relative overflow-hidden bg-[#0b1120] py-8 sm:py-10 lg:py-12"
     >
       {/* Geometric grid background */}
       <div className="pointer-events-none absolute inset-0">
@@ -288,7 +288,7 @@ export function ContactSection() {
         </div>
 
         {/* Grid: Form + Contact Info */}
-        <div className="mt-12 grid gap-10 lg:mt-16 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
+        <div className="mt-8 grid gap-8 lg:mt-10 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
           {/* Left: Form Card */}
           <ScrollReveal delay={0.1}>
             <motion.form

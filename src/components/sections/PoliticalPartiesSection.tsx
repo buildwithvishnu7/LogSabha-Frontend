@@ -36,9 +36,9 @@ const PARTIES: PoliticalParty[] = [
     themeColorRgb: "255, 107, 0",
     description:
       "India's ruling party with a strong nationalist agenda focusing on development, Hindutva ideology, and economic reforms.",
-    lokSabhaSeats: 303,
-    statesRuled: 12,
-    president: "J.P. Nadda",
+    lokSabhaSeats: 240,
+    statesRuled: 21,
+    president: "Nitin Nabin",
   },
   {
     id: "inc",
@@ -50,25 +50,10 @@ const PARTIES: PoliticalParty[] = [
     themeColor: "#00BFFF",
     themeColorRgb: "0, 191, 255",
     description:
-      "India's oldest political party with a secular vision, focusing on social welfare, inclusive growth, and democratic values.",
-    lokSabhaSeats: 52,
-    statesRuled: 4,
+      "India's oldest political party with a secular vision, focusing on social welfare, inclusive growth, and democratic values. Leads INDIA bloc and UDF coalition in Kerala.",
+    lokSabhaSeats: 99,
+    statesRuled: 3,
     president: "Mallikarjun Kharge",
-  },
-  {
-    id: "aap",
-    shortName: "AAP",
-    fullName: "Aam Aadmi Party",
-    established: 2012,
-    logo: "/logo/AAP.png.svg",
-    backgroundImage: "/images/Image (Aam Aadmi Party).png",
-    themeColor: "#0E8C3A",
-    themeColorRgb: "14, 140, 58",
-    description:
-      "An anti-corruption movement turned political party, focusing on education, healthcare, and governance transparency.",
-    lokSabhaSeats: 10,
-    statesRuled: 2,
-    president: "Arvind Kejriwal",
   },
   {
     id: "sp",
@@ -80,39 +65,24 @@ const PARTIES: PoliticalParty[] = [
     themeColor: "#DC2626",
     themeColorRgb: "220, 38, 38",
     description:
-      "Uttar Pradesh-based party championing social justice, secularism, and the upliftment of backward classes.",
-    lokSabhaSeats: 5,
-    statesRuled: 1,
-    president: "Akhilesh Yadav",
-  },
-  {
-    id: "bsp",
-    shortName: "BSP",
-    fullName: "Bahujan Samaj Party",
-    established: 1984,
-    logo: "/logo/BSP.svg",
-    backgroundImage: "/images/Image (Bahujan Samaj Party).png",
-    themeColor: "#2563EB",
-    themeColorRgb: "37, 99, 235",
-    description:
-      "A party dedicated to the empowerment of Dalits, Adivasis, OBCs, and religious minorities in Indian politics.",
-    lokSabhaSeats: 0,
+      "Uttar Pradesh-based party championing social justice, secularism, and the upliftment of backward classes. Main opposition in Uttar Pradesh.",
+    lokSabhaSeats: 37,
     statesRuled: 0,
-    president: "Mayawati",
+    president: "Akhilesh Yadav",
   },
   {
     id: "tmc",
     shortName: "TMC",
-    fullName: "Trinamool Congress",
+    fullName: "All India Trinamool Congress",
     established: 1998,
     logo: "/logo/BSP.svg",
     backgroundImage: "/images/Image (Trinamool Congress).png",
     themeColor: "#22C55E",
     themeColorRgb: "34, 197, 94",
     description:
-      "West Bengal's dominant party advocating for federalism, social welfare, and regional autonomy under strong leadership.",
+      "West Bengal's dominant party advocating for federalism, social welfare, and regional autonomy. Lost West Bengal to BJP in 2026 elections.",
     lokSabhaSeats: 29,
-    statesRuled: 1,
+    statesRuled: 0,
     president: "Mamata Banerjee",
   },
   {
@@ -125,55 +95,10 @@ const PARTIES: PoliticalParty[] = [
     themeColor: "#EF4444",
     themeColorRgb: "239, 68, 68",
     description:
-      "Tamil Nadu's leading Dravidian party championing social justice, rationalism, and linguistic pride.",
+      "Tamil Nadu's leading Dravidian party championing social justice, rationalism, and linguistic pride. Lost Tamil Nadu to TVK in 2026; was ruling state since 2021.",
     lokSabhaSeats: 22,
-    statesRuled: 1,
+    statesRuled: 0,
     president: "M.K. Stalin",
-  },
-  {
-    id: "ncp",
-    shortName: "NCP",
-    fullName: "Nationalist Congress Party",
-    established: 1999,
-    logo: "/logo/BSP.svg",
-    backgroundImage: "/images/Image (Indian National Congress).png",
-    themeColor: "#1E88E5",
-    themeColorRgb: "30, 136, 229",
-    description:
-      "A centrist political party committed to nationalism, democracy, and social justice with a strong base in Maharashtra.",
-    lokSabhaSeats: 5,
-    statesRuled: 0,
-    president: "Ajit Pawar",
-  },
-  {
-    id: "jdu",
-    shortName: "JDU",
-    fullName: "Janata Dal (United)",
-    established: 1999,
-    logo: "/logo/BSP.svg",
-    backgroundImage: "/images/Image (Samajwadi Party).png",
-    themeColor: "#43A047",
-    themeColorRgb: "67, 160, 71",
-    description:
-      "Bihar-centric party focused on social justice, secularism, and development under the banner of good governance.",
-    lokSabhaSeats: 12,
-    statesRuled: 1,
-    president: "Nitish Kumar",
-  },
-  {
-    id: "shiv-sena",
-    shortName: "SHS",
-    fullName: "Shiv Sena",
-    established: 1966,
-    logo: "/logo/BSP.svg",
-    backgroundImage: "/images/Image (Bharatiya Janata Party).png",
-    themeColor: "#FF6F00",
-    themeColorRgb: "255, 111, 0",
-    description:
-      "Maharashtra-based party with a strong Marathi identity politics agenda, now split into two factions.",
-    lokSabhaSeats: 7,
-    statesRuled: 0,
-    president: "Eknath Shinde",
   },
   {
     id: "tdp",
@@ -185,25 +110,100 @@ const PARTIES: PoliticalParty[] = [
     themeColor: "#FFCA28",
     themeColorRgb: "255, 202, 40",
     description:
-      "Andhra Pradesh's regional party championing Telugu pride, development, and good governance.",
+      "Andhra Pradesh's regional party championing Telugu pride, development, and good governance. Founder; also Andhra Pradesh CM. Part of NDA coalition government.",
     lokSabhaSeats: 16,
     statesRuled: 1,
     president: "N. Chandrababu Naidu",
   },
   {
-    id: "ysrcp",
-    shortName: "YSRCP",
-    fullName: "YSR Congress Party",
-    established: 2011,
+    id: "jdu",
+    shortName: "JD(U)",
+    fullName: "Janata Dal (United)",
+    established: 2003,
     logo: "/logo/BSP.svg",
-    backgroundImage: "/images/Image (Aam Aadmi Party).png",
-    themeColor: "#0277BD",
-    themeColorRgb: "2, 119, 189",
+    backgroundImage: "/images/Image (Samajwadi Party).png",
+    themeColor: "#43A047",
+    themeColorRgb: "67, 160, 71",
     description:
-      "Andhra Pradesh party focused on welfare schemes, social justice, and development for all sections.",
+      "Bihar CM; longtime JD(U) president. Bihar-centric party focused on social justice and development. Part of NDA coalition with BJP.",
+    lokSabhaSeats: 12,
+    statesRuled: 1,
+    president: "Nitish Kumar",
+  },
+  {
+    id: "ss-ubt",
+    shortName: "SS(UBT)",
+    fullName: "Shiv Sena (UBT)",
+    established: 1966,
+    logo: "/logo/BSP.svg",
+    backgroundImage: "/images/Image (Bharatiya Janata Party).png",
+    themeColor: "#FF6F00",
+    themeColorRgb: "255, 111, 0",
+    description:
+      "Leads Uddhav faction since 2022 split. Part of MVA opposition in Maharashtra.",
+    lokSabhaSeats: 9,
+    statesRuled: 0,
+    president: "Uddhav Thackeray",
+  },
+  {
+    id: "cpim",
+    shortName: "CPI(M)",
+    fullName: "Communist Party of India (Marxist)",
+    established: 1964,
+    logo: "/logo/BSP.svg",
+    backgroundImage: "/images/Image (Indian National Congress).png",
+    themeColor: "#B71C1C",
+    themeColorRgb: "183, 28, 28",
+    description:
+      "General Secretary since 2024. Led Kerala's LDF govt until 2026; lost to Congress-UDF.",
     lokSabhaSeats: 4,
     statesRuled: 0,
-    president: "Y.S. Jagan Mohan Reddy",
+    president: "M.A. Baby",
+  },
+  {
+    id: "aap",
+    shortName: "AAP",
+    fullName: "Aam Aadmi Party",
+    established: 2012,
+    logo: "/logo/AAP.png.svg",
+    backgroundImage: "/images/Image (Aam Aadmi Party).png",
+    themeColor: "#0E8C3A",
+    themeColorRgb: "14, 140, 58",
+    description:
+      "Founder & national convener. Anti-corruption party focusing on education, healthcare, and governance transparency. Rules Punjab; lost Delhi to BJP in 2025.",
+    lokSabhaSeats: 3,
+    statesRuled: 1,
+    president: "Arvind Kejriwal",
+  },
+  {
+    id: "jmm",
+    shortName: "JMM",
+    fullName: "Jharkhand Mukti Morcha",
+    established: 1972,
+    logo: "/logo/BSP.svg",
+    backgroundImage: "/images/Image (Trinamool Congress).png",
+    themeColor: "#2E7D32",
+    themeColorRgb: "46, 125, 50",
+    description:
+      "Also Jharkhand CM. Leads INDIA bloc coalition in Jharkhand.",
+    lokSabhaSeats: 3,
+    statesRuled: 1,
+    president: "Hemant Soren",
+  },
+  {
+    id: "bsp",
+    shortName: "BSP",
+    fullName: "Bahujan Samaj Party",
+    established: 1984,
+    logo: "/logo/BSP.svg",
+    backgroundImage: "/images/Image (Bahujan Samaj Party).png",
+    themeColor: "#2563EB",
+    themeColorRgb: "37, 99, 235",
+    description:
+      "Founder; national president. A party dedicated to the empowerment of Dalits, Adivasis, OBCs, and religious minorities. No state government currently.",
+    lokSabhaSeats: 0,
+    statesRuled: 0,
+    president: "Mayawati",
   },
 ];
 
@@ -645,7 +645,7 @@ export function PoliticalPartiesSection() {
   };
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-white py-12 sm:py-14 lg:py-18">
+    <section ref={sectionRef} className="relative overflow-hidden bg-white py-8 sm:py-10 lg:py-12">
       {/* Top blend from previous dark section */}
       <div className="absolute top-0 left-0 right-0 z-[2] h-24 bg-gradient-to-b from-[#0c0c1d] via-[#0c0c1d]/30 to-transparent" />
       {/* ── Video background ── */}
@@ -708,7 +708,7 @@ export function PoliticalPartiesSection() {
         {/* Party Cards Accordion — inside outer glass box */}
         <ScrollReveal delay={0.4}>
           <div
-            className="mx-auto mt-12 rounded-2xl p-2 sm:p-3 lg:mt-16"
+            className="mx-auto mt-8 rounded-2xl p-2 sm:p-3 lg:mt-16"
             style={{
               background: "rgba(255,255,255,0.08)",
               backdropFilter: "blur(8px)",

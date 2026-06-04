@@ -543,10 +543,10 @@ export function RSSSection() {
                     ))}
                   </div>
 
-                  {/* CTA — breathing glow */}
+                  {/* CTA — breathing glow + pulse ring */}
                   <motion.a
                     href="#"
-                    className="mt-6 inline-flex items-center gap-2 rounded-xl bg-orange-500 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-orange-600"
+                    className="relative mt-6 inline-flex items-center gap-2 rounded-xl bg-orange-500 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-orange-600"
                     animate={
                       triggered
                         ? {
@@ -566,6 +566,17 @@ export function RSSSection() {
                     whileHover={{ x: 4 }}
                     whileTap={{ scale: 0.97 }}
                   >
+                    <motion.span
+                      className="pointer-events-none absolute inset-[-3px] rounded-xl border-2 border-orange-500/70"
+                      style={{ boxShadow: "0 0 8px rgba(249,115,22,0.25)" }}
+                      animate={{ scale: [1, 1.06, 1], opacity: [0.8, 0, 0.8] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    />
+                    <motion.span
+                      className="pointer-events-none absolute inset-[-1px] rounded-xl border-2 border-orange-500/50"
+                      animate={{ scale: [1, 1.03, 1], opacity: [1, 0.2, 1] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
+                    />
                     और जानें
                     <motion.span
                       animate={{ x: [0, 4, 0] }}
