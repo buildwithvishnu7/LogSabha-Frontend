@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useMemo, type ComponentType } from "react";
+import { useRef, useEffect, useState, useMemo } from "react";
 import { motion, useInView } from "motion/react";
 import { Users, BookOpen, Heart, ArrowRight, Play, Pause } from "lucide-react";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
@@ -21,6 +21,15 @@ const TICKER_ITEMS = [
   "INTEGRAL HUMANISM",
 ];
 
+// ─── Typewriter Phrases ───
+
+const TYPEWRITER_PHRASES = [
+  "RSS की नींव, विचार और संगठन",
+  "एक राष्ट्र, एक संस्कृति, एक जनता",
+  "स्वयंसेवा से राष्ट्र निर्माण",
+  "भारत माता की सेवा ही धर्म",
+];
+
 // ─── Infinite Ticker ───
 
 function Ticker() {
@@ -34,7 +43,7 @@ function Ticker() {
 
       <motion.div
         className="flex whitespace-nowrap py-3.5"
-        animate={{ x: [0, `-${100 / items.length * TICKER_ITEMS.length}%`] }}
+        animate={{ x: [0, `-${(100 / items.length) * TICKER_ITEMS.length}%`] }}
         transition={{
           x: {
             duration: 25,
@@ -53,6 +62,63 @@ function Ticker() {
         ))}
       </motion.div>
     </div>
+  );
+}
+
+// ─── Multi-Phrase Typewriter ───
+
+function TypewriterText({
+  phrases,
+  triggered,
+  className,
+}: {
+  phrases: string[];
+  triggered: boolean;
+  className?: string;
+}) {
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [displayedCount, setDisplayedCount] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const currentPhrase = phrases[phraseIndex];
+  const chars = useMemo(() => [...currentPhrase], [currentPhrase]);
+
+  useEffect(() => {
+    if (!triggered) {
+      setDisplayedCount(0);
+      setIsDeleting(false);
+      return;
+    }
+
+    if (!isDeleting && displayedCount >= chars.length) {
+      const timeout = setTimeout(() => setIsDeleting(true), 2200);
+      return () => clearTimeout(timeout);
+    }
+
+    if (isDeleting && displayedCount === 0) {
+      setIsDeleting(false);
+      setPhraseIndex((i) => (i + 1) % phrases.length);
+      return;
+    }
+
+    const speed = isDeleting ? 25 : 55;
+    const timeout = setTimeout(() => {
+      setDisplayedCount((c) => c + (isDeleting ? -1 : 1));
+    }, speed);
+    return () => clearTimeout(timeout);
+  }, [triggered, displayedCount, chars.length, isDeleting, phrases]);
+
+  return (
+    <h3 className={className}>
+      <span>{chars.slice(0, displayedCount).join("")}</span>
+      {triggered && (
+        <motion.span
+          className="inline-block w-[2px] translate-y-[1px] bg-gray-800"
+          style={{ height: "1em" }}
+          animate={{ opacity: [1, 0] }}
+          transition={{ duration: 0.6, repeat: Infinity, ease: "steps(2)" }}
+        />
+      )}
+    </h3>
   );
 }
 
@@ -99,7 +165,7 @@ function PillarCard({
 }) {
   return (
     <motion.div
-      className={`flex flex-col items-center gap-2 rounded-xl border ${pillar.borderColor} ${pillar.bgColor} px-5 py-4`}
+      className={`relative flex flex-col items-center gap-2 overflow-hidden rounded-xl border ${pillar.borderColor} ${pillar.bgColor} px-5 py-4`}
       initial={{ opacity: 0, y: 20 }}
       animate={triggered ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
       transition={{
@@ -109,19 +175,64 @@ function PillarCard({
       }}
       whileHover={{ y: -3, scale: 1.03 }}
     >
+      {/* Shimmer sweep */}
+      {triggered && (
+        <motion.div
+          className="pointer-events-none absolute inset-0 z-10"
+          style={{
+            background: `linear-gradient(120deg, transparent 30%, ${pillar.color}10 45%, ${pillar.color}20 50%, ${pillar.color}10 55%, transparent 70%)`,
+            backgroundSize: "200% 100%",
+          }}
+          animate={{ backgroundPosition: ["-200% 0%", "200% 0%"] }}
+          transition={{
+            duration: 2.5,
+            repeat: Infinity,
+            repeatDelay: 2 + index * 0.5,
+            ease: "easeInOut",
+          }}
+        />
+      )}
+
+      {/* Pulsing border glow */}
+      {triggered && (
+        <motion.div
+          className="pointer-events-none absolute inset-0 rounded-xl"
+          animate={{
+            boxShadow: [
+              `inset 0 0 0 1px ${pillar.color}00`,
+              `inset 0 0 0 1.5px ${pillar.color}40`,
+              `inset 0 0 0 1px ${pillar.color}00`,
+            ],
+          }}
+          transition={{
+            duration: 2.5,
+            delay: index * 0.8,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      )}
+
       <motion.div
         className="flex h-11 w-11 items-center justify-center rounded-full"
         style={{ backgroundColor: `${pillar.color}15` }}
         animate={
           triggered
-            ? { scale: [1, 1.1, 1] }
+            ? {
+                scale: [1, 1.15, 1],
+                boxShadow: [
+                  `0 0 0 0 ${pillar.color}00`,
+                  `0 0 10px 3px ${pillar.color}30`,
+                  `0 0 0 0 ${pillar.color}00`,
+                ],
+              }
             : {}
         }
         transition={{
-          duration: 3,
-          delay: 3 + index * 1.5,
+          duration: 2.5,
+          delay: 1.5 + index * 0.8,
           repeat: Infinity,
-          repeatDelay: 3,
+          repeatDelay: 1.5,
           ease: "easeInOut",
         }}
       >
@@ -219,58 +330,7 @@ function VideoPlayer({ triggered }: { triggered: boolean }) {
           )}
         </motion.div>
       </motion.div>
-
     </motion.div>
-  );
-}
-
-// ─── Typewriter Text ───
-
-function TypewriterText({
-  text,
-  triggered,
-  className,
-}: {
-  text: string;
-  triggered: boolean;
-  className?: string;
-}) {
-  const [displayedCount, setDisplayedCount] = useState(0);
-  const chars = useMemo(() => [...text], [text]);
-
-  useEffect(() => {
-    if (!triggered) {
-      setDisplayedCount(0);
-      return;
-    }
-
-    // After fully typed, pause then restart
-    if (displayedCount >= chars.length) {
-      const restartTimeout = setTimeout(() => {
-        setDisplayedCount(0);
-      }, 2500);
-      return () => clearTimeout(restartTimeout);
-    }
-
-    const timeout = setTimeout(() => {
-      setDisplayedCount((c) => c + 1);
-    }, 60);
-
-    return () => clearTimeout(timeout);
-  }, [triggered, displayedCount, chars.length]);
-
-  return (
-    <h3 className={className}>
-      <span>{chars.slice(0, displayedCount).join("")}</span>
-      {triggered && (
-        <motion.span
-          className="inline-block w-[2px] translate-y-[1px] bg-gray-800"
-          style={{ height: "1em" }}
-          animate={{ opacity: [1, 0] }}
-          transition={{ duration: 0.6, repeat: Infinity, ease: "steps(2)" }}
-        />
-      )}
-    </h3>
   );
 }
 
@@ -292,29 +352,36 @@ export function RSSSection() {
 
       {/* Main Content — warm background */}
       <div className="relative bg-orange-50/60 py-8 sm:py-10 lg:py-12">
-        {/* Floating ambient particles */}
+        {/* Floating ambient particles — more and larger */}
         {triggered && (
           <>
-            {[...Array(6)].map((_, i) => (
+            {[...Array(12)].map((_, i) => (
               <motion.div
                 key={i}
-                className="pointer-events-none absolute rounded-full bg-orange-400/15"
+                className="pointer-events-none absolute rounded-full"
                 style={{
-                  width: 6 + i * 4,
-                  height: 6 + i * 4,
-                  left: `${12 + i * 15}%`,
-                  top: `${20 + (i % 3) * 25}%`,
+                  width: 6 + (i % 5) * 4,
+                  height: 6 + (i % 5) * 4,
+                  left: `${5 + i * 7.5}%`,
+                  top: `${10 + (i % 4) * 22}%`,
+                  background:
+                    i % 3 === 0
+                      ? "rgba(249,115,22,0.25)"
+                      : i % 3 === 1
+                        ? "rgba(251,191,36,0.2)"
+                        : "rgba(234,88,12,0.15)",
                 }}
                 animate={{
-                  y: [0, -20 - i * 5, 0],
-                  x: [0, (i % 2 === 0 ? 10 : -10), 0],
-                  opacity: [0.2, 0.5, 0.2],
+                  y: [0, -25 - (i % 4) * 8, 0],
+                  x: [0, i % 2 === 0 ? 12 : -12, 0],
+                  opacity: [0.15, 0.5, 0.15],
+                  scale: [1, 1.4, 1],
                 }}
                 transition={{
-                  duration: 4 + i * 0.8,
+                  duration: 3 + i * 0.4,
                   repeat: Infinity,
                   ease: "easeInOut",
-                  delay: i * 0.6,
+                  delay: i * 0.3,
                 }}
               />
             ))}
@@ -330,16 +397,16 @@ export function RSSSection() {
           style={{ originY: 0 }}
         />
 
-        {/* Ambient glow behind card */}
+        {/* Ambient glow behind card — breathing */}
         {triggered && (
           <motion.div
             className="pointer-events-none absolute top-1/2 left-1/2 h-[300px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-orange-300/10 blur-3xl"
             animate={{
-              scale: [1, 1.15, 1],
+              scale: [1, 1.2, 1],
               opacity: [0.3, 0.6, 0.3],
             }}
             transition={{
-              duration: 5,
+              duration: 4,
               repeat: Infinity,
               ease: "easeInOut",
             }}
@@ -349,9 +416,26 @@ export function RSSSection() {
         <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-10">
           {/* Single white card holding both info + video */}
           <ScrollReveal>
-            <div
-              className="overflow-hidden rounded-2xl bg-white shadow-2xl shadow-orange-900/10 ring-1 ring-gray-100/80"
-            >
+            <div className="relative overflow-hidden rounded-2xl bg-white shadow-2xl shadow-orange-900/10 ring-1 ring-gray-100/80">
+              {/* Card shimmer sweep */}
+              {triggered && (
+                <motion.div
+                  className="pointer-events-none absolute inset-0 z-20"
+                  style={{
+                    background:
+                      "linear-gradient(120deg, transparent 30%, rgba(249,115,22,0.04) 45%, rgba(249,115,22,0.08) 50%, rgba(249,115,22,0.04) 55%, transparent 70%)",
+                    backgroundSize: "200% 100%",
+                  }}
+                  animate={{ backgroundPosition: ["-200% 0%", "200% 0%"] }}
+                  transition={{
+                    duration: 3.5,
+                    repeat: Infinity,
+                    repeatDelay: 2,
+                    ease: "easeInOut",
+                  }}
+                />
+              )}
+
               <div className="relative grid lg:grid-cols-[1fr_380px] xl:grid-cols-[1fr_420px]">
                 {/* Left: Info — determines card height */}
                 <div className="relative z-10 p-6 sm:p-8 lg:min-h-[560px] lg:p-10">
@@ -363,46 +447,78 @@ export function RSSSection() {
                       className="h-11 w-11 object-contain sm:h-13 sm:w-13"
                       animate={
                         triggered
-                          ? { rotate: [0, 3, -3, 0] }
+                          ? {
+                              rotate: [0, 3, -3, 0],
+                              scale: [1, 1.05, 1],
+                            }
                           : {}
                       }
                       transition={{
                         duration: 4,
-                        delay: 3,
+                        delay: 1,
                         repeat: Infinity,
-                        repeatDelay: 4,
+                        repeatDelay: 2,
                         ease: "easeInOut",
                       }}
                     />
-                    <h2
+                    <motion.h2
                       className="text-2xl font-semibold text-gray-900 sm:text-3xl lg:text-[44px] lg:leading-[55px]"
                       style={{
                         fontFamily: "'Cormorant Garamond', serif",
                         letterSpacing: "-0.44px",
+                        backgroundImage:
+                          "linear-gradient(90deg, #1f2937, #92400e, #f59e0b, #92400e, #1f2937)",
+                        backgroundSize: "300% 100%",
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                        backgroundClip: "text",
+                      }}
+                      animate={{
+                        backgroundPosition: [
+                          "0% 50%",
+                          "100% 50%",
+                          "0% 50%",
+                        ],
+                      }}
+                      transition={{
+                        duration: 6,
+                        repeat: Infinity,
+                        ease: "easeInOut",
                       }}
                     >
                       राष्ट्रीय स्वयंसेवक संघ
-                    </h2>
+                    </motion.h2>
                   </div>
 
                   {/* Tagline */}
                   <motion.p
                     className="mt-2.5 text-sm font-semibold sm:text-base"
                     style={{
-                      background: "linear-gradient(90deg, #ea580c, #f97316, #fb923c, #f97316, #ea580c)",
+                      background:
+                        "linear-gradient(90deg, #ea580c, #f97316, #fb923c, #f97316, #ea580c)",
                       backgroundSize: "200% 100%",
                       WebkitBackgroundClip: "text",
                       WebkitTextFillColor: "transparent",
                     }}
-                    animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
-                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                    animate={{
+                      backgroundPosition: [
+                        "0% 50%",
+                        "100% 50%",
+                        "0% 50%",
+                      ],
+                    }}
+                    transition={{
+                      duration: 4,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
                   >
                     वह शुरुआत जिसने भारत को नई दिशा दी
                   </motion.p>
 
-                  {/* Subheading — Typewriter */}
+                  {/* Subheading — Multi-phrase Typewriter */}
                   <TypewriterText
-                    text="RSS की नींव, विचार और संगठन"
+                    phrases={TYPEWRITER_PHRASES}
                     triggered={triggered}
                     className="mt-3 text-sm font-bold text-gray-800"
                   />
@@ -427,27 +543,44 @@ export function RSSSection() {
                     ))}
                   </div>
 
-                  {/* CTA */}
+                  {/* CTA — breathing glow */}
                   <motion.a
                     href="#"
                     className="mt-6 inline-flex items-center gap-2 rounded-xl bg-orange-500 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-orange-600"
-                    animate={triggered ? {
-                      boxShadow: [
-                        "0 10px 15px -3px rgba(249,115,22,0.25)",
-                        "0 10px 25px -3px rgba(249,115,22,0.45)",
-                        "0 10px 15px -3px rgba(249,115,22,0.25)",
-                      ],
-                    } : undefined}
-                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                    animate={
+                      triggered
+                        ? {
+                            boxShadow: [
+                              "0 10px 15px -3px rgba(249,115,22,0.25)",
+                              "0 10px 30px -3px rgba(249,115,22,0.5)",
+                              "0 10px 15px -3px rgba(249,115,22,0.25)",
+                            ],
+                          }
+                        : undefined
+                    }
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
                     whileHover={{ x: 4 }}
                     whileTap={{ scale: 0.97 }}
                   >
                     और जानें
-                    <ArrowRight className="h-4 w-4" />
+                    <motion.span
+                      animate={{ x: [0, 4, 0] }}
+                      transition={{
+                        duration: 1.5,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
+                    >
+                      <ArrowRight className="h-4 w-4" />
+                    </motion.span>
                   </motion.a>
                 </div>
 
-                {/* Right: Video with dark orange background — fills height set by left column */}
+                {/* Right: Video with dark orange background */}
                 <div className="relative bg-gradient-to-br from-orange-700 via-orange-800 to-orange-900 p-1.5 lg:absolute lg:inset-y-0 lg:right-0 lg:w-[380px] lg:p-2 xl:w-[420px]">
                   <VideoPlayer triggered={triggered} />
                 </div>

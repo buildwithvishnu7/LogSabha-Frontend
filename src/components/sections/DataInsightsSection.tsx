@@ -290,7 +290,7 @@ function DonutChart({
           cy="100"
           r={R}
           fill="none"
-          stroke="#1e293b"
+          stroke="#e5e7eb"
           strokeWidth="28"
         />
         {segs.map((s, i) => {
@@ -355,7 +355,7 @@ function DonutChart({
             cy="100"
             r={R}
             fill="none"
-            stroke="rgba(255,255,255,0.12)"
+            stroke="rgba(0,0,0,0.06)"
             strokeWidth="28"
             strokeDasharray={`${C * 0.08} ${C * 0.92}`}
             animate={{ strokeDashoffset: [0, -C] }}
@@ -373,7 +373,7 @@ function DonutChart({
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <motion.span
           className="text-3xl font-extrabold sm:text-4xl"
-          style={{ color: active ? active.color : "#f1f5f9" }}
+          style={{ color: active ? active.color : "#1f2937" }}
           initial={{ opacity: 0, scale: 0.5 }}
           animate={
             triggered ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.5 }
@@ -434,14 +434,14 @@ function SeatShareCard({ triggered }: { triggered: boolean }) {
 
   return (
     <motion.div
-      className="flex h-full flex-col rounded-2xl border border-[#1e293b] bg-[#111827] p-5 sm:p-6"
+      className="flex h-full flex-col rounded-2xl border border-gray-200 bg-white shadow-sm p-5 sm:p-6"
       animate={
         triggered
           ? {
               borderColor: [
-                "#1e293b",
+                "#e5e7eb",
                 "rgba(245,158,11,0.25)",
-                "#1e293b",
+                "#e5e7eb",
               ],
             }
           : {}
@@ -455,7 +455,7 @@ function SeatShareCard({ triggered }: { triggered: boolean }) {
       onMouseLeave={() => setHovered(null)}
     >
       <div className="mb-3 flex items-center justify-between">
-        <h3 className="text-sm font-bold text-slate-100 sm:text-base">
+        <h3 className="text-sm font-bold text-gray-900 sm:text-base">
           Lok Sabha Seat Share
         </h3>
         <span className="rounded-full bg-emerald-500/90 px-2.5 py-0.5 text-[10px] font-bold text-white shadow-lg shadow-emerald-500/20">
@@ -469,7 +469,7 @@ function SeatShareCard({ triggered }: { triggered: boolean }) {
         onHoverParty={setHovered}
       />
 
-      <div className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 border-t border-[#1e293b] pt-3">
+      <div className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 border-t border-gray-200 pt-3">
         {PARTY_SEATS.map((p, i) => {
           const isH = hovered === p.party;
           const dim = hovered !== null && !isH;
@@ -501,7 +501,7 @@ function SeatShareCard({ triggered }: { triggered: boolean }) {
               />
               <span
                 className="text-[10px] font-medium sm:text-xs"
-                style={{ color: isH ? p.color : "#94a3b8" }}
+                style={{ color: isH ? p.color : "#6b7280" }}
               >
                 {p.party}: {p.seats}
               </span>
@@ -532,7 +532,7 @@ function GroupedBarChart({ triggered }: { triggered: boolean }) {
   const parties = [
     { key: "bjp" as const, color: "#f97316" },
     { key: "inc" as const, color: "#06b6d4" },
-    { key: "others" as const, color: "#94a3b8" },
+    { key: "others" as const, color: "#6b7280" },
   ];
 
   return (
@@ -550,7 +550,7 @@ function GroupedBarChart({ triggered }: { triggered: boolean }) {
             y1={toY(v)}
             x2={BAR.W - BAR.mr}
             y2={toY(v)}
-            stroke="#1e293b"
+            stroke="#e5e7eb"
             strokeWidth={v === 0 ? 1 : 0.5}
             strokeDasharray={v === 0 ? "none" : "4 3"}
           />
@@ -558,7 +558,7 @@ function GroupedBarChart({ triggered }: { triggered: boolean }) {
             x={BAR.ml - 5}
             y={toY(v) + 3}
             textAnchor="end"
-            fill="#475569"
+            fill="#9ca3af"
             fontSize="9"
           >
             {v}
@@ -636,7 +636,7 @@ function GroupedBarChart({ triggered }: { triggered: boolean }) {
               x={gx + groupW / 2}
               y={bottom + 16}
               textAnchor="middle"
-              fill="#94a3b8"
+              fill="#6b7280"
               fontSize="10"
               fontWeight="500"
             >
@@ -653,7 +653,7 @@ function GroupedBarChart({ triggered }: { triggered: boolean }) {
         return (
           <g key={p.key}>
             <circle cx={lx} cy={ly} r={4} fill={p.color} />
-            <text x={lx + 8} y={ly + 3} fill="#94a3b8" fontSize="9">
+            <text x={lx + 8} y={ly + 3} fill="#6b7280" fontSize="9">
               {p.key === "bjp" ? "BJP" : p.key === "inc" ? "INC" : "Others"}
             </text>
           </g>
@@ -666,14 +666,14 @@ function GroupedBarChart({ triggered }: { triggered: boolean }) {
 function StateDistributionCard({ triggered }: { triggered: boolean }) {
   return (
     <motion.div
-      className="flex h-full flex-col rounded-2xl border border-[#1e293b] bg-[#111827] p-5 sm:p-6"
+      className="flex h-full flex-col rounded-2xl border border-gray-200 bg-white shadow-sm p-5 sm:p-6"
       animate={
         triggered
           ? {
               borderColor: [
-                "#1e293b",
+                "#e5e7eb",
                 "rgba(245,158,11,0.25)",
-                "#1e293b",
+                "#e5e7eb",
               ],
             }
           : {}
@@ -686,7 +686,7 @@ function StateDistributionCard({ triggered }: { triggered: boolean }) {
       }}
     >
       <div className="mb-2 flex items-center justify-between">
-        <h3 className="text-sm font-bold text-slate-100 sm:text-base">
+        <h3 className="text-sm font-bold text-gray-900 sm:text-base">
           State-wise Seat Distribution
         </h3>
         <span className="rounded-full bg-orange-500/90 px-2.5 py-0.5 text-[10px] font-bold text-white shadow-lg shadow-orange-500/20">
@@ -753,7 +753,7 @@ function HistoricalLineChart({ triggered }: { triggered: boolean }) {
             y1={toY(v)}
             x2={LINE.W - LINE.mr}
             y2={toY(v)}
-            stroke="#1e293b"
+            stroke="#e5e7eb"
             strokeWidth={0.5}
             strokeDasharray="4 3"
           />
@@ -761,7 +761,7 @@ function HistoricalLineChart({ triggered }: { triggered: boolean }) {
             x={LINE.ml - 6}
             y={toY(v) + 3}
             textAnchor="end"
-            fill="#475569"
+            fill="#9ca3af"
             fontSize="9"
           >
             {v}
@@ -774,7 +774,7 @@ function HistoricalLineChart({ triggered }: { triggered: boolean }) {
         y1={bottom}
         x2={LINE.W - LINE.mr}
         y2={bottom}
-        stroke="#1e293b"
+        stroke="#e5e7eb"
         strokeWidth={1}
       />
 
@@ -786,7 +786,7 @@ function HistoricalLineChart({ triggered }: { triggered: boolean }) {
             y1={LINE.mt}
             x2={toX(i)}
             y2={bottom}
-            stroke="#1e293b"
+            stroke="#e5e7eb"
             strokeWidth={0.3}
             strokeDasharray="3 4"
           />
@@ -794,7 +794,7 @@ function HistoricalLineChart({ triggered }: { triggered: boolean }) {
             x={toX(i)}
             y={bottom + 16}
             textAnchor="middle"
-            fill="#94a3b8"
+            fill="#6b7280"
             fontSize="10"
             fontWeight="500"
           >
@@ -870,7 +870,7 @@ function HistoricalLineChart({ triggered }: { triggered: boolean }) {
             cy={toY(d.bjp)}
             r={4}
             fill="#f97316"
-            stroke="#111827"
+            stroke="#ffffff"
             strokeWidth={2}
             initial={{ scale: 0, opacity: 0 }}
             animate={
@@ -899,7 +899,7 @@ function HistoricalLineChart({ triggered }: { triggered: boolean }) {
             cy={toY(d.inc)}
             r={4}
             fill="#06b6d4"
-            stroke="#111827"
+            stroke="#ffffff"
             strokeWidth={2}
             initial={{ scale: 0, opacity: 0 }}
             animate={
@@ -1007,7 +1007,7 @@ function HistoricalLineChart({ triggered }: { triggered: boolean }) {
       ].map((item) => (
         <g key={item.label}>
           <circle cx={item.x} cy={LINE.H - 5} r={4} fill={item.color} />
-          <text x={item.x + 8} y={LINE.H - 2} fill="#94a3b8" fontSize="9">
+          <text x={item.x + 8} y={LINE.H - 2} fill="#6b7280" fontSize="9">
             {item.label}
           </text>
         </g>
@@ -1019,14 +1019,14 @@ function HistoricalLineChart({ triggered }: { triggered: boolean }) {
 function HistoricalTrendsCard({ triggered }: { triggered: boolean }) {
   return (
     <motion.div
-      className="flex h-full flex-col rounded-2xl border border-[#1e293b] bg-[#111827] p-5 sm:p-6"
+      className="flex h-full flex-col rounded-2xl border border-gray-200 bg-white shadow-sm p-5 sm:p-6"
       animate={
         triggered
           ? {
               borderColor: [
-                "#1e293b",
+                "#e5e7eb",
                 "rgba(245,158,11,0.25)",
-                "#1e293b",
+                "#e5e7eb",
               ],
             }
           : {}
@@ -1039,7 +1039,7 @@ function HistoricalTrendsCard({ triggered }: { triggered: boolean }) {
       }}
     >
       <div className="mb-2 flex items-center justify-between">
-        <h3 className="text-sm font-bold text-slate-100 sm:text-base">
+        <h3 className="text-sm font-bold text-gray-900 sm:text-base">
           Historical Seat Trends
         </h3>
         <span className="rounded-full bg-rose-500/90 px-2.5 py-0.5 text-[10px] font-bold text-white shadow-lg shadow-rose-500/20">
@@ -1065,7 +1065,7 @@ function StatCard({
   return (
     <ScrollReveal delay={0.15 + index * 0.1}>
       <motion.div
-        className="flex flex-col items-center rounded-2xl border border-[#1e293b] bg-[#111827] px-4 py-5 text-center"
+        className="flex flex-col items-center rounded-2xl border border-gray-200 bg-white shadow-sm px-4 py-5 text-center"
         whileHover={{
           borderColor: stat.color + "50",
           boxShadow: `0 0 20px ${stat.color}15`,
@@ -1079,11 +1079,11 @@ function StatCard({
           color={stat.color}
           baseDelay={0.3 + index * 0.12}
         />
-        <span className="mt-1.5 text-xs font-medium text-slate-400 sm:text-sm">
+        <span className="mt-1.5 text-xs font-medium text-gray-500 sm:text-sm">
           {stat.label}
         </span>
         <span
-          className={`mt-1 text-[11px] font-semibold ${stat.positive ? "text-emerald-400" : "text-rose-400"}`}
+          className={`mt-1 text-[11px] font-semibold ${stat.positive ? "text-emerald-600" : "text-rose-600"}`}
         >
           {stat.change}
         </span>
@@ -1112,12 +1112,12 @@ export function DataInsightsSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden bg-[#0b1120] py-12 sm:py-14 lg:py-18"
+      className="relative overflow-hidden bg-gray-50 py-12 sm:py-14 lg:py-18"
     >
       {/* Subtle radial glow */}
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-1/2 top-1/4 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-orange-500/[0.03] blur-[120px]" />
-        <div className="absolute bottom-0 left-1/4 h-[400px] w-[400px] rounded-full bg-cyan-500/[0.02] blur-[100px]" />
+        <div className="absolute left-1/2 top-1/4 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-orange-400/[0.06] blur-[120px]" />
+        <div className="absolute bottom-0 left-1/4 h-[400px] w-[400px] rounded-full bg-blue-400/[0.04] blur-[100px]" />
       </div>
 
       <div className="relative mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8 xl:px-12">
@@ -1129,7 +1129,7 @@ export function DataInsightsSection() {
             </h2>
           </ScrollReveal>
           <ScrollReveal delay={0.15}>
-            <p className="mt-4 max-w-xl text-sm text-slate-400 sm:text-base">
+            <p className="mt-4 max-w-xl text-sm text-gray-500 sm:text-base">
               Interactive 3D-styled data visualizations providing deep insights
               into India&apos;s electoral landscape.
             </p>

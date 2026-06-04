@@ -1,11 +1,12 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import { motion } from "motion/react";
-import { Video } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import {
   ScrollReveal,
   ScrollRevealLine,
 } from "@/components/motion/ScrollReveal";
 import { LoopingIcon } from "@/components/LoopingIcon";
+import BroadcastIcon from "@/components/ui/broadcast-icon";
 
 // ─── Data ───
 
@@ -148,20 +149,12 @@ function SpeechCard({
 
   const handleMouseEnter = useCallback(() => {
     setIsHovered(true);
-    const video = videoRef.current;
-    if (video) {
-      video.currentTime = 0;
-      video.play().catch(() => {});
-    }
+    videoRef.current?.play().catch(() => {});
   }, []);
 
   const handleMouseLeave = useCallback(() => {
     setIsHovered(false);
-    const video = videoRef.current;
-    if (video) {
-      video.pause();
-      video.currentTime = 0;
-    }
+    videoRef.current?.pause();
   }, []);
 
   return (
@@ -295,14 +288,28 @@ export function LiveCoverageSection() {
           <MainVideoPlayer />
         </div>
 
-        {/* ── Recent Speeches ── */}
+        {/* ── From the Archives ── */}
         <div className="mt-8 lg:mt-10">
           <ScrollReveal delay={0.1}>
-            <div className="flex items-center gap-2.5">
-              <LoopingIcon icon={Video} size={18} interval={4000} />
-              <h3 className="text-lg font-extrabold text-gray-900 sm:text-xl">
-                Recent Speeches
-              </h3>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <LoopingIcon
+                  icon={BroadcastIcon}
+                  size={20}
+                  interval={4000}
+                  className="text-amber-500"
+                />
+                <h3 className="text-lg font-extrabold text-gray-900 sm:text-xl">
+                  From the Archives
+                </h3>
+              </div>
+              <a
+                href="#"
+                className="moving-border flex items-center gap-1.5 rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-amber-500 transition-colors hover:text-amber-600"
+              >
+                <span>View All</span>
+                <ArrowRight className="h-4 w-4" />
+              </a>
             </div>
           </ScrollReveal>
 

@@ -42,36 +42,54 @@ const PILLARS = [
   },
 ];
 
-// ─── Continuous Typewriter ───
+const TYPEWRITER_PHRASES = [
+  "Social Justice & Community Welfare Initiative",
+  "Empowering Communities Through Unity",
+  "Defending Constitutional Rights for All",
+  "Building a Just & Equitable Society",
+];
+
+// ─── Multi-Phrase Typewriter ───
 
 function TypewriterText({
-  text,
+  phrases,
   triggered,
   className,
 }: {
-  text: string;
+  phrases: string[];
   triggered: boolean;
   className?: string;
 }) {
+  const [phraseIndex, setPhraseIndex] = useState(0);
   const [displayedCount, setDisplayedCount] = useState(0);
-  const chars = useMemo(() => [...text], [text]);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const currentPhrase = phrases[phraseIndex];
+  const chars = useMemo(() => [...currentPhrase], [currentPhrase]);
 
   useEffect(() => {
     if (!triggered) {
       setDisplayedCount(0);
+      setIsDeleting(false);
       return;
     }
-    if (displayedCount >= chars.length) {
-      const restartTimeout = setTimeout(() => {
-        setDisplayedCount(0);
-      }, 2500);
-      return () => clearTimeout(restartTimeout);
+
+    if (!isDeleting && displayedCount >= chars.length) {
+      const timeout = setTimeout(() => setIsDeleting(true), 2200);
+      return () => clearTimeout(timeout);
     }
+
+    if (isDeleting && displayedCount === 0) {
+      setIsDeleting(false);
+      setPhraseIndex((i) => (i + 1) % phrases.length);
+      return;
+    }
+
+    const speed = isDeleting ? 25 : 45;
     const timeout = setTimeout(() => {
-      setDisplayedCount((c) => c + 1);
-    }, 55);
+      setDisplayedCount((c) => c + (isDeleting ? -1 : 1));
+    }, speed);
     return () => clearTimeout(timeout);
-  }, [triggered, displayedCount, chars.length]);
+  }, [triggered, displayedCount, chars.length, isDeleting, phrases]);
 
   return (
     <span className={className}>
@@ -103,7 +121,7 @@ function PillarCard({
 
   return (
     <motion.div
-      className="group relative flex flex-col rounded-2xl border border-gray-100 bg-white/90 p-5 shadow-sm backdrop-blur-sm transition-all duration-300 hover:border-amber-300 hover:shadow-lg sm:p-6"
+      className="group relative flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white/90 p-5 shadow-sm backdrop-blur-sm transition-all duration-300 hover:border-amber-300 hover:shadow-lg sm:p-6"
       initial={{ opacity: 0, y: 30 }}
       animate={triggered ? { opacity: 1, y: 0 } : {}}
       transition={{
@@ -113,19 +131,65 @@ function PillarCard({
       }}
       whileHover={{ y: -5 }}
     >
-      {/* Icon */}
+      {/* Continuous shimmer sweep */}
+      {triggered && (
+        <motion.div
+          className="pointer-events-none absolute inset-0 z-10"
+          style={{
+            background:
+              "linear-gradient(120deg, transparent 30%, rgba(251,191,36,0.08) 45%, rgba(251,191,36,0.15) 50%, rgba(251,191,36,0.08) 55%, transparent 70%)",
+            backgroundSize: "200% 100%",
+          }}
+          animate={{ backgroundPosition: ["-200% 0%", "200% 0%"] }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            repeatDelay: 1.5,
+            ease: "easeInOut",
+          }}
+        />
+      )}
+
+      {/* Pulsing border glow */}
+      {triggered && (
+        <motion.div
+          className="pointer-events-none absolute inset-0 rounded-2xl"
+          animate={{
+            boxShadow: [
+              "inset 0 0 0 1px rgba(251,191,36,0)",
+              "inset 0 0 0 1.5px rgba(251,191,36,0.35)",
+              "inset 0 0 0 1px rgba(251,191,36,0)",
+            ],
+          }}
+          transition={{
+            duration: 3,
+            delay: index * 0.7,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      )}
+
+      {/* Icon with glow pulse */}
       <motion.div
-        className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-orange-500"
+        className="relative mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-orange-500"
         animate={
           triggered
-            ? { scale: [1, 1.12, 1] }
+            ? {
+                scale: [1, 1.15, 1],
+                boxShadow: [
+                  "0 0 0 0 rgba(249,115,22,0)",
+                  "0 0 12px 4px rgba(249,115,22,0.25)",
+                  "0 0 0 0 rgba(249,115,22,0)",
+                ],
+              }
             : {}
         }
         transition={{
-          duration: 3,
-          delay: 2 + index * 1.2,
+          duration: 2.5,
+          delay: 1 + index * 0.5,
           repeat: Infinity,
-          repeatDelay: 3,
+          repeatDelay: 1.5,
           ease: "easeInOut",
         }}
       >
@@ -190,26 +254,59 @@ export function HinduForJusticeSection() {
           }}
         />
 
-        {/* Animated ambient glow */}
+        {/* Animated ambient glows — faster, more visible */}
         {triggered && (
           <>
             <motion.div
-              className="absolute -top-32 -right-32 h-80 w-80 rounded-full bg-amber-300/15 blur-3xl"
-              animate={{ x: [0, 25, 0], y: [0, -15, 0] }}
-              transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute -top-32 -right-32 h-80 w-80 rounded-full bg-amber-300/20 blur-3xl"
+              animate={{ x: [0, 30, 0], y: [0, -20, 0], scale: [1, 1.2, 1] }}
+              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
             />
             <motion.div
-              className="absolute -bottom-32 -left-32 h-72 w-72 rounded-full bg-orange-200/10 blur-3xl"
-              animate={{ x: [0, -20, 0], y: [0, 20, 0] }}
-              transition={{
-                duration: 15,
-                delay: 2,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
+              className="absolute -bottom-32 -left-32 h-72 w-72 rounded-full bg-orange-200/15 blur-3xl"
+              animate={{ x: [0, -25, 0], y: [0, 25, 0], scale: [1.1, 0.9, 1.1] }}
+              transition={{ duration: 10, delay: 1, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <motion.div
+              className="absolute top-1/2 left-1/2 h-60 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-200/10 blur-3xl"
+              animate={{ scale: [1, 1.3, 1], opacity: [0.1, 0.25, 0.1] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             />
           </>
         )}
+
+        {/* Floating particles */}
+        {triggered &&
+          [...Array(10)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="pointer-events-none absolute rounded-full"
+              style={{
+                width: 4 + (i % 4) * 3,
+                height: 4 + (i % 4) * 3,
+                left: `${8 + i * 9}%`,
+                top: `${15 + (i % 4) * 20}%`,
+                background:
+                  i % 3 === 0
+                    ? "rgba(251,191,36,0.3)"
+                    : i % 3 === 1
+                      ? "rgba(249,115,22,0.25)"
+                      : "rgba(245,158,11,0.2)",
+              }}
+              animate={{
+                y: [0, -25 - (i % 3) * 10, 0],
+                x: [0, i % 2 === 0 ? 15 : -15, 0],
+                opacity: [0.15, 0.5, 0.15],
+                scale: [1, 1.4, 1],
+              }}
+              transition={{
+                duration: 3 + i * 0.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: i * 0.3,
+              }}
+            />
+          ))}
       </div>
 
       <div className="relative z-10 mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8 xl:px-12">
@@ -226,27 +323,49 @@ export function HinduForJusticeSection() {
                   className="h-16 w-16 rounded-xl object-contain shadow-md sm:h-20 sm:w-20"
                   animate={
                     triggered
-                      ? { rotate: [0, 2, -2, 0] }
+                      ? {
+                          rotate: [0, 3, -3, 0],
+                          scale: [1, 1.05, 1],
+                        }
                       : {}
                   }
                   transition={{
-                    duration: 5,
-                    delay: 3,
+                    duration: 4,
+                    delay: 1,
                     repeat: Infinity,
-                    repeatDelay: 5,
+                    repeatDelay: 2,
                     ease: "easeInOut",
                   }}
                 />
                 <div>
                   <h2 className="text-2xl font-extrabold text-gray-900 sm:text-3xl lg:text-4xl">
                     Hindu For{" "}
-                    <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">
+                    <motion.span
+                      className="inline-block bg-clip-text text-transparent"
+                      style={{
+                        backgroundImage:
+                          "linear-gradient(90deg, #f59e0b, #ea580c, #fbbf24, #f97316, #f59e0b)",
+                        backgroundSize: "200% 100%",
+                      }}
+                      animate={{
+                        backgroundPosition: [
+                          "0% 50%",
+                          "100% 50%",
+                          "0% 50%",
+                        ],
+                      }}
+                      transition={{
+                        duration: 4,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
+                    >
                       Justice
-                    </span>
+                    </motion.span>
                   </h2>
                   <p className="mt-0.5 text-sm font-medium text-gray-500 sm:text-base">
                     <TypewriterText
-                      text="Social Justice & Community Welfare Initiative"
+                      phrases={TYPEWRITER_PHRASES}
                       triggered={triggered}
                       className="text-sm font-medium text-gray-500 sm:text-base"
                     />
@@ -284,23 +403,22 @@ export function HinduForJusticeSection() {
                   e.currentTarget.style.display = "none";
                 }}
               />
-              {/* Shimmer sweep on image */}
+              {/* Shimmer sweep — more frequent */}
               {triggered && (
                 <motion.div
                   className="pointer-events-none absolute inset-0"
                   style={{
                     background:
-                      "linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%)",
+                      "linear-gradient(120deg, transparent 25%, rgba(255,255,255,0.2) 45%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.2) 55%, transparent 75%)",
                     backgroundSize: "200% 100%",
                   }}
                   animate={{
                     backgroundPosition: ["-200% 0%", "200% 0%"],
                   }}
                   transition={{
-                    duration: 3,
-                    delay: 4,
+                    duration: 2.5,
                     repeat: Infinity,
-                    repeatDelay: 4,
+                    repeatDelay: 1.5,
                     ease: "easeInOut",
                   }}
                 />
@@ -309,12 +427,52 @@ export function HinduForJusticeSection() {
               <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/30 to-transparent" />
             </motion.div>
 
-            {/* Mission text */}
+            {/* Mission text — pulsing border */}
             <motion.div
               className="mt-4 rounded-2xl border border-gray-100 bg-white/90 p-5 shadow-sm backdrop-blur-sm sm:p-6"
               initial={{ opacity: 0, y: 20 }}
-              animate={triggered ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              animate={
+                triggered
+                  ? {
+                      opacity: 1,
+                      y: 0,
+                      borderColor: [
+                        "rgba(229,229,229,1)",
+                        "rgba(251,191,36,0.5)",
+                        "rgba(229,229,229,1)",
+                      ],
+                      boxShadow: [
+                        "0 1px 3px rgba(0,0,0,0.1)",
+                        "0 4px 20px rgba(251,191,36,0.15)",
+                        "0 1px 3px rgba(0,0,0,0.1)",
+                      ],
+                    }
+                  : {}
+              }
+              transition={{
+                opacity: {
+                  duration: 0.7,
+                  delay: 0.8,
+                  ease: [0.16, 1, 0.3, 1],
+                },
+                y: {
+                  duration: 0.7,
+                  delay: 0.8,
+                  ease: [0.16, 1, 0.3, 1],
+                },
+                borderColor: {
+                  duration: 3,
+                  delay: 1.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                },
+                boxShadow: {
+                  duration: 3,
+                  delay: 1.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                },
+              }}
             >
               <p className="text-sm leading-relaxed text-gray-600">
                 Committed to fostering unity, justice, and cultural awareness
@@ -327,7 +485,16 @@ export function HinduForJusticeSection() {
                 transition={{ duration: 0.2 }}
               >
                 Read More
-                <ArrowRight className="h-4 w-4" />
+                <motion.span
+                  animate={{ x: [0, 4, 0] }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                >
+                  <ArrowRight className="h-4 w-4" />
+                </motion.span>
               </motion.a>
             </motion.div>
           </ScrollReveal>
