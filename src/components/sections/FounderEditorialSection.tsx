@@ -213,15 +213,25 @@ export function FounderEditorialSection() {
     >
       {/* ── Dark candle-lit background ── */}
       <div className="pointer-events-none absolute inset-0">
-        {/* Base warm dark gradient */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#1a0e04] via-[#0f0a04] to-[#0a0602]" />
+        {/* Candle background image */}
+        <img
+          src="/images/candle.jpg"
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+
+        {/* Dark overlay to keep text readable */}
+        <div className="absolute inset-0 bg-black/60" />
+
+        {/* Base warm dark gradient on top */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#1a0e04]/70 via-transparent to-[#0a0602]/80" />
 
         {/* Vignette */}
         <div
           className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(ellipse at 50% 40%, transparent 30%, rgba(0,0,0,0.6) 100%)",
+              "radial-gradient(ellipse at 50% 40%, transparent 30%, rgba(0,0,0,0.5) 100%)",
           }}
         />
 
@@ -306,14 +316,15 @@ export function FounderEditorialSection() {
       <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-10">
         {/* Title */}
         <ScrollReveal>
-          <motion.h2
-            className="text-center text-2xl font-extrabold leading-snug sm:text-3xl lg:text-4xl"
+          <h2
+            className="px-2 py-2 text-center text-3xl font-extrabold leading-relaxed sm:text-4xl sm:leading-relaxed lg:text-[52px] lg:leading-relaxed"
             style={{
               fontFamily: "'Cormorant Garamond', serif",
               letterSpacing: "-0.3px",
             }}
           >
             <motion.span
+              className="inline-block py-1"
               style={{
                 backgroundImage:
                   "linear-gradient(90deg, #fbbf24 0%, #fbbf24 30%, #fff 45%, #fde68a 50%, #fff 55%, #fbbf24 70%, #fbbf24 100%)",
@@ -333,7 +344,7 @@ export function FounderEditorialSection() {
             >
               कलम का संकल्प, संदीप (शिवा) संस्थापक, लोगसभा
             </motion.span>
-          </motion.h2>
+          </h2>
         </ScrollReveal>
 
         {/* Subtitle */}
