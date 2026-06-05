@@ -11,6 +11,24 @@ const NAME_MAP: Record<string, string> = {
   Uttaranchal: "Uttarakhand",
 };
 
+// Party → color mapping for state fills
+const PARTY_COLORS: Record<string, { fill: string; hover: string; stroke: string; glow: string }> = {
+  BJP:  { fill: "#f97316", hover: "#fb923c", stroke: "#fdba74", glow: "rgba(249,115,22,0.6)" },
+  INC:  { fill: "#06b6d4", hover: "#22d3ee", stroke: "#67e8f9", glow: "rgba(6,182,212,0.6)" },
+  AAP:  { fill: "#22c55e", hover: "#4ade80", stroke: "#86efac", glow: "rgba(34,197,94,0.6)" },
+  SP:   { fill: "#ef4444", hover: "#f87171", stroke: "#fca5a5", glow: "rgba(239,68,68,0.6)" },
+  TMC:  { fill: "#10b981", hover: "#34d399", stroke: "#6ee7b7", glow: "rgba(16,185,129,0.6)" },
+  DMK:  { fill: "#e11d48", hover: "#f43f5e", stroke: "#fb7185", glow: "rgba(225,29,72,0.6)" },
+  TDP:  { fill: "#eab308", hover: "#facc15", stroke: "#fde047", glow: "rgba(234,179,8,0.6)" },
+  "JD(U)": { fill: "#16a34a", hover: "#22c55e", stroke: "#4ade80", glow: "rgba(22,163,74,0.6)" },
+  JMM:  { fill: "#059669", hover: "#10b981", stroke: "#34d399", glow: "rgba(5,150,105,0.6)" },
+  BSP:  { fill: "#3b82f6", hover: "#60a5fa", stroke: "#93c5fd", glow: "rgba(59,130,246,0.6)" },
+  "SS(UBT)": { fill: "#f59e0b", hover: "#fbbf24", stroke: "#fcd34d", glow: "rgba(245,158,11,0.6)" },
+  "CPI(M)": { fill: "#dc2626", hover: "#ef4444", stroke: "#f87171", glow: "rgba(220,38,38,0.6)" },
+};
+
+const DEFAULT_PARTY_COLOR = { fill: "#d97706", hover: "#f59e0b", stroke: "#fbbf24", glow: "rgba(245,158,11,0.6)" };
+
 export interface HoverInfo {
   state: StateData;
   x: number;
@@ -27,27 +45,31 @@ const StatePath = memo(function StatePath({
   d,
   isHovered,
   hasData,
+  rulingParty,
   onEnter,
   onLeave,
 }: {
   d: string;
   isHovered: boolean;
   hasData: boolean;
+  rulingParty?: string;
   onEnter: (e: React.MouseEvent) => void;
   onLeave: () => void;
 }) {
+  const colors = (rulingParty && PARTY_COLORS[rulingParty]) || DEFAULT_PARTY_COLOR;
+
   return (
     <path
       d={d}
-      fill={isHovered ? "#f59e0b" : "#d97706"}
+      fill={isHovered ? colors.hover : colors.fill}
       fillOpacity={isHovered ? 1 : 0.65}
-      stroke={isHovered ? "#fbbf24" : "rgba(26, 26, 46, 0.6)"}
+      stroke={isHovered ? colors.stroke : "rgba(26, 26, 46, 0.6)"}
       strokeWidth={isHovered ? 1.5 : 0.5}
       style={{
         cursor: hasData ? "pointer" : "default",
-        transition: "fill 0.2s, fill-opacity 0.2s, stroke 0.2s, stroke-width 0.2s",
+        transition: "fill 0.3s, fill-opacity 0.3s, stroke 0.3s, stroke-width 0.3s",
         filter: isHovered
-          ? "drop-shadow(0 0 10px rgba(245,158,11,0.6))"
+          ? `drop-shadow(0 0 10px ${colors.glow})`
           : "none",
       }}
       onMouseEnter={onEnter}
@@ -131,6 +153,7 @@ export function IndiaMap({ states, onStateHover, hoveredStateId }: IndiaMapProps
           d={item.d}
           isHovered={hoveredStateId === item.stateData?.name}
           hasData={!!item.stateData}
+          rulingParty={item.stateData?.rulingParty}
           onEnter={(e) => handleEnter(item, e)}
           onLeave={() => onStateHover(null)}
         />
@@ -143,6 +166,8 @@ export function IndiaMap({ states, onStateHover, hoveredStateId }: IndiaMapProps
 
 export function StateTooltip({ state }: { state: StateData }) {
   const voteShare = ((state.ndaSeats / state.seats) * 100).toFixed(1);
+  const partyColors = (state.rulingParty && PARTY_COLORS[state.rulingParty]) || DEFAULT_PARTY_COLOR;
+  const alliance = state.ndaSeats > state.indiaSeats ? "NDA" : state.indiaSeats > state.ndaSeats ? "INDIA" : "TIED";
 
   return (
     <motion.div
@@ -154,8 +179,14 @@ export function StateTooltip({ state }: { state: StateData }) {
     >
       <div className="flex items-center justify-between">
         <p className="text-sm font-bold text-white">{state.name}</p>
-        <span className="rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold text-amber-400">
-          {state.ndaSeats > state.indiaSeats ? "NDA" : "INDIA"}
+        <span
+          className="rounded-full px-2 py-0.5 text-[10px] font-bold"
+          style={{
+            backgroundColor: `${partyColors.fill}33`,
+            color: partyColors.hover,
+          }}
+        >
+          {state.rulingParty || alliance}
         </span>
       </div>
 

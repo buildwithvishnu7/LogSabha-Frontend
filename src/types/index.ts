@@ -43,6 +43,7 @@ export interface StateData {
   ndaSeats: number;
   indiaSeats: number;
   otherSeats: number;
+  rulingParty?: string;
 }
 
 export interface PlatformStat {

@@ -14,45 +14,39 @@ interface SpeechVideo {
   id: string;
   title: string;
   speaker: string;
-  thumbnail: string;
   videoSrc: string;
 }
 
 const MAIN_VIDEO = {
   tag: "Parliament",
-  title: "Live: Budget Session Debate 2026",
-  videoSrc: "/videos/Stock-bg.mp4",
-  poster: "/images/editorial/parliament.jpg",
+  title: "PM Modi's Remarks in Lok Sabha — Parliament Session",
+  youtubeUrl: "https://www.youtube.com/watch?v=kTB6g92Usmw",
 };
 
 const RECENT_SPEECHES: SpeechVideo[] = [
   {
     id: "speech-1",
-    title: "Budget Session 2026 - Economic Policy Address",
-    speaker: "Finance Minister",
-    thumbnail: "/images/editorial/economy.jpg",
+    title: "PM Modi's First Speech After Re-Election",
+    speaker: "PM Narendra Modi",
     videoSrc: "/videos/Stock-bg.mp4",
   },
   {
     id: "speech-2",
-    title: "Parliamentary Debate on Agricultural Reforms",
-    speaker: "Agriculture Minister",
-    thumbnail: "/images/editorial/regional.jpg",
-    videoSrc: "/videos/Stock-bg.mp4",
+    title: "Lok Sabha Session — Motion of Thanks Debate",
+    speaker: "Parliament Session 2024",
+    videoSrc: "/videos/Ashoka-bg.mp4",
   },
   {
     id: "speech-3",
-    title: "National Security Council Address",
-    speaker: "Defence Minister",
-    thumbnail: "/images/editorial/featured.jpg",
-    videoSrc: "/videos/Stock-bg.mp4",
+    title: "PM Modi in Rajya Sabha — Presidential Address",
+    speaker: "Rajya Sabha Session",
+    videoSrc: "/videos/Tri-bg.mp4",
   },
   {
     id: "speech-4",
-    title: "Infrastructure Development Summit Keynote",
-    speaker: "Transport Minister",
-    thumbnail: "/images/editorial/digital.jpg",
-    videoSrc: "/videos/Stock-bg.mp4",
+    title: "Parliament Session — Lok Sabha Day 7",
+    speaker: "Sansad TV Coverage",
+    videoSrc: "/videos/flag-bg.mp4",
   },
 ];
 
@@ -67,26 +61,40 @@ function LiveDot() {
   );
 }
 
-// ─── Main Video Player ───
+// ─── YouTube Embed Helper ───
+
+function getYouTubeEmbedUrl(url: string, autoplay = true): string {
+  const match = url.match(/[?&]v=([^&]+)/);
+  const id = match?.[1] ?? "";
+  const params = new URLSearchParams({
+    autoplay: autoplay ? "1" : "0",
+    mute: "1",
+    loop: "1",
+    playlist: id,
+    controls: "0",
+    modestbranding: "1",
+    rel: "0",
+    showinfo: "0",
+    playsinline: "1",
+  });
+  return `https://www.youtube.com/embed/${id}?${params.toString()}`;
+}
+
+// ─── Main Video Player (YouTube iframe) ───
 
 function MainVideoPlayer() {
-  const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
 
   useEffect(() => {
-    const video = videoRef.current;
     const container = containerRef.current;
-    if (!video || !container) return;
+    if (!container) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          video.play().catch(() => {});
-        } else {
-          video.pause();
-        }
+        if (entry.isIntersecting) setInView(true);
       },
-      { threshold: 0.3 },
+      { threshold: 0.2 },
     );
 
     observer.observe(container);
@@ -96,37 +104,35 @@ function MainVideoPlayer() {
   return (
     <motion.div
       ref={containerRef}
-      className="group relative aspect-[16/7] max-h-[480px] w-full overflow-hidden rounded-2xl bg-gray-900 shadow-xl shadow-black/10"
+      className="group relative aspect-[16/9] max-h-[480px] w-full overflow-hidden rounded-2xl bg-gray-900 shadow-xl shadow-black/10"
       initial={{ opacity: 0, y: 30, scale: 0.98 }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
     >
-      <video
-        ref={videoRef}
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
-        poster={MAIN_VIDEO.poster}
-        className="absolute inset-0 h-full w-full object-cover"
-      >
-        <source src={MAIN_VIDEO.videoSrc} type="video/mp4" />
-      </video>
+      {inView && (
+        <iframe
+          src={getYouTubeEmbedUrl(MAIN_VIDEO.youtubeUrl)}
+          title={MAIN_VIDEO.title}
+          className="absolute inset-0 h-full w-full"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          style={{ border: "none" }}
+        />
+      )}
 
       {/* Gradient overlays */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
 
       {/* Tag */}
-      <div className="absolute top-4 left-4 z-10">
+      <div className="pointer-events-none absolute top-4 left-4 z-10">
         <span className="rounded-md bg-amber-500/90 px-3 py-1 text-[11px] font-bold tracking-wide text-white uppercase backdrop-blur-sm">
           {MAIN_VIDEO.tag}
         </span>
       </div>
 
       {/* Title overlay */}
-      <div className="absolute inset-x-0 bottom-0 z-10 p-5 sm:p-6">
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 p-5 sm:p-6">
         <h3 className="text-lg font-bold text-white sm:text-xl lg:text-2xl">
           {MAIN_VIDEO.title}
         </h3>
@@ -135,7 +141,7 @@ function MainVideoPlayer() {
   );
 }
 
-// ─── Hover-to-Play Speech Card ───
+// ─── Hover-to-Play Speech Card (local video, resume from last point) ───
 
 function SpeechCard({
   speech,
@@ -146,9 +152,11 @@ function SpeechCard({
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
 
   const handleMouseEnter = useCallback(() => {
     setIsHovered(true);
+    setHasStarted(true);
     videoRef.current?.play().catch(() => {});
   }, []);
 
@@ -171,35 +179,29 @@ function SpeechCard({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Thumbnail / Video */}
       <div className="relative aspect-[16/10] overflow-hidden rounded-xl bg-gray-100">
-        <img
-          src={speech.thumbnail}
-          alt={speech.title}
-          className={`absolute inset-0 h-full w-full object-cover transition-all duration-500 ${
-            isHovered ? "scale-110 opacity-0" : "scale-100 opacity-100"
-          }`}
-          onError={(e) => {
-            e.currentTarget.style.display = "none";
-          }}
-        />
-
+        {/* Video — always mounted, plays/pauses on hover */}
         <video
           ref={videoRef}
           muted
           loop
           playsInline
           preload="metadata"
-          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
-            isHovered ? "opacity-100" : "opacity-0"
-          }`}
+          className="absolute inset-0 h-full w-full object-cover"
         >
           <source src={speech.videoSrc} type="video/mp4" />
         </video>
 
-        {/* Play indicator on hover */}
+        {/* Dark overlay when paused */}
         <div
-          className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${
+          className={`absolute inset-0 bg-black/20 transition-opacity duration-300 ${
+            isHovered ? "opacity-0" : "opacity-100"
+          }`}
+        />
+
+        {/* Play indicator — visible when not hovered */}
+        <div
+          className={`pointer-events-none absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${
             isHovered ? "opacity-0" : "opacity-100"
           }`}
         >
