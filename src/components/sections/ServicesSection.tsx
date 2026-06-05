@@ -251,7 +251,7 @@ export function ServicesSection({ data }: { data: ServicesData }) {
       <div className="relative mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8 xl:px-12">
         {/* Main content grid — title lives inside left column so image spans full height */}
         <div
-          className="grid gap-6 sm:gap-8 lg:grid-cols-[280px_1.2fr_1fr] lg:items-start lg:gap-8 xl:grid-cols-[320px_1.2fr_1fr] xl:gap-10"
+          className="grid gap-6 sm:gap-8 lg:grid-cols-[280px_1.2fr_1fr] lg:items-stretch lg:gap-8 xl:grid-cols-[320px_1.2fr_1fr] xl:gap-10"
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => setIsHovering(false)}
         >
@@ -291,7 +291,7 @@ export function ServicesSection({ data }: { data: ServicesData }) {
                 animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
                 exit={{ opacity: 0, scale: 0.96, filter: "blur(6px)" }}
                 transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                className="relative h-[280px] overflow-hidden rounded-2xl bg-gray-100 sm:h-[360px] lg:h-[460px]"
+                className="relative h-[280px] overflow-hidden rounded-2xl bg-gray-100 sm:h-[360px] lg:h-full"
               >
                 <img
                   src={activeService.image}

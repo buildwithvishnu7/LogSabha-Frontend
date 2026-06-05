@@ -2,11 +2,80 @@ import { useState, useEffect, useRef, forwardRef, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { Menu, X } from "lucide-react";
-import {
-  AnimatedSearchIcon,
-  AnimatedUserIcon,
-  AnimatedGlobeIcon,
-} from "./AnimatedIcons";
+import { AnimatedGlobeIcon, AnimatedUserIcon } from "./AnimatedIcons";
+import lottie from "lottie-web";
+
+// ─── Lottie icon via lottie-web directly ───
+const lottieCache: Record<string, object> = {};
+
+function LottieIcon({ src, size = 24, color = "", className = "" }: { src: string; size?: number; color?: string; className?: string }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const colorRef = useRef(color);
+  colorRef.current = color;
+
+  // Load animation once
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const recolor = () => {
+      const c = colorRef.current;
+      if (!c) return;
+      const shapes = el.querySelectorAll("path, circle, rect, line, ellipse, polyline, polygon");
+      shapes.forEach((p) => {
+        const stroke = p.getAttribute("stroke");
+        if (stroke && stroke !== "none" && stroke !== "transparent") p.setAttribute("stroke", c);
+        const fill = p.getAttribute("fill");
+        if (fill && fill !== "none" && fill !== "transparent") p.setAttribute("fill", c);
+      });
+    };
+
+    const load = (data: object) => {
+      el.innerHTML = "";
+      const anim = lottie.loadAnimation({
+        container: el,
+        renderer: "svg",
+        loop: true,
+        autoplay: true,
+        animationData: data,
+      });
+      anim.addEventListener("DOMLoaded", recolor);
+      anim.addEventListener("enterFrame", recolor);
+    };
+
+    if (lottieCache[src]) { load(lottieCache[src]); return; }
+
+    let cancelled = false;
+    fetch(src)
+      .then((r) => r.json())
+      .then((json) => { lottieCache[src] = json; if (!cancelled) load(json); })
+      .catch(() => {});
+
+    return () => { cancelled = true; el.innerHTML = ""; };
+  }, [src]);
+
+  return (
+    <div
+      ref={containerRef}
+      className={className}
+      style={{ width: size, height: size, display: "inline-flex" }}
+    />
+  );
+}
+
+// ─── Flaticon animated GIF icon ───
+function FlatIcon({ src, size = 24, className = "" }: { src: string; size?: number; className?: string }) {
+  return (
+    <img
+      src={src}
+      alt=""
+      width={size}
+      height={size}
+      className={`pointer-events-none ${className}`}
+      style={{ width: size, height: size }}
+    />
+  );
+}
 import { cn } from "@/lib/utils";
 import { useGlobalData } from "@/hooks/useGlobalData";
 
@@ -322,7 +391,7 @@ export function Header() {
                     animate={{ rotate: [0, 15, -15, 0] }}
                     transition={{ duration: 0.4 }}
                   >
-                    <AnimatedSearchIcon size={16} className="flex-shrink-0 text-amber-500" />
+                    <LottieIcon src="/lottie/search.json" size={22} color="#f59e0b" className="flex-shrink-0" />
                   </motion.div>
                   <TypewriterInput
                     ref={searchInputRef}
@@ -379,7 +448,7 @@ export function Header() {
                     animate={{ scale: [1, 1.12, 1], opacity: [1, 0.3, 1] }}
                     transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
                   />
-                  <AnimatedSearchIcon size={18} />
+                  <LottieIcon src="/lottie/search.json" size={24} color={scrolled ? "#6b7280" : "#ffffff"} />
                 </motion.button>
               )}
             </AnimatePresence>
@@ -610,7 +679,7 @@ export function Header() {
               </div>
 
               <div className="mt-4 flex items-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-4 py-2.5 md:hidden">
-                <AnimatedSearchIcon size={16} className="text-gray-400" />
+                <LottieIcon src="/lottie/search.json" size={20} color="#9ca3af" />
                 <input
                   type="text"
                   placeholder="Search elections..."
