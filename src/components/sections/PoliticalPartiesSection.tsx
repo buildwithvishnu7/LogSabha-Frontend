@@ -1,6 +1,36 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "motion/react";
 import { Users, MapPin, Award, Landmark, Vote, TrendingUp, Map, ChartNoAxesCombined, ChevronLeft, ChevronRight } from "lucide-react";
+import lottieWeb from "lottie-web";
+
+// ─── Inline Lottie icon for badge ───
+function BadgeLottieIcon({ src, size = 18, color = "#f59e0b" }: { src: string; size?: number; color?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const colorRef = useRef(color);
+  colorRef.current = color;
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    let cancelled = false;
+    fetch(src).then(r => r.json()).then(json => {
+      if (cancelled) return;
+      el.innerHTML = "";
+      const anim = lottieWeb.loadAnimation({ container: el, renderer: "svg", loop: true, autoplay: true, animationData: json });
+      const recolor = () => {
+        const c = colorRef.current;
+        el.querySelectorAll("path,circle,rect,line,ellipse,polyline,polygon").forEach(p => {
+          const s = p.getAttribute("stroke"); if (s && s !== "none" && s !== "transparent") p.setAttribute("stroke", c);
+          const f = p.getAttribute("fill"); if (f && f !== "none" && f !== "transparent") p.setAttribute("fill", c);
+          const sw = parseFloat(p.getAttribute("stroke-width") || "0"); if (sw > 0 && sw < 22) p.setAttribute("stroke-width", "22");
+        });
+      };
+      anim.addEventListener("DOMLoaded", recolor);
+      anim.addEventListener("enterFrame", recolor);
+    }).catch(() => {});
+    return () => { cancelled = true; el.innerHTML = ""; };
+  }, [src]);
+  return <div ref={ref} style={{ width: size, height: size, display: "inline-flex" }} />;
+}
 import { AnimatedLucideIcon } from "@/components/AnimatedLucideIcon";
 import { LoopingIcon } from "@/components/LoopingIcon";
 import UsersIcon from "@/components/ui/users-icon";
@@ -529,9 +559,8 @@ function PartyStrip({
 
           {/* President */}
           <div className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white/10 sm:h-8 sm:w-8">
-              <LoopingIcon icon={UsersIcon} size={14} color="rgba(255,255,255,0.5)" className="sm:hidden" interval={4000} />
-              <LoopingIcon icon={UsersIcon} size={16} color="rgba(255,255,255,0.5)" className="hidden sm:block" interval={4000} />
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 sm:h-10 sm:w-10">
+              <BadgeLottieIcon src="/lottie/president.json" size={28} color="rgba(255,255,255,0.7)" />
             </div>
             <div>
               <p className="text-[9px] font-medium tracking-wider text-white/60 uppercase sm:text-[10px]">President</p>
@@ -670,7 +699,7 @@ export function PoliticalPartiesSection() {
         <div className="text-center">
           <ScrollReveal>
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5">
-              <AnimatedLucideIcon icon={Landmark} size={16} className="text-amber-500" animation="breathe" />
+              <BadgeLottieIcon src="/lottie/museum.json" size={20} />
               <span className="text-xs font-semibold tracking-wider text-amber-600 uppercase">
                 Political Landscape
               </span>

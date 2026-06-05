@@ -1,33 +1,61 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, useInView } from "motion/react";
 import {
-  MapPin,
-  Phone,
-  Mail,
   Clock,
   Send,
   CheckCircle,
 } from "lucide-react";
+import lottieWeb from "lottie-web";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
+
+// ─── Lottie icon for contact cards ───
+const contactLottieCache: Record<string, object> = {};
+
+function ContactLottieIcon({ src, size = 22, color = "#f97316" }: { src: string; size?: number; color?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const colorRef = useRef(color);
+  colorRef.current = color;
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const load = (data: object) => {
+      el.innerHTML = "";
+      const anim = lottieWeb.loadAnimation({ container: el, renderer: "svg", loop: true, autoplay: true, animationData: data });
+      const recolor = () => {
+        const c = colorRef.current;
+        el.querySelectorAll("path,circle,rect,line,ellipse,polyline,polygon").forEach(p => {
+          const s = p.getAttribute("stroke"); if (s && s !== "none" && s !== "transparent") p.setAttribute("stroke", c);
+        });
+      };
+      anim.addEventListener("DOMLoaded", recolor);
+      anim.addEventListener("enterFrame", recolor);
+    };
+    if (contactLottieCache[src]) { load(contactLottieCache[src]); return; }
+    let cancelled = false;
+    fetch(src).then(r => r.json()).then(json => { contactLottieCache[src] = json; if (!cancelled) load(json); }).catch(() => {});
+    return () => { cancelled = true; el.innerHTML = ""; };
+  }, [src]);
+  return <div ref={ref} style={{ width: size, height: size, display: "inline-flex" }} />;
+}
 
 // ─── Data ───
 
 const CONTACT_INFO = [
   {
-    icon: MapPin,
+    lottieSrc: "/lottie/location.json",
     label: "Office Address",
     lines: ["LogSabha Pvt Ltd", "Connaught Place, New Delhi", "110001, India"],
     color: "#f97316",
   },
   {
-    icon: Phone,
+    lottieSrc: "/lottie/contact.json",
     label: "Phone",
     lines: ["+91 98765 43210", "+91 11 2345 6789"],
     color: "#3b82f6",
     href: "tel:+919876543210",
   },
   {
-    icon: Mail,
+    lottieSrc: "/lottie/message.json",
     label: "Email",
     lines: ["info@logsabha.com", "support@logsabha.com"],
     color: "#22c55e",
@@ -142,8 +170,6 @@ function ContactCard({
   item: (typeof CONTACT_INFO)[0];
   index: number;
 }) {
-  const Icon = item.icon;
-
   const content = (
     <motion.div
       className="group flex gap-4 rounded-xl border border-white/[0.06] bg-white/[0.03] p-4 backdrop-blur-sm transition-all duration-300 hover:border-white/10 hover:bg-white/[0.06]"
@@ -167,7 +193,7 @@ function ContactCard({
           ease: "easeInOut",
         }}
       >
-        <Icon className="h-5 w-5" style={{ color: item.color }} />
+        <ContactLottieIcon src={item.lottieSrc} size={24} color={item.color} />
       </motion.div>
 
       {/* Text */}

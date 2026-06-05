@@ -1,11 +1,6 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { TrendingUp } from "lucide-react";
-import { AnimatedLucideIcon } from "@/components/AnimatedLucideIcon";
-import { LoopingIcon } from "@/components/LoopingIcon";
-import UsersIcon from "@/components/ui/users-icon";
-import MapPinIcon from "@/components/ui/map-pin-icon";
-import ChartBarIcon from "@/components/ui/chart-bar-icon";
+import lottie from "lottie-web";
 import { BackgroundVideo } from "@/components/video/BackgroundVideo";
 import { IndiaMap, StateTooltip } from "@/components/IndiaMap";
 import type { HoverInfo } from "@/components/IndiaMap";
@@ -13,11 +8,62 @@ import { ScrollReveal } from "@/components/motion/ScrollReveal";
 import { useCountUp } from "@/hooks/useCountUp";
 import type { PoliticalLandscapeData } from "@/types";
 
+// ─── Lottie stat icon (dark theme — amber colored) ───
+
+const lottieStatCache: Record<string, object> = {};
+
+function StatLottieIcon({ src, size = 22 }: { src: string; size?: number }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const load = (data: object) => {
+      el.innerHTML = "";
+      const anim = lottie.loadAnimation({
+        container: el,
+        renderer: "svg",
+        loop: true,
+        autoplay: true,
+        animationData: data,
+      });
+
+      const recolor = () => {
+        const shapes = el.querySelectorAll("path, circle, rect, line, ellipse, polyline, polygon");
+        shapes.forEach((p) => {
+          const stroke = p.getAttribute("stroke");
+          if (stroke && stroke !== "none" && stroke !== "transparent") p.setAttribute("stroke", "#f59e0b");
+          const fill = p.getAttribute("fill");
+          if (fill && fill !== "none" && fill !== "transparent") p.setAttribute("fill", "#f59e0b");
+          const sw = parseFloat(p.getAttribute("stroke-width") || "0");
+          if (sw > 0 && sw < 22) p.setAttribute("stroke-width", "22");
+        });
+      };
+
+      anim.addEventListener("DOMLoaded", recolor);
+      anim.addEventListener("enterFrame", recolor);
+    };
+
+    if (lottieStatCache[src]) { load(lottieStatCache[src]); return; }
+
+    let cancelled = false;
+    fetch(src)
+      .then((r) => r.json())
+      .then((json) => { lottieStatCache[src] = json; if (!cancelled) load(json); })
+      .catch(() => {});
+
+    return () => { cancelled = true; el.innerHTML = ""; };
+  }, [src]);
+
+  return <div ref={containerRef} style={{ width: size, height: size, display: "inline-flex" }} />;
+}
+
 const iconMap: Record<string, React.ReactNode> = {
-  users: <LoopingIcon icon={UsersIcon} size={20} interval={4000} />,
-  "map-pin": <LoopingIcon icon={MapPinIcon} size={20} interval={3000} delay={200} />,
-  "bar-chart": <LoopingIcon icon={ChartBarIcon} size={20} interval={3500} delay={500} />,
-  "trending-up": <AnimatedLucideIcon icon={TrendingUp} size={20} animation="flicker" />,
+  users: <StatLottieIcon src="/lottie/teamwork.json" />,
+  "map-pin": <StatLottieIcon src="/lottie/location.json" />,
+  "bar-chart": <StatLottieIcon src="/lottie/analytics.json" />,
+  "trending-up": <StatLottieIcon src="/lottie/growth.json" />,
 };
 
 // ─── Stat Card: bouncy whole card, count-up numbers, expandable on hover ───
@@ -87,7 +133,7 @@ function FloatingStatCard({
             animate={{ rotate: isExpanded ? [0, -10, 10, 0] : 0 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
           >
-            {iconMap[icon] ?? <LoopingIcon icon={ChartBarIcon} size={20} interval={3500} />}
+            {iconMap[icon] ?? <StatLottieIcon src="/lottie/analytics.json" />}
           </motion.div>
           <div>
             <p className="text-lg font-bold text-amber-400 sm:text-xl">

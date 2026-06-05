@@ -1,27 +1,41 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence, useInView } from "motion/react";
-import { Tv, Monitor } from "lucide-react";
+import lottieWeb from "lottie-web";
 import { useCountUp } from "@/hooks/useCountUp";
 import {
   ScrollReveal,
   ScrollRevealText,
 } from "@/components/motion/ScrollReveal";
-import { AnimatedLucideIcon } from "@/components/AnimatedLucideIcon";
-import { LoopingIcon } from "@/components/LoopingIcon";
-import TargetIcon from "@/components/ui/target-icon";
-import ChartBarIcon from "@/components/ui/chart-bar-icon";
-import UsersIcon from "@/components/ui/users-icon";
-import MagnifierIcon from "@/components/ui/magnifier-icon";
 import ArrowNarrowRightIcon from "@/components/ui/arrow-narrow-right-icon";
 import type { ServicesData, ServiceItem } from "@/types";
 
+// ─── Lottie icon for service tabs ───
+const svcLottieCache: Record<string, object> = {};
+
+function SvcLottieIcon({ src, size = 22 }: { src: string; size?: number }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const load = (data: object) => {
+      el.innerHTML = "";
+      lottieWeb.loadAnimation({ container: el, renderer: "svg", loop: true, autoplay: true, animationData: data });
+    };
+    if (svcLottieCache[src]) { load(svcLottieCache[src]); return; }
+    let cancelled = false;
+    fetch(src).then(r => r.json()).then(json => { svcLottieCache[src] = json; if (!cancelled) load(json); }).catch(() => {});
+    return () => { cancelled = true; el.innerHTML = ""; };
+  }, [src]);
+  return <div ref={containerRef} style={{ width: size, height: size, display: "inline-flex" }} />;
+}
+
 const iconMap: Record<string, React.ReactNode> = {
-  target: <LoopingIcon icon={TargetIcon} size={20} interval={4000} />,
-  "bar-chart": <LoopingIcon icon={ChartBarIcon} size={20} interval={3500} delay={500} />,
-  users: <LoopingIcon icon={UsersIcon} size={20} interval={4500} delay={300} />,
-  tv: <AnimatedLucideIcon icon={Tv} size={20} animation="flicker" />,
-  search: <LoopingIcon icon={MagnifierIcon} size={20} interval={3000} delay={800} />,
-  monitor: <AnimatedLucideIcon icon={Monitor} size={20} animation="scan" />,
+  target: <SvcLottieIcon src="/lottie/target.json" size={32} />,
+  "bar-chart": <SvcLottieIcon src="/lottie/analysis.json" size={32} />,
+  users: <SvcLottieIcon src="/lottie/community.json" size={32} />,
+  tv: <SvcLottieIcon src="/lottie/tv.json" size={32} />,
+  search: <SvcLottieIcon src="/lottie/search.json" size={32} />,
+  monitor: <SvcLottieIcon src="/lottie/watcher.json" size={32} />,
 };
 
 // ─── Animated Counter ───
@@ -88,7 +102,7 @@ function ServiceTab({
             color: isActive ? "white" : "rgb(107 114 128)",
           }}
         >
-          {iconMap[service.icon] ?? <LoopingIcon icon={TargetIcon} size={20} interval={4000} />}
+          {iconMap[service.icon] ?? <SvcLottieIcon src="/lottie/target.json" size={32} />}
         </div>
         <span
           className="relative text-base font-semibold transition-colors duration-500"
@@ -251,7 +265,7 @@ export function ServicesSection({ data }: { data: ServicesData }) {
       <div className="relative mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8 xl:px-12">
         {/* Main content grid — title lives inside left column so image spans full height */}
         <div
-          className="grid gap-6 sm:gap-8 lg:grid-cols-[280px_1.2fr_1fr] lg:items-stretch lg:gap-8 xl:grid-cols-[320px_1.2fr_1fr] xl:gap-10"
+          className="grid gap-6 sm:gap-8 lg:grid-cols-[280px_1fr_1fr] lg:items-stretch lg:gap-8 xl:grid-cols-[320px_1fr_1fr] xl:gap-10"
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => setIsHovering(false)}
         >
@@ -269,7 +283,7 @@ export function ServicesSection({ data }: { data: ServicesData }) {
                 {data.subtitle}
               </p>
             </ScrollReveal>
-            <div className="scrollbar-hide -mx-4 mt-5 flex flex-row gap-2 overflow-x-auto px-4 pb-2 sm:-mx-0 sm:mt-6 sm:px-0 lg:flex-1 lg:flex-col lg:justify-between lg:gap-0 lg:overflow-visible lg:pb-0">
+            <div className="scrollbar-hide -mx-4 mt-5 flex flex-row gap-2 overflow-x-auto px-4 pb-2 sm:-mx-0 sm:mt-6 sm:px-0 lg:flex-col lg:gap-1 lg:overflow-visible lg:pb-0">
               {data.services.map((service, i) => (
                 <ServiceTab
                   key={service.id}
@@ -283,7 +297,7 @@ export function ServicesSection({ data }: { data: ServicesData }) {
           </div>
 
           {/* Center: Image */}
-          <ScrollReveal delay={0.2} className="relative">
+          <ScrollReveal delay={0.2} className="relative h-full">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeService.id}
@@ -291,7 +305,7 @@ export function ServicesSection({ data }: { data: ServicesData }) {
                 animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
                 exit={{ opacity: 0, scale: 0.96, filter: "blur(6px)" }}
                 transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                className="relative h-[280px] overflow-hidden rounded-2xl bg-gray-100 sm:h-[360px] lg:h-full"
+                className="relative h-[280px] overflow-hidden rounded-2xl bg-gray-100 sm:h-[360px] lg:h-full lg:max-h-[500px]"
               >
                 <img
                   src={activeService.image}

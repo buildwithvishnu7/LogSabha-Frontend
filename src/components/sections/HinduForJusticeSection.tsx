@@ -1,40 +1,62 @@
 import { useRef, useState, useEffect, useMemo } from "react";
 import { motion, useInView } from "motion/react";
-import {
-  Scale,
-  Landmark,
-  Heart,
-  Shield,
-  ArrowRight,
-} from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import lottieWeb from "lottie-web";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
+
+// ─── Lottie icon for HFJ pillars ───
+const hfjLottieCache: Record<string, object> = {};
+
+function HfjLottieIcon({ src, size = 22 }: { src: string; size?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const load = (data: object) => {
+      el.innerHTML = "";
+      const anim = lottieWeb.loadAnimation({ container: el, renderer: "svg", loop: true, autoplay: true, animationData: data });
+      const recolor = () => {
+        el.querySelectorAll("path,circle,rect,line,ellipse,polyline,polygon").forEach(p => {
+          const s = p.getAttribute("stroke"); if (s && s !== "none" && s !== "transparent") p.setAttribute("stroke", "#f97316");
+        });
+      };
+      anim.addEventListener("DOMLoaded", recolor);
+      anim.addEventListener("enterFrame", recolor);
+    };
+    if (hfjLottieCache[src]) { load(hfjLottieCache[src]); return; }
+    let cancelled = false;
+    fetch(src).then(r => r.json()).then(json => { hfjLottieCache[src] = json; if (!cancelled) load(json); }).catch(() => {});
+    return () => { cancelled = true; el.innerHTML = ""; };
+  }, [src]);
+  return <div ref={ref} style={{ width: size, height: size, display: "inline-flex" }} />;
+}
 
 // ─── Data ───
 
 const PILLARS = [
   {
-    icon: Scale,
+    lottieSrc: "/lottie/justice.json",
     title: "Justice & Equality",
     description:
       "Advocating for equitable treatment and constitutional rights for all communities within the democratic framework.",
     color: "#f97316",
   },
   {
-    icon: Landmark,
+    lottieSrc: "/lottie/museum.json",
     title: "Cultural Preservation",
     description:
       "Preserving India's rich cultural heritage and promoting awareness of historical traditions and values.",
     color: "#f97316",
   },
   {
-    icon: Heart,
+    lottieSrc: "/lottie/heart.json",
     title: "Social Welfare",
     description:
       "Community-driven welfare programs focusing on education, healthcare, and economic empowerment.",
     color: "#f97316",
   },
   {
-    icon: Shield,
+    lottieSrc: "/lottie/shield.json",
     title: "Legal Advocacy",
     description:
       "Providing legal support and advocacy for issues affecting community rights and social justice.",
@@ -117,8 +139,6 @@ function PillarCard({
   index: number;
   triggered: boolean;
 }) {
-  const Icon = pillar.icon;
-
   return (
     <motion.div
       className="group relative flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white/90 p-5 shadow-sm backdrop-blur-sm transition-all duration-300 hover:border-amber-300 hover:shadow-lg sm:p-6"
@@ -193,7 +213,7 @@ function PillarCard({
           ease: "easeInOut",
         }}
       >
-        <Icon className="h-5 w-5" />
+        <HfjLottieIcon src={pillar.lottieSrc} size={24} />
       </motion.div>
 
       {/* Title */}

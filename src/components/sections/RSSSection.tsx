@@ -2,11 +2,37 @@ import { useRef, useEffect, useState, useMemo } from "react";
 import { motion, useInView } from "motion/react";
 import { Users, BookOpen, Heart, ArrowRight, Play, Pause } from "lucide-react";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
-import { LoopingIcon } from "@/components/LoopingIcon";
-import UsersIcon from "@/components/ui/users-icon";
-import BookIcon from "@/components/ui/book-icon";
-import HeartIcon from "@/components/ui/heart-icon";
-import type { AnimatedIconHandle, AnimatedIconProps } from "@/components/ui/types";
+import lottieWeb from "lottie-web";
+
+// ─── Lottie icon for RSS pillars ───
+const rssLottieCache: Record<string, object> = {};
+
+function RssLottieIcon({ src, size = 22, color = "#f97316" }: { src: string; size?: number; color?: string }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const colorRef = useRef(color);
+  colorRef.current = color;
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const load = (data: object) => {
+      el.innerHTML = "";
+      const anim = lottieWeb.loadAnimation({ container: el, renderer: "svg", loop: true, autoplay: true, animationData: data });
+      const recolor = () => {
+        const c = colorRef.current;
+        el.querySelectorAll("path,circle,rect,line,ellipse,polyline,polygon").forEach(p => {
+          const s = p.getAttribute("stroke"); if (s && s !== "none" && s !== "transparent") p.setAttribute("stroke", c);
+        });
+      };
+      anim.addEventListener("DOMLoaded", recolor);
+      anim.addEventListener("enterFrame", recolor);
+    };
+    if (rssLottieCache[src]) { load(rssLottieCache[src]); return; }
+    let cancelled = false;
+    fetch(src).then(r => r.json()).then(json => { rssLottieCache[src] = json; if (!cancelled) load(json); }).catch(() => {});
+    return () => { cancelled = true; el.innerHTML = ""; };
+  }, [src]);
+  return <div ref={containerRef} style={{ width: size, height: size, display: "inline-flex" }} />;
+}
 
 // ─── Ticker Data ───
 
@@ -127,30 +153,27 @@ function TypewriterText({
 const PILLARS = [
   {
     icon: Users,
-    animatedIcon: UsersIcon,
+    lottieSrc: "/lottie/community.json",
     label: "स्वयंसेवक",
     color: "#f97316",
     bgColor: "bg-orange-50",
     borderColor: "border-orange-200",
-    loopInterval: 4000,
   },
   {
     icon: BookOpen,
-    animatedIcon: BookIcon,
+    lottieSrc: "/lottie/open-book.json",
     label: "विचारधारा",
     color: "#22c55e",
     bgColor: "bg-green-50",
     borderColor: "border-green-200",
-    loopInterval: 4500,
   },
   {
     icon: Heart,
-    animatedIcon: HeartIcon,
+    lottieSrc: "/lottie/heart.json",
     label: "सेवा भाव",
     color: "#8b5cf6",
     bgColor: "bg-purple-50",
     borderColor: "border-purple-200",
-    loopInterval: 3000,
   },
 ];
 
@@ -236,12 +259,10 @@ function PillarCard({
           ease: "easeInOut",
         }}
       >
-        <LoopingIcon
-          icon={pillar.animatedIcon}
-          size={20}
+        <RssLottieIcon
+          src={pillar.lottieSrc}
+          size={24}
           color={pillar.color}
-          interval={pillar.loopInterval}
-          delay={300 + index * 500}
         />
       </motion.div>
       <span className="text-xs font-semibold text-gray-700 sm:text-sm">

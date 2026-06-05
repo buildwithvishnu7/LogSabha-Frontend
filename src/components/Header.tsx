@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, forwardRef, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { Menu, X } from "lucide-react";
-import { AnimatedGlobeIcon, AnimatedUserIcon } from "./AnimatedIcons";
+// AnimatedIcons no longer needed — using Flaticon Lottie for all header icons
 import lottie from "lottie-web";
 
 // ─── Lottie icon via lottie-web directly ───
@@ -27,6 +27,9 @@ function LottieIcon({ src, size = 24, color = "", className = "" }: { src: strin
         if (stroke && stroke !== "none" && stroke !== "transparent") p.setAttribute("stroke", c);
         const fill = p.getAttribute("fill");
         if (fill && fill !== "none" && fill !== "transparent") p.setAttribute("fill", c);
+        // Boost stroke width for better visibility at small sizes
+        const sw = parseFloat(p.getAttribute("stroke-width") || "0");
+        if (sw > 0 && sw < 22) p.setAttribute("stroke-width", "22");
       });
     };
 
@@ -369,11 +372,11 @@ export function Header() {
               {searchOpen ? (
                 <motion.div
                   key="search-bar"
-                  initial={{ width: 36, opacity: 0.5 }}
-                  animate={{ width: 180, opacity: 1 }}
-                  exit={{ width: 36, opacity: 0.5 }}
+                  initial={{ width: 40, opacity: 0.5, borderRadius: 9999 }}
+                  animate={{ width: 200, opacity: 1, borderRadius: 9999 }}
+                  exit={{ width: 40, opacity: 0, borderRadius: 9999 }}
                   transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                  className="relative flex items-center gap-2 overflow-visible rounded-full border border-amber-500/40 bg-gray-100 px-3 py-1.5 sm:py-2"
+                  className="relative flex h-10 items-center gap-2 overflow-hidden rounded-full border border-amber-500/40 bg-gray-100 px-3"
                 >
                   {/* Breathing pulse rings on expanded bar */}
                   <motion.span
@@ -387,12 +390,7 @@ export function Header() {
                     animate={{ scale: [1, 1.02, 1], opacity: [1, 0.3, 1] }}
                     transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
                   />
-                  <motion.div
-                    animate={{ rotate: [0, 15, -15, 0] }}
-                    transition={{ duration: 0.4 }}
-                  >
-                    <LottieIcon src="/lottie/search.json" size={22} color="#f59e0b" className="flex-shrink-0" />
-                  </motion.div>
+                  <LottieIcon src="/lottie/search (1).json" size={24} color="#f59e0b" className="flex-shrink-0" />
                   <TypewriterInput
                     ref={searchInputRef}
                     onKeyDown={(e: React.KeyboardEvent) => {
@@ -400,9 +398,9 @@ export function Header() {
                     }}
                   />
                   <motion.button
-                    initial={{ opacity: 0, rotate: -90 }}
-                    animate={{ opacity: 1, rotate: 0 }}
-                    transition={{ delay: 0.2 }}
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.15 }}
                     onClick={() => setSearchOpen(false)}
                     className="flex-shrink-0 text-gray-400 hover:text-gray-700"
                   >
@@ -448,7 +446,7 @@ export function Header() {
                     animate={{ scale: [1, 1.12, 1], opacity: [1, 0.3, 1] }}
                     transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
                   />
-                  <LottieIcon src="/lottie/search.json" size={24} color={scrolled ? "#6b7280" : "#ffffff"} />
+                  <LottieIcon src="/lottie/search (1).json" size={28} color={scrolled ? "#6b7280" : "#ffffff"} />
                 </motion.button>
               )}
             </AnimatePresence>
@@ -496,7 +494,7 @@ export function Header() {
               animate={{ rotate: 360 }}
               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
             >
-              <AnimatedGlobeIcon size={16} />
+              <LottieIcon src="/lottie/worldwide.json" size={24} color={scrolled ? "#6b7280" : "#ffffff"} />
             </motion.div>
             <span>EN</span>
             <motion.svg
@@ -562,7 +560,7 @@ export function Header() {
                   style={{ transformOrigin: "center" }}
                 />
               </svg>
-              <AnimatedUserIcon size={18} />
+              <LottieIcon src="/lottie/add-user.json" size={28} color={scrolled ? "#6b7280" : "#ffffff"} />
             </motion.button>
 
             <AnimatePresence>
@@ -579,7 +577,7 @@ export function Header() {
                     className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-left text-sm text-gray-600 transition-colors hover:text-gray-900"
                   >
                     <motion.div whileHover={{ rotate: 15 }}>
-                      <AnimatedUserIcon size={16} className="text-amber-500" />
+                      <LottieIcon src="/lottie/add-user.json" size={24} color="#f59e0b" />
                     </motion.div>
                     Login
                   </motion.button>
@@ -679,7 +677,7 @@ export function Header() {
               </div>
 
               <div className="mt-4 flex items-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-4 py-2.5 md:hidden">
-                <LottieIcon src="/lottie/search.json" size={20} color="#9ca3af" />
+                <LottieIcon src="/lottie/search (1).json" size={24} color="#9ca3af" />
                 <input
                   type="text"
                   placeholder="Search elections..."
@@ -691,7 +689,7 @@ export function Header() {
                 className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-full border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-600 lg:hidden"
                 whileTap={{ scale: 0.97 }}
               >
-                <AnimatedGlobeIcon size={16} />
+                <LottieIcon src="/lottie/worldwide.json" size={24} color={scrolled ? "#6b7280" : "#ffffff"} />
                 <span>EN</span>
               </motion.button>
 

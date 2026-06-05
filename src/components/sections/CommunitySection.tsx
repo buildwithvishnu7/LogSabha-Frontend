@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, type RefObject } from "react";
+import lottieWeb from "lottie-web";
 import { motion, useInView } from "motion/react";
 import {
   Users,
@@ -21,6 +22,32 @@ import {
 import { LoopingIcon } from "@/components/LoopingIcon";
 import UsersIcon from "@/components/ui/users-icon";
 import MessageCircleIcon from "@/components/ui/message-circle-icon";
+
+// ─── Badge Lottie Icon ───
+function BadgeLottie({ src, size = 16 }: { src: string; size?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    let cancelled = false;
+    fetch(src).then(r => r.json()).then(json => {
+      if (cancelled) return;
+      el.innerHTML = "";
+      const anim = lottieWeb.loadAnimation({ container: el, renderer: "svg", loop: true, autoplay: true, animationData: json });
+      const recolor = () => {
+        el.querySelectorAll("path,circle,rect,line,ellipse,polyline,polygon").forEach(p => {
+          const s = p.getAttribute("stroke"); if (s && s !== "none" && s !== "transparent") p.setAttribute("stroke", "#d97706");
+          const f = p.getAttribute("fill"); if (f && f !== "none" && f !== "transparent") p.setAttribute("fill", "#d97706");
+          const sw = parseFloat(p.getAttribute("stroke-width") || "0"); if (sw > 0 && sw < 22) p.setAttribute("stroke-width", "22");
+        });
+      };
+      anim.addEventListener("DOMLoaded", recolor);
+      anim.addEventListener("enterFrame", recolor);
+    }).catch(() => {});
+    return () => { cancelled = true; el.innerHTML = ""; };
+  }, [src]);
+  return <div ref={ref} style={{ width: size, height: size, display: "inline-flex" }} />;
+}
 
 // ─── Static Data ───
 
@@ -396,7 +423,7 @@ function PostCard({ post }: { post: Post }) {
         <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-3">
           <div className="flex items-center gap-3">
             <button className="flex items-center gap-1 text-[11px] text-gray-400 transition-colors hover:text-amber-500">
-              <ThumbsUp className="h-3.5 w-3.5" />
+              <BadgeLottie src="/lottie/like.json" size={16} />
               {post.likes}
             </button>
             <button className="flex items-center gap-1 text-[11px] text-gray-400 transition-colors hover:text-amber-500">
@@ -551,12 +578,7 @@ function TrendingTopicCard({
             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/20 text-[10px] font-bold text-white">
               #{topic.rank}
             </span>
-            <motion.span
-              animate={{ scale: [1, 1.2, 1] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <Flame className="h-4 w-4 text-amber-400" />
-            </motion.span>
+            <BadgeLottie src="/lottie/fire.json" size={20} />
           </div>
           <span className="flex items-center gap-0.5 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold text-emerald-400">
             <TrendingUp className="h-3 w-3" />
@@ -605,7 +627,7 @@ export function CommunitySection() {
         <div className="flex flex-col items-center text-center">
           <ScrollReveal>
             <span className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-1.5 text-[11px] font-semibold tracking-wider text-amber-600 uppercase">
-              <LoopingIcon icon={UsersIcon} size={14} interval={4500} />
+              <BadgeLottie src="/lottie/community.json" size={18} />
               Community Forum
             </span>
           </ScrollReveal>
