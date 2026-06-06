@@ -262,13 +262,13 @@ function MonumentBorder() {
         <img
           src="/images/monuments.png"
           alt=""
-          className="h-14 w-1/2 object-cover sm:h-18 lg:h-20"
+          className="h-20 w-1/2 object-contain object-bottom sm:h-24 lg:h-28"
           aria-hidden="true"
         />
         <img
           src="/images/monuments.png"
           alt=""
-          className="h-14 w-1/2 object-cover sm:h-18 lg:h-20"
+          className="h-20 w-1/2 object-contain object-bottom sm:h-24 lg:h-28"
           aria-hidden="true"
         />
       </motion.div>

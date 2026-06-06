@@ -24,7 +24,7 @@ import UsersIcon from "@/components/ui/users-icon";
 import MessageCircleIcon from "@/components/ui/message-circle-icon";
 
 // ─── Badge Lottie Icon ───
-function BadgeLottie({ src, size = 16 }: { src: string; size?: number }) {
+function BadgeLottie({ src, size = 16, color = "#d97706", bold = false }: { src: string; size?: number; color?: string | null; bold?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const el = ref.current;
@@ -34,18 +34,24 @@ function BadgeLottie({ src, size = 16 }: { src: string; size?: number }) {
       if (cancelled) return;
       el.innerHTML = "";
       const anim = lottieWeb.loadAnimation({ container: el, renderer: "svg", loop: true, autoplay: true, animationData: json });
-      const recolor = () => {
-        el.querySelectorAll("path,circle,rect,line,ellipse,polyline,polygon").forEach(p => {
-          const s = p.getAttribute("stroke"); if (s && s !== "none" && s !== "transparent") p.setAttribute("stroke", "#d97706");
-          const f = p.getAttribute("fill"); if (f && f !== "none" && f !== "transparent") p.setAttribute("fill", "#d97706");
-          const sw = parseFloat(p.getAttribute("stroke-width") || "0"); if (sw > 0 && sw < 22) p.setAttribute("stroke-width", "22");
-        });
-      };
-      anim.addEventListener("DOMLoaded", recolor);
-      anim.addEventListener("enterFrame", recolor);
+      if (color || bold) {
+        const restyle = () => {
+          el.querySelectorAll("path,circle,rect,line,ellipse,polyline,polygon").forEach(p => {
+            if (color) {
+              const s = p.getAttribute("stroke"); if (s && s !== "none" && s !== "transparent") p.setAttribute("stroke", color);
+              const f = p.getAttribute("fill"); if (f && f !== "none" && f !== "transparent") p.setAttribute("fill", color);
+            }
+            const sw = parseFloat(p.getAttribute("stroke-width") || "0");
+            if (bold && sw > 0) p.setAttribute("stroke-width", String(Math.max(sw, 30)));
+            else if (color && sw > 0 && sw < 22) p.setAttribute("stroke-width", "22");
+          });
+        };
+        anim.addEventListener("DOMLoaded", restyle);
+        anim.addEventListener("enterFrame", restyle);
+      }
     }).catch(() => {});
     return () => { cancelled = true; el.innerHTML = ""; };
-  }, [src]);
+  }, [src, color, bold]);
   return <div ref={ref} style={{ width: size, height: size, display: "inline-flex" }} />;
 }
 
@@ -423,11 +429,11 @@ function PostCard({ post }: { post: Post }) {
         <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-3">
           <div className="flex items-center gap-3">
             <button className="flex items-center gap-1 text-[11px] text-gray-400 transition-colors hover:text-amber-500">
-              <BadgeLottie src="/lottie/like.json" size={16} />
+              <BadgeLottie src="/lottie/like.json" size={18} color="#9ca3af" bold />
               {post.likes}
             </button>
             <button className="flex items-center gap-1 text-[11px] text-gray-400 transition-colors hover:text-amber-500">
-              <MessageCircle className="h-3.5 w-3.5" />
+              <MessageCircle className="h-[18px] w-[18px]" />
               {post.comments}
             </button>
           </div>

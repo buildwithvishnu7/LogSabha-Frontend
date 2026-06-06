@@ -85,9 +85,9 @@ import { useGlobalData } from "@/hooks/useGlobalData";
 // ─── Typewriter placeholder search input ───
 const PLACEHOLDER_PHRASES = [
   "Search elections...",
-  "Search candidates...",
+  "Search candida.....",
   "Search parties...",
-  "Search constituencies...",
+  "Search constituenc.....",
   "Search policies...",
 ];
 

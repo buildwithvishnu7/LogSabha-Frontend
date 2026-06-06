@@ -12,20 +12,21 @@ import { ScrollReveal } from "@/components/motion/ScrollReveal";
 
 const PARTY_SEATS = [
   { party: "BJP", seats: 240, color: "#f97316" },
-  { party: "INC", seats: 99, color: "#22c55e" },
-  { party: "TMC", seats: 23, color: "#06b6d4" },
+  { party: "INC", seats: 90, color: "#22c55e" },
+  { party: "SP", seats: 37, color: "#ef4444" },
+  { party: "TMC", seats: 29, color: "#06b6d4" },
   { party: "DMK", seats: 22, color: "#ec4899" },
-  { party: "Others", seats: 159, color: "#6b7280" },
+  { party: "Others", seats: 125, color: "#6b7280" },
 ];
 const TOTAL_SEATS = 543;
 
 const STATE_BAR_DATA = [
-  { state: "UP", bjp: 62, inc: 6, others: 12 },
-  { state: "MH", bjp: 23, inc: 13, others: 12 },
+  { state: "UP", bjp: 33, inc: 6, others: 41 },
+  { state: "MH", bjp: 9, inc: 13, others: 26 },
   { state: "WB", bjp: 12, inc: 1, others: 29 },
-  { state: "TN", bjp: 0, inc: 9, others: 30 },
+  { state: "Bihar", bjp: 12, inc: 3, others: 25 },
+  { state: "TN", bjp: 0, inc: 0, others: 39 },
   { state: "KA", bjp: 17, inc: 9, others: 2 },
-  { state: "RJ", bjp: 14, inc: 8, others: 3 },
 ];
 
 const HISTORICAL_DATA = [
@@ -33,7 +34,7 @@ const HISTORICAL_DATA = [
   { year: 2009, bjp: 116, inc: 206 },
   { year: 2014, bjp: 282, inc: 44 },
   { year: 2019, bjp: 303, inc: 52 },
-  { year: 2024, bjp: 240, inc: 99 },
+  { year: 2024, bjp: 240, inc: 90 },
 ];
 
 const BOTTOM_STATS = [
@@ -84,7 +85,7 @@ const BAR = {
   mr: 10,
   mt: 10,
   mb: 40,
-  yMax: 70,
+  yMax: 50,
   barW: 11,
   barGap: 3,
 };
@@ -524,7 +525,7 @@ function GroupedBarChart({ triggered }: { triggered: boolean }) {
   const groupW = BAR_CW / STATE_BAR_DATA.length;
   const clusterW = BAR.barW * 3 + BAR.barGap * 2;
   const pad = (groupW - clusterW) / 2;
-  const gridVals = [0, 20, 40, 60];
+  const gridVals = [0, 10, 20, 30, 40];
 
   const toY = (v: number) => BAR.mt + BAR_CH - (v / BAR.yMax) * BAR_CH;
   const bottom = BAR.mt + BAR_CH;
