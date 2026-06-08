@@ -131,6 +131,18 @@ function MainVideoPlayer() {
         </span>
       </div>
 
+      {/* LIVE NOW badge — visible on mobile only (overlaid on video) */}
+      <motion.div
+        className="pointer-events-none absolute top-3 right-3 z-10 flex items-center gap-1.5 rounded-full border border-red-300/50 bg-red-50/90 px-3 py-1.5 shadow-sm backdrop-blur-sm sm:hidden"
+        animate={{ boxShadow: ["0 0 0 0 rgba(239,68,68,0)", "0 0 0 6px rgba(239,68,68,0)"] }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <LiveDot />
+        <span className="text-[10px] font-bold tracking-wider text-red-600 uppercase">
+          Live Now
+        </span>
+      </motion.div>
+
       {/* Title overlay */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 p-5 sm:p-6">
         <h3 className="text-lg font-bold text-white sm:text-xl lg:text-2xl">
@@ -250,7 +262,7 @@ export function LiveCoverageSection() {
         <div className="flex items-start justify-between">
           <div>
             <ScrollReveal>
-              <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl lg:text-5xl">
+              <h2 className="text-2xl font-extrabold text-gray-900 sm:text-3xl md:text-4xl lg:text-5xl">
                 Live{" "}
                 <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 bg-clip-text text-transparent">
                   Political Coverage
@@ -259,14 +271,14 @@ export function LiveCoverageSection() {
             </ScrollReveal>
 
             <ScrollReveal delay={0.15}>
-              <p className="mt-1.5 text-sm leading-relaxed text-gray-500 sm:text-base">
+              <p className="mt-1.5 text-xs leading-relaxed text-gray-500 sm:text-sm md:text-base">
                 Watch live sessions and recent parliamentary speeches
               </p>
             </ScrollReveal>
           </div>
 
-          {/* LIVE NOW badge */}
-          <ScrollReveal delay={0.2}>
+          {/* LIVE NOW badge — hidden on mobile, shown in video overlay instead */}
+          <ScrollReveal delay={0.2} className="hidden sm:block">
             <motion.div
               className="flex items-center gap-2 rounded-full border border-red-200 bg-red-50 px-4 py-2 shadow-sm"
               animate={{ boxShadow: ["0 0 0 0 rgba(239,68,68,0)", "0 0 0 8px rgba(239,68,68,0)"] }}
@@ -315,9 +327,11 @@ export function LiveCoverageSection() {
             </div>
           </ScrollReveal>
 
-          <div className="mt-4 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="scrollbar-hide -mx-4 mt-4 flex gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-4">
             {RECENT_SPEECHES.map((speech, i) => (
-              <SpeechCard key={speech.id} speech={speech} index={i} />
+              <div key={speech.id} className="w-[240px] flex-shrink-0 sm:w-auto">
+                <SpeechCard speech={speech} index={i} />
+              </div>
             ))}
           </div>
         </div>

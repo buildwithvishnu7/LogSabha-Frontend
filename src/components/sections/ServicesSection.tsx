@@ -83,7 +83,7 @@ function ServiceTab({
     <ScrollReveal delay={0.1 + index * 0.06} direction="left">
       <motion.button
         onClick={onClick}
-        className="relative flex w-full items-center gap-3 whitespace-nowrap rounded-xl px-4 py-2.5 text-left sm:gap-4 sm:px-5 sm:py-3"
+        className="relative flex w-full items-center gap-3 whitespace-nowrap rounded-xl px-3 py-2 text-left sm:gap-4 sm:px-5 sm:py-3"
         whileHover={{ x: isActive ? 0 : 4 }}
         whileTap={{ scale: 0.98 }}
         transition={{ duration: 0.2 }}
@@ -96,7 +96,7 @@ function ServiceTab({
           />
         )}
         <div
-          className="relative flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl transition-colors duration-500"
+          className="relative flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl transition-colors duration-500 sm:h-11 sm:w-11"
           style={{
             backgroundColor: isActive ? "rgb(245 158 11)" : "rgb(243 244 246)",
             color: isActive ? "white" : "rgb(107 114 128)",
@@ -105,7 +105,7 @@ function ServiceTab({
           {iconMap[service.icon] ?? <SvcLottieIcon src="/lottie/target.json" size={32} />}
         </div>
         <span
-          className="relative text-base font-semibold transition-colors duration-500"
+          className="relative text-sm font-semibold transition-colors duration-500 sm:text-base"
           style={{ color: isActive ? "rgb(17 24 39)" : "rgb(75 85 99)" }}
         >
           {service.title}
@@ -263,9 +263,115 @@ export function ServicesSection({ data }: { data: ServicesData }) {
       </div>
 
       <div className="relative mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8 xl:px-12">
-        {/* Main content grid — title lives inside left column so image spans full height */}
+        {/* ── Title + Subtitle (mobile: above everything) ── */}
+        <div className="lg:hidden">
+          <ScrollRevealText
+            text={data.title}
+            highlight={data.titleHighlight}
+            className="text-2xl font-extrabold text-gray-900 sm:text-3xl"
+            highlightClassName="bg-gradient-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent"
+            delay={0}
+          />
+          <ScrollReveal delay={0.3}>
+            <p className="mt-2 text-sm leading-relaxed text-gray-500 sm:text-base">
+              {data.subtitle}
+            </p>
+          </ScrollReveal>
+        </div>
+
+        {/* ── Mobile layout: vertical tabs with inline content ── */}
         <div
-          className="grid gap-6 sm:gap-8 lg:grid-cols-[280px_1fr_1fr] lg:items-stretch lg:gap-8 xl:grid-cols-[320px_1fr_1fr] xl:gap-10"
+          className="mt-5 flex flex-col gap-1 lg:hidden"
+          onMouseEnter={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
+        >
+          {data.services.map((service, i) => (
+            <div key={service.id}>
+              <ServiceTab
+                service={service}
+                isActive={i === activeIndex}
+                onClick={() => handleTabClick(i)}
+                index={i}
+              />
+
+              {/* Expanded content — shows below the active tab */}
+              <AnimatePresence mode="wait">
+                {i === activeIndex && (
+                  <motion.div
+                    key={`content-${service.id}`}
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                    className="overflow-hidden"
+                  >
+                    <div className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm sm:p-5">
+                      {/* Image */}
+                      <div className="relative h-[200px] overflow-hidden rounded-xl bg-gray-100 sm:h-[260px]">
+                        <img
+                          src={activeService.image}
+                          alt={activeService.title}
+                          className="h-full w-full object-cover"
+                          onError={(e) => {
+                            e.currentTarget.style.display = "none";
+                          }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                      </div>
+
+                      {/* Description */}
+                      <p className="mt-3 text-sm leading-relaxed text-gray-600 sm:text-base">
+                        {activeService.description}
+                      </p>
+
+                      {/* Stats */}
+                      <div className="mt-3 flex gap-6 sm:gap-10">
+                        {activeService.stats.map((stat) => (
+                          <AnimatedStat
+                            key={stat.label}
+                            value={stat.value}
+                            suffix={stat.suffix}
+                            label={stat.label}
+                          />
+                        ))}
+                      </div>
+
+                      {/* Bullet points */}
+                      <ul className="mt-4 space-y-2">
+                        {activeService.bulletPoints.map((point, j) => (
+                          <motion.li
+                            key={point}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.2 + j * 0.1, duration: 0.4 }}
+                            className="flex items-center gap-2.5 text-sm text-gray-700"
+                          >
+                            <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-amber-500" />
+                            {point}
+                          </motion.li>
+                        ))}
+                      </ul>
+
+                      {/* Learn more */}
+                      <motion.a
+                        href={activeService.learnMoreLink}
+                        className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-amber-600 hover:text-amber-700"
+                        whileHover={{ x: 4 }}
+                      >
+                        Learn more
+                        <ArrowNarrowRightIcon size={14} />
+                      </motion.a>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ))}
+        </div>
+
+        {/* ── Desktop layout: 3-column grid (unchanged) ── */}
+        <div
+          className="hidden gap-8 lg:grid lg:grid-cols-[280px_1fr_1fr] lg:items-stretch xl:grid-cols-[320px_1fr_1fr] xl:gap-10"
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => setIsHovering(false)}
         >
@@ -283,7 +389,7 @@ export function ServicesSection({ data }: { data: ServicesData }) {
                 {data.subtitle}
               </p>
             </ScrollReveal>
-            <div className="scrollbar-hide -mx-4 mt-5 flex flex-row gap-2 overflow-x-auto px-4 pb-2 sm:-mx-0 sm:mt-6 sm:px-0 lg:flex-col lg:gap-1 lg:overflow-visible lg:pb-0">
+            <div className="mt-6 flex flex-col gap-1">
               {data.services.map((service, i) => (
                 <ServiceTab
                   key={service.id}
@@ -305,7 +411,7 @@ export function ServicesSection({ data }: { data: ServicesData }) {
                 animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
                 exit={{ opacity: 0, scale: 0.96, filter: "blur(6px)" }}
                 transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                className="relative h-[280px] overflow-hidden rounded-2xl bg-gray-100 sm:h-[360px] lg:h-full lg:max-h-[500px]"
+                className="relative min-h-[360px] overflow-hidden rounded-2xl bg-gray-100 lg:h-full lg:max-h-[500px]"
               >
                 <img
                   src={activeService.image}

@@ -26,6 +26,7 @@ function SideBadge({
   alwaysExpanded: boolean;
 }) {
   const [hoverExpanded, setHoverExpanded] = useState(false);
+  const isMobile = useIsMobile();
   const expanded = alwaysExpanded || hoverExpanded;
 
   return (
@@ -65,13 +66,13 @@ function SideBadge({
       <motion.div
         className="overflow-hidden border-y border-r border-amber-500/40 bg-[#1a1a2e]/90 shadow-xl backdrop-blur-sm"
         animate={{
-          height: expanded ? badge.expandedHeight : 60,
+          height: expanded ? badge.expandedHeight : (isMobile ? 44 : 60),
           borderTopRightRadius: expanded ? 14 : 26,
           borderBottomRightRadius: expanded ? 14 : 26,
         }}
         transition={{ duration: 0.45, ease: [0.25, 1, 0.5, 1] }}
         style={{
-          width: alwaysExpanded ? 52 : 62,
+          width: isMobile ? 46 : (alwaysExpanded ? 52 : 62),
           borderTopLeftRadius: 0,
           borderBottomLeftRadius: 0,
           display: "flex",
@@ -104,7 +105,7 @@ function SideBadge({
 
         <div
           className="relative flex flex-shrink-0 items-center justify-center p-1"
-          style={{ height: alwaysExpanded ? 52 : 52, width: "100%" }}
+          style={{ height: isMobile ? 44 : 52, width: "100%" }}
         >
           {/* Breathing glow behind image */}
           <motion.div
@@ -128,7 +129,7 @@ function SideBadge({
 
 export function StickyBadges({ badges }: { badges: SideBadgeType[] }) {
   return (
-    <div className="fixed bottom-[15%] left-0 z-40 hidden flex-col gap-3 lg:flex lg:gap-4 xl:gap-5">
+    <div className="fixed bottom-[38%] left-0 z-40 flex flex-col gap-2 sm:bottom-[30%] sm:gap-3 lg:bottom-[15%] lg:gap-4 xl:gap-5">
       {badges.map((badge, i) => (
         <SideBadge
           key={badge.id}

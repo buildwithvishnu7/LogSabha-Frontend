@@ -365,7 +365,7 @@ export function Header() {
         </nav>
 
         {/* Right Section */}
-        <div className="flex items-center gap-3 sm:gap-4 lg:gap-5">
+        <div className="flex items-center gap-2 sm:gap-3 lg:gap-5">
           {/* Search — with breathing pulse */}
           <div ref={searchContainerRef} className="relative hidden md:block">
             <AnimatePresence mode="wait">
@@ -606,11 +606,24 @@ export function Header() {
             </AnimatePresence>
           </div>
 
+          {/* Mobile Search — circular icon (visible below md) */}
+          <motion.button
+            className={cn(
+              "relative flex h-9 w-9 items-center justify-center rounded-full transition-colors duration-500 md:hidden",
+              scrolled ? "bg-gray-100/80 text-gray-500" : "bg-white/10 text-white/80",
+            )}
+            whileTap={{ scale: 0.9 }}
+            whileHover={{ scale: 1.1 }}
+            onClick={() => setMobileMenuOpen(true)}
+          >
+            <LottieIcon src="/lottie/search (1).json" size={18} color={scrolled ? "#6b7280" : "#ffffff"} />
+          </motion.button>
+
           {/* Hamburger — animated morph between menu and X */}
           <motion.button
             className={cn(
-              "relative z-10 ml-1 transition-colors duration-500 xl:hidden",
-              scrolled ? "text-gray-700" : "text-white",
+              "relative z-10 flex h-9 w-9 items-center justify-center rounded-full transition-colors duration-500 xl:hidden",
+              scrolled ? "bg-gray-100/80 text-gray-700" : "bg-white/10 text-white",
             )}
             whileTap={{ scale: 0.85, rotate: 90 }}
             whileHover={{ scale: 1.1 }}
@@ -643,41 +656,43 @@ export function Header() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Sidebar Menu */}
       <AnimatePresence>
         {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="overflow-hidden border-t border-gray-100 bg-white/98 backdrop-blur-lg xl:hidden"
-          >
-            <nav className="mx-auto flex max-w-[1440px] flex-col px-4 py-4 sm:px-6">
-              <div className="grid grid-cols-1 gap-0 sm:grid-cols-2 sm:gap-x-8">
-                {navLinks.map((link, i) => (
-                  <motion.div
-                    key={link.href}
-                    initial={{ opacity: 0, x: -30 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -30 }}
-                    transition={{ delay: i * 0.05, duration: 0.3 }}
-                  >
-                    <Link
-                      to={link.href}
-                      className={cn(
-                        "block border-b border-gray-100 py-3 text-sm font-medium text-gray-600 transition-colors hover:text-amber-600",
-                        isActive(link.href) && "text-amber-600",
-                      )}
-                    >
-                      {link.label}
-                    </Link>
-                  </motion.div>
-                ))}
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="fixed inset-0 z-[55] bg-black/40 backdrop-blur-sm xl:hidden"
+              onClick={() => setMobileMenuOpen(false)}
+            />
+
+            {/* Sidebar */}
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              className="fixed inset-y-0 right-0 z-[60] flex w-[280px] flex-col bg-white shadow-2xl xl:hidden sm:w-[320px]"
+            >
+              {/* Sidebar Header */}
+              <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
+                <img src={logoSrc} alt="The LogSabha" className="h-10 w-auto" />
+                <motion.button
+                  whileTap={{ scale: 0.85, rotate: 90 }}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-500"
+                >
+                  <X className="h-4 w-4" />
+                </motion.button>
               </div>
 
-              <div className="mt-4 flex items-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-4 py-2.5 md:hidden">
-                <LottieIcon src="/lottie/search (1).json" size={24} color="#9ca3af" />
+              {/* Search */}
+              <div className="mx-5 mt-4 flex items-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-4 py-2.5">
+                <LottieIcon src="/lottie/search (1).json" size={20} color="#9ca3af" />
                 <input
                   type="text"
                   placeholder="Search elections..."
@@ -685,31 +700,55 @@ export function Header() {
                 />
               </div>
 
-              <motion.button
-                className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-full border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-600 lg:hidden"
-                whileTap={{ scale: 0.97 }}
-              >
-                <LottieIcon src="/lottie/worldwide.json" size={24} color={scrolled ? "#6b7280" : "#ffffff"} />
-                <span>EN</span>
-              </motion.button>
+              {/* Nav Links */}
+              <nav className="mt-4 flex-1 overflow-y-auto px-5">
+                {navLinks.map((link, i) => (
+                  <motion.div
+                    key={link.href}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 + i * 0.04, duration: 0.3 }}
+                  >
+                    <Link
+                      to={link.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={cn(
+                        "block border-b border-gray-50 py-3.5 text-[15px] font-medium text-gray-700 transition-colors hover:text-amber-600",
+                        isActive(link.href) && "font-semibold text-amber-600",
+                      )}
+                    >
+                      {link.label}
+                    </Link>
+                  </motion.div>
+                ))}
+              </nav>
 
-              <div className="mt-3 flex gap-3 md:hidden">
+              {/* Bottom Section */}
+              <div className="border-t border-gray-100 px-5 py-5">
+                {/* Language */}
                 <motion.button
-                  className="flex-1 rounded-full border border-gray-200 py-2.5 text-sm font-medium text-gray-600"
+                  className="flex w-full items-center justify-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-gray-600"
                   whileTap={{ scale: 0.97 }}
                 >
-                  Login
+                  <LottieIcon src="/lottie/worldwide.json" size={20} color="#6b7280" />
+                  <span>English</span>
+                  <svg className="ml-auto h-3.5 w-3.5 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
                 </motion.button>
+
+                {/* Login / Sign Up */}
                 <motion.button
-                  className="flex-1 rounded-full bg-amber-500 py-2.5 text-sm font-semibold text-white"
+                  className="mt-3 flex w-full items-center justify-center gap-2 rounded-full bg-amber-500 py-3 text-sm font-semibold text-white shadow-lg shadow-amber-500/25"
                   whileTap={{ scale: 0.97 }}
                   whileHover={{ boxShadow: "0 0 20px rgba(245,158,11,0.4)" }}
                 >
-                  Sign Up
+                  <LottieIcon src="/lottie/add-user.json" size={18} color="#ffffff" />
+                  Login / Sign Up
                 </motion.button>
               </div>
-            </nav>
-          </motion.div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </motion.header>

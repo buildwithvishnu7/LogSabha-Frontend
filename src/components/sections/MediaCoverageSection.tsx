@@ -243,35 +243,35 @@ function MediaVideoCard({
 
 function MonumentBorder() {
   return (
-    <div className="relative mt-6 overflow-hidden">
+    <div className="relative mt-6 bg-orange-500">
       {/* Warm amber glow behind monuments */}
       <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-amber-500/10 to-transparent" />
 
-      <motion.div
-        className="flex"
-        style={{ width: "200%" }}
-        animate={{ x: ["0%", "-50%"] }}
-        transition={{
-          x: {
-            duration: 40,
-            repeat: Infinity,
-            ease: "linear",
-          },
-        }}
-      >
-        <img
-          src="/images/monuments.png"
-          alt=""
-          className="h-20 w-1/2 object-contain object-bottom sm:h-24 lg:h-28"
-          aria-hidden="true"
-        />
-        <img
-          src="/images/monuments.png"
-          alt=""
-          className="h-20 w-1/2 object-contain object-bottom sm:h-24 lg:h-28"
-          aria-hidden="true"
-        />
-      </motion.div>
+      <div className="overflow-hidden">
+        <motion.div
+          className="flex"
+          style={{ width: "300%" }}
+          animate={{ x: ["0%", "-33.333%"] }}
+          transition={{
+            x: {
+              duration: 40,
+              repeat: Infinity,
+              ease: "linear",
+            },
+          }}
+        >
+          {[0, 1, 2].map((i) => (
+            <img
+              key={i}
+              src="/images/monuments.png"
+              alt=""
+              className="h-10 flex-shrink-0 object-cover object-bottom sm:h-12 lg:h-14"
+              style={{ width: "33.334%" }}
+              aria-hidden="true"
+            />
+          ))}
+        </motion.div>
+      </div>
     </div>
   );
 }
@@ -376,8 +376,6 @@ export function MediaCoverageSection() {
         </div>
       </div>
 
-      {/* ── Animated Monument Border ── */}
-      <MonumentBorder />
     </section>
   );
 }

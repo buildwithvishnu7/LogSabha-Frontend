@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import {
   motion,
   useInView,
@@ -7,6 +7,51 @@ import {
   animate,
 } from "motion/react";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
+
+// ─── Typewriter Text ───
+
+function TypewriterText({
+  text,
+  className = "",
+  speed = 35,
+  startDelay = 600,
+}: {
+  text: string;
+  className?: string;
+  speed?: number;
+  startDelay?: number;
+}) {
+  const ref = useRef<HTMLParagraphElement>(null);
+  const isInView = useInView(ref, { once: true, amount: 0.5 });
+  const [displayedCount, setDisplayedCount] = useState(0);
+
+  useEffect(() => {
+    if (!isInView) return;
+    const timeout = setTimeout(() => {
+      let i = 0;
+      const interval = setInterval(() => {
+        i++;
+        setDisplayedCount(i);
+        if (i >= text.length) clearInterval(interval);
+      }, speed);
+      return () => clearInterval(interval);
+    }, startDelay);
+    return () => clearTimeout(timeout);
+  }, [isInView, text, speed, startDelay]);
+
+  return (
+    <p ref={ref} className={className}>
+      <span>{text.slice(0, displayedCount)}</span>
+      {displayedCount < text.length && isInView && (
+        <motion.span
+          className="inline-block h-[1em] w-[2px] translate-y-[2px] bg-amber-500"
+          animate={{ opacity: [1, 0] }}
+          transition={{ duration: 0.5, repeat: Infinity, repeatType: "reverse" }}
+        />
+      )}
+    </p>
+  );
+}
 
 // ─── Data ───
 
@@ -1069,6 +1114,16 @@ export function DataInsightsSection() {
       ref={sectionRef}
       className="relative overflow-hidden bg-gray-50 py-8 sm:py-10 lg:py-12"
     >
+      {/* Graph background image */}
+      <div className="pointer-events-none absolute inset-0">
+        <img
+          src="/images/graph-bg.jpg"
+          alt=""
+          aria-hidden="true"
+          className="h-full w-full object-cover opacity-[0.06]"
+        />
+      </div>
+
       {/* Subtle radial glow */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute left-1/2 top-1/4 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-orange-400/[0.06] blur-[120px]" />
@@ -1079,16 +1134,16 @@ export function DataInsightsSection() {
         {/* ── Header ── */}
         <div className="flex flex-col items-center text-center">
           <ScrollReveal>
-            <h2 className="bg-gradient-to-r from-orange-400 via-amber-400 to-orange-500 bg-clip-text text-3xl font-extrabold text-transparent sm:text-4xl lg:text-5xl">
+            <h2 className="overflow-visible bg-gradient-to-r from-orange-400 via-amber-400 to-orange-500 bg-clip-text pb-2 text-3xl leading-tight font-extrabold text-transparent sm:text-4xl lg:text-5xl">
               Data Insights &amp; Analytics
             </h2>
           </ScrollReveal>
-          <ScrollReveal delay={0.15}>
-            <p className="mt-4 max-w-xl text-sm text-gray-500 sm:text-base">
-              Interactive 3D-styled data visualizations providing deep insights
-              into India&apos;s electoral landscape.
-            </p>
-          </ScrollReveal>
+          <TypewriterText
+            text="Interactive 3D-styled data visualizations providing deep insights into India's electoral landscape."
+            className="mt-2 max-w-xl text-sm text-gray-500 sm:text-base"
+            speed={30}
+            startDelay={500}
+          />
           <ScrollReveal delay={0.25}>
             <div className="mt-5 h-[3px] w-12 rounded-full bg-blue-500" />
           </ScrollReveal>

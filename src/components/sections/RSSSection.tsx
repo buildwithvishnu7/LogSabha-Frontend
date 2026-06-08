@@ -188,7 +188,7 @@ function PillarCard({
 }) {
   return (
     <motion.div
-      className={`relative flex flex-col items-center gap-2 overflow-hidden rounded-xl border ${pillar.borderColor} ${pillar.bgColor} px-5 py-4`}
+      className={`relative flex flex-1 flex-col items-center gap-1.5 overflow-hidden rounded-xl border ${pillar.borderColor} ${pillar.bgColor} px-2 py-3 sm:gap-2 sm:px-5 sm:py-4`}
       initial={{ opacity: 0, y: 20 }}
       animate={triggered ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
       transition={{
@@ -437,7 +437,7 @@ export function RSSSection() {
         <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-10">
           {/* Single white card holding both info + video */}
           <ScrollReveal>
-            <div className="relative overflow-hidden rounded-2xl bg-white shadow-2xl shadow-orange-900/10 ring-1 ring-gray-100/80">
+            <div className="relative overflow-hidden rounded-2xl border-r-4 border-blue-800 bg-white shadow-2xl shadow-orange-900/10 ring-1 ring-gray-100/80 sm:border-r-[6px]">
               {/* Card shimmer sweep */}
               {triggered && (
                 <motion.div
@@ -459,7 +459,7 @@ export function RSSSection() {
 
               <div className="relative grid lg:grid-cols-[1fr_380px] xl:grid-cols-[1fr_420px]">
                 {/* Left: Info — determines card height */}
-                <div className="relative z-10 p-6 sm:p-8 lg:min-h-[560px] lg:p-10">
+                <div className="relative z-10 p-4 sm:p-6 md:p-8 lg:min-h-[560px] lg:p-10">
                   {/* Logo + Title */}
                   <div className="flex items-center gap-3">
                     <motion.img
@@ -483,7 +483,7 @@ export function RSSSection() {
                       }}
                     />
                     <motion.h2
-                      className="text-2xl font-semibold text-gray-900 sm:text-3xl lg:text-[44px] lg:leading-[55px]"
+                      className="text-xl font-semibold text-gray-900 sm:text-2xl md:text-3xl lg:text-[44px] lg:leading-[55px]"
                       style={{
                         fontFamily: "'Cormorant Garamond', serif",
                         letterSpacing: "-0.44px",
@@ -553,7 +553,7 @@ export function RSSSection() {
                   </p>
 
                   {/* Pillars */}
-                  <div className="mt-5 flex flex-wrap gap-3">
+                  <div className="mt-5 flex gap-2 sm:gap-3">
                     {PILLARS.map((pillar, i) => (
                       <PillarCard
                         key={pillar.label}
@@ -613,7 +613,7 @@ export function RSSSection() {
                 </div>
 
                 {/* Right: Video with dark orange background */}
-                <div className="relative bg-gradient-to-br from-orange-700 via-orange-800 to-orange-900 p-1.5 lg:absolute lg:inset-y-0 lg:right-0 lg:w-[380px] lg:p-2 xl:w-[420px]">
+                <div className="relative h-[280px] bg-gradient-to-br from-orange-700 via-orange-800 to-orange-900 p-1.5 sm:h-[340px] lg:absolute lg:inset-y-0 lg:right-0 lg:h-auto lg:w-[380px] lg:p-2 xl:w-[420px]">
                   <VideoPlayer triggered={triggered} />
                 </div>
               </div>
