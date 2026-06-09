@@ -1,5 +1,5 @@
-import { useRef, useEffect } from "react";
-import { motion } from "motion/react";
+import { useRef, useEffect, useState, useMemo } from "react";
+import { motion, useInView } from "motion/react";
 import {
   Calendar,
   Clock,
@@ -110,16 +110,132 @@ const SIDEBAR_ARTICLES: Article[] = [
   },
 ];
 
+// ─── Continuous Looping Typewriter ───
+
+const TYPEWRITER_PHRASES = [
+  "In-depth analysis, research, and commentary on India's political landscape from our editorial team.",
+  "Exploring the forces shaping India's democracy through expert perspectives and data-driven insights.",
+  "Bridging policy, politics, and public discourse with thoughtful editorial coverage.",
+  "Your window into the evolving story of Indian governance and democratic progress.",
+];
+
+function LoopingTypewriter({ className }: { className?: string }) {
+  const ref = useRef<HTMLParagraphElement>(null);
+  const isInView = useInView(ref, { once: true, amount: 0.5 });
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [displayedCount, setDisplayedCount] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const currentPhrase = TYPEWRITER_PHRASES[phraseIndex];
+  const chars = useMemo(() => [...currentPhrase], [currentPhrase]);
+
+  useEffect(() => {
+    if (!isInView) return;
+
+    if (!isDeleting && displayedCount >= chars.length) {
+      const timeout = setTimeout(() => setIsDeleting(true), 2200);
+      return () => clearTimeout(timeout);
+    }
+
+    if (isDeleting && displayedCount === 0) {
+      setIsDeleting(false);
+      setPhraseIndex((i) => (i + 1) % TYPEWRITER_PHRASES.length);
+      return;
+    }
+
+    const speed = isDeleting ? 20 : 35;
+    const timeout = setTimeout(() => {
+      setDisplayedCount((c) => c + (isDeleting ? -1 : 1));
+    }, speed);
+    return () => clearTimeout(timeout);
+  }, [isInView, displayedCount, chars.length, isDeleting]);
+
+  return (
+    <p ref={ref} className={className}>
+      <span>{chars.slice(0, displayedCount).join("")}</span>
+      {isInView && (
+        <motion.span
+          className="inline-block h-[1em] w-[2px] translate-y-[2px] bg-amber-500"
+          animate={{ opacity: [1, 0] }}
+          transition={{ duration: 0.5, repeat: Infinity, repeatType: "reverse" }}
+        />
+      )}
+    </p>
+  );
+}
+
+// ─── Floating Particles ───
+
+const PARTICLES = Array.from({ length: 8 }, (_, i) => ({
+  id: i,
+  size: 3 + (i % 3) * 2,
+  left: `${10 + i * 11}%`,
+  top: `${15 + (i % 4) * 20}%`,
+  duration: 6 + (i % 3) * 2,
+  delay: i * 0.8,
+}));
+
+function FloatingParticles() {
+  return (
+    <>
+      {PARTICLES.map((p) => (
+        <motion.div
+          key={p.id}
+          className="pointer-events-none absolute rounded-full bg-amber-400/20"
+          style={{
+            width: p.size,
+            height: p.size,
+            left: p.left,
+            top: p.top,
+          }}
+          animate={{
+            y: [0, -20, 0],
+            x: [0, 10, 0],
+            opacity: [0.2, 0.5, 0.2],
+          }}
+          transition={{
+            duration: p.duration,
+            delay: p.delay,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+    </>
+  );
+}
+
 // ─── Trending Badge ───
 
 function TrendingBadge() {
   return (
     <motion.span
-      className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-red-500 to-orange-500 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white shadow-md shadow-red-500/20"
-      animate={{ scale: [1, 1.05, 1] }}
+      className="relative inline-flex items-center gap-1 overflow-hidden rounded-full bg-gradient-to-r from-red-500 to-orange-500 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white shadow-md shadow-red-500/20"
+      animate={{ scale: [1, 1.06, 1] }}
       transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
     >
-      <TrendingUp className="h-3 w-3" />
+      {/* Shimmer sweep */}
+      <motion.span
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.35) 50%, transparent 70%)",
+          backgroundSize: "200% 100%",
+        }}
+        animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
+        transition={{ duration: 2, repeat: Infinity, repeatDelay: 2, ease: "easeInOut" }}
+      />
+      {/* Glow ring */}
+      <motion.span
+        className="pointer-events-none absolute inset-[-2px] rounded-full border border-red-400/60"
+        animate={{ scale: [1, 1.15, 1], opacity: [0.6, 0, 0.6] }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.span
+        animate={{ rotate: [0, -15, 15, 0] }}
+        transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 1.5, ease: "easeInOut" }}
+      >
+        <TrendingUp className="h-3 w-3" />
+      </motion.span>
       Trending
     </motion.span>
   );
@@ -160,12 +276,47 @@ function FeaturedCard({ article }: { article: Article }) {
             />
           </div>
 
+          {/* Shimmer sweep overlay */}
+          <motion.div
+            className="pointer-events-none absolute inset-0 z-10"
+            style={{
+              background:
+                "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.18) 50%, transparent 60%)",
+              backgroundSize: "200% 100%",
+            }}
+            animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
+            transition={{
+              duration: 3,
+              delay: 2,
+              repeat: Infinity,
+              repeatDelay: 5,
+              ease: "easeInOut",
+            }}
+          />
+
           {/* Category badge */}
           <motion.span
-            className={`absolute top-4 left-4 rounded-lg ${article.categoryColor} px-3 py-1.5 text-xs font-bold text-white shadow-lg`}
+            className={`absolute top-4 left-4 z-20 overflow-hidden rounded-lg ${article.categoryColor} px-3 py-1.5 text-xs font-bold text-white shadow-lg`}
             custom={0}
             variants={textReveal}
           >
+            {/* Shimmer sweep */}
+            <motion.span
+              className="pointer-events-none absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.3) 50%, transparent 70%)",
+                backgroundSize: "200% 100%",
+              }}
+              animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
+              transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" }}
+            />
+            {/* Glow pulse */}
+            <motion.span
+              className="pointer-events-none absolute inset-[-2px] rounded-lg border border-white/40"
+              animate={{ scale: [1, 1.08, 1], opacity: [0.5, 0, 0.5] }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+            />
             {article.category}
           </motion.span>
 
@@ -173,20 +324,32 @@ function FeaturedCard({ article }: { article: Article }) {
           <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/50 to-transparent" />
 
           {/* Date & read time overlay */}
-          <motion.div
+          {/* <motion.div
             className="absolute inset-x-0 bottom-0 flex items-center gap-4 px-5 pb-4"
             custom={1}
             variants={textReveal}
           >
             <span className="flex items-center gap-1.5 text-xs font-medium text-white/90">
-              <Calendar className="h-3.5 w-3.5" />
+              <motion.span
+                className="inline-flex"
+                whileHover={{ rotate: [0, -10, 10, 0], scale: 1.2 }}
+                transition={{ duration: 0.4 }}
+              >
+                <Calendar className="h-3.5 w-3.5" />
+              </motion.span>
               {article.date}
             </span>
             <span className="flex items-center gap-1.5 text-xs font-medium text-white/90">
-              <Clock className="h-3.5 w-3.5" />
+              <motion.span
+                className="inline-flex"
+                animate={{ rotate: [0, 360] }}
+                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+              >
+                <Clock className="h-3.5 w-3.5" />
+              </motion.span>
               {article.readTime}
             </span>
-          </motion.div>
+          </motion.div> */}
         </div>
 
         {/* Content */}
@@ -227,7 +390,13 @@ function FeaturedCard({ article }: { article: Article }) {
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
             />
             Read More
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+            <motion.span
+              className="inline-flex"
+              animate={{ x: [0, 3, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <ArrowRight className="h-4 w-4" />
+            </motion.span>
           </motion.a>
         </div>
       </motion.div>
@@ -245,10 +414,21 @@ function SidebarCard({
 }) {
   return (
     <motion.div
-      className="group flex cursor-pointer gap-4 rounded-xl border border-gray-100 bg-white p-3 shadow-sm transition-all duration-300 hover:border-amber-200 hover:shadow-md"
-      whileHover={{ x: -4 }}
+      className="group relative flex cursor-pointer gap-4 overflow-hidden rounded-xl border border-gray-100 bg-white p-3 shadow-sm transition-all duration-300 hover:border-amber-200 hover:shadow-md"
+      whileHover={{ x: -4, scale: 1.01 }}
       transition={{ duration: 0.25 }}
     >
+      {/* Shimmer sweep on hover */}
+      <motion.div
+        className="pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        style={{
+          background:
+            "linear-gradient(105deg, transparent 40%, rgba(245,158,11,0.08) 50%, transparent 60%)",
+          backgroundSize: "200% 100%",
+        }}
+        animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
+        transition={{ duration: 2, repeat: Infinity, repeatDelay: 1, ease: "easeInOut" }}
+      />
       {/* Thumbnail */}
       <div className="relative flex-shrink-0 overflow-hidden rounded-lg">
         <div className="h-24 w-24 bg-gradient-to-br from-amber-100 via-orange-50 to-amber-50 sm:h-28 sm:w-28">
@@ -273,16 +453,26 @@ function SidebarCard({
       {/* Content */}
       <div className="flex min-w-0 flex-1 flex-col justify-center">
         {/* Category */}
-        <span
-          className={`w-fit rounded-md ${article.categoryColor}/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider`}
-          style={{
-            color: `var(--cat-color)`,
-          }}
+        <motion.span
+          className={`relative w-fit overflow-hidden rounded-md ${article.categoryColor}/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider`}
+          whileHover={{ scale: 1.08 }}
+          transition={{ type: "spring", stiffness: 400, damping: 15 }}
         >
-          <span className={`${article.categoryColor} bg-clip-text text-transparent`} style={{ WebkitBackgroundClip: "text" }}>
+          {/* Shimmer sweep on badge */}
+          <motion.span
+            className="pointer-events-none absolute inset-0 rounded-md"
+            style={{
+              background:
+                "linear-gradient(105deg, transparent 30%, rgba(245,158,11,0.15) 50%, transparent 70%)",
+              backgroundSize: "200% 100%",
+            }}
+            animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
+            transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 4, ease: "easeInOut", delay: index * 0.3 }}
+          />
+          <span className={`relative ${article.categoryColor} bg-clip-text text-transparent`} style={{ WebkitBackgroundClip: "text" }}>
             {article.category}
           </span>
-        </span>
+        </motion.span>
 
         {/* Title */}
         <h4 className="mt-1.5 line-clamp-2 text-sm font-bold leading-snug text-gray-900 transition-colors group-hover:text-amber-600">
@@ -290,16 +480,28 @@ function SidebarCard({
         </h4>
 
         {/* Meta */}
-        <div className="mt-2 flex items-center gap-3 text-[11px] text-gray-400">
+        {/* <div className="mt-2 flex items-center gap-3 text-[11px] text-gray-400">
           <span className="flex items-center gap-1">
-            <Calendar className="h-3 w-3" />
+            <motion.span
+              className="inline-flex"
+              whileHover={{ rotate: [0, -10, 10, 0], scale: 1.2 }}
+              transition={{ duration: 0.4 }}
+            >
+              <Calendar className="h-3 w-3 transition-colors group-hover:text-amber-500" />
+            </motion.span>
             {article.date}
           </span>
           <span className="flex items-center gap-1">
-            <Clock className="h-3 w-3" />
+            <motion.span
+              className="inline-flex"
+              animate={{ rotate: [0, 360] }}
+              transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+            >
+              <Clock className="h-3 w-3 transition-colors group-hover:text-amber-500" />
+            </motion.span>
             {article.readTime}
           </span>
-        </div>
+        </div> */}
       </div>
     </motion.div>
   );
@@ -409,29 +611,77 @@ function ScrollingSidebar({ articles }: { articles: Article[] }) {
 export function EditorialInsightsSection() {
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-white via-amber-50/20 to-white py-8 sm:py-10 lg:py-12">
-      {/* Background pattern */}
-      <div className="absolute inset-0 opacity-[0.025]">
+      {/* Grid background image */}
+      <div className="pointer-events-none absolute inset-0">
+        <img
+          src="/images/grid-bg.png"
+          alt=""
+          aria-hidden="true"
+          className="h-full w-full object-cover opacity-20"
+        />
+        {/* Edge vignette to fade into white */}
         <div
-          className="h-full w-full"
+          className="absolute inset-0"
           style={{
-            backgroundImage:
-              "repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(245,158,11,0.4) 35px, rgba(245,158,11,0.4) 36px)",
+            background:
+              "radial-gradient(ellipse at center, transparent 40%, rgba(255,255,255,0.5) 75%, rgba(255,255,255,0.95) 100%)",
           }}
         />
       </div>
+
+      {/* Floating ambient orbs */}
+      <motion.div
+        className="pointer-events-none absolute top-16 left-[8%] h-52 w-52 rounded-full bg-amber-400/[0.05] blur-[80px]"
+        animate={{ x: [0, 25, 0], y: [0, -18, 0] }}
+        transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="pointer-events-none absolute right-[8%] bottom-24 h-44 w-44 rounded-full bg-orange-400/[0.05] blur-[80px]"
+        animate={{ x: [0, -20, 0], y: [0, 15, 0] }}
+        transition={{ duration: 11, repeat: Infinity, ease: "easeInOut", delay: 2.5 }}
+      />
+      <motion.div
+        className="pointer-events-none absolute top-1/2 left-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-300/[0.03] blur-[100px]"
+        animate={{ scale: [1, 1.15, 1], opacity: [0.03, 0.06, 0.03] }}
+        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+      />
+
+      {/* Floating particles */}
+      <FloatingParticles />
 
       <div className="relative mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8 xl:px-12">
         {/* ── Header ── */}
         <div className="flex flex-col items-center text-center">
           <ScrollReveal>
-            <span className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-1.5 text-[11px] font-semibold tracking-wider text-amber-600 uppercase">
+            <motion.span
+              className="relative inline-flex items-center gap-2 overflow-hidden rounded-full border border-amber-200 bg-amber-50 px-4 py-1.5 text-[11px] font-semibold tracking-wider text-amber-600 uppercase"
+              whileHover={{ scale: 1.05, boxShadow: "0 0 12px rgba(245,158,11,0.25)" }}
+              transition={{ type: "spring", stiffness: 300, damping: 15 }}
+            >
+              {/* Shimmer sweep */}
+              <motion.span
+                className="pointer-events-none absolute inset-0"
+                style={{
+                  background:
+                    "linear-gradient(105deg, transparent 30%, rgba(245,158,11,0.15) 50%, transparent 70%)",
+                  backgroundSize: "200% 100%",
+                }}
+                animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
+                transition={{ duration: 3, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" }}
+              />
+              {/* Glow border pulse */}
+              <motion.span
+                className="pointer-events-none absolute inset-[-1px] rounded-full border border-amber-400/50"
+                animate={{ scale: [1, 1.06, 1], opacity: [0.5, 0, 0.5] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              />
               <LoopingIcon icon={BookIcon} size={14} interval={4000} />
               Blog & Articles
-            </span>
+            </motion.span>
           </ScrollReveal>
 
           <ScrollReveal delay={0.15}>
-            <h2 className="mt-5 text-3xl font-extrabold text-gray-900 sm:text-4xl lg:text-5xl">
+            <h2 className="mt-5 overflow-visible pb-2 text-3xl font-extrabold leading-tight text-gray-900 sm:text-4xl lg:text-5xl">
               <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 bg-clip-text text-transparent">
                 Editorial Insights
               </span>
@@ -443,12 +693,7 @@ export function EditorialInsightsSection() {
             className="mx-auto mt-3 h-[3px] w-12 rounded-full bg-amber-500"
           />
 
-          <ScrollReveal delay={0.4}>
-            <p className="mt-4 max-w-xl text-sm leading-relaxed text-gray-500">
-              In-depth analysis, research, and commentary on India's political
-              landscape from our editorial team.
-            </p>
-          </ScrollReveal>
+          <LoopingTypewriter className="mt-4 max-w-xl text-sm leading-relaxed text-gray-500" />
         </div>
 
         {/* ── Content Grid ── */}

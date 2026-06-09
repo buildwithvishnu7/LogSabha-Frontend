@@ -376,21 +376,34 @@ function PlatformFilter({
 
 function SocialCard({ post, index }: { post: SocialPost; index: number }) {
   const platform = PLATFORMS.find((p) => p.key === post.platform)!;
+  // Alternate slide direction: left, right, left based on index
+  const slideX = index % 2 === 0 ? -60 : 60;
 
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: 40, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: -20, scale: 0.95 }}
-      transition={{ duration: 0.5, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
+      initial={{ opacity: 0, x: slideX, y: 30, scale: 0.9, rotateY: index % 2 === 0 ? -8 : 8 }}
+      animate={{ opacity: 1, x: 0, y: 0, scale: 1, rotateY: 0 }}
+      exit={{ opacity: 0, x: -slideX, y: -20, scale: 0.9 }}
+      transition={{ duration: 0.6, delay: index * 0.12, ease: [0.16, 1, 0.3, 1] }}
       className="group w-full"
     >
       <motion.div
-        className="relative overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:shadow-xl"
+        className="relative overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:border-amber-200 hover:shadow-xl"
         whileHover={{ y: -6 }}
         transition={{ duration: 0.3 }}
       >
+        {/* Shimmer sweep on hover */}
+        <motion.div
+          className="pointer-events-none absolute inset-0 z-20 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+          style={{
+            background:
+              "linear-gradient(105deg, transparent 40%, rgba(245,158,11,0.06) 50%, transparent 60%)",
+            backgroundSize: "200% 100%",
+          }}
+          animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
+          transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 1.5, ease: "easeInOut" }}
+        />
         {/* Card Header */}
         <div className="flex items-center justify-between px-4 pt-4 pb-3">
           <div className="flex items-center gap-3">
@@ -546,8 +559,8 @@ export function SocialPresenceSection() {
 
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-amber-50/60 via-orange-50/30 to-white py-8 sm:py-10 lg:py-12">
-      {/* Background decorations */}
-      <div className="absolute inset-0 opacity-[0.03]">
+      {/* Background dot pattern */}
+      <div className="absolute inset-0 opacity-[0.035]">
         <div
           className="h-full w-full"
           style={{
@@ -557,17 +570,59 @@ export function SocialPresenceSection() {
         />
       </div>
 
-      {/* Floating gradient orbs */}
+      {/* Diagonal line pattern */}
+      <div className="absolute inset-0 opacity-[0.02]">
+        <div
+          className="h-full w-full"
+          style={{
+            backgroundImage:
+              "repeating-linear-gradient(135deg, transparent, transparent 40px, rgba(245,158,11,0.4) 40px, rgba(245,158,11,0.4) 41px)",
+          }}
+        />
+      </div>
+
+      {/* Floating gradient orbs — more visible */}
       <motion.div
-        className="absolute -top-40 -right-40 h-96 w-96 rounded-full bg-amber-200/20 blur-3xl"
-        animate={{ x: [0, 30, 0], y: [0, -20, 0] }}
-        transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+        className="pointer-events-none absolute -top-32 -right-32 h-80 w-80 rounded-full bg-amber-300/15 blur-[80px]"
+        animate={{ x: [0, 35, 0], y: [0, -25, 0] }}
+        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
-        className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-orange-200/20 blur-3xl"
-        animate={{ x: [0, -20, 0], y: [0, 30, 0] }}
-        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+        className="pointer-events-none absolute -bottom-32 -left-32 h-72 w-72 rounded-full bg-orange-300/12 blur-[80px]"
+        animate={{ x: [0, -25, 0], y: [0, 30, 0] }}
+        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 2 }}
       />
+      <motion.div
+        className="pointer-events-none absolute top-1/3 left-1/2 h-60 w-60 -translate-x-1/2 rounded-full bg-amber-200/10 blur-[100px]"
+        animate={{ scale: [1, 1.2, 1], opacity: [0.08, 0.15, 0.08] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 3 }}
+      />
+
+      {/* Floating particles */}
+      {[...Array(10)].map((_, i) => (
+        <motion.div
+          key={`sp-particle-${i}`}
+          className="pointer-events-none absolute rounded-full"
+          style={{
+            width: 3 + (i % 3) * 2,
+            height: 3 + (i % 3) * 2,
+            left: `${8 + i * 9}%`,
+            top: `${12 + (i % 5) * 18}%`,
+            background: i % 2 === 0 ? "rgba(245,158,11,0.25)" : "rgba(249,115,22,0.2)",
+          }}
+          animate={{
+            y: [0, -18 - (i % 3) * 8, 0],
+            x: [0, i % 2 === 0 ? 12 : -12, 0],
+            opacity: [0.15, 0.45, 0.15],
+          }}
+          transition={{
+            duration: 5 + i * 0.6,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: i * 0.5,
+          }}
+        />
+      ))}
 
       <div className="relative mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8 xl:px-12">
         {/* ── Section Header ── */}

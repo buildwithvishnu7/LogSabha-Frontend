@@ -337,26 +337,48 @@ export function HinduForJusticeSection() {
             {/* Header with logo */}
             <ScrollReveal>
               <div className="flex items-center gap-4">
-                <motion.img
-                  src="/logo/HFJ-logo-final-new.gif"
-                  alt="Hindu For Justice"
-                  className="h-16 w-16 rounded-xl object-contain shadow-md sm:h-20 sm:w-20"
+                <motion.div
+                  className="relative"
                   animate={
                     triggered
                       ? {
-                          rotate: [0, 3, -3, 0],
-                          scale: [1, 1.05, 1],
+                          rotate: [0, 8, -8, 5, -5, 0],
+                          scale: [1, 1.12, 0.95, 1.08, 1],
+                          y: [0, -4, 2, -2, 0],
                         }
                       : {}
                   }
                   transition={{
-                    duration: 4,
-                    delay: 1,
+                    duration: 3,
+                    delay: 0.5,
                     repeat: Infinity,
-                    repeatDelay: 2,
+                    repeatDelay: 1,
                     ease: "easeInOut",
                   }}
-                />
+                >
+                  <motion.img
+                    src="/logo/HFJ-logo-final-new.gif"
+                    alt="Hindu For Justice"
+                    className="h-16 w-16 rounded-xl object-contain shadow-md sm:h-20 sm:w-20"
+                    whileHover={{ scale: 1.2, rotate: 15 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 12 }}
+                  />
+                  {/* Glow ring pulse */}
+                  {triggered && (
+                    <motion.span
+                      className="pointer-events-none absolute inset-[-4px] rounded-xl border-2 border-amber-400/50"
+                      animate={{
+                        scale: [1, 1.15, 1],
+                        opacity: [0.5, 0, 0.5],
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
+                    />
+                  )}
+                </motion.div>
                 <div>
                   <h2 className="text-2xl font-extrabold text-gray-900 sm:text-3xl lg:text-4xl">
                     Hindu For{" "}
@@ -416,7 +438,7 @@ export function HinduForJusticeSection() {
               transition={{ duration: 0.4 }}
             >
               <img
-                src="/images/justice.jpg"
+                src="/images/justice-main.jpg"
                 alt="Hindu For Justice"
                 className="h-full min-h-[260px] w-full object-cover"
                 onError={(e) => {

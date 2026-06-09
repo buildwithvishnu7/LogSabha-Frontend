@@ -28,25 +28,25 @@ const RECENT_SPEECHES: SpeechVideo[] = [
     id: "speech-1",
     title: "PM Modi's First Speech After Re-Election",
     speaker: "PM Narendra Modi",
-    videoSrc: "/videos/Stock-bg.mp4",
+    videoSrc: "/videos/speech3.mp4",
   },
   {
     id: "speech-2",
     title: "Lok Sabha Session — Motion of Thanks Debate",
     speaker: "Parliament Session 2024",
-    videoSrc: "/videos/Ashoka-bg.mp4",
+    videoSrc: "/videos/speech4.mp4",
   },
   {
     id: "speech-3",
     title: "PM Modi in Rajya Sabha — Presidential Address",
     speaker: "Rajya Sabha Session",
-    videoSrc: "/videos/Tri-bg.mp4",
+    videoSrc: "/videos/speech5.mp4",
   },
   {
     id: "speech-4",
-    title: "Parliament Session — Lok Sabha Day 7",
-    speaker: "Sansad TV Coverage",
-    videoSrc: "/videos/flag-bg.mp4",
+    title: "PM Narendra Modi Recalls Hoisting Tricolour At Lal Chowk",
+    speaker: "PM Narendra Modi",
+    videoSrc: "/videos/speech6.mp4",
   },
 ];
 
@@ -68,10 +68,10 @@ function getYouTubeEmbedUrl(url: string, autoplay = true): string {
   const id = match?.[1] ?? "";
   const params = new URLSearchParams({
     autoplay: autoplay ? "1" : "0",
-    mute: "1",
+    mute: "0",
     loop: "1",
     playlist: id,
-    controls: "0",
+    controls: "1",
     modestbranding: "1",
     rel: "0",
     showinfo: "0",
@@ -104,7 +104,7 @@ function MainVideoPlayer() {
   return (
     <motion.div
       ref={containerRef}
-      className="group relative aspect-[16/9] max-h-[480px] w-full overflow-hidden rounded-2xl bg-gray-900 shadow-xl shadow-black/10"
+      className="group relative aspect-[16/9] w-full overflow-hidden rounded-2xl bg-gray-900 shadow-xl shadow-black/10"
       initial={{ opacity: 0, y: 30, scale: 0.98 }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, amount: 0.2 }}
@@ -195,10 +195,9 @@ function SpeechCard({
         {/* Video — always mounted, plays/pauses on hover */}
         <video
           ref={videoRef}
-          muted
           loop
           playsInline
-          preload="metadata"
+          preload="auto"
           className="absolute inset-0 h-full w-full object-cover"
         >
           <source src={speech.videoSrc} type="video/mp4" />

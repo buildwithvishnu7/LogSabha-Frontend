@@ -403,7 +403,7 @@ export function ServicesSection({ data }: { data: ServicesData }) {
           </div>
 
           {/* Center: Image */}
-          <ScrollReveal delay={0.2} className="relative h-full">
+          <ScrollReveal delay={0.2} className="relative flex h-full items-center">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeService.id}
@@ -411,7 +411,7 @@ export function ServicesSection({ data }: { data: ServicesData }) {
                 animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
                 exit={{ opacity: 0, scale: 0.96, filter: "blur(6px)" }}
                 transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                className="relative min-h-[360px] overflow-hidden rounded-2xl bg-gray-100 lg:h-full lg:max-h-[500px]"
+                className="relative w-full overflow-hidden rounded-2xl bg-gray-100 lg:aspect-[3/4] lg:max-h-[480px]"
               >
                 <img
                   src={activeService.image}

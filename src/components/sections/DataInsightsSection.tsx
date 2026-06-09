@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useCallback } from "react";
+import { useRef, useEffect, useState, useMemo, useCallback } from "react";
 import {
   motion,
   useInView,
@@ -8,41 +8,49 @@ import {
 } from "motion/react";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
 
-// ─── Typewriter Text ───
+// ─── Continuous Looping Typewriter ───
 
-function TypewriterText({
-  text,
-  className = "",
-  speed = 35,
-  startDelay = 600,
-}: {
-  text: string;
-  className?: string;
-  speed?: number;
-  startDelay?: number;
-}) {
+const DATA_TYPEWRITER_PHRASES = [
+  "Interactive 3D-styled data visualizations providing deep insights into India's electoral landscape.",
+  "Explore seat share, state-wise breakdowns, and historical trends through dynamic charts.",
+  "Real-time analytics powering a deeper understanding of Indian democracy's evolving numbers.",
+  "From voter turnout to coalition patterns — data tells the story of India's elections.",
+];
+
+function LoopingTypewriter({ className }: { className?: string }) {
   const ref = useRef<HTMLParagraphElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.5 });
+  const [phraseIndex, setPhraseIndex] = useState(0);
   const [displayedCount, setDisplayedCount] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const currentPhrase = DATA_TYPEWRITER_PHRASES[phraseIndex];
+  const chars = useMemo(() => [...currentPhrase], [currentPhrase]);
 
   useEffect(() => {
     if (!isInView) return;
+
+    if (!isDeleting && displayedCount >= chars.length) {
+      const timeout = setTimeout(() => setIsDeleting(true), 2200);
+      return () => clearTimeout(timeout);
+    }
+
+    if (isDeleting && displayedCount === 0) {
+      setIsDeleting(false);
+      setPhraseIndex((i) => (i + 1) % DATA_TYPEWRITER_PHRASES.length);
+      return;
+    }
+
+    const speed = isDeleting ? 20 : 35;
     const timeout = setTimeout(() => {
-      let i = 0;
-      const interval = setInterval(() => {
-        i++;
-        setDisplayedCount(i);
-        if (i >= text.length) clearInterval(interval);
-      }, speed);
-      return () => clearInterval(interval);
-    }, startDelay);
+      setDisplayedCount((c) => c + (isDeleting ? -1 : 1));
+    }, speed);
     return () => clearTimeout(timeout);
-  }, [isInView, text, speed, startDelay]);
+  }, [isInView, displayedCount, chars.length, isDeleting]);
 
   return (
     <p ref={ref} className={className}>
-      <span>{text.slice(0, displayedCount)}</span>
-      {displayedCount < text.length && isInView && (
+      <span>{chars.slice(0, displayedCount).join("")}</span>
+      {isInView && (
         <motion.span
           className="inline-block h-[1em] w-[2px] translate-y-[2px] bg-amber-500"
           animate={{ opacity: [1, 0] }}
@@ -1120,7 +1128,7 @@ export function DataInsightsSection() {
           src="/images/graph-bg.jpg"
           alt=""
           aria-hidden="true"
-          className="h-full w-full object-cover opacity-[0.06]"
+          className="h-full w-full object-cover opacity-20"
         />
       </div>
 
@@ -1138,12 +1146,7 @@ export function DataInsightsSection() {
               Data Insights &amp; Analytics
             </h2>
           </ScrollReveal>
-          <TypewriterText
-            text="Interactive 3D-styled data visualizations providing deep insights into India's electoral landscape."
-            className="mt-2 max-w-xl text-sm text-gray-500 sm:text-base"
-            speed={30}
-            startDelay={500}
-          />
+          <LoopingTypewriter className="mt-2 max-w-xl text-sm text-gray-500 sm:text-base" />
           <ScrollReveal delay={0.25}>
             <div className="mt-5 h-[3px] w-12 rounded-full bg-blue-500" />
           </ScrollReveal>

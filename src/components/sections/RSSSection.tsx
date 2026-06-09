@@ -373,6 +373,23 @@ export function RSSSection() {
 
       {/* Main Content — warm background */}
       <div className="relative bg-orange-50/60 py-8 sm:py-10 lg:py-12">
+        {/* RSS background image */}
+        <div className="pointer-events-none absolute inset-0">
+          <img
+            src="/images/rss-bg.png"
+            alt=""
+            aria-hidden="true"
+            className="h-full w-full object-cover opacity-20"
+          />
+          {/* Edge vignette */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(ellipse at center, transparent 40%, rgba(255,247,237,0.5) 75%, rgba(255,247,237,0.95) 100%)",
+            }}
+          />
+        </div>
         {/* Floating ambient particles — more and larger */}
         {triggered && (
           <>

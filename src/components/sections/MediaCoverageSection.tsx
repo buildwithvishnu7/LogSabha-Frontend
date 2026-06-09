@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import { motion } from "motion/react";
 import {
   ScrollReveal,
@@ -29,25 +29,25 @@ const MEDIA_VIDEOS: MediaVideo[] = [
   {
     id: "media-1",
     title: "Nation's Pride - The Great Hindu Revival",
-    videoSrc: "/videos/Stock-bg.mp4",
+    videoSrc: "/videos/speech.mp4",
     poster: "/images/editorial/featured.jpg",
   },
   {
     id: "media-2",
     title: "NDA Sweeps - Political Analysis",
-    videoSrc: "/videos/Stock-bg.mp4",
+    videoSrc: "/videos/speech1.mp4",
     poster: "/images/editorial/parliament.jpg",
   },
   {
     id: "media-3",
     title: "Shri Ram Navami Celebrations",
-    videoSrc: "/videos/Stock-bg.mp4",
+    videoSrc: "/videos/speech2.mp4",
     poster: "/images/editorial/regional.jpg",
   },
   {
     id: "media-4",
     title: "Lok Sabha Session Coverage",
-    videoSrc: "/videos/Stock-bg.mp4",
+    videoSrc: "/videos/speech.mp4",
     poster: "/images/editorial/economy.jpg",
   },
 ];
@@ -104,28 +104,27 @@ function LogoTicker() {
 function MediaVideoCard({
   video,
   index,
-  sectionInView,
 }: {
   video: MediaVideo;
   index: number;
-  sectionInView: boolean;
+  sectionInView?: boolean;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  useEffect(() => {
-    if (!sectionInView || !videoRef.current) return;
+  const handleMouseEnter = () => {
+    const vid = videoRef.current;
+    if (!vid) return;
+    vid.play().catch(() => {});
+    setIsPlaying(true);
+  };
 
-    const timer = setTimeout(
-      () => {
-        videoRef.current?.play().catch(() => {});
-        setIsPlaying(true);
-      },
-      300 + index * 200,
-    );
-
-    return () => clearTimeout(timer);
-  }, [sectionInView, index]);
+  const handleMouseLeave = () => {
+    const vid = videoRef.current;
+    if (!vid) return;
+    vid.pause();
+    setIsPlaying(false);
+  };
 
   return (
     <motion.div
@@ -139,6 +138,8 @@ function MediaVideoCard({
         ease: [0.16, 1, 0.3, 1],
       }}
       whileHover={{ y: -6, scale: 1.02 }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       {/* Orbiting border glow on hover */}
       <motion.span
@@ -158,30 +159,35 @@ function MediaVideoCard({
       />
 
       <div className="relative aspect-[9/16] max-h-[420px] overflow-hidden sm:aspect-[3/4]">
-        {/* Poster */}
-        <img
-          src={video.poster}
-          alt={video.title}
-          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
-            isPlaying ? "opacity-0" : "opacity-100"
-          }`}
-          onError={(e) => {
-            e.currentTarget.style.display = "none";
-          }}
-        />
-
-        {/* Video */}
+        {/* Video — paused by default, plays on hover, resumes from where it stopped */}
+        {/* First frame of the video acts as the thumbnail */}
         <video
           ref={videoRef}
           muted
           loop
           playsInline
-          preload="metadata"
-          poster={video.poster}
+          preload="auto"
           className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
         >
           <source src={video.videoSrc} type="video/mp4" />
         </video>
+
+        {/* Play icon — visible when paused */}
+        <motion.div
+          className={`pointer-events-none absolute inset-0 z-[2] flex items-center justify-center transition-opacity duration-300 ${
+            isPlaying ? "opacity-0" : "opacity-100"
+          }`}
+        >
+          <motion.div
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm"
+            animate={{ scale: [1, 1.08, 1] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <svg className="ml-0.5 h-3.5 w-3.5 text-white" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </motion.div>
+        </motion.div>
 
         {/* Shimmer sweep overlay */}
         <motion.div
@@ -205,23 +211,6 @@ function MediaVideoCard({
         <div className="absolute inset-x-0 top-0 h-1/4 bg-gradient-to-b from-black/30 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/70 to-transparent" />
 
-        {/* Live badge with pulse */}
-        <motion.div
-          className="absolute top-3 left-3 z-10 flex items-center gap-1.5 rounded-md bg-red-600/90 px-2.5 py-1 backdrop-blur-sm"
-          initial={{ opacity: 0, x: -10 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.5 + index * 0.15, duration: 0.4 }}
-        >
-          <span className="relative flex h-1.5 w-1.5">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75" />
-            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-white" />
-          </span>
-          <span className="text-[10px] font-bold tracking-wide text-white uppercase">
-            Live
-          </span>
-        </motion.div>
-
         {/* Title overlay at bottom */}
         <motion.div
           className="absolute inset-x-0 bottom-0 z-10 p-3"
@@ -243,35 +232,32 @@ function MediaVideoCard({
 
 function MonumentBorder() {
   return (
-    <div className="relative mt-6 bg-orange-500">
-      {/* Warm amber glow behind monuments */}
-      <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-amber-500/10 to-transparent" />
-
-      <div className="overflow-hidden">
-        <motion.div
-          className="flex"
-          style={{ width: "300%" }}
-          animate={{ x: ["0%", "-33.333%"] }}
-          transition={{
-            x: {
-              duration: 40,
-              repeat: Infinity,
-              ease: "linear",
-            },
-          }}
-        >
-          {[0, 1, 2].map((i) => (
-            <img
-              key={i}
-              src="/images/monuments.png"
-              alt=""
-              className="h-10 flex-shrink-0 object-cover object-bottom sm:h-12 lg:h-14"
-              style={{ width: "33.334%" }}
-              aria-hidden="true"
-            />
-          ))}
-        </motion.div>
-      </div>
+    <div className="relative mt-6 overflow-hidden">
+      <motion.div
+        className="flex"
+        style={{ width: "200%" }}
+        animate={{ x: ["0%", "-50%"] }}
+        transition={{
+          x: {
+            duration: 30,
+            repeat: Infinity,
+            ease: "linear",
+          },
+        }}
+      >
+        <img
+          src="/images/MonumentSVG.svg"
+          alt=""
+          aria-hidden="true"
+          className="h-auto w-1/2 flex-shrink-0"
+        />
+        <img
+          src="/images/MonumentSVG.svg"
+          alt=""
+          aria-hidden="true"
+          className="h-auto w-1/2 flex-shrink-0"
+        />
+      </motion.div>
     </div>
   );
 }
@@ -279,53 +265,43 @@ function MonumentBorder() {
 // ─── Main Section ───
 
 export function MediaCoverageSection() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const [inView, setInView] = useState(false);
-
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true);
-        }
-      },
-      { threshold: 0.2 },
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <section
-      ref={sectionRef}
-      className="relative overflow-hidden bg-white py-8 sm:py-10 lg:py-12"
+      className="relative overflow-hidden bg-white pt-8 pb-0 sm:pt-10 lg:pt-12"
     >
-      {/* Subtle background dot pattern */}
-      <div className="absolute inset-0 opacity-[0.03]">
+      {/* ── Grid Background Image ── */}
+      <div className="pointer-events-none absolute inset-0">
+        <img
+          src="/images/grid-bg.png"
+          alt=""
+          aria-hidden="true"
+          className="h-full w-full object-cover opacity-20"
+        />
+        {/* Edge vignette to fade into white */}
         <div
-          className="h-full w-full"
+          className="absolute inset-0"
           style={{
-            backgroundImage:
-              "radial-gradient(circle at 1px 1px, rgba(245,158,11,0.5) 1px, transparent 0)",
-            backgroundSize: "32px 32px",
+            background:
+              "radial-gradient(ellipse at center, transparent 40%, rgba(255,255,255,0.5) 75%, rgba(255,255,255,0.95) 100%)",
           }}
         />
       </div>
 
       {/* Floating ambient orbs */}
       <motion.div
-        className="pointer-events-none absolute top-10 left-[10%] h-60 w-60 rounded-full bg-amber-400/[0.06] blur-[80px]"
+        className="pointer-events-none absolute top-10 left-[10%] h-60 w-60 rounded-full bg-amber-400/[0.07] blur-[80px]"
         animate={{ x: [0, 30, 0], y: [0, -20, 0] }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
-        className="pointer-events-none absolute right-[10%] bottom-20 h-48 w-48 rounded-full bg-orange-400/[0.06] blur-[80px]"
+        className="pointer-events-none absolute right-[10%] bottom-20 h-48 w-48 rounded-full bg-orange-400/[0.07] blur-[80px]"
         animate={{ x: [0, -25, 0], y: [0, 15, 0] }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+      />
+      <motion.div
+        className="pointer-events-none absolute top-1/2 left-1/2 h-52 w-52 -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-300/[0.05] blur-[90px]"
+        animate={{ scale: [1, 1.2, 1], opacity: [0.04, 0.08, 0.04] }}
+        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
       />
 
       <div className="relative mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8 xl:px-12">
@@ -370,12 +346,13 @@ export function MediaCoverageSection() {
               key={video.id}
               video={video}
               index={i}
-              sectionInView={inView}
             />
           ))}
         </div>
       </div>
 
+      {/* ── Monument SVG Border ── */}
+      <MonumentBorder />
     </section>
   );
 }
