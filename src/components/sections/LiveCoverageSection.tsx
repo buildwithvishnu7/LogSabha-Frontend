@@ -1,0 +1,340 @@
+import { useRef, useEffect, useState, useCallback } from "react";
+import { motion } from "motion/react";
+import { ArrowRight } from "lucide-react";
+import {
+  ScrollReveal,
+  ScrollRevealLine,
+} from "@/components/motion/ScrollReveal";
+import { LoopingIcon } from "@/components/LoopingIcon";
+import BroadcastIcon from "@/components/ui/broadcast-icon";
+
+// ─── Data ───
+
+interface SpeechVideo {
+  id: string;
+  title: string;
+  speaker: string;
+  videoSrc: string;
+}
+
+const MAIN_VIDEO = {
+  tag: "Parliament",
+  title: "PM Modi's Remarks in Lok Sabha — Parliament Session",
+  youtubeUrl: "https://www.youtube.com/watch?v=kTB6g92Usmw",
+};
+
+const RECENT_SPEECHES: SpeechVideo[] = [
+  {
+    id: "speech-1",
+    title: "PM Modi's First Speech After Re-Election",
+    speaker: "PM Narendra Modi",
+    videoSrc: "/videos/speech3.mp4",
+  },
+  {
+    id: "speech-2",
+    title: "Lok Sabha Session — Motion of Thanks Debate",
+    speaker: "Parliament Session 2024",
+    videoSrc: "/videos/speech4.mp4",
+  },
+  {
+    id: "speech-3",
+    title: "PM Modi in Rajya Sabha — Presidential Address",
+    speaker: "Rajya Sabha Session",
+    videoSrc: "/videos/speech5.mp4",
+  },
+  {
+    id: "speech-4",
+    title: "PM Narendra Modi Recalls Hoisting Tricolour At Lal Chowk",
+    speaker: "PM Narendra Modi",
+    videoSrc: "/videos/speech6.mp4",
+  },
+];
+
+// ─── Live Pulse Dot ───
+
+function LiveDot() {
+  return (
+    <span className="relative flex h-2.5 w-2.5">
+      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75" />
+      <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-500" />
+    </span>
+  );
+}
+
+// ─── YouTube Embed Helper ───
+
+function getYouTubeEmbedUrl(url: string, autoplay = true): string {
+  const match = url.match(/[?&]v=([^&]+)/);
+  const id = match?.[1] ?? "";
+  const params = new URLSearchParams({
+    autoplay: autoplay ? "1" : "0",
+    mute: "0",
+    loop: "1",
+    playlist: id,
+    controls: "1",
+    modestbranding: "1",
+    rel: "0",
+    showinfo: "0",
+    playsinline: "1",
+  });
+  return `https://www.youtube.com/embed/${id}?${params.toString()}`;
+}
+
+// ─── Main Video Player (YouTube iframe) ───
+
+function MainVideoPlayer() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setInView(true);
+      },
+      { threshold: 0.2 },
+    );
+
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <motion.div
+      ref={containerRef}
+      className="group relative aspect-[16/9] w-full overflow-hidden rounded-2xl bg-gray-900 shadow-xl shadow-black/10"
+      initial={{ opacity: 0, y: 30, scale: 0.98 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+    >
+      {inView && (
+        <iframe
+          src={getYouTubeEmbedUrl(MAIN_VIDEO.youtubeUrl)}
+          title={MAIN_VIDEO.title}
+          className="absolute inset-0 h-full w-full"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          style={{ border: "none" }}
+        />
+      )}
+
+      {/* Gradient overlays */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
+
+      {/* Tag */}
+      <div className="pointer-events-none absolute top-4 left-4 z-10">
+        <span className="rounded-md bg-amber-500/90 px-3 py-1 text-[11px] font-bold tracking-wide text-white uppercase backdrop-blur-sm">
+          {MAIN_VIDEO.tag}
+        </span>
+      </div>
+
+      {/* LIVE NOW badge — visible on mobile only (overlaid on video) */}
+      <motion.div
+        className="pointer-events-none absolute top-3 right-3 z-10 flex items-center gap-1.5 rounded-full border border-red-300/50 bg-red-50/90 px-3 py-1.5 shadow-sm backdrop-blur-sm sm:hidden"
+        animate={{ boxShadow: ["0 0 0 0 rgba(239,68,68,0)", "0 0 0 6px rgba(239,68,68,0)"] }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <LiveDot />
+        <span className="text-[10px] font-bold tracking-wider text-red-600 uppercase">
+          Live Now
+        </span>
+      </motion.div>
+
+      {/* Title overlay */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 p-5 sm:p-6">
+        <h3 className="text-lg font-bold text-white sm:text-xl lg:text-2xl">
+          {MAIN_VIDEO.title}
+        </h3>
+      </div>
+    </motion.div>
+  );
+}
+
+// ─── Hover-to-Play Speech Card (local video, resume from last point) ───
+
+function SpeechCard({
+  speech,
+  index,
+}: {
+  speech: SpeechVideo;
+  index: number;
+}) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
+
+  const handleMouseEnter = useCallback(() => {
+    setIsHovered(true);
+    setHasStarted(true);
+    videoRef.current?.play().catch(() => {});
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    setIsHovered(false);
+    videoRef.current?.pause();
+  }, []);
+
+  return (
+    <motion.div
+      className="group cursor-pointer"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{
+        duration: 0.6,
+        delay: index * 0.1,
+        ease: [0.16, 1, 0.3, 1],
+      }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <div className="relative aspect-[16/10] overflow-hidden rounded-xl bg-gray-100">
+        {/* Video — always mounted, plays/pauses on hover */}
+        <video
+          ref={videoRef}
+          loop
+          playsInline
+          preload="auto"
+          className="absolute inset-0 h-full w-full object-cover"
+        >
+          <source src={speech.videoSrc} type="video/mp4" />
+        </video>
+
+        {/* Dark overlay when paused */}
+        <div
+          className={`absolute inset-0 bg-black/20 transition-opacity duration-300 ${
+            isHovered ? "opacity-0" : "opacity-100"
+          }`}
+        />
+
+        {/* Play indicator — visible when not hovered */}
+        <div
+          className={`pointer-events-none absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${
+            isHovered ? "opacity-0" : "opacity-100"
+          }`}
+        >
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm transition-transform duration-300 group-hover:scale-110">
+            <svg
+              className="ml-0.5 h-4 w-4 text-white"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      {/* Info */}
+      <div className="mt-3 px-0.5">
+        <h4 className="line-clamp-2 text-sm font-bold leading-snug text-gray-900 transition-colors duration-200 group-hover:text-amber-600">
+          {speech.title}
+        </h4>
+        <p className="mt-1 text-xs text-gray-500">{speech.speaker}</p>
+      </div>
+    </motion.div>
+  );
+}
+
+// ─── Main Section ───
+
+export function LiveCoverageSection() {
+  return (
+    <section className="relative overflow-hidden bg-gradient-to-b from-white via-amber-50/20 to-white py-8 sm:py-10 lg:py-12">
+      {/* Subtle background pattern */}
+      <div className="absolute inset-0 opacity-[0.02]">
+        <div
+          className="h-full w-full"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 1px 1px, rgba(245,158,11,0.5) 1px, transparent 0)",
+            backgroundSize: "40px 40px",
+          }}
+        />
+      </div>
+
+      <div className="relative mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8 xl:px-12">
+        {/* ── Header ── */}
+        <div className="flex items-start justify-between">
+          <div>
+            <ScrollReveal>
+              <h2 className="text-2xl font-extrabold text-gray-900 sm:text-3xl md:text-4xl lg:text-5xl">
+                Live{" "}
+                <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 bg-clip-text text-transparent">
+                  Political Coverage
+                </span>
+              </h2>
+            </ScrollReveal>
+
+            <ScrollReveal delay={0.15}>
+              <p className="mt-1.5 text-xs leading-relaxed text-gray-500 sm:text-sm md:text-base">
+                Watch live sessions and recent parliamentary speeches
+              </p>
+            </ScrollReveal>
+          </div>
+
+          {/* LIVE NOW badge — hidden on mobile, shown in video overlay instead */}
+          <ScrollReveal delay={0.2} className="hidden sm:block">
+            <motion.div
+              className="flex items-center gap-2 rounded-full border border-red-200 bg-red-50 px-4 py-2 shadow-sm"
+              animate={{ boxShadow: ["0 0 0 0 rgba(239,68,68,0)", "0 0 0 8px rgba(239,68,68,0)"] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <LiveDot />
+              <span className="text-xs font-bold tracking-wider text-red-600 uppercase">
+                Live Now
+              </span>
+            </motion.div>
+          </ScrollReveal>
+        </div>
+
+        <ScrollRevealLine
+          delay={0.3}
+          className="mt-3 h-[3px] w-12 rounded-full bg-amber-500"
+        />
+
+        {/* ── Main Video ── */}
+        <div className="mt-6 lg:mt-8">
+          <MainVideoPlayer />
+        </div>
+
+        {/* ── From the Archives ── */}
+        <div className="mt-8 lg:mt-10">
+          <ScrollReveal delay={0.1}>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <LoopingIcon
+                  icon={BroadcastIcon}
+                  size={20}
+                  interval={4000}
+                  className="text-amber-500"
+                />
+                <h3 className="text-lg font-extrabold text-gray-900 sm:text-xl">
+                  From the Archives
+                </h3>
+              </div>
+              <a
+                href="#"
+                className="moving-border flex items-center gap-1.5 rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-amber-500 transition-colors hover:text-amber-600"
+              >
+                <span>View All</span>
+                <ArrowRight className="h-4 w-4" />
+              </a>
+            </div>
+          </ScrollReveal>
+
+          <div className="scrollbar-hide -mx-4 mt-4 flex gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-4">
+            {RECENT_SPEECHES.map((speech, i) => (
+              <div key={speech.id} className="w-[240px] flex-shrink-0 sm:w-auto">
+                <SpeechCard speech={speech} index={i} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

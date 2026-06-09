@@ -4,6 +4,7 @@ export const globalData: GlobalData = {
   nav: {
     logo: "/logo/Logfinalsabha.gif",
     links: [
+      { label: "Home", href: "/" },
       { label: "Political Analysis", href: "/political-analysis" },
       { label: "Hindu For Justice", href: "/hindu-for-justice" },
       { label: "About Us", href: "/about" },
@@ -19,14 +20,14 @@ export const globalData: GlobalData = {
       label: "Hindu for Justice",
       image: "/logo/HFJ-logo-final-new.gif",
       href: "/hindu-for-justice",
-      expandedHeight: 250,
+      expandedHeight: 190,
     },
     {
       id: "rss",
       label: "RSS",
       image: "/logo/rss.gif",
       href: "#",
-      expandedHeight: 160,
+      expandedHeight: 120,
     },
   ],
 };

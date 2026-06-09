@@ -1,7 +1,20 @@
 import { useHomeData } from "@/hooks/useHomeData";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { PoliticalLandscapeSection } from "@/components/sections/PoliticalLandscapeSection";
-import { ScrollReveal, ScrollRevealText, ScrollRevealLine } from "@/components/motion/ScrollReveal";
+import { LiveCoverageSection } from "@/components/sections/LiveCoverageSection";
+import { PoliticalPartiesSection } from "@/components/sections/PoliticalPartiesSection";
+import { ServicesSection } from "@/components/sections/ServicesSection";
+import { CommunitySection } from "@/components/sections/CommunitySection";
+import { DataInsightsSection } from "@/components/sections/DataInsightsSection";
+import { RSSSection } from "@/components/sections/RSSSection";
+import { LogSabhaStorySection } from "@/components/sections/LogSabhaStorySection";
+import { ContactSection } from "@/components/sections/ContactSection";
+import { SocialPresenceSection } from "@/components/sections/SocialPresenceSection";
+import { HinduForJusticeSection } from "@/components/sections/HinduForJusticeSection";
+import { FounderEditorialSection } from "@/components/sections/FounderEditorialSection";
+import { EditorialInsightsSection } from "@/components/sections/EditorialInsightsSection";
+import { MediaCoverageSection } from "@/components/sections/MediaCoverageSection";
+import { Footer } from "@/components/Footer";
 
 export default function Home() {
   const { data, isLoading } = useHomeData();
@@ -18,24 +31,21 @@ export default function Home() {
     <>
       <HeroSection data={data.hero} />
       <PoliticalLandscapeSection data={data.politicalLandscape} />
+      <PoliticalPartiesSection />
+      <CommunitySection />
+      <ServicesSection data={data.services} />
+      <LiveCoverageSection />
+      <RSSSection />
+      <LogSabhaStorySection />
+      <FounderEditorialSection />
+      <HinduForJusticeSection />
+      <EditorialInsightsSection />
+      <SocialPresenceSection />
+      <MediaCoverageSection />
 
-      {/* Placeholder — demonstrates scroll animations for future sections */}
-      <section className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-4">
-        <ScrollRevealLine delay={0} className="mb-6 h-[2px] w-16 bg-amber-500" />
-        <ScrollRevealText
-          text="More Sections"
-          highlight="Coming Soon"
-          className="text-center text-3xl font-extrabold text-gray-900 sm:text-4xl lg:text-5xl"
-          highlightClassName="bg-gradient-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent"
-          delay={0.1}
-        />
-        <ScrollReveal delay={0.4}>
-          <p className="mt-4 max-w-md text-center text-gray-500">
-            Each section will animate in as you scroll — text reveals word by
-            word, elements slide up with blur-to-sharp transitions.
-          </p>
-        </ScrollReveal>
-      </section>
+      <DataInsightsSection />
+      <ContactSection />
+      <Footer />
     </>
   );
 }

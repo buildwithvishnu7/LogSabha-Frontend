@@ -2,6 +2,7 @@ import { motion } from "motion/react";
 import type { ReactNode } from "react";
 
 // ─── Basic scroll reveal wrapper ───
+// Re-animates every time the element enters the viewport
 
 interface ScrollRevealProps {
   children: ReactNode;
@@ -27,13 +28,22 @@ export function ScrollReveal({
 
   return (
     <motion.div
-      initial={{ opacity: 0, filter: "blur(6px)", ...offset }}
-      whileInView={{ opacity: 1, filter: "blur(0px)", x: 0, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{
-        delay,
-        duration: 0.7,
-        ease: [0.16, 1, 0.3, 1],
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.3 }}
+      variants={{
+        hidden: { opacity: 0, filter: "blur(6px)", ...offset },
+        visible: {
+          opacity: 1,
+          filter: "blur(0px)",
+          x: 0,
+          y: 0,
+          transition: {
+            delay,
+            duration: 0.7,
+            ease: [0.16, 1, 0.3, 1],
+          },
+        },
       }}
       className={className}
     >
@@ -43,6 +53,7 @@ export function ScrollReveal({
 }
 
 // ─── Word-by-word scroll reveal for headings ───
+// Re-animates each time heading enters viewport
 
 interface ScrollRevealTextProps {
   text: string;
@@ -66,7 +77,7 @@ export function ScrollRevealText({
       className={className}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: "-80px" }}
+      viewport={{ once: true, amount: 0.3 }}
       variants={{
         hidden: {},
         visible: {
@@ -127,37 +138,17 @@ export function ScrollRevealLine({
   return (
     <motion.div
       className={className}
-      initial={{ scaleX: 0, originX: 0 }}
-      whileInView={{ scaleX: 1 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ delay, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.3 }}
+      variants={{
+        hidden: { scaleX: 0 },
+        visible: {
+          scaleX: 1,
+          transition: { delay, duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+        },
+      }}
+      style={{ originX: 0 }}
     />
-  );
-}
-
-// ─── Counter animation for numbers ───
-
-export function ScrollRevealCounter({
-  value,
-  suffix = "",
-  className = "text-4xl font-extrabold text-amber-500",
-  delay = 0,
-}: {
-  value: number;
-  suffix?: string;
-  className?: string;
-  delay?: number;
-}) {
-  return (
-    <motion.span
-      className={className}
-      initial={{ opacity: 0, scale: 0.5 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ delay, duration: 0.5, type: "spring", stiffness: 200 }}
-    >
-      {value.toLocaleString()}
-      {suffix}
-    </motion.span>
   );
 }

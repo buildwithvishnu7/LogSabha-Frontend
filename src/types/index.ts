@@ -43,6 +43,7 @@ export interface StateData {
   ndaSeats: number;
   indiaSeats: number;
   otherSeats: number;
+  rulingParty?: string;
 }
 
 export interface PlatformStat {
@@ -62,6 +63,25 @@ export interface PoliticalLandscapeData {
   states: StateData[];
 }
 
+// ─── Services Section ───
+export interface ServiceItem {
+  id: string;
+  icon: string;
+  title: string;
+  description: string;
+  image: string;
+  stats: { value: number; suffix: string; label: string }[];
+  bulletPoints: string[];
+  learnMoreLink: string;
+}
+
+export interface ServicesData {
+  title: string;
+  titleHighlight: string;
+  subtitle: string;
+  services: ServiceItem[];
+}
+
 // ─── Generic Section ───
 export interface SectionData {
   id: string;
@@ -74,6 +94,7 @@ export interface SectionData {
 export interface HomePageData {
   hero: HeroData;
   politicalLandscape: PoliticalLandscapeData;
+  services: ServicesData;
   sections: SectionData[];
 }
 

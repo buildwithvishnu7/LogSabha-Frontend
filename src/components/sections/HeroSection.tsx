@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
 import { BackgroundVideo } from "@/components/video/BackgroundVideo";
 import type { HeroData, HeroStat, SideBadge as SideBadgeType } from "@/types";
 
@@ -26,6 +26,7 @@ function SideBadge({
   alwaysExpanded: boolean;
 }) {
   const [hoverExpanded, setHoverExpanded] = useState(false);
+  const isMobile = useIsMobile();
   const expanded = alwaysExpanded || hoverExpanded;
 
   return (
@@ -41,21 +42,42 @@ function SideBadge({
       onMouseEnter={() => setHoverExpanded(true)}
       onMouseLeave={() => setHoverExpanded(false)}
       className="relative block"
+      whileHover={{ x: 4 }}
     >
-      <motion.div
-        className="overflow-hidden border-y border-r border-amber-500/30 bg-[#1a1a2e]/90 shadow-xl backdrop-blur-sm"
+      {/* Orbiting border glow */}
+      <motion.span
+        className="pointer-events-none absolute -inset-[2px] rounded-r-[30px]"
+        style={{
+          background:
+            "conic-gradient(from var(--angle), transparent 0%, transparent 65%, rgba(245,158,11,0.8) 80%, rgba(245,158,11,1) 85%, rgba(245,158,11,0.8) 90%, transparent 100%)",
+          mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+          maskComposite: "exclude",
+          WebkitMaskComposite: "xor",
+          padding: "2px",
+          borderTopLeftRadius: 0,
+          borderBottomLeftRadius: 0,
+        }}
         animate={{
-          height: expanded ? badge.expandedHeight : 56,
-          borderTopRightRadius: expanded ? 12 : 28,
-          borderBottomRightRadius: expanded ? 12 : 28,
+          "--angle": ["0deg", "360deg"],
+        } as Record<string, string[]>}
+        transition={{ duration: 3, repeat: Infinity, ease: "linear", delay: index * 0.5 }}
+      />
+
+      <motion.div
+        className="overflow-hidden border-y border-r border-amber-500/40 bg-[#1a1a2e]/90 shadow-xl backdrop-blur-sm"
+        animate={{
+          height: expanded ? badge.expandedHeight : (isMobile ? 44 : 60),
+          borderTopRightRadius: expanded ? 14 : 26,
+          borderBottomRightRadius: expanded ? 14 : 26,
         }}
         transition={{ duration: 0.45, ease: [0.25, 1, 0.5, 1] }}
         style={{
-          width: alwaysExpanded ? 56 : 70,
+          width: isMobile ? 46 : (alwaysExpanded ? 52 : 62),
           borderTopLeftRadius: 0,
           borderBottomLeftRadius: 0,
           display: "flex",
           flexDirection: "column",
+          boxShadow: "4px 0 20px rgba(245,158,11,0.15)",
         }}
       >
         <motion.div
@@ -69,7 +91,7 @@ function SideBadge({
         >
           <div className="flex flex-1 items-center">
             <span
-              className="whitespace-nowrap text-[9px] font-bold tracking-wider text-white uppercase sm:text-[10px] md:text-xs"
+              className="whitespace-nowrap text-[10px] font-bold tracking-wider text-white uppercase sm:text-xs md:text-sm"
               style={{
                 writingMode: "vertical-rl",
                 transform: "rotate(180deg)",
@@ -78,17 +100,26 @@ function SideBadge({
               {badge.label}
             </span>
           </div>
-          <div className="mb-1.5 h-[1px] w-7 bg-amber-500/50 sm:w-8 md:w-10" />
+          <div className="mb-1.5 h-[1px] w-8 bg-amber-500/50 sm:w-10 md:w-12" />
         </motion.div>
 
         <div
-          className="flex flex-shrink-0 items-center justify-center p-1 sm:p-1.5 md:p-2"
-          style={{ height: alwaysExpanded ? 56 : 56, width: "100%" }}
+          className="relative flex flex-shrink-0 items-center justify-center p-1"
+          style={{ height: isMobile ? 44 : 52, width: "100%" }}
         >
-          <img
+          {/* Breathing glow behind image */}
+          <motion.div
+            className="absolute inset-2 rounded-full"
+            style={{ background: "radial-gradient(circle, rgba(245,158,11,0.3) 0%, transparent 70%)" }}
+            animate={{ scale: [1, 1.3, 1], opacity: [0.6, 0.2, 0.6] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: index * 0.4 }}
+          />
+          <motion.img
             src={badge.image}
             alt={badge.label}
-            className="h-[34px] w-[34px] rounded-full object-contain sm:h-[40px] sm:w-[40px] md:h-[50px] md:w-[50px]"
+            className="relative h-[34px] w-[34px] rounded-full object-contain sm:h-[38px] sm:w-[38px] md:h-[42px] md:w-[42px]"
+            animate={{ y: [0, -2, 0] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: index * 0.3 }}
           />
         </div>
       </motion.div>
@@ -97,38 +128,76 @@ function SideBadge({
 }
 
 export function StickyBadges({ badges }: { badges: SideBadgeType[] }) {
-  const isMobile = useIsMobile();
-
   return (
-    <div className="fixed left-0 top-1/2 z-40 flex -translate-y-1/2 flex-col gap-3 md:gap-4">
+    <div className="fixed bottom-[38%] left-0 z-40 flex flex-col gap-2 sm:bottom-[30%] sm:gap-3 lg:bottom-[15%] lg:gap-4 xl:gap-5">
       {badges.map((badge, i) => (
         <SideBadge
           key={badge.id}
           badge={badge}
           index={i}
-          alwaysExpanded={isMobile}
+          alwaysExpanded={false}
         />
       ))}
     </div>
   );
 }
 
-// ─── Sticky Watermark Logo ───
+// ─── Scroll-linked diagonal logo — merges into header logo ───
 
-export function StickyWatermark({ src }: { src: string }) {
+function ScrollLogo({ src, sectionRef }: { src: string; sectionRef: React.RefObject<HTMLElement | null> }) {
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+
+  // Position: half-visible at bottom-center → top-left
+  const x = useTransform(scrollYProgress, [0, 1], ["50vw", "5vw"]);
+  const y = useTransform(scrollYProgress, [0, 1], ["100vh", "2vh"]);
+  const scale = useTransform(scrollYProgress, [0, 0.8, 1], [1, 0.5, 0.25]);
+  const opacity = useTransform(scrollYProgress, [0, 0.1, 0.85, 1], [1, 1, 1, 0]);
+
+  // 3D rotations linked to scroll
+  const rotateY = useTransform(scrollYProgress, [0, 0.5, 1], [0, 180, 360]);
+  const rotateX = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 15, -10, 0]);
+
   return (
     <motion.div
-      className="pointer-events-none fixed bottom-4 left-1/2 z-30 -translate-x-1/2 sm:bottom-6"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 0.3, y: 0 }}
-      transition={{ duration: 1, delay: 1.5 }}
+      className="pointer-events-none fixed left-0 top-0 z-[45]"
+      style={{
+        x,
+        y,
+        scale,
+        opacity,
+        translateX: "-50%",
+        translateY: "-50%",
+        perspective: 800,
+      }}
     >
-      <img
-        src={src}
-        alt=""
-        aria-hidden="true"
-        className="h-14 w-auto sm:h-16 md:h-20 lg:h-24"
-      />
+      <motion.div
+        style={{
+          rotateY,
+          rotateX,
+          transformStyle: "preserve-3d",
+        }}
+        className="relative"
+      >
+        {/* Glow behind logo */}
+        <motion.div
+          className="absolute inset-0 rounded-full blur-xl"
+          style={{
+            background: "radial-gradient(circle, rgba(245,158,11,0.4) 0%, transparent 70%)",
+            scale: useTransform(scrollYProgress, [0, 0.5, 1], [1.2, 1.5, 0.8]),
+          }}
+        />
+
+        {/* Logo image */}
+        <img
+          src={src}
+          alt=""
+          aria-hidden="true"
+          className="relative h-36 w-auto drop-shadow-[0_0_20px_rgba(245,158,11,0.5)] sm:h-40 md:h-48 lg:h-56"
+        />
+      </motion.div>
     </motion.div>
   );
 }
@@ -149,7 +218,7 @@ function RotatingStats({ stats }: { stats: HeroStat[] }) {
   if (stats.length === 0) return null;
 
   return (
-    <div className="absolute right-3 top-[30%] z-10 -translate-y-1/2 text-right sm:right-6 sm:top-[35%] md:right-10 lg:right-20">
+    <div className="text-left">
       <AnimatePresence mode="wait">
         <motion.div
           key={currentStat}
@@ -168,7 +237,7 @@ function RotatingStats({ stats }: { stats: HeroStat[] }) {
           </motion.p>
 
           <motion.div
-            className="mt-1 flex items-baseline justify-end gap-2 sm:mt-2"
+            className="mt-1 flex items-baseline gap-2 sm:mt-2"
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.25, duration: 0.5 }}
@@ -183,7 +252,7 @@ function RotatingStats({ stats }: { stats: HeroStat[] }) {
         </motion.div>
       </AnimatePresence>
 
-      <div className="mt-4 flex justify-end gap-1.5 sm:mt-6">
+      <div className="mt-4 flex gap-1.5 sm:mt-6">
         {stats.map((_, i) => (
           <motion.div
             key={i}
@@ -207,9 +276,12 @@ function RotatingStats({ stats }: { stats: HeroStat[] }) {
 
 export function HeroSection({ data }: { data: HeroData }) {
   const titleWords = data.title.split(" ");
+  const sectionRef = useRef<HTMLElement>(null);
 
   return (
-    <section className="relative h-screen w-full overflow-hidden">
+    <section ref={sectionRef} className="relative h-screen w-full overflow-hidden">
+      {/* Logo that moves diagonally into header on scroll */}
+      <ScrollLogo src={data.watermarkLogo} sectionRef={sectionRef} />
       <BackgroundVideo src={data.videoSrc} poster={data.posterSrc} />
 
       {/* Top vignette — blends with header */}
@@ -241,19 +313,18 @@ export function HeroSection({ data }: { data: HeroData }) {
 
       <div className="absolute inset-0 z-[1] bg-black/10" />
 
-      <RotatingStats stats={data.stats} />
-
       {/* Content */}
       <div
-        className="relative z-10 mx-auto flex h-full max-w-[1440px] flex-col justify-end px-3 pb-12 sm:px-6 sm:pb-16 md:pb-20 lg:px-8 lg:pb-24 xl:px-12"
+        className="relative z-10 mx-auto flex h-full max-w-[1440px] flex-col items-start justify-end px-3 pb-12 sm:px-6 sm:pb-16 md:pb-20 lg:px-8 lg:pb-24 xl:px-12"
         style={{ perspective: "1000px" }}
       >
         {/* 3D heading */}
-        <div>
+        <div className="max-w-2xl">
           <motion.h1
             className="text-2xl font-extrabold leading-tight sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl"
             initial="hidden"
-            animate="visible"
+            whileInView="visible"
+            viewport={{ margin: "-80px", amount: 0.3 }}
             variants={{
               hidden: {},
               visible: {
@@ -264,7 +335,7 @@ export function HeroSection({ data }: { data: HeroData }) {
             {titleWords.map((word, i) => (
               <motion.span
                 key={i}
-                className="mr-3 inline-block text-white lg:mr-4"
+                className="hero-text-shimmer mr-3 inline-block lg:mr-4"
                 style={{ transformStyle: "preserve-3d" }}
                 variants={{
                   hidden: { y: 80, rotateX: 90, opacity: 0 },
@@ -283,7 +354,7 @@ export function HeroSection({ data }: { data: HeroData }) {
               </motion.span>
             ))}
             <motion.span
-              className="inline-block bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(245,158,11,0.3)]"
+              className="hero-text-highlight inline-block"
               style={{ transformStyle: "preserve-3d" }}
               variants={{
                 hidden: { y: 80, rotateX: 90, scale: 0.8, opacity: 0 },
@@ -308,34 +379,55 @@ export function HeroSection({ data }: { data: HeroData }) {
         <motion.div
           className="mt-3 flex items-center gap-3 sm:mt-4"
           style={{ transformStyle: "preserve-3d" }}
-          initial={{ opacity: 0, rotateY: -30, x: -40 }}
-          animate={{ opacity: 1, rotateY: 0, x: 0 }}
-          transition={{
-            delay: 0.9,
-            duration: 0.8,
-            ease: [0.16, 1, 0.3, 1],
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ margin: "-80px", amount: 0.3 }}
+          variants={{
+            hidden: { opacity: 0, rotateY: -30, x: -40 },
+            visible: {
+              opacity: 1,
+              rotateY: 0,
+              x: 0,
+              transition: {
+                delay: 0.9,
+                duration: 0.8,
+                ease: [0.16, 1, 0.3, 1],
+              },
+            },
           }}
         >
           <motion.div
             className="h-[2px] bg-amber-500"
-            initial={{ width: 0 }}
-            animate={{ width: 40 }}
-            transition={{
-              delay: 1.1,
-              duration: 0.5,
-              ease: [0.16, 1, 0.3, 1],
+            variants={{
+              hidden: { width: 0 },
+              visible: {
+                width: 40,
+                transition: {
+                  delay: 1.1,
+                  duration: 0.5,
+                  ease: [0.16, 1, 0.3, 1],
+                },
+              },
             }}
           />
           <motion.p
             className="text-xs font-medium tracking-wide text-white/90 sm:text-sm md:text-base lg:text-lg"
-            initial={{ opacity: 0, z: -50 }}
-            animate={{ opacity: 1, z: 0 }}
-            transition={{ delay: 1.2, duration: 0.6 }}
+            variants={{
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: 1,
+                transition: { delay: 1.2, duration: 0.6 },
+              },
+            }}
           >
             {data.subtitle}
           </motion.p>
         </motion.div>
 
+        {/* Rotating stats — left aligned below subtitle */}
+        <div className="mt-6 max-w-2xl sm:mt-8">
+          <RotatingStats stats={data.stats} />
+        </div>
       </div>
     </section>
   );

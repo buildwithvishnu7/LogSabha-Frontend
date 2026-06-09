@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" fill="none">
+  <rect width="200" height="60" rx="4" fill="#E31E24"/>
+  <text x="14" y="38" font-family="Arial,sans-serif" font-weight="900" font-size="26" fill="#FFFFFF">NEWS</text>
+  <text x="118" y="38" font-family="Arial,sans-serif" font-weight="900" font-size="26" fill="#FFD700">18</text>
+  <text x="100" y="56" font-family="Arial,sans-serif" font-weight="600" font-size="13" fill="#FFFFFF" text-anchor="middle">हिन्दी</text>
+</svg>
