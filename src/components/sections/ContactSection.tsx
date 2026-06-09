@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, useInView } from "motion/react";
 import {
-  Clock,
   Send,
   CheckCircle,
 } from "lucide-react";

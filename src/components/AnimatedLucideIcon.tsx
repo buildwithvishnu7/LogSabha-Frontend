@@ -37,7 +37,7 @@ export function AnimatedLucideIcon({
       className={cn("inline-flex", className)}
       style={style}
       animate={config.animate}
-      transition={config.transition}
+      transition={config.transition as any}
     >
       <Icon size={size} />
     </motion.span>

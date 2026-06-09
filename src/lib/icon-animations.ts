@@ -22,7 +22,7 @@ export interface IconAnimationConfig {
   transition: {
     duration: number;
     repeat: number;
-    ease: string | number[];
+    ease: string;
     delay?: number;
   };
 }

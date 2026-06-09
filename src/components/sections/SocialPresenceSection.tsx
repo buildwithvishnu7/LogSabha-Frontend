@@ -7,7 +7,6 @@ import {
   Eye,
   Play,
   ExternalLink,
-  ArrowRight,
 } from "lucide-react";
 import {
   ScrollReveal,
@@ -519,7 +518,7 @@ const AGGREGATE_STATS = [
   { label: "Video Views", value: "18M", icon: "views" },
 ];
 
-function StatsBar() {
+export function StatsBar() {
   return (
     <ScrollReveal delay={0.3}>
       <div className="mx-auto mt-6 grid max-w-4xl grid-cols-2 gap-4 sm:grid-cols-4">

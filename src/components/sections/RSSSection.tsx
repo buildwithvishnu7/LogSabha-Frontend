@@ -141,7 +141,7 @@ function TypewriterText({
           className="inline-block w-[2px] translate-y-[1px] bg-gray-800"
           style={{ height: "1em" }}
           animate={{ opacity: [1, 0] }}
-          transition={{ duration: 0.6, repeat: Infinity, ease: "steps(2)" }}
+          transition={{ duration: 0.6, repeat: Infinity, repeatType: "reverse" }}
         />
       )}
     </h3>

@@ -1,11 +1,8 @@
 import { useRef, useEffect, useState, useMemo } from "react";
 import { motion, useInView } from "motion/react";
 import {
-  Calendar,
-  Clock,
   ArrowRight,
   TrendingUp,
-  BookOpen,
 } from "lucide-react";
 import {
   ScrollReveal,
@@ -249,7 +246,7 @@ const textReveal = {
     opacity: 1,
     y: 0,
     filter: "blur(0px)",
-    transition: { delay: 0.3 + i * 0.12, duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+    transition: { delay: 0.3 + i * 0.12, duration: 0.6, ease: [0.16, 1, 0.3, 1] as const },
   }),
 };
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, forwardRef, useCallback } from "react";
+import { useState, useEffect, useRef, forwardRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { Menu, X } from "lucide-react";
@@ -67,7 +67,7 @@ function LottieIcon({ src, size = 24, color = "", className = "" }: { src: strin
 }
 
 // ─── Flaticon animated GIF icon ───
-function FlatIcon({ src, size = 24, className = "" }: { src: string; size?: number; className?: string }) {
+export function FlatIcon({ src, size = 24, className = "" }: { src: string; size?: number; className?: string }) {
   return (
     <img
       src={src}

@@ -38,7 +38,7 @@ const ARTICLES: EditorialArticle[] = [
 
 // ─── Candle Flame (SVG) ───
 
-function CandleFlame({
+export function CandleFlame({
   x,
   size,
   delay,

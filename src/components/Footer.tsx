@@ -2,7 +2,6 @@ import { useRef, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Link } from "react-router-dom";
 import {
-  ArrowRight,
   ArrowUpRight,
   ChevronUp,
 } from "lucide-react";
@@ -179,7 +178,7 @@ const TICKER_WORDS = [
   "ELECTIONS",
 ];
 
-function FooterTicker() {
+export function FooterTicker() {
   const items = [...TICKER_WORDS, ...TICKER_WORDS];
   return (
     <div className="overflow-hidden border-b border-white/5">

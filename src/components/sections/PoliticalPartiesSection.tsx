@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "motion/react";
-import { Users, MapPin, Award, Landmark, Vote, TrendingUp, Map, ChartNoAxesCombined, ChevronLeft, ChevronRight } from "lucide-react";
+import { Landmark, Vote, Map, ChartNoAxesCombined, ChevronLeft, ChevronRight } from "lucide-react";
 import lottieWeb from "lottie-web";
 
 // ─── Inline Lottie icon for badge ───
@@ -32,8 +32,6 @@ function BadgeLottieIcon({ src, size = 18, color = "#f59e0b" }: { src: string; s
   return <div ref={ref} style={{ width: size, height: size, display: "inline-flex" }} />;
 }
 import { AnimatedLucideIcon } from "@/components/AnimatedLucideIcon";
-import { LoopingIcon } from "@/components/LoopingIcon";
-import UsersIcon from "@/components/ui/users-icon";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
 import { useCountUp } from "@/hooks/useCountUp";
 
@@ -237,7 +235,7 @@ const PARTIES: PoliticalParty[] = [
   },
 ];
 
-const PLATFORM_STATS = [
+export const PLATFORM_STATS = [
   { icon: "parties", value: 2500, suffix: "+", label: "Registered Parties" },
   { icon: "seats", value: 543, suffix: "", label: "Lok Sabha Seats" },
   { icon: "states", value: 28, suffix: "", label: "States & UTs" },
@@ -265,7 +263,7 @@ function AnimatedIcon({ icon }: { icon: string }) {
 
 // ─── Animated Stat Counter ───
 
-function StatCounter({
+export function StatCounter({
   icon,
   value,
   suffix,

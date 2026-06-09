@@ -1,10 +1,9 @@
-import { useState, useRef, useEffect, type RefObject } from "react";
+import { useState, useRef, useEffect } from "react";
 import lottieWeb from "lottie-web";
 import { motion, useInView } from "motion/react";
 import {
   Users,
   MessageCircle,
-  ThumbsUp,
   Share2,
   Bookmark,
   MoreHorizontal,
@@ -12,7 +11,6 @@ import {
   Eye,
   Clock,
   TrendingUp,
-  Flame,
   Hash,
 } from "lucide-react";
 import {

@@ -164,11 +164,8 @@ function SpeechCard({
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isHovered, setIsHovered] = useState(false);
-  const [hasStarted, setHasStarted] = useState(false);
-
   const handleMouseEnter = useCallback(() => {
     setIsHovered(true);
-    setHasStarted(true);
     videoRef.current?.play().catch(() => {});
   }, []);
 
