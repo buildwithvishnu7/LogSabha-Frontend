@@ -96,7 +96,7 @@ function getYouTubeEmbedUrl(url: string, autoplay = true): string {
   const id = match?.[1] ?? "";
   const params = new URLSearchParams({
     autoplay: autoplay ? "1" : "0",
-    mute: "0",
+    mute: "1",
     loop: "1",
     playlist: id,
     controls: "1",
@@ -120,9 +120,9 @@ function MainVideoPlayer() {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) setInView(true);
+        setInView(entry.isIntersecting);
       },
-      { threshold: 0.2 },
+      { threshold: 0.3 },
     );
 
     observer.observe(container);
