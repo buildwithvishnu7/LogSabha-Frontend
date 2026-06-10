@@ -1,15 +1,43 @@
 import { useRef, useEffect, useState, useMemo } from "react";
 import { motion, useInView } from "motion/react";
 import {
-  ArrowRight,
   TrendingUp,
 } from "lucide-react";
+import lottieWeb from "lottie-web";
 import {
   ScrollReveal,
   ScrollRevealLine,
 } from "@/components/motion/ScrollReveal";
 import { LoopingIcon } from "@/components/LoopingIcon";
 import BookIcon from "@/components/ui/book-icon";
+
+// ─── Inline Lottie Icon ───
+function LottieIcon({ src, size = 18, color = "#ffffff" }: { src: string; size?: number; color?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const colorRef = useRef(color);
+  colorRef.current = color;
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    let cancelled = false;
+    fetch(src).then(r => r.json()).then(json => {
+      if (cancelled) return;
+      el.innerHTML = "";
+      const anim = lottieWeb.loadAnimation({ container: el, renderer: "svg", loop: true, autoplay: true, animationData: json });
+      const recolor = () => {
+        const c = colorRef.current;
+        el.querySelectorAll("path,circle,rect,line,ellipse,polyline,polygon").forEach(p => {
+          const s = p.getAttribute("stroke"); if (s && s !== "none" && s !== "transparent") p.setAttribute("stroke", c);
+          const f = p.getAttribute("fill"); if (f && f !== "none" && f !== "transparent") p.setAttribute("fill", c);
+        });
+      };
+      anim.addEventListener("DOMLoaded", recolor);
+      anim.addEventListener("enterFrame", recolor);
+    }).catch(() => {});
+    return () => { cancelled = true; el.innerHTML = ""; };
+  }, [src]);
+  return <div ref={ref} style={{ width: size, height: size, display: "inline-flex" }} />;
+}
 
 // ─── Data ───
 
@@ -387,13 +415,7 @@ function FeaturedCard({ article }: { article: Article }) {
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
             />
             Read More
-            <motion.span
-              className="inline-flex"
-              animate={{ x: [0, 3, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <ArrowRight className="h-4 w-4" />
-            </motion.span>
+            <LottieIcon src="/lottie/fast-forward.json" size={22} color="#ffffff" />
           </motion.a>
         </div>
       </motion.div>

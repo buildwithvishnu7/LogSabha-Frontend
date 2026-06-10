@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, useInView } from "motion/react";
 import {
-  Send,
   CheckCircle,
 } from "lucide-react";
 import lottieWeb from "lottie-web";
@@ -418,7 +417,7 @@ export function ContactSection() {
                       </>
                     ) : (
                       <>
-                        <Send className="h-4 w-4" />
+                        <ContactLottieIcon src="/lottie/paper-plane.json" size={32} color="#ffffff" />
                         Send Message
                       </>
                     )}
