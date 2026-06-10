@@ -1,38 +1,12 @@
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Link } from "react-router-dom";
 import {
   ArrowUpRight,
   ChevronUp,
 } from "lucide-react";
-import lottieWeb from "lottie-web";
 
-// ─── Lottie icon for footer ───
-const footerLottieCache: Record<string, object> = {};
 
-function FooterLottieIcon({ src, size = 18 }: { src: string; size?: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const load = (data: object) => {
-      el.innerHTML = "";
-      const anim = lottieWeb.loadAnimation({ container: el, renderer: "svg", loop: true, autoplay: true, animationData: data });
-      const recolor = () => {
-        el.querySelectorAll("path,circle,rect,line,ellipse,polyline,polygon").forEach(p => {
-          const s = p.getAttribute("stroke"); if (s && s !== "none" && s !== "transparent") p.setAttribute("stroke", "#f59e0b");
-        });
-      };
-      anim.addEventListener("DOMLoaded", recolor);
-      anim.addEventListener("enterFrame", recolor);
-    };
-    if (footerLottieCache[src]) { load(footerLottieCache[src]); return; }
-    let cancelled = false;
-    fetch(src).then(r => r.json()).then(json => { footerLottieCache[src] = json; if (!cancelled) load(json); }).catch(() => {});
-    return () => { cancelled = true; el.innerHTML = ""; };
-  }, [src]);
-  return <div ref={ref} className="flex-shrink-0" style={{ width: size, height: size, display: "inline-flex" }} />;
-}
 
 const FOOTER_LINKS = {
   Platform: [

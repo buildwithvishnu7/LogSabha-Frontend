@@ -8,8 +8,6 @@ import {
   ScrollReveal,
   ScrollRevealLine,
 } from "@/components/motion/ScrollReveal";
-import { LoopingIcon } from "@/components/LoopingIcon";
-import BookIcon from "@/components/ui/book-icon";
 
 // ─── Inline Lottie Icon ───
 function LottieIcon({ src, size = 18, color = "#ffffff" }: { src: string; size?: number; color?: string }) {

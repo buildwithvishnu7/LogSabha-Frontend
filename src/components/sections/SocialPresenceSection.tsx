@@ -12,7 +12,6 @@ import {
   ScrollReveal,
   ScrollRevealLine,
 } from "@/components/motion/ScrollReveal";
-import { AnimatedLucideIcon } from "@/components/AnimatedLucideIcon";
 
 // ─── Platform Config ───
 
