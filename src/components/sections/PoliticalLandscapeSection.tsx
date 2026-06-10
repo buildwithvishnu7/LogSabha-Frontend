@@ -334,20 +334,12 @@ export function PoliticalLandscapeSection({
       <BackgroundVideo src={data.backgroundVideo} poster={data.backgroundPoster} />
       <div className="absolute inset-0 z-[1] bg-black/60" />
 
-      <div className="relative z-10 mx-auto flex min-h-screen max-w-[1440px] flex-col justify-center px-4 py-16 sm:px-6 sm:py-20 lg:flex-row lg:items-center lg:gap-10 lg:px-8 xl:gap-12 xl:px-12">
+      <div className="relative z-10 mx-auto flex min-h-screen max-w-[1440px] flex-col justify-center pl-16 pr-4 py-16 sm:pl-20 sm:pr-6 sm:py-20 lg:flex-row lg:items-center lg:gap-10 lg:pr-8 xl:gap-12 xl:pr-12">
         {/* Left — text */}
         <div className="flex-1 lg:max-w-[480px]">
-          {/* Badge with pulsing dot */}
-          <ScrollReveal delay={0} direction="left">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5">
-              <span className="badge-dot-pulse h-2 w-2 rounded-full bg-amber-500" />
-              <span className="text-xs font-medium text-amber-400 sm:text-sm">{data.badge}</span>
-            </div>
-          </ScrollReveal>
-
           {/* Heading — word-by-word with shimmer + bounce */}
           <motion.h2
-            className="text-3xl font-extrabold leading-tight sm:text-4xl lg:text-5xl"
+            className="text-2xl font-extrabold leading-tight sm:text-3xl lg:text-4xl"
             initial="hidden"
             whileInView="visible"
             viewport={{ margin: "-80px", amount: 0.3 }}
@@ -411,7 +403,7 @@ export function PoliticalLandscapeSection({
 
           {/* Subtitle with shimmer */}
           <ScrollReveal delay={0.5}>
-            <p className="section-subtitle-shimmer mt-4 text-sm leading-relaxed sm:text-base lg:text-lg">
+            <p className="section-subtitle-shimmer mt-4 text-xs leading-relaxed sm:text-sm lg:text-base">
               {data.subtitle}
             </p>
           </ScrollReveal>

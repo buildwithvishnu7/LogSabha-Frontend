@@ -61,6 +61,7 @@ interface ScrollRevealTextProps {
   className?: string;
   highlightClassName?: string;
   delay?: number;
+  inline?: boolean;
 }
 
 export function ScrollRevealText({
@@ -69,6 +70,7 @@ export function ScrollRevealText({
   className = "text-3xl font-extrabold text-white sm:text-4xl lg:text-5xl",
   highlightClassName = "bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent",
   delay = 0,
+  inline = false,
 }: ScrollRevealTextProps) {
   const words = text.split(" ");
 
@@ -104,7 +106,7 @@ export function ScrollRevealText({
       ))}
       {highlight && (
         <>
-          <br />
+          {!inline && <br />}
           <motion.span
             className={`inline-block ${highlightClassName}`}
             variants={{

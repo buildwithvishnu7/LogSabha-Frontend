@@ -172,7 +172,7 @@ function ArticleCard({
       whileHover={{ y: -6 }}
     >
       {/* Image */}
-      <div className="relative aspect-[16/11] overflow-hidden">
+      <div className="relative aspect-[16/9] overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-amber-900/40 to-orange-900/30">
           <img
             src={article.image}
@@ -201,12 +201,12 @@ function ArticleCard({
       </div>
 
       {/* Content */}
-      <div className="flex flex-1 flex-col p-4 sm:p-5">
-        <h3 className="line-clamp-3 text-sm font-bold leading-snug text-white/90 transition-colors group-hover:text-amber-400 sm:text-base">
+      <div className="flex flex-1 flex-col p-3 sm:p-4">
+        <h3 className="line-clamp-2 text-xs font-bold leading-snug text-white/90 transition-colors group-hover:text-amber-400 sm:text-sm">
           {article.title}
         </h3>
 
-        <div className="mt-auto flex items-center justify-between pt-4">
+        <div className="mt-auto flex items-center justify-between pt-2">
           <span className="flex items-center gap-1.5 text-xs text-amber-400/70">
             <Calendar className="h-3.5 w-3.5" />
             {article.date}
@@ -238,7 +238,7 @@ export function FounderEditorialSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden bg-[#0f0a04] py-10 sm:py-12 lg:py-14"
+      className="relative overflow-hidden bg-[#0f0a04] py-6 sm:py-8 lg:py-10"
     >
       {/* ── Dark candle-lit background ── */}
       <div className="pointer-events-none absolute inset-0">
@@ -350,7 +350,7 @@ export function FounderEditorialSection() {
         {/* Title */}
         <ScrollReveal>
           <h2
-            className="px-2 py-2 text-center text-3xl font-extrabold leading-relaxed sm:text-4xl sm:leading-relaxed lg:text-[52px] lg:leading-relaxed"
+            className="px-2 py-1 text-center text-xl font-extrabold leading-normal sm:text-2xl sm:leading-normal lg:text-3xl lg:leading-normal"
             style={{
               fontFamily: "'Cormorant Garamond', serif",
               letterSpacing: "-0.3px",
@@ -382,7 +382,7 @@ export function FounderEditorialSection() {
 
         {/* Subtitle */}
         <ScrollReveal delay={0.15}>
-          <p className="mx-auto mt-3 max-w-xl text-center text-sm leading-relaxed text-amber-200/50 sm:text-base">
+          <p className="mx-auto mt-2 max-w-xl text-center text-[10px] leading-relaxed text-amber-200/50 sm:text-xs lg:text-sm">
             ना झुके, ना रुके - धर्म, राष्ट्र और संस्कृति के लिए समर्पित संकल्प
             |
           </p>
@@ -390,11 +390,11 @@ export function FounderEditorialSection() {
 
         {/* Divider line */}
         <ScrollReveal delay={0.25}>
-          <div className="mx-auto mt-5 h-px w-24 bg-gradient-to-r from-transparent via-amber-500/50 to-transparent" />
+          <div className="mx-auto mt-3 h-px w-24 bg-gradient-to-r from-transparent via-amber-500/50 to-transparent" />
         </ScrollReveal>
 
         {/* Article Cards */}
-        <div className="mt-6 grid gap-4 sm:mt-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+        <div className="mt-4 grid gap-3 sm:mt-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-4">
           {ARTICLES.map((article, i) => (
             <ArticleCard
               key={article.id}
@@ -407,7 +407,7 @@ export function FounderEditorialSection() {
 
         {/* Read More CTA */}
         <ScrollReveal delay={0.5}>
-          <div className="mt-6 flex justify-center sm:mt-8">
+          <div className="mt-4 flex justify-center sm:mt-5">
             <motion.a
               href="#"
               className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full border border-amber-500/50 bg-gradient-to-r from-amber-600/20 to-orange-600/20 px-8 py-3 text-sm font-semibold text-amber-400 backdrop-blur-sm transition-all hover:border-amber-400 hover:text-white"

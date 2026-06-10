@@ -30,7 +30,6 @@ const PLATFORMS: Platform[] = [
   { key: "instagram", label: "Instagram", color: "text-pink-500", bgGradient: "from-pink-500 via-purple-500 to-orange-400", iconBg: "bg-gradient-to-br from-pink-500 via-purple-500 to-orange-400" },
   { key: "facebook", label: "Facebook", color: "text-blue-600", bgGradient: "from-blue-600 to-blue-700", iconBg: "bg-blue-600" },
   { key: "youtube", label: "YouTube", color: "text-red-600", bgGradient: "from-red-600 to-red-700", iconBg: "bg-red-600" },
-  { key: "linkedin", label: "LinkedIn", color: "text-blue-700", bgGradient: "from-blue-700 to-blue-800", iconBg: "bg-blue-700" },
 ];
 
 // ─── SVG Platform Icons ───
@@ -556,7 +555,7 @@ export function SocialPresenceSection() {
   ).slice(0, POSTS_PER_FILTER);
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-amber-50/60 via-orange-50/30 to-white py-8 sm:py-10 lg:py-12">
+    <section className="relative overflow-hidden bg-gradient-to-b from-amber-50/60 via-orange-50/30 to-white py-4 sm:py-6 lg:py-8">
       {/* Background dot pattern */}
       <div className="absolute inset-0 opacity-[0.035]">
         <div
@@ -625,15 +624,8 @@ export function SocialPresenceSection() {
       <div className="relative mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8 xl:px-12">
         {/* ── Section Header ── */}
         <div className="flex flex-col items-center text-center">
-          <ScrollReveal>
-            <span className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-1.5 text-[11px] font-semibold tracking-wider text-amber-600 uppercase">
-              <AnimatedLucideIcon icon={Share2} size={14} animation="wave" />
-              Social Media
-            </span>
-          </ScrollReveal>
-
           <ScrollReveal delay={0.15}>
-            <h2 className="mt-5 text-3xl font-extrabold text-gray-900 sm:text-4xl lg:text-5xl">
+            <h2 className="text-2xl font-extrabold text-gray-900 sm:text-3xl lg:text-4xl">
               Our{" "}
               <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">
                 Social Presence
@@ -643,7 +635,7 @@ export function SocialPresenceSection() {
 
           <ScrollRevealLine
             delay={0.3}
-            className="mx-auto mt-3 h-[3px] w-12 rounded-full bg-amber-500"
+            className="mx-auto mt-2 h-[3px] w-12 rounded-full bg-amber-500"
           />
 
           {/* <ScrollReveal delay={0.4}>
@@ -658,13 +650,13 @@ export function SocialPresenceSection() {
 
         {/* ── Platform Filter ── */}
         <ScrollReveal delay={0.5}>
-          <div className="mt-8">
+          <div className="mt-4">
             <PlatformFilter active={activeFilter} onChange={setActiveFilter} />
           </div>
         </ScrollReveal>
 
         {/* ── Posts Grid ── */}
-        <div className="mt-6">
+        <div className="mt-4">
           <AnimatePresence mode="popLayout">
             <motion.div
               key={activeFilter}

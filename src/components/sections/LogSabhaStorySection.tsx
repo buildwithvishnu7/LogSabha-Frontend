@@ -94,21 +94,21 @@ function SlotMachineStat({
   return (
     <motion.div
       ref={ref}
-      className="flex flex-col items-center gap-2 rounded-2xl border border-white/20 bg-white/10 px-6 py-5 backdrop-blur-md sm:px-8 sm:py-6"
+      className="flex flex-col items-center gap-1 rounded-xl border border-white/20 bg-white/10 px-4 py-3 backdrop-blur-md sm:px-6 sm:py-3"
       initial={{ opacity: 0, y: 30, scale: 0.9 }}
       animate={triggered ? { opacity: 1, y: 0, scale: 1 } : {}}
       transition={{ duration: 0.7, delay: delay / 1000 + 0.3, ease: [0.16, 1, 0.3, 1] }}
       whileHover={{ scale: 1.05, borderColor: "rgba(245, 158, 11, 0.5)" }}
     >
       <motion.div
-        className="flex h-10 w-10 items-center justify-center rounded-full"
+        className="flex h-8 w-8 items-center justify-center rounded-full"
         style={{ backgroundColor: `${iconColor}25` }}
         animate={triggered ? { scale: [1, 1.15, 1] } : {}}
         transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 2, ease: "easeInOut" }}
       >
-        <Icon className="h-5 w-5" style={{ color: iconColor }} />
+        <Icon className="h-4 w-4" style={{ color: iconColor }} />
       </motion.div>
-      <div className="flex items-baseline text-2xl font-extrabold text-amber-400 sm:text-3xl">
+      <div className="flex items-baseline text-xl font-extrabold text-amber-400 sm:text-2xl">
         {chars.map((ch, i) =>
           /\d/.test(ch) ? (
             <SlotDigit
@@ -125,7 +125,7 @@ function SlotMachineStat({
         )}
         <span className="ml-0.5">{suffix}</span>
       </div>
-      <span className="text-xs font-semibold tracking-wider text-white/70 uppercase sm:text-sm">
+      <span className="text-[10px] font-semibold tracking-wider text-white/70 uppercase sm:text-xs">
         {label}
       </span>
     </motion.div>
@@ -167,7 +167,7 @@ function ShimmerText({
 function QuoteBox({ triggered }: { triggered: boolean }) {
   return (
     <ScrollReveal delay={0.2}>
-      <div className="relative mx-auto max-w-4xl overflow-hidden rounded-2xl border-2 border-amber-500/50 bg-black/40 px-6 py-8 backdrop-blur-md sm:px-10 sm:py-10">
+      <div className="relative mx-auto max-w-4xl overflow-hidden rounded-2xl border-2 border-amber-500/50 bg-black/40 px-4 py-4 backdrop-blur-md sm:px-6 sm:py-5">
         {/* Rotating border glow */}
         <motion.div
           className="pointer-events-none absolute inset-0 rounded-2xl"
@@ -182,7 +182,7 @@ function QuoteBox({ triggered }: { triggered: boolean }) {
 
         {/* Quote */}
         <motion.p
-          className="text-center text-sm leading-relaxed text-white/90 italic sm:text-base lg:text-lg"
+          className="text-center text-xs leading-relaxed text-white/90 italic sm:text-sm lg:text-base"
           initial={{ opacity: 0 }}
           animate={triggered ? { opacity: 1 } : {}}
           transition={{ duration: 1, delay: 0.5 }}
@@ -196,7 +196,7 @@ function QuoteBox({ triggered }: { triggered: boolean }) {
 
         {/* Subheading */}
         <motion.h3
-          className="mt-6 text-center text-lg font-bold text-white sm:text-xl lg:text-2xl"
+          className="mt-3 text-center text-xs font-bold text-white sm:text-sm lg:text-base"
           initial={{ opacity: 0, y: 10 }}
           animate={triggered ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, delay: 0.8 }}
@@ -208,7 +208,7 @@ function QuoteBox({ triggered }: { triggered: boolean }) {
 
         {/* Description */}
         <motion.p
-          className="mx-auto mt-4 max-w-3xl text-center text-sm leading-relaxed text-white/75 sm:text-base"
+          className="mx-auto mt-2 max-w-3xl text-center text-[10px] leading-relaxed text-white/75 sm:text-xs lg:text-sm"
           initial={{ opacity: 0 }}
           animate={triggered ? { opacity: 1 } : {}}
           transition={{ duration: 1, delay: 1.1 }}
@@ -242,7 +242,7 @@ export function LogSabhaStorySection() {
   }, [isInView]);
 
   return (
-    <section ref={sectionRef} className="relative min-h-[600px] overflow-hidden">
+    <section ref={sectionRef} className="relative overflow-hidden">
       {/* Background image */}
       <div className="absolute inset-0">
         <img
@@ -283,15 +283,15 @@ export function LogSabhaStorySection() {
       )}
 
       {/* Content */}
-      <div className="relative z-10 mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-12 lg:px-10 lg:py-14">
+      <div className="relative z-10 mx-auto max-w-6xl px-4 py-4 sm:px-6 sm:py-6 lg:px-10 lg:py-8">
         {/* Title */}
         <motion.h2
-          className="mb-10 text-center text-3xl font-extrabold sm:text-4xl lg:text-5xl"
+          className="mb-4 text-center text-2xl font-extrabold sm:text-3xl lg:text-4xl"
           initial={{ opacity: 0, y: 30 }}
           animate={triggered ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
-          <ShimmerText className="text-3xl font-extrabold sm:text-4xl lg:text-5xl" speed={5}>
+          <ShimmerText className="text-2xl font-extrabold sm:text-3xl lg:text-4xl" speed={5}>
             The LogSabha Story
           </ShimmerText>
         </motion.h2>
@@ -300,7 +300,7 @@ export function LogSabhaStorySection() {
         <QuoteBox triggered={triggered} />
 
         {/* Stats */}
-        <div className="mt-6 flex flex-wrap justify-center gap-4 sm:gap-6 lg:gap-8">
+        <div className="mt-4 flex flex-wrap justify-center gap-3 sm:gap-4 lg:gap-6">
           {STATS.map((stat, i) => (
             <SlotMachineStat
               key={stat.label}

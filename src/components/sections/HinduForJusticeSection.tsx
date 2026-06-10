@@ -437,7 +437,7 @@ export function HinduForJusticeSection() {
                     <TypewriterText
                       phrases={TYPEWRITER_PHRASES}
                       triggered={triggered}
-                      className="text-sm font-medium text-gray-500 sm:text-base"
+                      className="text-xs font-medium text-gray-500 sm:text-sm lg:text-base"
                     />
                   </p>
                 </div>

@@ -414,30 +414,20 @@ export function Footer() {
               Delivering data-driven insights for informed political decisions.
             </p>
 
-            {/* Contact info */}
-            <div className="mt-6 space-y-3">
-              <motion.a
-                href="mailto:info@logsabha.com"
-                className="flex items-center gap-3 text-sm transition-colors"
-                whileHover={{ x: 3 }}
-              >
-                <FooterLottieIcon src="/lottie/message.json" size={18} />
-                <span className="footer-link-shimmer" style={{ animationDelay: "0.5s" }}>info@logsabha.com</span>
-              </motion.a>
-              <motion.a
-                href="tel:+919876543210"
-                className="flex items-center gap-3 text-sm transition-colors"
-                whileHover={{ x: 3 }}
-              >
-                <FooterLottieIcon src="/lottie/contact.json" size={18} />
-                <span className="footer-link-shimmer" style={{ animationDelay: "1s" }}>+91 98765 43210</span>
-              </motion.a>
-              <motion.div
-                className="flex items-center gap-3 text-sm text-white"
-              >
-                <FooterLottieIcon src="/lottie/location.json" size={18} />
-                New Delhi, India
-              </motion.div>
+            {/* Legal links */}
+            <div className="mt-6 flex flex-wrap gap-4">
+              {["Privacy Policy", "Terms of Service", "Disclaimer"].map(
+                (text, i) => (
+                  <a
+                    key={text}
+                    href="#"
+                    className="footer-legal-shimmer text-xs transition-colors"
+                    style={{ animationDelay: `${i * 1.2}s` }}
+                  >
+                    {text}
+                  </a>
+                ),
+              )}
             </div>
           </motion.div>
 
@@ -503,22 +493,6 @@ export function Footer() {
           <p className="text-xs text-white">
             &copy; {new Date().getFullYear()} Logsabha. All rights reserved.
           </p>
-
-          {/* Legal links */}
-          <div className="flex items-center gap-5">
-            {["Privacy Policy", "Terms of Service", "Disclaimer"].map(
-              (text, i) => (
-                <a
-                  key={text}
-                  href="#"
-                  className="footer-legal-shimmer text-xs transition-colors"
-                  style={{ animationDelay: `${i * 1.2}s` }}
-                >
-                  {text}
-                </a>
-              ),
-            )}
-          </div>
 
           {/* Social + Made in India */}
           <div className="flex items-center gap-4">

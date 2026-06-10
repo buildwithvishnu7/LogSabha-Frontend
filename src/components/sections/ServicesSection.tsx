@@ -295,12 +295,12 @@ export function ServicesSection({ data }: { data: ServicesData }) {
           <ScrollRevealText
             text={data.title}
             highlight={data.titleHighlight}
-            className="text-2xl font-extrabold text-gray-900 sm:text-3xl"
+            className="text-2xl font-extrabold text-gray-900 sm:text-3xl lg:text-4xl"
             highlightClassName="bg-gradient-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent"
             delay={0}
           />
           <ScrollReveal delay={0.3}>
-            <p className="mt-2 text-sm leading-relaxed text-gray-500 sm:text-base">
+            <p className="mt-2 text-[10px] leading-relaxed text-gray-500 sm:text-xs lg:text-sm">
               {data.subtitle}
             </p>
           </ScrollReveal>
@@ -407,16 +407,17 @@ export function ServicesSection({ data }: { data: ServicesData }) {
             <ScrollRevealText
               text={data.title}
               highlight={data.titleHighlight}
-              className="text-3xl font-extrabold text-gray-900 sm:text-4xl lg:text-5xl"
+              className="whitespace-nowrap text-2xl font-extrabold text-gray-900 sm:text-3xl lg:text-4xl"
               highlightClassName="bg-gradient-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent"
               delay={0}
+              inline
             />
             <ScrollReveal delay={0.3}>
-              <p className="mt-3 max-w-xl text-sm text-gray-500 sm:text-base">
+              <p className="mt-2 max-w-xl text-[10px] text-gray-500 sm:text-xs lg:text-sm">
                 {data.subtitle}
               </p>
             </ScrollReveal>
-            <div className="mt-6 flex flex-col gap-1">
+            <div className="mt-4 flex flex-col gap-1">
               {data.services.map((service, i) => (
                 <ServiceTab
                   key={service.id}
@@ -430,42 +431,22 @@ export function ServicesSection({ data }: { data: ServicesData }) {
           </div>
 
           {/* Center: Image */}
-          <ScrollReveal delay={0.2} className="relative flex h-full items-center">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeService.id}
-                initial={{ opacity: 0, scale: 0.96, filter: "blur(6px)" }}
-                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                exit={{ opacity: 0, scale: 0.96, filter: "blur(6px)" }}
-                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                className="relative w-full overflow-hidden rounded-2xl bg-gray-100 lg:aspect-[3/4] lg:max-h-[480px]"
-              >
-                <img
+          <ScrollReveal delay={0.2} className="relative">
+            <div className="relative h-full overflow-hidden rounded-2xl bg-gray-100">
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={activeService.id}
                   src={activeService.image}
                   alt={activeService.title}
-                  className="h-full w-full object-cover"
-                  onError={(e) => {
-                    const target = e.currentTarget;
-                    target.style.display = "none";
-                    const parent = target.parentElement;
-                    if (parent) {
-                      parent.classList.add(
-                        "flex",
-                        "items-center",
-                        "justify-center",
-                      );
-                      const div = document.createElement("div");
-                      div.className =
-                        "text-center text-gray-400 text-sm px-4";
-                      div.textContent = activeService.title;
-                      parent.appendChild(div);
-                    }
-                  }}
+                  initial={{ opacity: 0, scale: 0.96, filter: "blur(6px)" }}
+                  animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, scale: 0.96, filter: "blur(6px)" }}
+                  transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                  className="absolute inset-0 h-full w-full object-cover"
                 />
-                {/* Image overlay gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-              </motion.div>
-            </AnimatePresence>
+              </AnimatePresence>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+            </div>
           </ScrollReveal>
 
           {/* Right: Content panel — fill grid cell height */}

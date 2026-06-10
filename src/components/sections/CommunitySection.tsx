@@ -65,6 +65,7 @@ interface Post {
   comments: number;
   timeAgo: string;
   gradient: string;
+  image: string;
 }
 
 interface TrendingTopic {
@@ -99,6 +100,7 @@ const POSTS: Post[] = [
     comments: 87,
     timeAgo: "2h ago",
     gradient: "from-red-900 via-red-800 to-orange-900",
+    image: "/images/editorial/rural.jpg",
   },
   {
     id: "2",
@@ -115,6 +117,7 @@ const POSTS: Post[] = [
     comments: 87,
     timeAgo: "2h ago",
     gradient: "from-blue-900 via-indigo-800 to-purple-900",
+    image: "/images/editorial/regional.jpg",
   },
   {
     id: "3",
@@ -128,6 +131,7 @@ const POSTS: Post[] = [
     comments: 87,
     timeAgo: "3h ago",
     gradient: "from-amber-900 via-yellow-900 to-orange-900",
+    image: "/images/editorial/parliament.jpg",
   },
   {
     id: "4",
@@ -144,6 +148,7 @@ const POSTS: Post[] = [
     comments: 54,
     timeAgo: "4h ago",
     gradient: "from-emerald-900 via-teal-800 to-cyan-900",
+    image: "/images/editorial/economy.jpg",
   },
   {
     id: "5",
@@ -157,6 +162,7 @@ const POSTS: Post[] = [
     comments: 43,
     timeAgo: "5h ago",
     gradient: "from-slate-800 via-gray-800 to-zinc-900",
+    image: "/images/editorial/featured.jpg",
   },
 ];
 
@@ -365,8 +371,15 @@ function PostCard({ post }: { post: Post }) {
     <div className="group flex-shrink-0 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-shadow duration-300 hover:shadow-lg">
       {/* Header image area */}
       <div
-        className={`relative h-48 overflow-hidden bg-gradient-to-br ${post.gradient}`}
+        className="relative h-48 overflow-hidden"
       >
+        <img
+          src={post.image}
+          alt={post.title}
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        {/* Gradient overlay */}
+        <div className={`absolute inset-0 bg-gradient-to-br ${post.gradient} opacity-40`} />
         {/* Noise texture overlay */}
         <div className="absolute inset-0 opacity-20 mix-blend-overlay"
           style={{
@@ -611,7 +624,7 @@ function TrendingTopicCard({
 
 export function CommunitySection() {
   return (
-    <section className="relative overflow-hidden bg-white py-8 sm:py-10 lg:py-12">
+    <section className="relative overflow-hidden bg-white py-4 sm:py-6 lg:py-8">
       {/* Dot pattern background */}
       <div className="absolute inset-0 opacity-[0.025]">
         <div
@@ -628,32 +641,25 @@ export function CommunitySection() {
         {/* ── Section Header ── */}
         <div className="flex flex-col items-center text-center">
           <ScrollReveal>
-            <span className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-1.5 text-[11px] font-semibold tracking-wider text-amber-600 uppercase">
-              <BadgeLottie src="/lottie/community.json" size={18} />
-              Community Forum
-            </span>
-          </ScrollReveal>
-
-          <ScrollReveal delay={0.15}>
-            <h2 className="community-title-shimmer mt-5 text-3xl font-extrabold sm:text-4xl lg:text-5xl">
+            <h2 className="community-title-shimmer text-2xl font-extrabold sm:text-3xl lg:text-4xl">
               Join the Conversation
             </h2>
           </ScrollReveal>
 
           <ScrollRevealLine
-            delay={0.35}
-            className="mx-auto mt-3 h-[3px] w-12 rounded-full bg-amber-500"
+            delay={0.2}
+            className="mx-auto mt-2 h-[3px] w-12 rounded-full bg-amber-500"
           />
 
-          <ScrollReveal delay={0.45}>
-            <p className="mt-4 h-6 text-sm text-gray-400">
+          <ScrollReveal delay={0.3}>
+            <p className="mt-2 h-6 text-sm text-gray-400">
               <TypewriterText />
             </p>
           </ScrollReveal>
         </div>
 
         {/* ── Main Content Grid ── */}
-        <div className="mt-6 grid gap-6 lg:mt-8 lg:grid-cols-[1fr_380px] xl:grid-cols-[1fr_400px]">
+        <div className="mt-4 grid gap-6 lg:mt-5 lg:grid-cols-[1fr_380px] xl:grid-cols-[1fr_400px]">
           {/* Left: Recent Posts */}
           <div>
             <ScrollReveal>

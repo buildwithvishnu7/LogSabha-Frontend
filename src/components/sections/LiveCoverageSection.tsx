@@ -104,13 +104,20 @@ function getYouTubeEmbedUrl(url: string, autoplay = true): string {
     rel: "0",
     showinfo: "0",
     playsinline: "1",
+    enablejsapi: "1",
   });
   return `https://www.youtube.com/embed/${id}?${params.toString()}`;
 }
 
 // ─── Main Video Player (YouTube iframe) ───
 
-function MainVideoPlayer() {
+function MainVideoPlayer({
+  isPausedByHover,
+  iframeRef,
+}: {
+  isPausedByHover: boolean;
+  iframeRef: React.RefObject<HTMLIFrameElement | null>;
+}) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
 
@@ -129,10 +136,21 @@ function MainVideoPlayer() {
     return () => observer.disconnect();
   }, []);
 
+  // Pause / resume YouTube via postMessage when a speech card is hovered
+  useEffect(() => {
+    const iframe = iframeRef.current;
+    if (!iframe?.contentWindow) return;
+    const cmd = isPausedByHover ? "pauseVideo" : "playVideo";
+    iframe.contentWindow.postMessage(
+      JSON.stringify({ event: "command", func: cmd, args: "" }),
+      "*",
+    );
+  }, [isPausedByHover, iframeRef]);
+
   return (
     <motion.div
       ref={containerRef}
-      className="group relative aspect-[16/9] w-full overflow-hidden rounded-2xl bg-gray-900 shadow-xl shadow-black/10"
+      className="group relative h-[340px] w-full overflow-hidden rounded-2xl bg-gray-900 shadow-xl shadow-black/10 sm:h-[400px] lg:h-[500px]"
       initial={{ opacity: 0, y: 30, scale: 0.98 }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: false, amount: 0.2 }}
@@ -140,6 +158,7 @@ function MainVideoPlayer() {
     >
       {inView && (
         <iframe
+          ref={iframeRef}
           src={getYouTubeEmbedUrl(MAIN_VIDEO.youtubeUrl)}
           title={MAIN_VIDEO.title}
           className="absolute inset-0 h-full w-full"
@@ -186,21 +205,27 @@ function MainVideoPlayer() {
 function SpeechCard({
   speech,
   index,
+  onHoverStart,
+  onHoverEnd,
 }: {
   speech: SpeechVideo;
   index: number;
+  onHoverStart: () => void;
+  onHoverEnd: () => void;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isHovered, setIsHovered] = useState(false);
   const handleMouseEnter = useCallback(() => {
     setIsHovered(true);
+    onHoverStart();
     videoRef.current?.play().catch(() => {});
-  }, []);
+  }, [onHoverStart]);
 
   const handleMouseLeave = useCallback(() => {
     setIsHovered(false);
+    onHoverEnd();
     videoRef.current?.pause();
-  }, []);
+  }, [onHoverEnd]);
 
   return (
     <motion.div
@@ -267,8 +292,14 @@ function SpeechCard({
 // ─── Main Section ───
 
 export function LiveCoverageSection() {
+  const mainIframeRef = useRef<HTMLIFrameElement>(null);
+  const [speechHovered, setSpeechHovered] = useState(false);
+
+  const handleSpeechHoverStart = useCallback(() => setSpeechHovered(true), []);
+  const handleSpeechHoverEnd = useCallback(() => setSpeechHovered(false), []);
+
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-white via-amber-50/20 to-white py-8 sm:py-10 lg:py-12">
+    <section className="relative overflow-hidden bg-gradient-to-b from-white via-amber-50/20 to-white py-3 sm:py-4 lg:py-6">
       {/* Subtle background pattern */}
       <div className="absolute inset-0 opacity-[0.02]">
         <div
@@ -286,7 +317,7 @@ export function LiveCoverageSection() {
         <div className="flex items-start justify-between">
           <div>
             <ScrollReveal>
-              <h2 className="text-2xl font-extrabold text-gray-900 sm:text-3xl md:text-4xl lg:text-5xl">
+              <h2 className="text-2xl font-extrabold text-gray-900 sm:text-3xl lg:text-4xl">
                 Live{" "}
                 <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 bg-clip-text text-transparent">
                   Political Coverage
@@ -295,7 +326,7 @@ export function LiveCoverageSection() {
             </ScrollReveal>
 
             <ScrollReveal delay={0.15}>
-              <p className="mt-1.5 text-xs leading-relaxed text-gray-500 sm:text-sm md:text-base">
+              <p className="mt-1.5 text-xs leading-relaxed text-gray-500 sm:text-sm lg:text-base">
                 Watch live sessions and recent parliamentary speeches
               </p>
             </ScrollReveal>
@@ -318,16 +349,16 @@ export function LiveCoverageSection() {
 
         <ScrollRevealLine
           delay={0.3}
-          className="mt-3 h-[3px] w-12 rounded-full bg-amber-500"
+          className="mt-2 h-[3px] w-12 rounded-full bg-amber-500"
         />
 
         {/* ── Main Video ── */}
-        <div className="mt-6 lg:mt-8">
-          <MainVideoPlayer />
+        <div className="mt-3 lg:mt-4">
+          <MainVideoPlayer isPausedByHover={speechHovered} iframeRef={mainIframeRef} />
         </div>
 
         {/* ── From the Archives ── */}
-        <div className="mt-8 lg:mt-10">
+        <div className="mt-4 lg:mt-5">
           <ScrollReveal delay={0.1}>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
@@ -354,7 +385,12 @@ export function LiveCoverageSection() {
           <div className="scrollbar-hide -mx-4 mt-4 flex gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-4">
             {RECENT_SPEECHES.map((speech, i) => (
               <div key={speech.id} className="w-[240px] flex-shrink-0 sm:w-auto">
-                <SpeechCard speech={speech} index={i} />
+                <SpeechCard
+                  speech={speech}
+                  index={i}
+                  onHoverStart={handleSpeechHoverStart}
+                  onHoverEnd={handleSpeechHoverEnd}
+                />
               </div>
             ))}
           </div>

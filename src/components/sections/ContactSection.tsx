@@ -41,30 +41,30 @@ function ContactLottieIcon({ src, size = 22, color = "#f97316" }: { src: string;
 const CONTACT_INFO = [
   {
     lottieSrc: "/lottie/location.json",
-    label: "Office Address",
-    lines: ["LogSabha Pvt Ltd", "Connaught Place, New Delhi", "110001, India"],
+    label: "Noida Office",
+    lines: ["206 Second Floor, Tower 1, Assotech Business Cresterra, Plot No-22, Sector 135, Noida - 201301, Uttar Pradesh, India"],
     color: "#f97316",
   },
   {
-    lottieSrc: "/lottie/contact.json",
-    label: "Phone",
-    lines: ["+91 98765 43210", "+91 11 2345 6789"],
-    color: "#3b82f6",
-    href: "tel:+919876543210",
+    lottieSrc: "/lottie/location.json",
+    label: "Lucknow Office",
+    lines: ["Vibhuti Khand, Gomti Nagar, Lucknow - 226010, Uttar Pradesh, India"],
+    color: "#f97316",
   },
   {
     lottieSrc: "/lottie/message.json",
     label: "Email",
-    lines: ["info@logsabha.com", "support@logsabha.com"],
+    lines: ["logsabhabharat@gmail.com"],
     color: "#22c55e",
-    href: "mailto:info@logsabha.com",
+    href: "mailto:logsabhabharat@gmail.com",
   },
-  // {
-  //   icon: Clock,
-  //   label: "Office Hours",
-  //   lines: ["Mon – Fri: 9:00 AM – 6:00 PM", "Sat: 10:00 AM – 2:00 PM"],
-  //   color: "#a855f7",
-  // },
+  {
+    lottieSrc: "/lottie/contact.json",
+    label: "Phone",
+    lines: ["+91 9839773333"],
+    color: "#3b82f6",
+    href: "tel:+919839773333",
+  },
 ];
 
 const TYPEWRITER_PHRASES = [
@@ -140,8 +140,8 @@ function AnimatedInput({
           onChange={(e) => onChange(e.target.value)}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
-          rows={textarea ? 4 : undefined}
-          className={`w-full resize-none rounded-xl border bg-white/[0.04] px-4 py-3 text-sm text-white placeholder-slate-500 outline-none backdrop-blur-sm transition-all duration-300 ${
+          rows={textarea ? 5 : undefined}
+          className={`w-full resize-none rounded-xl border bg-white/[0.04] px-4 py-3 text-sm text-white placeholder-slate-500 outline-none backdrop-blur-sm transition-all duration-300 ${textarea ? "flex-1 " : ""}${
             focused
               ? "border-amber-500/60 shadow-[0_0_15px_rgba(245,158,11,0.1)]"
               : "border-white/10 hover:border-white/20"
@@ -170,7 +170,7 @@ function ContactCard({
 }) {
   const content = (
     <motion.div
-      className="group flex gap-4 rounded-xl border border-white/[0.06] bg-white/[0.03] p-4 backdrop-blur-sm transition-all duration-300 hover:border-white/10 hover:bg-white/[0.06]"
+      className="group flex gap-3 rounded-xl border border-white/[0.06] bg-white/[0.03] p-3 backdrop-blur-sm transition-all duration-300 hover:border-white/10 hover:bg-white/[0.06]"
       whileHover={{ x: 4 }}
     >
       {/* Icon */}
@@ -237,7 +237,6 @@ export function ContactSection() {
     name: "",
     email: "",
     message: "",
-    newsletter: false,
   });
   const [submitted, setSubmitted] = useState(false);
 
@@ -250,7 +249,7 @@ export function ContactSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden bg-[#0b1120] py-8 sm:py-10 lg:py-12"
+      className="relative overflow-hidden bg-[#0b1120] py-4 sm:py-6 lg:py-8"
     >
       {/* Geometric grid background */}
       <div className="pointer-events-none absolute inset-0">
@@ -294,7 +293,7 @@ export function ContactSection() {
         {/* Header */}
         <div className="flex flex-col items-center text-center">
           <ScrollReveal>
-            <h2 className="text-3xl font-extrabold text-white sm:text-4xl lg:text-5xl">
+            <h2 className="text-2xl font-extrabold text-white sm:text-3xl lg:text-4xl">
               Get in{" "}
               <span className="bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">
                 Touch
@@ -302,22 +301,22 @@ export function ContactSection() {
             </h2>
           </ScrollReveal>
           <ScrollReveal delay={0.15}>
-            <p className="mt-3 h-6 text-sm sm:text-base">
+            <p className="mt-2 h-5 text-xs sm:text-sm">
               <TypewriterText />
             </p>
           </ScrollReveal>
           <ScrollReveal delay={0.25}>
-            <div className="mt-4 h-[3px] w-12 rounded-full bg-amber-500" />
+            <div className="mt-2 h-[3px] w-12 rounded-full bg-amber-500" />
           </ScrollReveal>
         </div>
 
         {/* Grid: Form + Contact Info */}
-        <div className="mt-8 grid gap-8 lg:mt-10 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
+        <div className="mt-4 grid gap-5 lg:mt-5 lg:grid-cols-[1.1fr_1fr] lg:gap-10">
           {/* Left: Form Card */}
           <ScrollReveal delay={0.1}>
             <motion.form
               onSubmit={handleSubmit}
-              className="relative overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.04] p-6 backdrop-blur-md sm:p-8"
+              className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.04] p-4 backdrop-blur-md sm:p-5"
               animate={
                 isInView
                   ? {
@@ -340,7 +339,7 @@ export function ContactSection() {
               <div className="absolute top-0 left-0 h-8 w-8 border-t-2 border-l-2 border-amber-500/30 rounded-tl-2xl" />
               <div className="absolute right-0 bottom-0 h-8 w-8 border-r-2 border-b-2 border-amber-500/30 rounded-br-2xl" />
 
-              <div className="space-y-5">
+              <div className="flex flex-1 flex-col space-y-3">
                 <AnimatedInput
                   placeholder="Your Name"
                   name="name"
@@ -365,35 +364,11 @@ export function ContactSection() {
                   textarea
                 />
 
-                {/* Newsletter checkbox */}
-                <ScrollReveal delay={0.5}>
-                  <label className="flex cursor-pointer items-center gap-3">
-                    <div className="relative">
-                      <input
-                        type="checkbox"
-                        checked={form.newsletter}
-                        onChange={(e) =>
-                          setForm((f) => ({
-                            ...f,
-                            newsletter: e.target.checked,
-                          }))
-                        }
-                        className="peer sr-only"
-                      />
-                      <div className="h-5 w-5 rounded border border-white/20 bg-white/5 transition-all peer-checked:border-amber-500 peer-checked:bg-amber-500" />
-                      <CheckCircle className="absolute inset-0 m-auto h-3.5 w-3.5 text-white opacity-0 transition-opacity peer-checked:opacity-100" />
-                    </div>
-                    <span className="text-sm text-slate-400">
-                      I would like to receive the newsletter.
-                    </span>
-                  </label>
-                </ScrollReveal>
-
                 {/* Submit button */}
                 <ScrollReveal delay={0.6}>
                   <motion.button
                     type="submit"
-                    className="relative mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-amber-500/20 transition-all hover:shadow-amber-500/30 sm:w-auto"
+                    className="relative flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-amber-500/20 transition-all hover:shadow-amber-500/30 sm:w-auto"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
@@ -437,7 +412,7 @@ export function ContactSection() {
               </p>
             </ScrollReveal>
 
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2">
               {CONTACT_INFO.map((item, i) => (
                 <ContactCard key={item.label} item={item} index={i} />
               ))}

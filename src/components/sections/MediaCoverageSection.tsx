@@ -308,7 +308,7 @@ export function MediaCoverageSection() {
         {/* ── Header ── */}
         <div className="text-center">
           <ScrollReveal>
-            <h2 className="text-3xl font-extrabold sm:text-4xl lg:text-5xl">
+            <h2 className="text-2xl font-extrabold sm:text-3xl lg:text-4xl">
               <motion.span
                 className="inline-block bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 bg-clip-text text-transparent"
                 animate={{
@@ -323,7 +323,7 @@ export function MediaCoverageSection() {
           </ScrollReveal>
 
           <ScrollReveal delay={0.1}>
-            <p className="mt-1.5 text-sm text-gray-500 sm:text-base">
+            <p className="mt-1.5 text-xs text-gray-500 sm:text-sm lg:text-base">
               Featured across India's leading news networks
             </p>
           </ScrollReveal>

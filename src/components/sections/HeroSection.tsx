@@ -315,13 +315,13 @@ export function HeroSection({ data }: { data: HeroData }) {
 
       {/* Content */}
       <div
-        className="relative z-10 mx-auto flex h-full max-w-[1440px] flex-col items-start justify-end px-3 pb-12 sm:px-6 sm:pb-16 md:pb-20 lg:px-8 lg:pb-24 xl:px-12"
+        className="relative z-10 mx-auto flex h-full max-w-[1440px] flex-col items-start justify-end pl-16 pr-3 pb-12 sm:pl-20 sm:pr-6 sm:pb-16 md:pb-20 lg:pr-8 lg:pb-24 xl:pr-12"
         style={{ perspective: "1000px" }}
       >
         {/* 3D heading */}
         <div className="max-w-2xl">
           <motion.h1
-            className="text-2xl font-extrabold leading-tight sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl"
+            className="text-2xl font-extrabold leading-tight sm:text-3xl lg:text-4xl"
             initial="hidden"
             whileInView="visible"
             viewport={{ margin: "-80px", amount: 0.3 }}
@@ -411,7 +411,7 @@ export function HeroSection({ data }: { data: HeroData }) {
             }}
           />
           <motion.p
-            className="text-xs font-medium tracking-wide text-white/90 sm:text-sm md:text-base lg:text-lg"
+            className="text-sm font-medium tracking-wide text-white/90 sm:text-base lg:text-lg"
             variants={{
               hidden: { opacity: 0 },
               visible: {

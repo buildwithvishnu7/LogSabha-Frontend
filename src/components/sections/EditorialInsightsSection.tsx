@@ -629,7 +629,7 @@ function ScrollingSidebar({ articles }: { articles: Article[] }) {
 
 export function EditorialInsightsSection() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-white via-amber-50/20 to-white py-8 sm:py-10 lg:py-12">
+    <section className="relative overflow-hidden bg-gradient-to-b from-white via-amber-50/20 to-white py-4 sm:py-6 lg:py-8">
       {/* Grid background image */}
       <div className="pointer-events-none absolute inset-0">
         <img
@@ -671,36 +671,8 @@ export function EditorialInsightsSection() {
       <div className="relative mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8 xl:px-12">
         {/* ── Header ── */}
         <div className="flex flex-col items-center text-center">
-          <ScrollReveal>
-            <motion.span
-              className="relative inline-flex items-center gap-2 overflow-hidden rounded-full border border-amber-200 bg-amber-50 px-4 py-1.5 text-[11px] font-semibold tracking-wider text-amber-600 uppercase"
-              whileHover={{ scale: 1.05, boxShadow: "0 0 12px rgba(245,158,11,0.25)" }}
-              transition={{ type: "spring", stiffness: 300, damping: 15 }}
-            >
-              {/* Shimmer sweep */}
-              <motion.span
-                className="pointer-events-none absolute inset-0"
-                style={{
-                  background:
-                    "linear-gradient(105deg, transparent 30%, rgba(245,158,11,0.15) 50%, transparent 70%)",
-                  backgroundSize: "200% 100%",
-                }}
-                animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
-                transition={{ duration: 3, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" }}
-              />
-              {/* Glow border pulse */}
-              <motion.span
-                className="pointer-events-none absolute inset-[-1px] rounded-full border border-amber-400/50"
-                animate={{ scale: [1, 1.06, 1], opacity: [0.5, 0, 0.5] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-              />
-              <LoopingIcon icon={BookIcon} size={14} interval={4000} />
-              Blog & Articles
-            </motion.span>
-          </ScrollReveal>
-
           <ScrollReveal delay={0.15}>
-            <h2 className="mt-5 overflow-visible pb-2 text-3xl font-extrabold leading-tight text-gray-900 sm:text-4xl lg:text-5xl">
+            <h2 className="overflow-visible pb-1 text-2xl font-extrabold leading-tight text-gray-900 sm:text-3xl lg:text-4xl">
               <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 bg-clip-text text-transparent">
                 Editorial Insights
               </span>
@@ -709,15 +681,15 @@ export function EditorialInsightsSection() {
 
           <ScrollRevealLine
             delay={0.3}
-            className="mx-auto mt-3 h-[3px] w-12 rounded-full bg-amber-500"
+            className="mx-auto mt-2 h-[3px] w-12 rounded-full bg-amber-500"
           />
 
-          <LoopingTypewriter className="mt-4 max-w-xl text-sm leading-relaxed text-gray-500" />
+          <LoopingTypewriter className="mt-2 max-w-xl text-xs leading-relaxed text-gray-500 sm:text-sm lg:text-base" />
         </div>
 
         {/* ── Content Grid ── */}
         <motion.div
-          className="mt-8 grid gap-5 lg:mt-10 lg:grid-cols-[1fr_420px] xl:grid-cols-[1fr_460px]"
+          className="mt-5 grid gap-5 lg:mt-6 lg:grid-cols-[1fr_420px] xl:grid-cols-[1fr_460px]"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: false, amount: 0.2 }}

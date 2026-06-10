@@ -372,7 +372,7 @@ export function RSSSection() {
       <Ticker />
 
       {/* Main Content — warm background */}
-      <div className="relative bg-orange-50/60 py-8 sm:py-10 lg:py-12">
+      <div className="relative bg-orange-50/60 py-4 sm:py-6 lg:py-8">
         {/* RSS background image */}
         <div className="pointer-events-none absolute inset-0">
           <img
@@ -476,7 +476,7 @@ export function RSSSection() {
 
               <div className="relative grid lg:grid-cols-[1fr_380px] xl:grid-cols-[1fr_420px]">
                 {/* Left: Info — determines card height */}
-                <div className="relative z-10 p-4 sm:p-6 md:p-8 lg:min-h-[560px] lg:p-10">
+                <div className="relative z-10 p-4 sm:p-6 md:p-8 lg:p-8">
                   {/* Logo + Title */}
                   <div className="flex items-center gap-3">
                     <motion.img
@@ -500,7 +500,7 @@ export function RSSSection() {
                       }}
                     />
                     <motion.h2
-                      className="text-xl font-semibold text-gray-900 sm:text-2xl md:text-3xl lg:text-[44px] lg:leading-[55px]"
+                      className="text-2xl leading-normal font-semibold text-gray-900 sm:text-3xl lg:text-4xl"
                       style={{
                         fontFamily: "'Cormorant Garamond', serif",
                         letterSpacing: "-0.44px",
@@ -530,7 +530,7 @@ export function RSSSection() {
 
                   {/* Tagline */}
                   <motion.p
-                    className="mt-2.5 text-sm font-semibold sm:text-base"
+                    className="mt-2.5 text-sm font-semibold sm:text-base lg:text-lg"
                     style={{
                       background:
                         "linear-gradient(90deg, #ea580c, #f97316, #fb923c, #f97316, #ea580c)",
@@ -562,7 +562,7 @@ export function RSSSection() {
                   />
 
                   {/* Description */}
-                  <p className="mt-2 text-sm leading-relaxed text-gray-500">
+                  <p className="mt-2 text-xs leading-relaxed text-gray-500 sm:text-sm lg:text-base">
                     आज राष्ट्रीय स्वयंसेवक संघ भारत के सबसे बड़े स्वयंसेवी संगठनों
                     में से एक माना जाता है। इसके कार्य और प्रभाव को समझने के लिए
                     उसके मूल विचार, स्थापना की पृष्ठभूमि और संस्थापक दृष्टि को जानना
@@ -570,7 +570,7 @@ export function RSSSection() {
                   </p>
 
                   {/* Pillars */}
-                  <div className="mt-5 flex gap-2 sm:gap-3">
+                  <div className="mt-4 flex gap-2 sm:gap-3">
                     {PILLARS.map((pillar, i) => (
                       <PillarCard
                         key={pillar.label}
@@ -584,7 +584,7 @@ export function RSSSection() {
                   {/* CTA — breathing glow + pulse ring */}
                   <motion.a
                     href="#"
-                    className="relative mt-6 inline-flex items-center gap-2 rounded-xl bg-orange-500 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-orange-600"
+                    className="relative mt-4 inline-flex items-center gap-2 rounded-xl bg-orange-500 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-orange-600"
                     animate={
                       triggered
                         ? {

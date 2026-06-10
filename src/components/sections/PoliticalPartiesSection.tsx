@@ -672,7 +672,7 @@ export function PoliticalPartiesSection() {
   };
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-white py-8 sm:py-10 lg:py-12">
+    <section ref={sectionRef} className="relative overflow-hidden bg-white py-4 sm:py-6 lg:py-8">
       {/* Top blend from previous dark section */}
       <div className="absolute top-0 left-0 right-0 z-[2] h-24 bg-gradient-to-b from-[#0c0c1d] via-[#0c0c1d]/30 to-transparent" />
       {/* ── Video background ── */}
@@ -696,16 +696,7 @@ export function PoliticalPartiesSection() {
         {/* Section Header */}
         <div className="text-center">
           <ScrollReveal>
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5">
-              <BadgeLottieIcon src="/lottie/museum.json" size={20} />
-              <span className="text-xs font-semibold tracking-wider text-amber-600 uppercase">
-                Political Landscape
-              </span>
-            </div>
-          </ScrollReveal>
-
-          <ScrollReveal delay={0.1}>
-            <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl lg:text-5xl">
+            <h2 className="text-2xl font-extrabold text-gray-900 sm:text-3xl lg:text-4xl">
               Political Parties of{" "}
               <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">
                 India
@@ -713,16 +704,16 @@ export function PoliticalPartiesSection() {
             </h2>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.2}>
-            <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-gray-500 sm:text-base">
+          <ScrollReveal delay={0.1}>
+            <p className="mx-auto mt-2 max-w-2xl text-[10px] leading-relaxed text-gray-500 sm:text-xs lg:text-sm">
               Comprehensive analysis of India's major political parties, their
               ideologies, strategies, and electoral performance across states.
             </p>
           </ScrollReveal>
 
           {/* Decorative divider */}
-          <ScrollReveal delay={0.3}>
-            <div className="mx-auto mt-6 flex items-center justify-center gap-2">
+          <ScrollReveal delay={0.2}>
+            <div className="mx-auto mt-3 flex items-center justify-center gap-2">
               <div className="h-px w-12 bg-gradient-to-r from-transparent to-amber-400" />
               <div className="h-1.5 w-1.5 rounded-full bg-amber-500" />
               <div className="h-px w-24 bg-amber-400" />
@@ -735,7 +726,7 @@ export function PoliticalPartiesSection() {
         {/* Party Cards Accordion — inside outer glass box */}
         <ScrollReveal delay={0.4}>
           <div
-            className="mx-auto mt-8 rounded-2xl p-2 sm:p-3 lg:mt-16"
+            className="mx-auto mt-4 rounded-2xl p-2 sm:p-3 lg:mt-6"
             style={{
               background: "rgba(255,255,255,0.08)",
               backdropFilter: "blur(8px)",
