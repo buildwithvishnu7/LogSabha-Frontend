@@ -6,7 +6,7 @@ import {
   ScrollReveal,
   ScrollRevealText,
 } from "@/components/motion/ScrollReveal";
-import ArrowNarrowRightIcon from "@/components/ui/arrow-narrow-right-icon";
+
 import type { ServicesData, ServiceItem } from "@/types";
 
 // ─── Lottie icon for service tabs ───
@@ -27,6 +27,33 @@ function SvcLottieIcon({ src, size = 22 }: { src: string; size?: number }) {
     return () => { cancelled = true; el.innerHTML = ""; };
   }, [src]);
   return <div ref={containerRef} style={{ width: size, height: size, display: "inline-flex" }} />;
+}
+
+function SvcColorLottieIcon({ src, size = 18, color = "#d97706" }: { src: string; size?: number; color?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const colorRef = useRef(color);
+  colorRef.current = color;
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    let cancelled = false;
+    fetch(src).then(r => r.json()).then(json => {
+      if (cancelled) return;
+      el.innerHTML = "";
+      const anim = lottieWeb.loadAnimation({ container: el, renderer: "svg", loop: true, autoplay: true, animationData: json });
+      const recolor = () => {
+        const c = colorRef.current;
+        el.querySelectorAll("path,circle,rect,line,ellipse,polyline,polygon").forEach(p => {
+          const s = p.getAttribute("stroke"); if (s && s !== "none" && s !== "transparent") p.setAttribute("stroke", c);
+          const f = p.getAttribute("fill"); if (f && f !== "none" && f !== "transparent") p.setAttribute("fill", c);
+        });
+      };
+      anim.addEventListener("DOMLoaded", recolor);
+      anim.addEventListener("enterFrame", recolor);
+    }).catch(() => {});
+    return () => { cancelled = true; el.innerHTML = ""; };
+  }, [src]);
+  return <div ref={ref} style={{ width: size, height: size, display: "inline-flex" }} />;
 }
 
 const iconMap: Record<string, React.ReactNode> = {
@@ -183,7 +210,7 @@ function ServiceContent({ service }: { service: ServiceItem }) {
         transition={{ duration: 0.2 }}
       >
         Learn more
-        <ArrowNarrowRightIcon size={16} />
+        <SvcColorLottieIcon src="/lottie/fast-forward.json" size={22} color="#d97706" />
       </motion.a>
     </motion.div>
   );
@@ -359,7 +386,7 @@ export function ServicesSection({ data }: { data: ServicesData }) {
                         whileHover={{ x: 4 }}
                       >
                         Learn more
-                        <ArrowNarrowRightIcon size={14} />
+                        <SvcColorLottieIcon src="/lottie/fast-forward.json" size={20} color="#d97706" />
                       </motion.a>
                     </div>
                   </motion.div>

@@ -7,7 +7,6 @@ import {
   Share2,
   Bookmark,
   MoreHorizontal,
-  ArrowRight,
   Eye,
   Clock,
   TrendingUp,
@@ -680,7 +679,7 @@ export function CommunitySection() {
                   className="moving-border flex items-center gap-1.5 rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-amber-500 transition-colors hover:text-amber-600"
                 >
                   <span>View All</span>
-                  <ArrowRight className="h-4 w-4" />
+                  <BadgeLottie src="/lottie/fast-forward.json" size={20} color="#f59e0b" />
                 </a>
               </div>
             </ScrollReveal>
@@ -787,7 +786,7 @@ export function CommunitySection() {
                   className="moving-border mt-4 flex w-full items-center justify-center gap-1.5 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-amber-600 transition-colors hover:bg-amber-50"
                 >
                   <span>View More</span>
-                  <ArrowRight className="h-4 w-4" />
+                  <BadgeLottie src="/lottie/fast-forward.json" size={20} color="#d97706" />
                 </button>
               </div>
             </ScrollReveal>

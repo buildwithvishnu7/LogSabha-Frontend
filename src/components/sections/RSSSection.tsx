@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState, useMemo } from "react";
 import { motion, useInView } from "motion/react";
-import { Users, BookOpen, Heart, ArrowRight, Play, Pause } from "lucide-react";
+import { Users, BookOpen, Heart, Play, Pause } from "lucide-react";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
 import lottieWeb from "lottie-web";
 
@@ -616,16 +616,7 @@ export function RSSSection() {
                       transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
                     />
                     और जानें
-                    <motion.span
-                      animate={{ x: [0, 4, 0] }}
-                      transition={{
-                        duration: 1.5,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      }}
-                    >
-                      <ArrowRight className="h-4 w-4" />
-                    </motion.span>
+                    <RssLottieIcon src="/lottie/fast-forward.json" size={22} color="#ffffff" />
                   </motion.a>
                 </div>
 

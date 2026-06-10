@@ -1,12 +1,40 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import { motion } from "motion/react";
-import { ArrowRight } from "lucide-react";
+import lottieWeb from "lottie-web";
 import {
   ScrollReveal,
   ScrollRevealLine,
 } from "@/components/motion/ScrollReveal";
 import { LoopingIcon } from "@/components/LoopingIcon";
 import BroadcastIcon from "@/components/ui/broadcast-icon";
+
+// ─── Inline Lottie Icon ───
+function LiveLottieIcon({ src, size = 18, color = "#f59e0b" }: { src: string; size?: number; color?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const colorRef = useRef(color);
+  colorRef.current = color;
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    let cancelled = false;
+    fetch(src).then(r => r.json()).then(json => {
+      if (cancelled) return;
+      el.innerHTML = "";
+      const anim = lottieWeb.loadAnimation({ container: el, renderer: "svg", loop: true, autoplay: true, animationData: json });
+      const recolor = () => {
+        const c = colorRef.current;
+        el.querySelectorAll("path,circle,rect,line,ellipse,polyline,polygon").forEach(p => {
+          const s = p.getAttribute("stroke"); if (s && s !== "none" && s !== "transparent") p.setAttribute("stroke", c);
+          const f = p.getAttribute("fill"); if (f && f !== "none" && f !== "transparent") p.setAttribute("fill", c);
+        });
+      };
+      anim.addEventListener("DOMLoaded", recolor);
+      anim.addEventListener("enterFrame", recolor);
+    }).catch(() => {});
+    return () => { cancelled = true; el.innerHTML = ""; };
+  }, [src]);
+  return <div ref={ref} style={{ width: size, height: size, display: "inline-flex" }} />;
+}
 
 // ─── Data ───
 
@@ -318,7 +346,7 @@ export function LiveCoverageSection() {
                 className="moving-border flex items-center gap-1.5 rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-amber-500 transition-colors hover:text-amber-600"
               >
                 <span>View All</span>
-                <ArrowRight className="h-4 w-4" />
+                <LiveLottieIcon src="/lottie/fast-forward.json" size={20} color="#f59e0b" />
               </a>
             </div>
           </ScrollReveal>
