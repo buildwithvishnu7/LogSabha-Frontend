@@ -19,7 +19,7 @@ const DATA_TYPEWRITER_PHRASES = [
 
 function LoopingTypewriter({ className }: { className?: string }) {
   const ref = useRef<HTMLParagraphElement>(null);
-  const isInView = useInView(ref, { once: true, amount: 0.5 });
+  const isInView = useInView(ref, { once: false, amount: 0.5 });
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [displayedCount, setDisplayedCount] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -163,7 +163,7 @@ function AnimatedNumber({
   className?: string;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { once: true, amount: 0.5 });
+  const isInView = useInView(ref, { once: false, amount: 0.5 });
   const motionVal = useMotionValue(0);
   const display = useTransform(motionVal, (v) =>
     decimals > 0 ? v.toFixed(decimals) : String(Math.round(v))
@@ -1114,7 +1114,7 @@ function StatCard({
 
 export function DataInsightsSection() {
   const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
+  const isInView = useInView(sectionRef, { once: false, amount: 0.2 });
   const triggered = isInView;
 
   return (

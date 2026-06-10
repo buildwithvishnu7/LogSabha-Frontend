@@ -438,11 +438,11 @@ export function PoliticalLandscapeSection({
                   <stop offset="100%" stopColor="rgba(245,158,11,0.1)" />
                 </linearGradient>
               </defs>
-              <motion.line x1="8%" y1="10%" x2="35%" y2="22%" stroke="url(#lineGrad)" strokeWidth="1" strokeDasharray="4 4" initial={{ pathLength: 0, opacity: 0 }} whileInView={{ pathLength: 1, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.6, duration: 0.8 }} />
-              <motion.line x1="88%" y1="8%" x2="62%" y2="20%" stroke="url(#lineGrad)" strokeWidth="1" strokeDasharray="4 4" initial={{ pathLength: 0, opacity: 0 }} whileInView={{ pathLength: 1, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.7, duration: 0.8 }} />
-              <motion.line x1="5%" y1="62%" x2="30%" y2="52%" stroke="url(#lineGrad)" strokeWidth="1" strokeDasharray="4 4" initial={{ pathLength: 0, opacity: 0 }} whileInView={{ pathLength: 1, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.8, duration: 0.8 }} />
-              <motion.line x1="18%" y1="92%" x2="38%" y2="75%" stroke="url(#lineGrad)" strokeWidth="1" strokeDasharray="4 4" initial={{ pathLength: 0, opacity: 0 }} whileInView={{ pathLength: 1, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.9, duration: 0.8 }} />
-              <motion.line x1="88%" y1="85%" x2="62%" y2="70%" stroke="url(#lineGrad)" strokeWidth="1" strokeDasharray="4 4" initial={{ pathLength: 0, opacity: 0 }} whileInView={{ pathLength: 1, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 1.0, duration: 0.8 }} />
+              <motion.line x1="8%" y1="10%" x2="35%" y2="22%" stroke="url(#lineGrad)" strokeWidth="1" strokeDasharray="4 4" initial={{ pathLength: 0, opacity: 0 }} whileInView={{ pathLength: 1, opacity: 1 }} viewport={{ once: false }} transition={{ delay: 0.6, duration: 0.8 }} />
+              <motion.line x1="88%" y1="8%" x2="62%" y2="20%" stroke="url(#lineGrad)" strokeWidth="1" strokeDasharray="4 4" initial={{ pathLength: 0, opacity: 0 }} whileInView={{ pathLength: 1, opacity: 1 }} viewport={{ once: false }} transition={{ delay: 0.7, duration: 0.8 }} />
+              <motion.line x1="5%" y1="62%" x2="30%" y2="52%" stroke="url(#lineGrad)" strokeWidth="1" strokeDasharray="4 4" initial={{ pathLength: 0, opacity: 0 }} whileInView={{ pathLength: 1, opacity: 1 }} viewport={{ once: false }} transition={{ delay: 0.8, duration: 0.8 }} />
+              <motion.line x1="18%" y1="92%" x2="38%" y2="75%" stroke="url(#lineGrad)" strokeWidth="1" strokeDasharray="4 4" initial={{ pathLength: 0, opacity: 0 }} whileInView={{ pathLength: 1, opacity: 1 }} viewport={{ once: false }} transition={{ delay: 0.9, duration: 0.8 }} />
+              <motion.line x1="88%" y1="85%" x2="62%" y2="70%" stroke="url(#lineGrad)" strokeWidth="1" strokeDasharray="4 4" initial={{ pathLength: 0, opacity: 0 }} whileInView={{ pathLength: 1, opacity: 1 }} viewport={{ once: false }} transition={{ delay: 1.0, duration: 0.8 }} />
             </svg>
 
             {/* Floating stat cards — hidden on mobile, shown sm+ */}

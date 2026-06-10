@@ -30,7 +30,7 @@ export function ScrollReveal({
     <motion.div
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, amount: 0.3 }}
+      viewport={{ once: false, amount: 0.3 }}
       variants={{
         hidden: { opacity: 0, filter: "blur(6px)", ...offset },
         visible: {
@@ -77,7 +77,7 @@ export function ScrollRevealText({
       className={className}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, amount: 0.3 }}
+      viewport={{ once: false, amount: 0.3 }}
       variants={{
         hidden: {},
         visible: {
@@ -140,7 +140,7 @@ export function ScrollRevealLine({
       className={className}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, amount: 0.3 }}
+      viewport={{ once: false, amount: 0.3 }}
       variants={{
         hidden: { scaleX: 0 },
         visible: {

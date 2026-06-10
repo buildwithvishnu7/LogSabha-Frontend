@@ -241,12 +241,11 @@ function SlotMachineNumber({
   className?: string;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { once: true, amount: 0.5 });
+  const isInView = useInView(ref, { once: false, amount: 0.5 });
   const [triggered, setTriggered] = useState(false);
 
   useEffect(() => {
-    if (isInView) setTriggered(true);
-    else setTriggered(false);
+    setTriggered(isInView);
   }, [isInView]);
 
   const chars = value.split("");

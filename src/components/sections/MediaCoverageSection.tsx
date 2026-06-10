@@ -131,7 +131,7 @@ function MediaVideoCard({
       className="group relative overflow-hidden rounded-2xl bg-gray-900 shadow-lg"
       initial={{ opacity: 0, y: 40, scale: 0.95 }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, amount: 0.3 }}
+      viewport={{ once: false, amount: 0.3 }}
       transition={{
         duration: 0.7,
         delay: index * 0.12,
@@ -216,7 +216,7 @@ function MediaVideoCard({
           className="absolute inset-x-0 bottom-0 z-10 p-3"
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: false }}
           transition={{ delay: 0.7 + index * 0.15, duration: 0.5 }}
         >
           <p className="line-clamp-2 text-xs font-semibold leading-tight text-white/90 sm:text-sm">

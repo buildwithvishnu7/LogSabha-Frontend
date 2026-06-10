@@ -232,7 +232,7 @@ function ContactCard({
 
 export function ContactSection() {
   const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
+  const isInView = useInView(sectionRef, { once: false, amount: 0.2 });
   const [form, setForm] = useState({
     name: "",
     email: "",

@@ -359,11 +359,11 @@ function VideoPlayer({ triggered }: { triggered: boolean }) {
 
 export function RSSSection() {
   const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
+  const isInView = useInView(sectionRef, { once: false, amount: 0.2 });
   const [triggered, setTriggered] = useState(false);
 
   useEffect(() => {
-    if (isInView) setTriggered(true);
+    setTriggered(isInView);
   }, [isInView]);
 
   return (

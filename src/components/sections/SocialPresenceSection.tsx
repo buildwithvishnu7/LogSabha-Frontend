@@ -292,12 +292,11 @@ function SlotDigit({ target, delay, triggered }: { target: number; delay: number
 
 function AnimatedStat({ value, className = "" }: { value: string; className?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { once: true, amount: 0.5 });
+  const isInView = useInView(ref, { once: false, amount: 0.5 });
   const [triggered, setTriggered] = useState(false);
 
   useEffect(() => {
-    if (isInView) setTriggered(true);
-    else setTriggered(false);
+    setTriggered(isInView);
   }, [isInView]);
 
   const chars = value.split("");
@@ -528,7 +527,7 @@ export function StatsBar() {
             className="relative overflow-hidden rounded-2xl border border-amber-200/60 bg-gradient-to-b from-white to-amber-50/30 px-4 py-5 text-center"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
+            viewport={{ once: false, amount: 0.3 }}
             transition={{ delay: 0.4 + i * 0.1, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             whileHover={{ y: -3, borderColor: "rgba(245, 158, 11, 0.5)" }}
           >

@@ -282,7 +282,7 @@ export function StatCounter({
     <motion.div
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.3 }}
+      viewport={{ once: false, amount: 0.3 }}
       transition={{ duration: 0.5, delay: index * 0.1, ease: [0.25, 1, 0.5, 1] }}
       whileHover={{ y: -4, boxShadow: "0 12px 32px rgba(245, 158, 11, 0.12)" }}
       className="group flex items-center gap-3 rounded-2xl border border-amber-500/20 bg-white/90 px-3 py-3 shadow-md backdrop-blur-sm transition-colors hover:border-amber-500/40 sm:gap-4 sm:px-5 sm:py-4 md:px-6 md:py-5"
@@ -575,11 +575,11 @@ function PartyStrip({
 
 export function PoliticalPartiesSection() {
   const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
+  const isInView = useInView(sectionRef, { once: false, amount: 0.2 });
   const [triggered, setTriggered] = useState(false);
 
   useEffect(() => {
-    if (isInView) setTriggered(true);
+    setTriggered(isInView);
   }, [isInView]);
 
   const [activeIndex, setActiveIndex] = useState(0);

@@ -220,11 +220,11 @@ function ServiceContent({ service }: { service: ServiceItem }) {
 
 export function ServicesSection({ data }: { data: ServicesData }) {
   const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
+  const isInView = useInView(sectionRef, { once: false, amount: 0.2 });
   const [triggered, setTriggered] = useState(false);
 
   useEffect(() => {
-    if (isInView) setTriggered(true);
+    setTriggered(isInView);
   }, [isInView]);
 
   const [activeIndex, setActiveIndex] = useState(0);

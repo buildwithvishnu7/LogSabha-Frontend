@@ -228,11 +228,11 @@ function ArticleCard({
 
 export function FounderEditorialSection() {
   const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.15 });
+  const isInView = useInView(sectionRef, { once: false, amount: 0.15 });
   const [triggered, setTriggered] = useState(false);
 
   useEffect(() => {
-    if (isInView) setTriggered(true);
+    setTriggered(isInView);
   }, [isInView]);
 
   return (

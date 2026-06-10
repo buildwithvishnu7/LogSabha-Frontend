@@ -207,7 +207,7 @@ function AnimatedDivider() {
         className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-500/40 to-transparent"
         initial={{ scaleX: 0 }}
         whileInView={{ scaleX: 1 }}
-        viewport={{ once: true, amount: 0.5 }}
+        viewport={{ once: false, amount: 0.5 }}
         transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
       />
       {/* Traveling light dot */}
@@ -352,7 +352,7 @@ function AnimatedFlag() {
   );
 }
 
-const VIEW_ONCE = { once: true, amount: 0.05 as const };
+const VIEW_ONCE = { once: false, amount: 0.05 as const };
 
 export function Footer() {
   const scrollToTop = () => {
@@ -534,7 +534,7 @@ export function Footer() {
         className="fixed right-6 bottom-6 z-50 flex h-10 w-10 items-center justify-center rounded-full bg-amber-500 text-white shadow-lg shadow-amber-500/25 transition-colors hover:bg-amber-600"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
+        viewport={{ once: false }}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
       >

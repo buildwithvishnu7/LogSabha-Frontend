@@ -146,7 +146,7 @@ const TYPEWRITER_PHRASES = [
 
 function LoopingTypewriter({ className }: { className?: string }) {
   const ref = useRef<HTMLParagraphElement>(null);
-  const isInView = useInView(ref, { once: true, amount: 0.5 });
+  const isInView = useInView(ref, { once: false, amount: 0.5 });
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [displayedCount, setDisplayedCount] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -286,7 +286,7 @@ function FeaturedCard({ article }: { article: Article }) {
         transition={{ duration: 0.3 }}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
+        viewport={{ once: false, amount: 0.2 }}
       >
         {/* Image */}
         <div className="relative flex-1 overflow-hidden">
@@ -720,7 +720,7 @@ export function EditorialInsightsSection() {
           className="mt-8 grid gap-5 lg:mt-10 lg:grid-cols-[1fr_420px] xl:grid-cols-[1fr_460px]"
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
+          viewport={{ once: false, amount: 0.2 }}
           variants={{
             hidden: { opacity: 0 },
             visible: {

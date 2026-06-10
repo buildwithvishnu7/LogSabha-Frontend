@@ -135,7 +135,7 @@ function MainVideoPlayer() {
       className="group relative aspect-[16/9] w-full overflow-hidden rounded-2xl bg-gray-900 shadow-xl shadow-black/10"
       initial={{ opacity: 0, y: 30, scale: 0.98 }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ once: false, amount: 0.2 }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
     >
       {inView && (
@@ -207,7 +207,7 @@ function SpeechCard({
       className="group cursor-pointer"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.3 }}
+      viewport={{ once: false, amount: 0.3 }}
       transition={{
         duration: 0.6,
         delay: index * 0.1,
