@@ -231,12 +231,12 @@ function MediaVideoCard({
 // ─── Animated Monument Border ───
 
 export function MonumentBorder() {
+  const tileCount = 12;
   return (
     <div className="relative mt-6 overflow-hidden">
       <motion.div
-        className="flex"
-        style={{ width: "200%" }}
-        animate={{ x: ["0%", "-50%"] }}
+        className="flex items-end"
+        animate={{ x: ["0px", `-${tileCount / 2 * 283}px`] }}
         transition={{
           x: {
             duration: 30,
@@ -245,18 +245,16 @@ export function MonumentBorder() {
           },
         }}
       >
-        <img
-          src="/images/MonumentSVG.svg"
-          alt=""
-          aria-hidden="true"
-          className="h-auto w-1/2 flex-shrink-0"
-        />
-        <img
-          src="/images/MonumentSVG.svg"
-          alt=""
-          aria-hidden="true"
-          className="h-auto w-1/2 flex-shrink-0"
-        />
+        {Array.from({ length: tileCount }, (_, i) => (
+          <img
+            key={i}
+            src="/lottie/MonumentSVGGroup.svg"
+            alt=""
+            aria-hidden="true"
+            className="h-[100px] flex-shrink-0"
+            style={{ width: 283 }}
+          />
+        ))}
       </motion.div>
     </div>
   );
