@@ -283,7 +283,7 @@ export function LogSabhaStorySection() {
       )}
 
       {/* Content */}
-      <div className="relative z-10 mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10 lg:px-10 lg:py-14">
+      <div className="relative z-10 mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14 lg:px-10 lg:py-20">
         {/* Title */}
         <motion.h2
           className="mb-4 text-center text-2xl font-extrabold sm:text-3xl lg:text-4xl"

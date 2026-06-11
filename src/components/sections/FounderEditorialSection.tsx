@@ -238,7 +238,7 @@ export function FounderEditorialSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden bg-[#0f0a04] py-6 sm:py-8 lg:py-10"
+      className="relative overflow-hidden bg-[#0f0a04] py-8 sm:py-12 lg:py-16"
     >
       {/* ── Dark candle-lit background ── */}
       <div className="pointer-events-none absolute inset-0">
