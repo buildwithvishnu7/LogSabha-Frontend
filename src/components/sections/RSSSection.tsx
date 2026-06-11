@@ -476,7 +476,7 @@ export function RSSSection() {
 
               <div className="relative grid lg:grid-cols-[1fr_380px] xl:grid-cols-[1fr_420px]">
                 {/* Left: Info — determines card height */}
-                <div className="relative z-10 p-4 sm:p-6 md:p-8 lg:p-8">
+                <div className="relative z-10 p-5 sm:p-7 md:p-9 lg:p-10">
                   {/* Logo + Title */}
                   <div className="flex items-center gap-3">
                     <motion.img
@@ -621,7 +621,7 @@ export function RSSSection() {
                 </div>
 
                 {/* Right: Video with dark orange background */}
-                <div className="relative h-[280px] bg-gradient-to-br from-orange-700 via-orange-800 to-orange-900 p-1.5 sm:h-[340px] lg:absolute lg:inset-y-0 lg:right-0 lg:h-auto lg:w-[380px] lg:p-2 xl:w-[420px]">
+                <div className="relative h-[280px] overflow-hidden sm:h-[340px] lg:absolute lg:inset-y-0 lg:right-0 lg:h-auto lg:w-[380px] xl:w-[420px]">
                   <VideoPlayer triggered={triggered} />
                 </div>
               </div>
