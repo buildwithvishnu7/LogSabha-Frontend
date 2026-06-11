@@ -372,7 +372,7 @@ export function RSSSection() {
       <Ticker />
 
       {/* Main Content — warm background */}
-      <div className="relative bg-orange-50/60 py-4 sm:py-6 lg:py-8">
+      <div className="relative bg-orange-50/60 py-6 sm:py-10 lg:py-14">
         {/* RSS background image */}
         <div className="pointer-events-none absolute inset-0">
           <img

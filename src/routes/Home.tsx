@@ -13,7 +13,7 @@ import { SocialPresenceSection } from "@/components/sections/SocialPresenceSecti
 import { HinduForJusticeSection } from "@/components/sections/HinduForJusticeSection";
 import { FounderEditorialSection } from "@/components/sections/FounderEditorialSection";
 import { EditorialInsightsSection } from "@/components/sections/EditorialInsightsSection";
-import { MediaCoverageSection } from "@/components/sections/MediaCoverageSection";
+import { MediaCoverageSection, MonumentBorder } from "@/components/sections/MediaCoverageSection";
 import { Footer } from "@/components/Footer";
 
 export default function Home() {
@@ -33,6 +33,7 @@ export default function Home() {
       <PoliticalLandscapeSection data={data.politicalLandscape} />
       <PoliticalPartiesSection />
       <CommunitySection />
+      <MonumentBorder />
       <ServicesSection data={data.services} />
       <LiveCoverageSection />
       <RSSSection />

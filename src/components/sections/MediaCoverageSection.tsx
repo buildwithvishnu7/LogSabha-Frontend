@@ -230,7 +230,7 @@ function MediaVideoCard({
 
 // ─── Animated Monument Border ───
 
-function MonumentBorder() {
+export function MonumentBorder() {
   return (
     <div className="relative mt-6 overflow-hidden">
       <motion.div
@@ -351,8 +351,6 @@ export function MediaCoverageSection() {
         </div>
       </div>
 
-      {/* ── Monument SVG Border ── */}
-      <MonumentBorder />
     </section>
   );
 }
