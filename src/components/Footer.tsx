@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from "motion/react";
 import { Link } from "react-router-dom";
 import {
   ArrowUpRight,
-  ChevronUp,
 } from "lucide-react";
 
 
@@ -329,10 +328,6 @@ function AnimatedFlag() {
 const VIEW_ONCE = { once: false, amount: 0.05 as const };
 
 export function Footer() {
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
   return (
     <footer className="relative overflow-hidden bg-[#0c0f1a]">
       {/* <FooterTicker /> */}
@@ -476,18 +471,6 @@ export function Footer() {
         </motion.div>
       </div>
 
-      {/* Back to top */}
-      <motion.button
-        onClick={scrollToTop}
-        className="fixed right-6 bottom-6 z-50 flex h-10 w-10 items-center justify-center rounded-full bg-amber-500 text-white shadow-lg shadow-amber-500/25 transition-colors hover:bg-amber-600"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: false }}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-      >
-        <ChevronUp className="h-5 w-5" />
-      </motion.button>
     </footer>
   );
 }

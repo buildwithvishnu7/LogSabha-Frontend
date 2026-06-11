@@ -631,10 +631,10 @@ export function EditorialInsightsSection() {
       {/* Grid background image */}
       <div className="pointer-events-none absolute inset-0">
         <img
-          src="/images/grid-bg.png"
+          src="/images/editorial-bg.jpg"
           alt=""
           aria-hidden="true"
-          className="h-full w-full object-cover opacity-20"
+          className="h-full w-full object-cover opacity-10"
         />
         {/* Edge vignette to fade into white */}
         <div

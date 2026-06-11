@@ -224,7 +224,12 @@ export function ServicesSection({ data }: { data: ServicesData }) {
   const [triggered, setTriggered] = useState(false);
 
   useEffect(() => {
-    setTriggered(isInView);
+    if (isInView) {
+      setTriggered(true);
+    } else {
+      const id = setTimeout(() => setTriggered(false), 300);
+      return () => clearTimeout(id);
+    }
   }, [isInView]);
 
   const [activeIndex, setActiveIndex] = useState(0);

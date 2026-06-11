@@ -15,6 +15,7 @@ import { FounderEditorialSection } from "@/components/sections/FounderEditorialS
 import { EditorialInsightsSection } from "@/components/sections/EditorialInsightsSection";
 import { MediaCoverageSection, MonumentBorder } from "@/components/sections/MediaCoverageSection";
 import { Footer } from "@/components/Footer";
+import { FloatingChatButton } from "@/components/FloatingChatButton";
 
 export default function Home() {
   const { data, isLoading } = useHomeData();
@@ -47,6 +48,7 @@ export default function Home() {
       <DataInsightsSection />
       <ContactSection />
       <Footer />
+      <FloatingChatButton />
     </>
   );
 }
