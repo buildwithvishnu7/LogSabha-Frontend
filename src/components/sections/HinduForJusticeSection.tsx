@@ -550,12 +550,23 @@ export function HinduForJusticeSection() {
               </p>
               <motion.a
                 href="#"
-                className="mt-3 inline-flex items-center gap-2 text-sm font-bold text-amber-600 transition-colors hover:text-amber-700"
-                whileHover={{ x: 4 }}
-                transition={{ duration: 0.2 }}
+                className="relative mt-3 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-amber-500/20 transition-shadow hover:shadow-lg hover:shadow-amber-500/30"
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.97 }}
               >
+                <motion.span
+                  className="pointer-events-none absolute inset-[-3px] rounded-xl border-2 border-amber-500/70"
+                  style={{ boxShadow: "0 0 8px rgba(245,158,11,0.25)" }}
+                  animate={{ scale: [1, 1.06, 1], opacity: [0.8, 0, 0.8] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                />
+                <motion.span
+                  className="pointer-events-none absolute inset-[-1px] rounded-xl border-2 border-amber-500/50"
+                  animate={{ scale: [1, 1.03, 1], opacity: [1, 0.2, 1] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
+                />
                 Read More
-                <HfjColorLottieIcon src="/lottie/fast-forward.json" size={22} color="#d97706" />
+                <HfjColorLottieIcon src="/lottie/fast-forward.json" size={22} color="#ffffff" />
               </motion.a>
             </motion.div>
           </ScrollReveal>
