@@ -547,11 +547,24 @@ export function StatsBar() {
 export function SocialPresenceSection() {
   const [activeFilter, setActiveFilter] = useState("all");
 
-  const filteredPosts = (
-    activeFilter === "all"
-      ? SOCIAL_POSTS
-      : SOCIAL_POSTS.filter((p) => p.platform === activeFilter)
-  ).slice(0, POSTS_PER_FILTER);
+  const filteredPosts = (() => {
+    if (activeFilter !== "all") {
+      return SOCIAL_POSTS.filter((p) => p.platform === activeFilter).slice(0, POSTS_PER_FILTER);
+    }
+    const platformKeys = PLATFORMS.filter((p) => p.key !== "all").map((p) => p.key);
+    const mixed: SocialPost[] = [];
+    let round = 0;
+    while (mixed.length < POSTS_PER_FILTER) {
+      for (const key of platformKeys) {
+        if (mixed.length >= POSTS_PER_FILTER) break;
+        const post = SOCIAL_POSTS.filter((p) => p.platform === key)[round];
+        if (post) mixed.push(post);
+      }
+      round++;
+      if (round > 10) break;
+    }
+    return mixed;
+  })();
 
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-amber-50/60 via-orange-50/30 to-white py-4 sm:py-6 lg:py-8">
