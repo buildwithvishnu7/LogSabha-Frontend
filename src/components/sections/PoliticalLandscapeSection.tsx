@@ -265,8 +265,6 @@ export function PoliticalLandscapeSection({
   data: PoliticalLandscapeData;
 }) {
   const [hoverInfo, setHoverInfo] = useState<HoverInfo | null>(null);
-  const [isUserHovering, setIsUserHovering] = useState(false);
-  const [autoIndex, setAutoIndex] = useState(0);
 
   // Auto-cycle cards (6 total: 4 stat cards + 2 alliance cards)
   const TOTAL_CARDS = 6;
@@ -281,35 +279,11 @@ export function PoliticalLandscapeSection({
     return () => clearInterval(interval);
   }, [hoveredCardIndex]);
 
-  // Auto-cycle through states when user is NOT hovering
-  useEffect(() => {
-    if (isUserHovering || data.states.length === 0) return;
-
-    const interval = setInterval(() => {
-      setAutoIndex((prev) => (prev + 1) % data.states.length);
-    }, 2500);
-
-    return () => clearInterval(interval);
-  }, [isUserHovering, data.states.length]);
-
-  // Build autoHoverInfo from auto-cycling state
-  const autoState = data.states[autoIndex];
-  const activeInfo = isUserHovering ? hoverInfo : autoState ? {
-    state: autoState,
-    // Approximate positions for auto-cycle (will be overridden by real centroid on hover)
-    x: 40 + (autoIndex % 5) * 8,
-    y: 25 + (autoIndex % 4) * 10,
-  } : null;
+  const activeInfo = hoverInfo;
   const activeStateId = activeInfo?.state.name ?? null;
 
   const handleStateHover = (info: HoverInfo | null) => {
-    if (info) {
-      setIsUserHovering(true);
-      setHoverInfo(info);
-    } else {
-      setIsUserHovering(false);
-      setHoverInfo(null);
-    }
+    setHoverInfo(info);
   };
 
   const totalNda = useMemo(
