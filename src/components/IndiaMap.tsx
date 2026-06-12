@@ -49,7 +49,6 @@ const StatePath = memo(function StatePath({
   isHovered,
   hasData,
   rulingParty,
-  flipY,
   onEnter,
   onLeave,
 }: {
