@@ -285,22 +285,10 @@ export function MediaCoverageSection() {
         />
       </div>
 
-      {/* Floating ambient orbs */}
-      <motion.div
-        className="pointer-events-none absolute top-10 left-[10%] h-60 w-60 rounded-full bg-amber-400/[0.07] blur-[80px]"
-        animate={{ x: [0, 30, 0], y: [0, -20, 0] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="pointer-events-none absolute right-[10%] bottom-20 h-48 w-48 rounded-full bg-orange-400/[0.07] blur-[80px]"
-        animate={{ x: [0, -25, 0], y: [0, 15, 0] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-      />
-      <motion.div
-        className="pointer-events-none absolute top-1/2 left-1/2 h-52 w-52 -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-300/[0.05] blur-[90px]"
-        animate={{ scale: [1, 1.2, 1], opacity: [0.04, 0.08, 0.04] }}
-        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-      />
+      {/* Static ambient orbs — no animation for scroll performance */}
+      <div className="pointer-events-none absolute top-10 left-[10%] h-60 w-60 rounded-full bg-amber-400/[0.07] blur-[80px]" />
+      <div className="pointer-events-none absolute right-[10%] bottom-20 h-48 w-48 rounded-full bg-orange-400/[0.07] blur-[80px]" />
+      <div className="pointer-events-none absolute top-1/2 left-1/2 h-52 w-52 -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-300/[0.05] blur-[90px]" />
 
       <div className="relative mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8 xl:px-12">
         {/* ── Header ── */}

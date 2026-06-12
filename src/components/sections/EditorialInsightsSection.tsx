@@ -188,7 +188,7 @@ function LoopingTypewriter({ className }: { className?: string }) {
 
 // ─── Floating Particles ───
 
-const PARTICLES = Array.from({ length: 8 }, (_, i) => ({
+const PARTICLES = Array.from({ length: 4 }, (_, i) => ({
   id: i,
   size: 3 + (i % 3) * 2,
   left: `${10 + i * 11}%`,
@@ -646,22 +646,10 @@ export function EditorialInsightsSection() {
         />
       </div>
 
-      {/* Floating ambient orbs */}
-      <motion.div
-        className="pointer-events-none absolute top-16 left-[8%] h-52 w-52 rounded-full bg-amber-400/[0.05] blur-[80px]"
-        animate={{ x: [0, 25, 0], y: [0, -18, 0] }}
-        transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="pointer-events-none absolute right-[8%] bottom-24 h-44 w-44 rounded-full bg-orange-400/[0.05] blur-[80px]"
-        animate={{ x: [0, -20, 0], y: [0, 15, 0] }}
-        transition={{ duration: 11, repeat: Infinity, ease: "easeInOut", delay: 2.5 }}
-      />
-      <motion.div
-        className="pointer-events-none absolute top-1/2 left-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-300/[0.03] blur-[100px]"
-        animate={{ scale: [1, 1.15, 1], opacity: [0.03, 0.06, 0.03] }}
-        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-      />
+      {/* Static ambient orbs — no animation for scroll performance */}
+      <div className="pointer-events-none absolute top-16 left-[8%] h-52 w-52 rounded-full bg-amber-400/[0.05] blur-[80px]" />
+      <div className="pointer-events-none absolute right-[8%] bottom-24 h-44 w-44 rounded-full bg-orange-400/[0.05] blur-[80px]" />
+      <div className="pointer-events-none absolute top-1/2 left-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-300/[0.03] blur-[100px]" />
 
       {/* Floating particles */}
       <FloatingParticles />

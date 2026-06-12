@@ -55,25 +55,25 @@ const RECENT_SPEECHES: SpeechVideo[] = [
   {
     id: "speech-1",
     title: "PM Modi's First Speech After Re-Election",
-    speaker: "PM Narendra Modi",
+    speaker: "Parliament Session January 2024",
     videoSrc: "/videos/speech3.mp4",
   },
   {
     id: "speech-2",
     title: "Lok Sabha Session — Motion of Thanks Debate",
-    speaker: "Parliament Session 2024",
+    speaker: "Parliament Session January 2024",
     videoSrc: "/videos/speech4.mp4",
   },
   {
     id: "speech-3",
     title: "PM Modi in Rajya Sabha — Presidential Address",
-    speaker: "Rajya Sabha Session",
+    speaker: "Parliament Session January 2024",
     videoSrc: "/videos/speech5.mp4",
   },
   {
     id: "speech-4",
     title: "PM Narendra Modi Recalls Hoisting Tricolour At Lal Chowk",
-    speaker: "PM Narendra Modi",
+    speaker: "Parliament Session January 2024",
     videoSrc: "/videos/speech6.mp4",
   },
 ];
@@ -280,7 +280,7 @@ function SpeechCard({
 
       {/* Info */}
       <div className="mt-3 px-0.5">
-        <h4 className="line-clamp-2 text-sm font-bold leading-snug text-gray-900 transition-colors duration-200 group-hover:text-amber-600">
+        <h4 className="line-clamp-1 text-sm font-bold leading-snug text-gray-900 transition-colors duration-200 group-hover:text-amber-600">
           {speech.title}
         </h4>
         <p className="mt-1 text-xs text-gray-500">{speech.speaker}</p>

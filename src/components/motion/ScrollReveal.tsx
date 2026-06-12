@@ -32,10 +32,9 @@ export function ScrollReveal({
       whileInView="visible"
       viewport={{ once: false, amount: 0.3, margin: "0px 0px -100px 0px" }}
       variants={{
-        hidden: { opacity: 0, filter: "blur(6px)", ...offset },
+        hidden: { opacity: 0, ...offset },
         visible: {
           opacity: 1,
-          filter: "blur(0px)",
           x: 0,
           y: 0,
           transition: {
@@ -92,11 +91,10 @@ export function ScrollRevealText({
           key={i}
           className="mr-2 inline-block lg:mr-3"
           variants={{
-            hidden: { opacity: 0, y: 30, filter: "blur(8px)" },
+            hidden: { opacity: 0, y: 30 },
             visible: {
               opacity: 1,
               y: 0,
-              filter: "blur(0px)",
               transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
             },
           }}
@@ -110,12 +108,11 @@ export function ScrollRevealText({
           <motion.span
             className={`inline-block ${highlightClassName}`}
             variants={{
-              hidden: { opacity: 0, y: 30, scale: 0.95, filter: "blur(8px)" },
+              hidden: { opacity: 0, y: 30, scale: 0.95 },
               visible: {
                 opacity: 1,
                 y: 0,
                 scale: 1,
-                filter: "blur(0px)",
                 transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
               },
             }}

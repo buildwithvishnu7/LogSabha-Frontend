@@ -325,7 +325,7 @@ export function HinduForJusticeSection() {
 
         {/* Floating particles */}
         {triggered &&
-          [...Array(10)].map((_, i) => (
+          [...Array(4)].map((_, i) => (
             <motion.div
               key={i}
               className="pointer-events-none absolute rounded-full"

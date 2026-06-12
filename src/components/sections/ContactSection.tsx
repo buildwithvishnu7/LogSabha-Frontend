@@ -273,19 +273,11 @@ export function ContactSection() {
         <div className="absolute inset-0 bg-gradient-to-r from-[#0b1120] via-transparent to-[#0b1120]" />
       </div>
 
-      {/* Ambient glows */}
+      {/* Static ambient glows — no animation for scroll performance */}
       {isInView && (
         <>
-          <motion.div
-            className="pointer-events-none absolute top-1/4 left-0 h-[500px] w-[500px] rounded-full bg-amber-500/[0.04] blur-[120px]"
-            animate={{ x: [0, 50, 0], y: [0, -30, 0] }}
-            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <motion.div
-            className="pointer-events-none absolute right-0 bottom-1/4 h-[400px] w-[400px] rounded-full bg-blue-500/[0.03] blur-[100px]"
-            animate={{ x: [0, -40, 0], y: [0, 30, 0] }}
-            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-          />
+          <div className="pointer-events-none absolute top-1/4 left-0 h-[500px] w-[500px] rounded-full bg-amber-500/[0.04] blur-[120px]" />
+          <div className="pointer-events-none absolute right-0 bottom-1/4 h-[400px] w-[400px] rounded-full bg-blue-500/[0.03] blur-[100px]" />
         </>
       )}
 

@@ -98,7 +98,7 @@ export const homeData: HomePageData = {
         title: "Political Analytics",
         description:
           "Advanced data analytics and predictive modeling for election forecasting and political trend analysis.",
-        image: "/images/Political Analytics.png",
+        image: "/images/Political Analytics.jpg",
         stats: [
           { value: 98, suffix: "%", label: "ACCURACY" },
           { value: 500, suffix: "+", label: "REPORTS DELIVERED" },
@@ -152,7 +152,7 @@ export const homeData: HomePageData = {
         title: "Opposition Research",
         description:
           "In-depth opposition analysis and competitive intelligence to stay ahead in the political landscape.",
-        image: "/images/Opposition Research.png",
+        image: "/images/Opposition Research.jpg",
         stats: [
           { value: 200, suffix: "+", label: "PROFILES ANALYZED" },
           { value: 50, suffix: "+", label: "ELECTIONS COVERED" },

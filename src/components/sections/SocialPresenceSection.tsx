@@ -590,25 +590,13 @@ export function SocialPresenceSection() {
         />
       </div>
 
-      {/* Floating gradient orbs — more visible */}
-      <motion.div
-        className="pointer-events-none absolute -top-32 -right-32 h-80 w-80 rounded-full bg-amber-300/15 blur-[80px]"
-        animate={{ x: [0, 35, 0], y: [0, -25, 0] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="pointer-events-none absolute -bottom-32 -left-32 h-72 w-72 rounded-full bg-orange-300/12 blur-[80px]"
-        animate={{ x: [0, -25, 0], y: [0, 30, 0] }}
-        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-      />
-      <motion.div
-        className="pointer-events-none absolute top-1/3 left-1/2 h-60 w-60 -translate-x-1/2 rounded-full bg-amber-200/10 blur-[100px]"
-        animate={{ scale: [1, 1.2, 1], opacity: [0.08, 0.15, 0.08] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 3 }}
-      />
+      {/* Static gradient orbs — no animation for scroll performance */}
+      <div className="pointer-events-none absolute -top-32 -right-32 h-80 w-80 rounded-full bg-amber-300/15 blur-[80px]" />
+      <div className="pointer-events-none absolute -bottom-32 -left-32 h-72 w-72 rounded-full bg-orange-300/12 blur-[80px]" />
+      <div className="pointer-events-none absolute top-1/3 left-1/2 h-60 w-60 -translate-x-1/2 rounded-full bg-amber-200/10 blur-[100px]" />
 
       {/* Floating particles */}
-      {[...Array(10)].map((_, i) => (
+      {[...Array(4)].map((_, i) => (
         <motion.div
           key={`sp-particle-${i}`}
           className="pointer-events-none absolute rounded-full"

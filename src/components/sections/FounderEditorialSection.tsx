@@ -202,7 +202,7 @@ function ArticleCard({
 
       {/* Content */}
       <div className="flex flex-1 flex-col p-3 sm:p-4">
-        <h3 className="line-clamp-2 text-xs font-bold leading-snug text-white/90 transition-colors group-hover:text-amber-400 sm:text-sm">
+        <h3 className="line-clamp-3 text-xs font-bold leading-snug text-white/90 transition-colors group-hover:text-amber-400 sm:text-sm">
           {article.title}
         </h3>
 
@@ -273,51 +273,24 @@ export function FounderEditorialSection() {
           }}
         />
 
-        {/* Warm ambient light from candles */}
+        {/* Warm ambient light — static for scroll performance */}
         {triggered && (
           <>
-            <motion.div
-              className="absolute top-1/4 left-1/2 h-[500px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-700/[0.06] blur-[120px]"
-              animate={{
-                opacity: [0.4, 0.7, 0.4],
-                scale: [1, 1.05, 1],
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
+            <div
+              className="absolute top-1/4 left-1/2 h-[500px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-700/[0.06] blur-[120px] opacity-55"
             />
-            <motion.div
-              className="absolute top-[60%] left-[25%] h-[300px] w-[300px] rounded-full bg-orange-600/[0.04] blur-[100px]"
-              animate={{
-                opacity: [0.3, 0.5, 0.3],
-              }}
-              transition={{
-                duration: 5,
-                delay: 1,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
+            <div
+              className="absolute top-[60%] left-[25%] h-[300px] w-[300px] rounded-full bg-orange-600/[0.04] blur-[100px] opacity-40"
             />
-            <motion.div
-              className="absolute top-[50%] right-[20%] h-[250px] w-[250px] rounded-full bg-amber-500/[0.03] blur-[80px]"
-              animate={{
-                opacity: [0.2, 0.45, 0.2],
-              }}
-              transition={{
-                duration: 6,
-                delay: 2,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
+            <div
+              className="absolute top-[50%] right-[20%] h-[250px] w-[250px] rounded-full bg-amber-500/[0.03] blur-[80px] opacity-30"
             />
           </>
         )}
 
         {/* Floating embers / sparks */}
         {triggered &&
-          [...Array(10)].map((_, i) => (
+          [...Array(4)].map((_, i) => (
             <motion.div
               key={i}
               className="absolute rounded-full bg-amber-400"

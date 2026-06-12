@@ -393,7 +393,7 @@ export function RSSSection() {
         {/* Floating ambient particles — more and larger */}
         {triggered && (
           <>
-            {[...Array(12)].map((_, i) => (
+            {[...Array(4)].map((_, i) => (
               <motion.div
                 key={i}
                 className="pointer-events-none absolute rounded-full"

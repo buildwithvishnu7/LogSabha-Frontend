@@ -256,7 +256,7 @@ export function LogSabhaStorySection() {
       {/* Floating ambient particles */}
       {triggered && (
         <>
-          {[...Array(8)].map((_, i) => (
+          {[...Array(4)].map((_, i) => (
             <motion.div
               key={i}
               className="pointer-events-none absolute rounded-full bg-amber-400/10"
