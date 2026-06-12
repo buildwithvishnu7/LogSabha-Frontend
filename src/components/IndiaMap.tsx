@@ -9,6 +9,9 @@ import type { StateData } from "@/types";
 const NAME_MAP: Record<string, string> = {
   Orissa: "Odisha",
   Uttaranchal: "Uttarakhand",
+  "NCT of Delhi": "Delhi",
+  "Andaman & Nicobar Island": "Andaman & Nicobar Islands",
+  "Dadara & Nagar Havelli": "Dadra & Nagar Haveli",
 };
 
 // Party → color mapping for state fills
@@ -46,6 +49,7 @@ const StatePath = memo(function StatePath({
   isHovered,
   hasData,
   rulingParty,
+  flipY,
   onEnter,
   onLeave,
 }: {
@@ -86,13 +90,30 @@ export function IndiaMap({ states, onStateHover, hoveredStateId }: IndiaMapProps
       .then((res) => res.json())
       .then((topo: Topology) => {
         const geo = feature(topo, topo.objects.ind) as FeatureCollection<Geometry>;
+        // Fix inverted polygon winding for states decoded from topojson
+        geo.features.forEach((f) => {
+          const coords = f.geometry.type === "Polygon"
+            ? [f.geometry.coordinates]
+            : f.geometry.type === "MultiPolygon"
+              ? f.geometry.coordinates
+              : [];
+          coords.forEach((poly) => {
+            poly.forEach((ring) => {
+              let area = 0;
+              for (let i = 0; i < ring.length - 1; i++) {
+                area += (ring[i + 1][0] - ring[i][0]) * (ring[i + 1][1] + ring[i][1]);
+              }
+              if (area < 0) ring.reverse();
+            });
+          });
+        });
         setFeatures(geo);
       })
       .catch(console.error);
   }, []);
 
   const projection = useMemo(
-    () => geoMercator().center([82, 22]).scale(1000).translate([300, 300]),
+    () => geoMercator().center([80, 23]).scale(800).translate([290, 320]),
     [],
   );
 
@@ -106,11 +127,12 @@ export function IndiaMap({ states, onStateHover, hoveredStateId }: IndiaMapProps
       const stateData = states.find(
         (s) => s.name.toLowerCase() === normalized.toLowerCase(),
       );
-      // Compute centroid for tooltip positioning
       const centroid = projection(geoCentroid(f as Feature<Geometry>));
+      const d = pathGenerator(f) ?? "";
+
       return {
         key: `${name}-${i}`,
-        d: pathGenerator(f) ?? "",
+        d,
         name: normalized,
         stateData,
         cx: centroid?.[0] ?? 300,
