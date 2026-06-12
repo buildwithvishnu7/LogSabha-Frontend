@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import {
   ScrollReveal,
   ScrollRevealLine,
@@ -16,37 +16,42 @@ const NEWS_LOGOS = [
   { name: "Republic", src: "/images/news-channels/republic.svg" },
 ];
 
-// ─── Video Data ───
+// ─── Media Item Data ───
 
-interface MediaVideo {
+interface MediaItem {
   id: string;
   title: string;
-  videoSrc: string;
-  poster: string;
+  type: "video" | "image";
+  videoSrc?: string;
+  imageSrc?: string;
+  poster?: string;
 }
 
-const MEDIA_VIDEOS: MediaVideo[] = [
+const MEDIA_ITEMS: MediaItem[] = [
   {
     id: "media-1",
     title: "Nation's Pride - The Great Hindu Revival",
-    videoSrc: "/videos/speech.mp4",
-    poster: "/images/editorial/featured.jpg",
+    type: "image",
+    imageSrc: "/images/RAM-INDIA-TODAY.jpg",
   },
   {
     id: "media-2",
     title: "NDA Sweeps - Political Analysis",
+    type: "video",
     videoSrc: "/videos/speech1.mp4",
     poster: "/images/editorial/parliament.jpg",
   },
   {
     id: "media-3",
     title: "Shri Ram Navami Celebrations",
+    type: "video",
     videoSrc: "/videos/speech2.mp4",
     poster: "/images/editorial/regional.jpg",
   },
   {
     id: "media-4",
     title: "Lok Sabha Session Coverage",
+    type: "video",
     videoSrc: "/videos/speech.mp4",
     poster: "/images/editorial/economy.jpg",
   },
@@ -99,15 +104,148 @@ function LogoTicker() {
   );
 }
 
+// ─── Image Lightbox ───
+
+function ImageLightbox({ src, alt, onClose }: { src: string; alt: string; onClose: () => void }) {
+  return (
+    <motion.div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+      onClick={onClose}
+    >
+      <motion.img
+        src={src}
+        alt={alt}
+        className="max-h-[85vh] max-w-[90vw] rounded-2xl object-contain shadow-2xl"
+        initial={{ scale: 0.7, opacity: 0, y: 40 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        exit={{ scale: 0.7, opacity: 0, y: 40 }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        onClick={(e) => e.stopPropagation()}
+      />
+      <motion.button
+        className="absolute top-6 right-6 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+        onClick={onClose}
+        initial={{ opacity: 0, scale: 0.5 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.5 }}
+        transition={{ delay: 0.2 }}
+      >
+        <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+          <path d="M18 6L6 18M6 6l12 12" />
+        </svg>
+      </motion.button>
+    </motion.div>
+  );
+}
+
+// ─── Media Image Card ───
+
+function MediaImageCard({
+  item,
+  index,
+  onImageClick,
+}: {
+  item: MediaItem;
+  index: number;
+  onImageClick: (src: string, alt: string) => void;
+}) {
+  return (
+    <motion.div
+      className="group relative cursor-pointer overflow-hidden rounded-2xl bg-gray-900 shadow-lg"
+      initial={{ opacity: 0, y: 40, scale: 0.95 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: false, amount: 0.3 }}
+      transition={{
+        duration: 0.7,
+        delay: index * 0.12,
+        ease: [0.16, 1, 0.3, 1],
+      }}
+      whileHover={{ y: -6, scale: 1.02 }}
+      onClick={() => onImageClick(item.imageSrc!, item.title)}
+    >
+      <motion.span
+        className="pointer-events-none absolute inset-[-2px] z-20 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+        style={{
+          background:
+            "conic-gradient(from var(--angle), transparent 0%, transparent 60%, rgba(245,158,11,0.7) 80%, rgba(245,158,11,1) 85%, rgba(245,158,11,0.7) 90%, transparent 100%)",
+          mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+          maskComposite: "exclude",
+          WebkitMaskComposite: "xor",
+          padding: "2px",
+        }}
+        animate={{
+          "--angle": ["0deg", "360deg"],
+        } as Record<string, string[]>}
+        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+      />
+
+      <div className="relative aspect-[9/16] max-h-[420px] overflow-hidden sm:aspect-[3/4]">
+        <img
+          src={item.imageSrc}
+          alt={item.title}
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+        />
+
+        {/* Expand icon */}
+        <div className="pointer-events-none absolute inset-0 z-[2] flex items-center justify-center">
+          <motion.div
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-100"
+          >
+            <svg className="h-5 w-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+              <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+            </svg>
+          </motion.div>
+        </div>
+
+        {/* Shimmer sweep overlay */}
+        <motion.div
+          className="pointer-events-none absolute inset-0 z-10"
+          style={{
+            background:
+              "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%)",
+            backgroundSize: "200% 100%",
+          }}
+          animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
+          transition={{
+            duration: 3,
+            delay: 2 + index * 0.5,
+            repeat: Infinity,
+            repeatDelay: 4,
+            ease: "easeInOut",
+          }}
+        />
+
+        <div className="absolute inset-x-0 top-0 h-1/4 bg-gradient-to-b from-black/30 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/70 to-transparent" />
+
+        <motion.div
+          className="absolute inset-x-0 bottom-0 z-10 p-3"
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false }}
+          transition={{ delay: 0.7 + index * 0.15, duration: 0.5 }}
+        >
+          <p className="line-clamp-2 text-xs font-semibold leading-tight text-white/90 sm:text-sm">
+            {item.title}
+          </p>
+        </motion.div>
+      </div>
+    </motion.div>
+  );
+}
+
 // ─── Auto-Play Video Card ───
 
 function MediaVideoCard({
-  video,
+  item,
   index,
 }: {
-  video: MediaVideo;
+  item: MediaItem;
   index: number;
-  sectionInView?: boolean;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -141,7 +279,6 @@ function MediaVideoCard({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Orbiting border glow on hover */}
       <motion.span
         className="pointer-events-none absolute inset-[-2px] z-20 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
         style={{
@@ -159,8 +296,6 @@ function MediaVideoCard({
       />
 
       <div className="relative aspect-[9/16] max-h-[420px] overflow-hidden sm:aspect-[3/4]">
-        {/* Video — paused by default, plays on hover, resumes from where it stopped */}
-        {/* First frame of the video acts as the thumbnail */}
         <video
           ref={videoRef}
           muted
@@ -169,10 +304,9 @@ function MediaVideoCard({
           preload="auto"
           className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
         >
-          <source src={video.videoSrc} type="video/mp4" />
+          <source src={item.videoSrc} type="video/mp4" />
         </video>
 
-        {/* Play icon — visible when paused */}
         <motion.div
           className={`pointer-events-none absolute inset-0 z-[2] flex items-center justify-center transition-opacity duration-300 ${
             isPlaying ? "opacity-0" : "opacity-100"
@@ -189,7 +323,6 @@ function MediaVideoCard({
           </motion.div>
         </motion.div>
 
-        {/* Shimmer sweep overlay */}
         <motion.div
           className="pointer-events-none absolute inset-0 z-10"
           style={{
@@ -207,11 +340,9 @@ function MediaVideoCard({
           }}
         />
 
-        {/* Gradient overlays */}
         <div className="absolute inset-x-0 top-0 h-1/4 bg-gradient-to-b from-black/30 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/70 to-transparent" />
 
-        {/* Title overlay at bottom */}
         <motion.div
           className="absolute inset-x-0 bottom-0 z-10 p-3"
           initial={{ opacity: 0, y: 10 }}
@@ -220,7 +351,7 @@ function MediaVideoCard({
           transition={{ delay: 0.7 + index * 0.15, duration: 0.5 }}
         >
           <p className="line-clamp-2 text-xs font-semibold leading-tight text-white/90 sm:text-sm">
-            {video.title}
+            {item.title}
           </p>
         </motion.div>
       </div>
@@ -263,6 +394,8 @@ export function MonumentBorder() {
 // ─── Main Section ───
 
 export function MediaCoverageSection() {
+  const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null);
+
   return (
     <section
       className="relative overflow-hidden bg-white pt-8 pb-0 sm:pt-10 lg:pt-12"
@@ -325,18 +458,37 @@ export function MediaCoverageSection() {
           <LogoTicker />
         </ScrollReveal>
 
-        {/* ── Video Grid ── */}
+        {/* ── Media Grid ── */}
         <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4 lg:gap-5">
-          {MEDIA_VIDEOS.map((video, i) => (
-            <MediaVideoCard
-              key={video.id}
-              video={video}
-              index={i}
-            />
-          ))}
+          {MEDIA_ITEMS.map((item, i) =>
+            item.type === "image" ? (
+              <MediaImageCard
+                key={item.id}
+                item={item}
+                index={i}
+                onImageClick={(src, alt) => setLightbox({ src, alt })}
+              />
+            ) : (
+              <MediaVideoCard
+                key={item.id}
+                item={item}
+                index={i}
+              />
+            )
+          )}
         </div>
       </div>
 
+      {/* Lightbox overlay */}
+      <AnimatePresence>
+        {lightbox && (
+          <ImageLightbox
+            src={lightbox.src}
+            alt={lightbox.alt}
+            onClose={() => setLightbox(null)}
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
 }
