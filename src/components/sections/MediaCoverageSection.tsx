@@ -43,17 +43,15 @@ const MEDIA_ITEMS: MediaItem[] = [
   },
   {
     id: "media-3",
-    title: "Shri Ram Navami Celebrations",
+    title: "Jai Shri Ram - Cultural Renaissance",
     type: "video",
-    videoSrc: "/videos/speech2.mp4",
-    poster: "/images/editorial/regional.jpg",
+    videoSrc: "/videos/ramji.mp4",
   },
   {
     id: "media-4",
-    title: "Lok Sabha Session Coverage",
+    title: "The Saffron Grip - Rising Bharat",
     type: "video",
-    videoSrc: "/videos/speech.mp4",
-    poster: "/images/editorial/economy.jpg",
+    videoSrc: "/videos/saffron-grip.mp4",
   },
 ];
 

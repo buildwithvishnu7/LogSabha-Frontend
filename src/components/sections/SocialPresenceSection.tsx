@@ -27,7 +27,6 @@ const PLATFORMS: Platform[] = [
   { key: "all", label: "All", color: "text-white", bgGradient: "from-amber-500 to-amber-600", iconBg: "" },
   { key: "twitter", label: "Twitter", color: "text-sky-500", bgGradient: "from-sky-500 to-sky-600", iconBg: "bg-sky-500" },
   { key: "instagram", label: "Instagram", color: "text-pink-500", bgGradient: "from-pink-500 via-purple-500 to-orange-400", iconBg: "bg-gradient-to-br from-pink-500 via-purple-500 to-orange-400" },
-  { key: "facebook", label: "Facebook", color: "text-blue-600", bgGradient: "from-blue-600 to-blue-700", iconBg: "bg-blue-600" },
   { key: "youtube", label: "YouTube", color: "text-red-600", bgGradient: "from-red-600 to-red-700", iconBg: "bg-red-600" },
 ];
 
@@ -84,6 +83,7 @@ interface SocialPost {
   comments: string;
   shares: string;
   views?: string;
+  link?: string;
 }
 
 const SOCIAL_POSTS: SocialPost[] = [
@@ -91,47 +91,51 @@ const SOCIAL_POSTS: SocialPost[] = [
   {
     id: "tw-1",
     platform: "twitter",
-    handle: "@logsabha",
-    timeAgo: "2h ago",
+    handle: "@TLogsabha",
+    timeAgo: "2w ago",
     image: "/images/social/twitter-post.jpg",
-    caption: "Breaking: Lok Sabha passes landmark legislation on electoral reforms. A historic step towards strengthening democratic processes.",
+    caption: "दाऊद के पैसों पर पलने वाले भांड बॉलीवुड और OTT प्लेटफॉर्म्स का सनातन के खिलाफ डरावना 'सांस्कृतिक जिहाद' #Bollywood #SanatanDharma",
     likes: "12.5K",
     comments: "2.3K",
     shares: "4.1K",
+    link: "https://x.com/TLogsabha/status/2058258784301306066",
   },
   {
     id: "tw-2",
     platform: "twitter",
-    handle: "@logsabha",
+    handle: "@TLogsabha",
     timeAgo: "1d ago",
-    image: "/images/social/twitter-post-2.jpg",
+    image: "/images/social/twitter-post.jpg",
     caption: "State election results are in! Our prediction model achieved 96% accuracy across all constituencies. Full analysis thread below.",
     likes: "15.1K",
     comments: "4.6K",
     shares: "7.2K",
+    link: "https://x.com/TLogsabha",
   },
   {
     id: "tw-3",
     platform: "twitter",
-    handle: "@logsabha",
+    handle: "@TLogsabha",
     timeAgo: "2d ago",
     image: "/images/social/twitter-post.jpg",
     caption: "Exit polls vs actual results — a deep dive into what the data got right and where the models diverged. Thread below.",
     likes: "8.9K",
     comments: "1.8K",
     shares: "3.5K",
+    link: "https://x.com/TLogsabha",
   },
   // ── Instagram (3 posts) ──
   {
     id: "ig-1",
     platform: "instagram",
     handle: "@logsabha",
-    timeAgo: "4h ago",
+    timeAgo: "1w ago",
     image: "/images/social/instagram-post.jpg",
     caption: "Celebrating 75 years of Indian democracy! Swipe to see the journey of our parliamentary system.",
     likes: "28.7K",
     comments: "1.5K",
     shares: "892",
+    link: "https://www.instagram.com/p/DYsSIkIGOeN/",
   },
   {
     id: "ig-2",
@@ -143,6 +147,7 @@ const SOCIAL_POSTS: SocialPost[] = [
     likes: "22.3K",
     comments: "2.1K",
     shares: "1.3K",
+    link: "https://www.instagram.com/logsabha/",
   },
   {
     id: "ig-3",
@@ -154,19 +159,21 @@ const SOCIAL_POSTS: SocialPost[] = [
     likes: "31.5K",
     comments: "3.4K",
     shares: "2.7K",
+    link: "https://www.instagram.com/logsabha/",
   },
   // ── YouTube (3 posts) ──
   {
     id: "yt-1",
     platform: "youtube",
     handle: "@logsabha",
-    timeAgo: "6h ago",
+    timeAgo: "1w ago",
     image: "/images/social/youtube-post.jpg",
     caption: "Live Coverage: Parliament Session 2026 | Key Debates & Discussions",
     likes: "45.2K",
     comments: "8.9K",
     shares: "15.3K",
     views: "1.2M",
+    link: "https://youtu.be/iACoQ3s_g5M",
   },
   {
     id: "yt-2",
@@ -179,6 +186,7 @@ const SOCIAL_POSTS: SocialPost[] = [
     comments: "5.4K",
     shares: "9.8K",
     views: "890K",
+    link: "https://www.youtube.com/@logsabha",
   },
   {
     id: "yt-3",
@@ -191,74 +199,7 @@ const SOCIAL_POSTS: SocialPost[] = [
     comments: "11.2K",
     shares: "21.4K",
     views: "2.5M",
-  },
-  // ── Facebook (3 posts) ──
-  {
-    id: "fb-1",
-    platform: "facebook",
-    handle: "LogSabha Official",
-    timeAgo: "8h ago",
-    image: "/images/social/facebook-post.jpg",
-    caption: "India's democratic journey continues to inspire the world. Here's a look at the key policy decisions shaping our nation's future.",
-    likes: "18.3K",
-    comments: "3.2K",
-    shares: "6.7K",
-  },
-  {
-    id: "fb-2",
-    platform: "facebook",
-    handle: "LogSabha Official",
-    timeAgo: "1d ago",
-    image: "/images/social/facebook-post.jpg",
-    caption: "Our latest survey reveals shifting voter sentiments in 5 key states ahead of upcoming assembly elections.",
-    likes: "14.6K",
-    comments: "2.8K",
-    shares: "5.1K",
-  },
-  {
-    id: "fb-3",
-    platform: "facebook",
-    handle: "LogSabha Official",
-    timeAgo: "4d ago",
-    image: "/images/social/facebook-post.jpg",
-    caption: "Join us this Saturday for a live Facebook discussion on the impact of digital campaigning in rural India.",
-    likes: "11.2K",
-    comments: "1.9K",
-    shares: "3.8K",
-  },
-  // ── LinkedIn (3 posts) ──
-  {
-    id: "li-1",
-    platform: "linkedin",
-    handle: "LogSabha",
-    timeAgo: "12h ago",
-    image: "/images/social/linkedin-post.jpg",
-    caption: "New report: How data analytics is transforming political campaigning in India. Read our latest insights on the intersection of technology and democracy.",
-    likes: "9.8K",
-    comments: "1.1K",
-    shares: "3.4K",
-  },
-  {
-    id: "li-2",
-    platform: "linkedin",
-    handle: "LogSabha",
-    timeAgo: "3d ago",
-    image: "/images/social/linkedin-post.jpg",
-    caption: "We're hiring! LogSabha is looking for data scientists and political analysts to join our growing team. Apply now.",
-    likes: "7.3K",
-    comments: "845",
-    shares: "2.1K",
-  },
-  {
-    id: "li-3",
-    platform: "linkedin",
-    handle: "LogSabha",
-    timeAgo: "6d ago",
-    image: "/images/social/linkedin-post.jpg",
-    caption: "Case study: How our predictive models helped a national party optimize their ground campaign in 120+ constituencies.",
-    likes: "12.4K",
-    comments: "1.6K",
-    shares: "4.9K",
+    link: "https://www.youtube.com/@logsabha",
   },
 ];
 
@@ -372,8 +313,8 @@ function PlatformFilter({
 
 function SocialCard({ post, index }: { post: SocialPost; index: number }) {
   const platform = PLATFORMS.find((p) => p.key === post.platform)!;
-  // Alternate slide direction: left, right, left based on index
   const slideX = index % 2 === 0 ? -60 : 60;
+  const isTwitter = post.platform === "twitter";
 
   return (
     <motion.div
@@ -382,10 +323,10 @@ function SocialCard({ post, index }: { post: SocialPost; index: number }) {
       animate={{ opacity: 1, x: 0, y: 0, scale: 1, rotateY: 0 }}
       exit={{ opacity: 0, x: -slideX, y: -20, scale: 0.9 }}
       transition={{ duration: 0.6, delay: index * 0.12, ease: [0.16, 1, 0.3, 1] }}
-      className="group w-full"
+      className="group h-full w-full"
     >
       <motion.div
-        className="relative overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:border-amber-200 hover:shadow-xl"
+        className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:border-amber-200 hover:shadow-xl"
         whileHover={{ y: -6 }}
         transition={{ duration: 0.3 }}
       >
@@ -408,7 +349,7 @@ function SocialCard({ post, index }: { post: SocialPost; index: number }) {
             </div>
             <div>
               <p className="text-sm font-bold text-gray-900">
-                {post.platform.charAt(0).toUpperCase() + post.platform.slice(1)}
+                {post.platform === "twitter" ? "X" : post.platform.charAt(0).toUpperCase() + post.platform.slice(1)}
               </p>
               <p className="text-xs text-gray-400">{post.handle}</p>
             </div>
@@ -418,64 +359,102 @@ function SocialCard({ post, index }: { post: SocialPost; index: number }) {
           </span>
         </div>
 
-        {/* Image with overlay effects */}
-        <div className="relative mx-3 overflow-hidden rounded-xl">
-          <div className="aspect-[16/10] bg-gradient-to-br from-gray-100 to-gray-200">
-            <img
-              src={post.image}
-              alt={post.caption}
-              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-              onError={(e) => {
-                const target = e.currentTarget;
-                target.style.display = "none";
-              }}
-            />
-          </div>
-
-          {/* Gradient overlay on hover */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-
-          {/* YouTube play button */}
-          {post.platform === "youtube" && (
-            <motion.div
-              className="absolute inset-0 flex items-center justify-center"
-              initial={false}
-            >
-              <motion.div
-                className="flex h-14 w-14 items-center justify-center rounded-full bg-white/90 shadow-xl backdrop-blur-sm"
-                whileHover={{ scale: 1.15 }}
-                transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              >
-                <Play className="ml-1 h-6 w-6 text-red-600" fill="currentColor" />
-              </motion.div>
-            </motion.div>
-          )}
-
-          {/* Views badge for YouTube */}
-          {post.views && (
-            <div className="absolute top-3 right-3 flex items-center gap-1 rounded-full bg-black/60 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-sm">
-              <Eye className="h-3 w-3" />
-              <AnimatedStat value={post.views} className="text-[11px] font-semibold" />
+        {/* Twitter/X: text-first layout */}
+        {isTwitter ? (
+          <>
+            {/* Post text as primary content — grows to fill card height */}
+            <div className="flex flex-1 flex-col px-4 pb-3">
+              <p className="flex-1 text-[15px] leading-relaxed text-gray-900">
+                {post.caption}
+              </p>
+              {post.link && (
+                <a
+                  href={post.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 inline-flex items-center gap-1 text-xs text-sky-500 hover:underline"
+                >
+                  <ExternalLink className="h-3 w-3" />
+                  {post.link.replace(/^https?:\/\//, "").slice(0, 40)}...
+                </a>
+              )}
             </div>
-          )}
+            {/* Image below text */}
+            {post.image && (
+              <div className="relative mx-3 mb-3 overflow-hidden rounded-xl">
+                <div className="aspect-[16/10] bg-gradient-to-br from-gray-100 to-gray-200">
+                  <img
+                    src={post.image}
+                    alt=""
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    onError={(e) => { e.currentTarget.style.display = "none"; }}
+                  />
+                </div>
+              </div>
+            )}
+          </>
+        ) : (
+          <>
+            {/* Image with overlay effects (Instagram / YouTube) — stretches to fill */}
+            <div className="relative mx-3 flex-1 overflow-hidden rounded-xl">
+              <img
+                src={post.image}
+                alt={post.caption}
+                className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                onError={(e) => { e.currentTarget.style.display = "none"; }}
+              />
 
-          {/* External link on hover */}
-          <motion.div
-            className="absolute right-3 bottom-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-gray-700 shadow-lg opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-100"
-          >
-            <ExternalLink className="h-3.5 w-3.5" />
-          </motion.div>
-        </div>
+              {/* Gradient overlay on hover */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
-        {/* Caption */}
-        <div className="px-4 pt-3 pb-1">
-          <p className="line-clamp-2 text-sm leading-relaxed text-gray-700">
-            {post.caption}
-          </p>
-        </div>
+              {/* YouTube play button */}
+              {post.platform === "youtube" && (
+                <motion.div
+                  className="absolute inset-0 flex items-center justify-center"
+                  initial={false}
+                >
+                  <motion.div
+                    className="flex h-14 w-14 items-center justify-center rounded-full bg-white/90 shadow-xl backdrop-blur-sm"
+                    whileHover={{ scale: 1.15 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  >
+                    <Play className="ml-1 h-6 w-6 text-red-600" fill="currentColor" />
+                  </motion.div>
+                </motion.div>
+              )}
+
+              {/* Views badge for YouTube */}
+              {post.views && (
+                <div className="absolute top-3 right-3 flex items-center gap-1 rounded-full bg-black/60 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-sm">
+                  <Eye className="h-3 w-3" />
+                  <AnimatedStat value={post.views} className="text-[11px] font-semibold" />
+                </div>
+              )}
+
+              {/* External link on hover */}
+              {post.link && (
+                <a
+                  href={post.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="absolute right-3 bottom-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-gray-700 shadow-lg opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-100 hover:bg-white"
+                >
+                  <ExternalLink className="h-3.5 w-3.5" />
+                </a>
+              )}
+            </div>
+
+            {/* Caption */}
+            <div className="px-4 pt-3 pb-1">
+              <p className="line-clamp-2 text-sm leading-relaxed text-gray-700">
+                {post.caption}
+              </p>
+            </div>
+          </>
+        )}
 
         {/* Engagement Stats */}
-        <div className="flex items-center justify-between border-t border-gray-50 px-4 py-3 mt-2">
+        <div className="mt-auto flex items-center justify-between border-t border-gray-50 px-4 py-3">
           <EngagementButton icon={Heart} value={post.likes} hoverColor="hover:text-red-500" />
           <EngagementButton icon={MessageCircle} value={post.comments} hoverColor="hover:text-blue-500" />
           <EngagementButton icon={Share2} value={post.shares} hoverColor="hover:text-emerald-500" />

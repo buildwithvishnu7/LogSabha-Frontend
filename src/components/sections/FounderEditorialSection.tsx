@@ -45,23 +45,23 @@ const ARTICLES: EditorialArticle[] = [
   {
     id: "fe-1",
     title:
-      "चोल ताबे की पट्टिकाओं की महाकाव्यात्मक 1000 वर्षीय यात्रा: तमिल गौरव से डच तटों",
+      "निःस्वार्थ सेवा की भावना में अमर हुआ कर्तव्य: लेफ्टिनेंट शशांक तिवारी",
     image: "/images/editorial/featured.jpg",
-    date: "April 8, 2026",
+    date: "June 12, 2026",
   },
   {
     id: "fe-2",
     title:
-      "नस्लवादी कार्टून ने पीएम मोदी को निशाना बनाया वैश्विक आक्रोश क्यों? भारत को क्यों",
-    image: "/images/editorial/regional.jpg",
-    date: "April 5, 2026",
+      "रियो से ऋषिकेश: आचार्य विश्वनाथ जोनास मसेती की सनातन धर्म यात्रा",
+    image: "/images/editorial/regional.webp",
+    date: "June 11, 2026",
   },
   {
     id: "fe-3",
     title:
-      "झारखंड-छत्तीसगढ़ के जंगलों में विदेशी चिंगाई सभाओं का खौफनाक जाल, भोले-भाले",
-    image: "/images/editorial/parliament.jpg",
-    date: "April 2, 2026",
+      "उपरबेड़ा से राष्ट्रपति भवन तक: राष्ट्रपति द्रौपदी मुर्मू की प्रेरणादायक कहानी",
+    image: "/images/editorial/parliament.webp",
+    date: "June 11, 2026",
   },
 ];
 
