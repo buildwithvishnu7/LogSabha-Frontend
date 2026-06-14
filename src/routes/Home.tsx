@@ -6,7 +6,7 @@ import { PoliticalPartiesSection } from "@/components/sections/PoliticalPartiesS
 import { ServicesSection } from "@/components/sections/ServicesSection";
 import { CommunitySection } from "@/components/sections/CommunitySection";
 import { DataInsightsSection } from "@/components/sections/DataInsightsSection";
-import { RSSSection } from "@/components/sections/RSSSection";
+import { RSSSection, Ticker } from "@/components/sections/RSSSection";
 import { LogSabhaStorySection } from "@/components/sections/LogSabhaStorySection";
 import { ContactSection } from "@/components/sections/ContactSection";
 import { SocialPresenceSection } from "@/components/sections/SocialPresenceSection";
@@ -34,7 +34,7 @@ export default function Home() {
       <PoliticalLandscapeSection data={data.politicalLandscape} />
       <PoliticalPartiesSection />
       <CommunitySection />
-      <MonumentBorder />
+      <Ticker />
       <ServicesSection data={data.services} />
       <LiveCoverageSection />
       <RSSSection />
@@ -44,6 +44,7 @@ export default function Home() {
       <EditorialInsightsSection />
       <SocialPresenceSection />
       <MediaCoverageSection />
+      <MonumentBorder />
 
       <DataInsightsSection />
       <ContactSection />

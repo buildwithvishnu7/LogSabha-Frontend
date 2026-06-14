@@ -266,8 +266,8 @@ export function PoliticalLandscapeSection({
 }) {
   const [hoverInfo, setHoverInfo] = useState<HoverInfo | null>(null);
 
-  // Auto-cycle cards (6 total: 4 stat cards + 2 alliance cards)
-  const TOTAL_CARDS = 6;
+  // Auto-cycle cards (4 stat cards)
+  const TOTAL_CARDS = 4;
   const [autoCardIndex, setAutoCardIndex] = useState(0);
   const [hoveredCardIndex, setHoveredCardIndex] = useState<number | null>(null);
 
@@ -428,39 +428,16 @@ export function PoliticalLandscapeSection({
               </div>
 
               <div style={{ pointerEvents: "auto" }}>
-                <div className="absolute -right-8 -top-2">
-                  <FloatingStatCard
-                    icon="map-pin"
-                    numericValue={stats[1]?.numericValue ?? 28}
-                    suffix=""
-                    label={stats[1]?.label ?? "States Covered"}
-                    detail="Complete state-level analysis"
-                    bounceDelay={0.8}
-                    expanded={hoveredCardIndex !== null ? hoveredCardIndex === 1 : autoCardIndex === 1}
-                    onUserHover={(h) => setHoveredCardIndex(h ? 1 : null)}
-                  />
-                  <div className="mt-2">
-                    <AllianceCard
-                      title="NDA Alliance"
-                      seats={totalNda}
-                      color="text-green-400"
-                      bounceDelay={1.2}
-                      expanded={hoveredCardIndex !== null ? hoveredCardIndex === 2 : autoCardIndex === 2}
-                      onUserHover={(h) => setHoveredCardIndex(h ? 2 : null)}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div style={{ pointerEvents: "auto" }}>
-                <AllianceCard
-                  title="India Alliance"
-                  seats={totalIndia}
-                  color="text-blue-400"
-                  className="absolute -left-8 bottom-[25%]"
-                  bounceDelay={1.6}
-                  expanded={hoveredCardIndex !== null ? hoveredCardIndex === 3 : autoCardIndex === 3}
-                  onUserHover={(h) => setHoveredCardIndex(h ? 3 : null)}
+                <FloatingStatCard
+                  icon="map-pin"
+                  numericValue={stats[1]?.numericValue ?? 28}
+                  suffix=""
+                  label={stats[1]?.label ?? "States Covered"}
+                  detail="Complete state-level analysis"
+                  bounceDelay={0.8}
+                  className="absolute -right-8 -top-2"
+                  expanded={hoveredCardIndex !== null ? hoveredCardIndex === 1 : autoCardIndex === 1}
+                  onUserHover={(h) => setHoveredCardIndex(h ? 1 : null)}
                 />
               </div>
 
@@ -473,8 +450,8 @@ export function PoliticalLandscapeSection({
                   detail="Successfully managed campaigns"
                   bounceDelay={2}
                   className="absolute bottom-0 left-[5%]"
-                  expanded={hoveredCardIndex !== null ? hoveredCardIndex === 4 : autoCardIndex === 4}
-                  onUserHover={(h) => setHoveredCardIndex(h ? 4 : null)}
+                  expanded={hoveredCardIndex !== null ? hoveredCardIndex === 2 : autoCardIndex === 2}
+                  onUserHover={(h) => setHoveredCardIndex(h ? 2 : null)}
                 />
               </div>
 
@@ -487,8 +464,8 @@ export function PoliticalLandscapeSection({
                   detail="Prediction accuracy rate"
                   bounceDelay={2.4}
                   className="absolute -right-8 bottom-4"
-                  expanded={hoveredCardIndex !== null ? hoveredCardIndex === 5 : autoCardIndex === 5}
-                  onUserHover={(h) => setHoveredCardIndex(h ? 5 : null)}
+                  expanded={hoveredCardIndex !== null ? hoveredCardIndex === 3 : autoCardIndex === 3}
+                  onUserHover={(h) => setHoveredCardIndex(h ? 3 : null)}
                 />
               </div>
             </div>
@@ -530,28 +507,12 @@ export function PoliticalLandscapeSection({
               expanded={false}
               onUserHover={() => {}}
             />
-            <AllianceCard
-              title="NDA Alliance"
-              seats={totalNda}
-              color="text-green-400"
-              bounceDelay={0.4}
-              expanded={false}
-              onUserHover={() => {}}
-            />
-            <AllianceCard
-              title="India Alliance"
-              seats={totalIndia}
-              color="text-blue-400"
-              bounceDelay={0.6}
-              expanded={false}
-              onUserHover={() => {}}
-            />
             <FloatingStatCard
               icon="bar-chart"
               numericValue={stats[2]?.numericValue ?? 1000}
               suffix={stats[2]?.parsedSuffix ?? "+"}
               label={stats[2]?.label ?? "Campaigns"}
-              bounceDelay={0.8}
+              bounceDelay={0.4}
               expanded={false}
               onUserHover={() => {}}
             />
@@ -560,7 +521,7 @@ export function PoliticalLandscapeSection({
               numericValue={stats[3]?.numericValue ?? 95}
               suffix={stats[3]?.parsedSuffix ?? "%"}
               label={stats[3]?.label ?? "Accuracy"}
-              bounceDelay={1}
+              bounceDelay={0.6}
               expanded={false}
               onUserHover={() => {}}
             />

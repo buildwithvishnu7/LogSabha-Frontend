@@ -4,14 +4,18 @@ interface BackgroundVideoProps {
   src: string;
   poster?: string;
   className?: string;
+  onPlaying?: () => void;
 }
 
-export function BackgroundVideo({ src, poster, className = "" }: BackgroundVideoProps) {
+export function BackgroundVideo({ src, poster, className = "", onPlaying }: BackgroundVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
+
+    const handlePlaying = () => onPlaying?.();
+    video.addEventListener("playing", handlePlaying);
 
     // IntersectionObserver to pause when offscreen
     const observer = new IntersectionObserver(
@@ -26,8 +30,11 @@ export function BackgroundVideo({ src, poster, className = "" }: BackgroundVideo
     );
 
     observer.observe(video);
-    return () => observer.disconnect();
-  }, []);
+    return () => {
+      video.removeEventListener("playing", handlePlaying);
+      observer.disconnect();
+    };
+  }, [onPlaying]);
 
   return (
     <video

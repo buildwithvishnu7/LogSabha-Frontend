@@ -437,15 +437,15 @@ export function ServicesSection({ data }: { data: ServicesData }) {
 
           {/* Center: Image */}
           <ScrollReveal delay={0.2} className="relative">
-            <div className="relative h-full overflow-hidden rounded-2xl bg-gray-100">
+            <div className="relative h-full min-h-[350px] overflow-hidden rounded-2xl bg-gray-100">
               <AnimatePresence mode="wait">
                 <motion.img
                   key={activeService.id}
                   src={activeService.image}
                   alt={activeService.title}
-                  initial={{ opacity: 0, scale: 0.96, filter: "blur(6px)" }}
-                  animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                  exit={{ opacity: 0, scale: 0.96, filter: "blur(6px)" }}
+                  initial={{ opacity: 0, scale: 0.96 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.96 }}
                   transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                   className="absolute inset-0 h-full w-full object-cover"
                 />

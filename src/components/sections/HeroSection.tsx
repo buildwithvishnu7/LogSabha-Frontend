@@ -277,12 +277,13 @@ function RotatingStats({ stats }: { stats: HeroStat[] }) {
 export function HeroSection({ data }: { data: HeroData }) {
   const titleWords = data.title.split(" ");
   const sectionRef = useRef<HTMLElement>(null);
+  const [videoPlaying, setVideoPlaying] = useState(false);
 
   return (
     <section ref={sectionRef} className="relative h-screen w-full overflow-hidden">
       {/* Logo that moves diagonally into header on scroll */}
       <ScrollLogo src={data.watermarkLogo} sectionRef={sectionRef} />
-      <BackgroundVideo src={data.videoSrc} poster={data.posterSrc} />
+      <BackgroundVideo src={data.videoSrc} poster={data.posterSrc} onPlaying={() => setVideoPlaying(true)} />
 
       {/* Top vignette — blends with header */}
       <div className="absolute top-0 left-0 right-0 z-[2] h-40 bg-gradient-to-b from-black/40 via-black/15 to-transparent" />
@@ -293,22 +294,26 @@ export function HeroSection({ data }: { data: HeroData }) {
       {/* Left/right edge vignette */}
       <div className="absolute inset-0 z-[2] bg-[radial-gradient(ellipse_at_center,transparent_50%,rgba(0,0,0,0.3)_100%)]" />
 
-      {/* Outer chevron/arrow */}
-      <div
+      {/* Outer chevron/arrow — placeholder until video plays */}
+      <motion.div
         className="absolute inset-0 z-[1]"
         style={{
           clipPath: "polygon(0 0, 35% 0, 62% 50%, 35% 100%, 0 100%)",
           backgroundColor: "rgba(194, 120, 40, 0.4)",
         }}
+        animate={{ opacity: videoPlaying ? 0 : 1 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
       />
 
-      {/* Inner chevron */}
-      <div
+      {/* Inner chevron — placeholder until video plays */}
+      <motion.div
         className="absolute inset-0 z-[1]"
         style={{
           clipPath: "polygon(0 0, 42% 0, 68% 50%, 42% 100%, 0 100%)",
           backgroundColor: "rgba(220, 160, 80, 0.15)",
         }}
+        animate={{ opacity: videoPlaying ? 0 : 1 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
       />
 
       <div className="absolute inset-0 z-[1] bg-black/10" />

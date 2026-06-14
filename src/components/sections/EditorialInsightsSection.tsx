@@ -634,7 +634,7 @@ export function EditorialInsightsSection() {
           src="/images/editorial-bg.jpg"
           alt=""
           aria-hidden="true"
-          className="h-full w-full object-cover opacity-10"
+          className="h-full w-full object-cover opacity-25"
         />
         {/* Edge vignette to fade into white */}
         <div

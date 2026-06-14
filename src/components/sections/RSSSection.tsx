@@ -58,7 +58,7 @@ const TYPEWRITER_PHRASES = [
 
 // ─── Infinite Ticker ───
 
-function Ticker() {
+export function Ticker() {
   const items = [...TICKER_ITEMS, ...TICKER_ITEMS];
 
   return (
@@ -314,7 +314,7 @@ function VideoPlayer({ triggered }: { triggered: boolean }) {
     >
       <video
         ref={videoRef}
-        className="h-full w-full object-cover"
+        className="h-full w-full object-contain"
         muted
         loop
         playsInline
@@ -368,11 +368,8 @@ export function RSSSection() {
 
   return (
     <section ref={sectionRef} className="relative overflow-hidden">
-      {/* Ticker */}
-      <Ticker />
-
       {/* Main Content — warm background */}
-      <div className="relative bg-orange-50/60 py-6 sm:py-10 lg:py-14">
+      <div className="relative bg-orange-50/60 py-6 sm:py-10 lg:py-16">
         {/* RSS background image */}
         <div className="pointer-events-none absolute inset-0">
           <img
@@ -476,7 +473,7 @@ export function RSSSection() {
 
               <div className="relative grid lg:grid-cols-[1fr_380px] xl:grid-cols-[1fr_420px]">
                 {/* Left: Info — determines card height */}
-                <div className="relative z-10 p-5 sm:p-7 md:p-9 lg:p-10">
+                <div className="relative z-10 p-5 sm:p-7 md:p-9 lg:px-10 lg:py-14">
                   {/* Logo + Title */}
                   <div className="flex items-center gap-3">
                     <motion.img
@@ -620,8 +617,8 @@ export function RSSSection() {
                   </motion.a>
                 </div>
 
-                {/* Right: Video with dark orange background */}
-                <div className="relative h-[280px] overflow-hidden sm:h-[340px] lg:absolute lg:inset-y-0 lg:right-0 lg:h-auto lg:w-[380px] xl:w-[420px]">
+                {/* Right: Video */}
+                <div className="relative h-[280px] overflow-hidden rounded-xl bg-orange-950/5 sm:h-[340px] lg:absolute lg:inset-y-0 lg:right-0 lg:h-auto lg:w-[380px] xl:w-[420px]">
                   <VideoPlayer triggered={triggered} />
                 </div>
               </div>
