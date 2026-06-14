@@ -61,13 +61,13 @@ const RECENT_SPEECHES: SpeechVideo[] = [
   {
     id: "speech-2",
     title: "Lok Sabha Session — Motion of Thanks Debate",
-    speaker: "Parliament Session January 2024",
+    speaker: "Parliament Session January 2025",
     videoSrc: "/videos/speech4.mp4",
   },
   {
     id: "speech-3",
     title: "'Is PM Modi God' Mallikarjun Kharge's Dig At Govt Ahead Of PM Modi's Parliament Speech",
-    speaker: "Parliament Session",
+    speaker: "Budget Session February 2025",
     videoSrc: "/videos/is-pm-modi-god.mp4",
   },
   {
