@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import lottie from "lottie-web";
 import { BackgroundVideo } from "@/components/video/BackgroundVideo";
@@ -182,74 +182,6 @@ function FloatingStatCard({
   );
 }
 
-// ─── Alliance Card ───
-
-function AllianceCard({
-  title,
-  seats,
-  color,
-  bounceDelay,
-  className,
-  expanded,
-  onUserHover,
-}: {
-  title: string;
-  seats: number;
-  color: string;
-  bounceDelay: number;
-  className?: string;
-  expanded?: boolean;
-  onUserHover?: (hovering: boolean) => void;
-}) {
-  const isExpanded = expanded ?? false;
-  const { count, ref, replay } = useCountUp(seats, 3000);
-
-  const prevExpanded = useRef(false);
-  useEffect(() => {
-    if (isExpanded && !prevExpanded.current) replay();
-    prevExpanded.current = isExpanded;
-  }, [isExpanded, replay]);
-
-  return (
-    <motion.div
-      animate={{ y: [0, -4, 0, 3, 0] }}
-      transition={{
-        duration: 4.5,
-        repeat: Infinity,
-        ease: "easeInOut",
-        delay: bounceDelay,
-      }}
-      className={className}
-    >
-      <motion.div
-        onMouseEnter={() => { onUserHover?.(true); replay(); }}
-        onMouseLeave={() => onUserHover?.(false)}
-        animate={{
-          scale: isExpanded ? 1.08 : 1,
-          borderColor: isExpanded
-            ? "rgba(245, 158, 11, 0.4)"
-            : "rgba(255, 255, 255, 0.1)",
-        }}
-        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-        className="rounded-xl border bg-[#1a1a2e]/80 px-4 py-3 shadow-lg backdrop-blur-md"
-        style={{
-          boxShadow: isExpanded
-            ? "0 0 20px rgba(245, 158, 11, 0.15)"
-            : "none",
-        }}
-      >
-        <p className="text-[10px] font-medium tracking-wider text-white/50 uppercase">
-          {title}
-        </p>
-        <p className={`text-2xl font-bold ${color}`}>
-          <span ref={ref}>{count.toLocaleString()}</span>
-        </p>
-        <p className="text-[10px] text-white/40">seats won</p>
-      </motion.div>
-    </motion.div>
-  );
-}
-
 function parseNumeric(val: string): { num: number; suffix: string } {
   const cleaned = val.replace(/,/g, "");
   const match = cleaned.match(/^([\d.]+)(.*)$/);
@@ -285,15 +217,6 @@ export function PoliticalLandscapeSection({
   const handleStateHover = (info: HoverInfo | null) => {
     setHoverInfo(info);
   };
-
-  const totalNda = useMemo(
-    () => data.states.reduce((sum, s) => sum + s.ndaSeats, 0),
-    [data.states],
-  );
-  const totalIndia = useMemo(
-    () => data.states.reduce((sum, s) => sum + s.indiaSeats, 0),
-    [data.states],
-  );
 
   const stats = data.overallStats.map((s) => {
     const parsed = parseNumeric(s.value);
