@@ -66,15 +66,15 @@ const RECENT_SPEECHES: SpeechVideo[] = [
   },
   {
     id: "speech-3",
-    title: "PM Modi in Rajya Sabha — Presidential Address",
-    speaker: "Parliament Session January 2024",
-    videoSrc: "/videos/speech5.mp4",
+    title: "'Is PM Modi God' Mallikarjun Kharge's Dig At Govt Ahead Of PM Modi's Parliament Speech",
+    speaker: "Parliament Session",
+    videoSrc: "/videos/is-pm-modi-god.mp4",
   },
   {
     id: "speech-4",
-    title: "PM Narendra Modi Recalls Hoisting Tricolour At Lal Chowk",
-    speaker: "Parliament Session January 2024",
-    videoSrc: "/videos/speech6.mp4",
+    title: "Winter Session: Future in India — Nitin Gadkari Explains Growth, Safety & Rules in Lok Sabha",
+    speaker: "Winter Session",
+    videoSrc: "/videos/winter-session-v.mp4",
   },
 ];
 
@@ -241,14 +241,14 @@ function SpeechCard({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <div className="relative aspect-[16/10] overflow-hidden rounded-xl bg-gray-100">
+      <div className="relative aspect-[16/10] overflow-hidden rounded-xl bg-gray-900">
         {/* Video — always mounted, plays/pauses on hover */}
         <video
           ref={videoRef}
           loop
           playsInline
           preload="auto"
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full object-contain"
         >
           <source src={speech.videoSrc} type="video/mp4" />
         </video>

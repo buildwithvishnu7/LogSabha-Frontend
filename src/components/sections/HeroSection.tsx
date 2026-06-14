@@ -19,107 +19,84 @@ function useIsMobile() {
 function SideBadge({
   badge,
   index,
-  alwaysExpanded,
 }: {
   badge: SideBadgeType;
   index: number;
-  alwaysExpanded: boolean;
+  alwaysExpanded?: boolean;
 }) {
-  const [hoverExpanded, setHoverExpanded] = useState(false);
-  const isMobile = useIsMobile();
-  const expanded = alwaysExpanded || hoverExpanded;
+  const [hovered, setHovered] = useState(false);
+  const size = 64;
 
   return (
     <motion.a
       href={badge.href}
-      initial={{ opacity: 0, x: -100 }}
+      initial={{ opacity: 0, x: 30 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{
-        duration: 0.6,
-        delay: 1 + index * 0.2,
+        duration: 0.5,
+        delay: 1.2 + index * 0.15,
         ease: [0.16, 1, 0.3, 1],
       }}
-      onMouseEnter={() => setHoverExpanded(true)}
-      onMouseLeave={() => setHoverExpanded(false)}
-      className="relative block"
-      whileHover={{ x: 4 }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className="relative flex items-center"
+      whileHover={{ x: -4 }}
     >
-      {/* Orbiting border glow */}
-      <motion.span
-        className="pointer-events-none absolute -inset-[2px] rounded-r-[30px]"
-        style={{
-          background:
-            "conic-gradient(from var(--angle), transparent 0%, transparent 65%, rgba(245,158,11,0.8) 80%, rgba(245,158,11,1) 85%, rgba(245,158,11,0.8) 90%, transparent 100%)",
-          mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-          maskComposite: "exclude",
-          WebkitMaskComposite: "xor",
-          padding: "2px",
-          borderTopLeftRadius: 0,
-          borderBottomLeftRadius: 0,
-        }}
-        animate={{
-          "--angle": ["0deg", "360deg"],
-        } as Record<string, string[]>}
-        transition={{ duration: 3, repeat: Infinity, ease: "linear", delay: index * 0.5 }}
-      />
-
-      <motion.div
-        className="overflow-hidden border-y border-r border-amber-500/40 bg-[#1a1a2e]/90 shadow-xl backdrop-blur-sm"
-        animate={{
-          height: expanded ? badge.expandedHeight : (isMobile ? 44 : 60),
-          borderTopRightRadius: expanded ? 14 : 26,
-          borderBottomRightRadius: expanded ? 14 : 26,
-        }}
-        transition={{ duration: 0.45, ease: [0.25, 1, 0.5, 1] }}
-        style={{
-          width: isMobile ? 46 : (alwaysExpanded ? 52 : 62),
-          borderTopLeftRadius: 0,
-          borderBottomLeftRadius: 0,
-          display: "flex",
-          flexDirection: "column",
-          boxShadow: "4px 0 20px rgba(245,158,11,0.15)",
-        }}
-      >
-        <motion.div
-          className="flex flex-col items-center overflow-hidden"
-          animate={{
-            flexGrow: expanded ? 1 : 0,
-            opacity: expanded ? 1 : 0,
-            paddingTop: expanded ? 12 : 0,
-          }}
-          transition={{ duration: 0.45, ease: [0.25, 1, 0.5, 1] }}
-        >
-          <div className="flex flex-1 items-center">
-            <span
-              className="whitespace-nowrap text-[10px] font-bold tracking-wider text-white uppercase sm:text-xs md:text-sm"
-              style={{
-                writingMode: "vertical-rl",
-                transform: "rotate(180deg)",
-              }}
-            >
+      {/* Label tooltip on hover — to the left */}
+      <AnimatePresence>
+        {hovered && (
+          <motion.span
+            className="absolute right-full mr-3 whitespace-nowrap rounded-lg border border-white/10 bg-black/80 px-3.5 py-2 shadow-xl backdrop-blur-md"
+            initial={{ opacity: 0, x: 8 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 8 }}
+            transition={{ duration: 0.2 }}
+          >
+            <span className="badge-shimmer text-[11px] font-bold tracking-wider uppercase">
               {badge.label}
             </span>
-          </div>
-          <div className="mb-1.5 h-[1px] w-8 bg-amber-500/50 sm:w-10 md:w-12" />
-        </motion.div>
+          </motion.span>
+        )}
+      </AnimatePresence>
 
+      <motion.div
+        className="relative flex items-center justify-center rounded-full"
+        style={{ width: size, height: size }}
+        whileHover={{ scale: 1.08 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        {/* Pulse ring — same as chat icon */}
+        <span className="absolute inset-0 rounded-full">
+          <span className="absolute inset-0 animate-ping rounded-full bg-amber-400 opacity-20" />
+        </span>
+
+        {/* Orbiting glow ring */}
+        <motion.span
+          className="pointer-events-none absolute -inset-[2px] rounded-full"
+          style={{
+            background:
+              "conic-gradient(from var(--angle), transparent 0%, transparent 60%, rgba(245,158,11,0.8) 80%, rgba(251,191,36,1) 85%, rgba(245,158,11,0.8) 90%, transparent 100%)",
+            mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+            maskComposite: "exclude",
+            WebkitMaskComposite: "xor",
+            padding: "2.5px",
+          }}
+          animate={{ "--angle": ["0deg", "360deg"] } as Record<string, string[]>}
+          transition={{ duration: 3, repeat: Infinity, ease: "linear", delay: index * 0.8 }}
+        />
+
+        {/* Badge circle */}
         <div
-          className="relative flex flex-shrink-0 items-center justify-center p-1"
-          style={{ height: isMobile ? 44 : 52, width: "100%" }}
+          className="relative flex items-center justify-center rounded-full bg-gradient-to-br from-[#1a1a2e] to-[#0d0d1a] shadow-lg shadow-amber-500/20"
+          style={{ width: size, height: size }}
         >
-          {/* Breathing glow behind image */}
-          <motion.div
-            className="absolute inset-2 rounded-full"
-            style={{ background: "radial-gradient(circle, rgba(245,158,11,0.3) 0%, transparent 70%)" }}
-            animate={{ scale: [1, 1.3, 1], opacity: [0.6, 0.2, 0.6] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: index * 0.4 }}
-          />
           <motion.img
             src={badge.image}
             alt={badge.label}
-            className="relative h-[34px] w-[34px] rounded-full object-contain sm:h-[38px] sm:w-[38px] md:h-[42px] md:w-[42px]"
-            animate={{ y: [0, -2, 0] }}
-            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: index * 0.3 }}
+            className="relative z-10 rounded-full object-contain"
+            style={{ width: size - 12, height: size - 12 }}
+            animate={{ rotate: [0, 3, -3, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: index * 0.5 }}
           />
         </div>
       </motion.div>
@@ -129,13 +106,12 @@ function SideBadge({
 
 export function StickyBadges({ badges }: { badges: SideBadgeType[] }) {
   return (
-    <div className="fixed bottom-[38%] left-0 z-40 flex flex-col gap-2 sm:bottom-[30%] sm:gap-3 lg:bottom-[15%] lg:gap-4 xl:gap-5">
+    <div className="fixed right-5 bottom-[104px] z-50 flex flex-col items-center gap-3 sm:right-6">
       {badges.map((badge, i) => (
         <SideBadge
           key={badge.id}
           badge={badge}
           index={i}
-          alwaysExpanded={false}
         />
       ))}
     </div>

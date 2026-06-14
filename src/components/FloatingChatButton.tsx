@@ -61,7 +61,7 @@ export function FloatingChatButton() {
         className="relative flex items-center gap-2 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-lg shadow-orange-500/30 transition-shadow hover:shadow-xl hover:shadow-orange-500/40"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        style={{ padding: hovered ? "10px 20px 10px 12px" : "12px" }}
+        style={{ padding: hovered ? "14px 22px 14px 16px" : "16px" }}
       >
         {/* Pulse ring */}
         <span className="absolute inset-0 rounded-full">
@@ -69,7 +69,7 @@ export function FloatingChatButton() {
         </span>
 
         <span className="relative z-10 flex items-center justify-center">
-          <ChatLottieIcon size={28} color="#ffffff" />
+          <ChatLottieIcon size={36} color="#ffffff" />
         </span>
 
         <AnimatePresence>

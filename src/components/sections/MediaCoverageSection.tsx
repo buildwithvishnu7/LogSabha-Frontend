@@ -227,7 +227,7 @@ function MediaImageCard({
           viewport={{ once: false }}
           transition={{ delay: 0.7 + index * 0.15, duration: 0.5 }}
         >
-          <p className="line-clamp-2 text-xs font-semibold leading-tight text-white/90 sm:text-sm">
+          <p className="line-clamp-1 text-xs font-semibold leading-tight text-white/90 sm:text-sm">
             {item.title}
           </p>
         </motion.div>
@@ -348,7 +348,7 @@ function MediaVideoCard({
           viewport={{ once: false }}
           transition={{ delay: 0.7 + index * 0.15, duration: 0.5 }}
         >
-          <p className="line-clamp-2 text-xs font-semibold leading-tight text-white/90 sm:text-sm">
+          <p className="line-clamp-1 text-xs font-semibold leading-tight text-white/90 sm:text-sm">
             {item.title}
           </p>
         </motion.div>
