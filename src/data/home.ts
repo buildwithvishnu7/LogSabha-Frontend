@@ -5,7 +5,7 @@ export const homeData: HomePageData = {
     title: "Welcome to",
     titleHighlight: "Logsabha",
     subtitle: "Political Research & Analysis Wing of Bharat",
-    videoSrc: "/videos/hero-bg.mp4",
+    videoSrc: "/videos/pre-comp.mp4",
     posterSrc: "/videos/hero-poster.jpg",
     watermarkLogo: "/logo/Logfinalsabha.gif",
     stats: [
