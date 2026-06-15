@@ -54,9 +54,9 @@ const MAIN_VIDEO = {
 const RECENT_SPEECHES: SpeechVideo[] = [
   {
     id: "speech-1",
-    title: "PM Modi's First Speech After Re-Election",
-    speaker: "Parliament Session January 2024",
-    videoSrc: "/videos/speech3.mp4",
+    title: "Modi's Speech",
+    speaker: "Parliament Session",
+    videoSrc: "/videos/modis-speech.mp4",
   },
   {
     id: "speech-2",
@@ -245,6 +245,7 @@ function SpeechCard({
         {/* Video — always mounted, plays/pauses on hover */}
         <video
           ref={videoRef}
+          muted
           loop
           playsInline
           preload="auto"
