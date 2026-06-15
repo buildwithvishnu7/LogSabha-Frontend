@@ -55,14 +55,14 @@ const RECENT_SPEECHES: SpeechVideo[] = [
   {
     id: "speech-1",
     title: "Modi's Speech",
-    speaker: "Parliament Session",
+    speaker: "Parliament Session July 2024",
     videoSrc: "/videos/modis-speech.mp4",
   },
   {
     id: "speech-2",
-    title: "Lok Sabha Session — Motion of Thanks Debate",
+    title: "PM Modi Speech",
     speaker: "Parliament Session January 2025",
-    videoSrc: "/videos/speech4.mp4",
+    videoSrc: "/videos/pm-modi-speech.mp4",
   },
   {
     id: "speech-3",
@@ -73,7 +73,7 @@ const RECENT_SPEECHES: SpeechVideo[] = [
   {
     id: "speech-4",
     title: "Winter Session: Future in India — Nitin Gadkari Explains Growth, Safety & Rules in Lok Sabha",
-    speaker: "Winter Session",
+    speaker: "Winter Session December 2024",
     videoSrc: "/videos/winter-session-v.mp4",
   },
 ];
