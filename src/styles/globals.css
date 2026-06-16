@@ -413,6 +413,28 @@
   -webkit-text-fill-color: transparent;
 }
 
+/* Light theme variant */
+.footer-shimmer-text-light {
+  background: linear-gradient(
+    90deg,
+    #111827 0%,
+    #111827 40%,
+    #f59e0b 50%,
+    #111827 60%,
+    #111827 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: footer-text-shimmer 4s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+.footer-shimmer-text-light span {
+  -webkit-text-fill-color: transparent;
+}
+
 /* ─── Footer newsletter border shimmer ─── */
 @keyframes footer-border-shimmer {
   0%   { opacity: 0; left: -30%; }
@@ -466,6 +488,34 @@
   );
 }
 
+/* ─── Light theme footer link shimmer ─── */
+.footer-link-shimmer-light {
+  background-image: linear-gradient(
+    90deg,
+    rgba(55,65,81,1) 0%,
+    rgba(55,65,81,1) 35%,
+    rgba(245,158,11,1) 50%,
+    rgba(55,65,81,1) 65%,
+    rgba(55,65,81,1) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: footer-link-shimmer 4s ease-in-out infinite;
+}
+
+.footer-link-shimmer-light:hover {
+  background-image: linear-gradient(
+    90deg,
+    rgba(245,158,11,1) 0%,
+    rgba(245,158,11,1) 35%,
+    rgba(234,88,12,1) 50%,
+    rgba(245,158,11,1) 65%,
+    rgba(245,158,11,1) 100%
+  );
+}
+
 /* ─── Footer legal link shimmer (dimmer) ─── */
 .footer-legal-shimmer {
   background-image: linear-gradient(
@@ -484,6 +534,31 @@
 }
 
 .footer-legal-shimmer:hover {
+  background-image: linear-gradient(
+    90deg,
+    rgba(245,158,11,1) 0%,
+    rgba(245,158,11,1) 100%
+  );
+}
+
+/* ─── Light theme footer legal shimmer ─── */
+.footer-legal-shimmer-light {
+  background-image: linear-gradient(
+    90deg,
+    rgba(75,85,99,1) 0%,
+    rgba(75,85,99,1) 35%,
+    rgba(245,158,11,0.9) 50%,
+    rgba(75,85,99,1) 65%,
+    rgba(75,85,99,1) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: footer-link-shimmer 5s ease-in-out infinite;
+}
+
+.footer-legal-shimmer-light:hover {
   background-image: linear-gradient(
     90deg,
     rgba(245,158,11,1) 0%,

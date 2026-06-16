@@ -33,8 +33,8 @@ const SOCIAL_LINKS = [
     label: "Facebook",
     href: "#",
     brandColor: "#1877F2",
-    brandBg: "rgba(24, 119, 242, 0.2)",
-    brandGlow: "rgba(24, 119, 242, 0.35)",
+    brandBg: "rgba(24, 119, 242, 0.12)",
+    brandGlow: "rgba(24, 119, 242, 0.25)",
     icon: (
       <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
         <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
@@ -44,9 +44,9 @@ const SOCIAL_LINKS = [
   {
     label: "Twitter",
     href: "#",
-    brandColor: "#ffffff",
-    brandBg: "rgba(255, 255, 255, 0.12)",
-    brandGlow: "rgba(255, 255, 255, 0.25)",
+    brandColor: "#1DA1F2",
+    brandBg: "rgba(29, 161, 242, 0.12)",
+    brandGlow: "rgba(29, 161, 242, 0.25)",
     icon: (
       <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
         <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -57,8 +57,8 @@ const SOCIAL_LINKS = [
     label: "Instagram",
     href: "#",
     brandColor: "#E4405F",
-    brandBg: "rgba(228, 64, 95, 0.2)",
-    brandGlow: "rgba(228, 64, 95, 0.35)",
+    brandBg: "rgba(228, 64, 95, 0.12)",
+    brandGlow: "rgba(228, 64, 95, 0.25)",
     icon: (
       <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
         <path d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" />
@@ -69,8 +69,8 @@ const SOCIAL_LINKS = [
     label: "YouTube",
     href: "#",
     brandColor: "#FF0000",
-    brandBg: "rgba(255, 0, 0, 0.2)",
-    brandGlow: "rgba(255, 0, 0, 0.35)",
+    brandBg: "rgba(255, 0, 0, 0.12)",
+    brandGlow: "rgba(255, 0, 0, 0.25)",
     icon: (
       <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
         <path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
@@ -88,7 +88,7 @@ function FloatingParticles() {
     size: 2 + (i % 3),
     duration: 6 + (i % 5) * 2,
     delay: (i * 1.3) % 8,
-    opacity: 0.08 + (i % 4) * 0.04,
+    opacity: 0.15 + (i % 4) * 0.05,
   }));
 
   return (
@@ -96,7 +96,7 @@ function FloatingParticles() {
       {particles.map((p) => (
         <motion.div
           key={p.id}
-          className="absolute bottom-0 rounded-full bg-amber-400"
+          className="absolute bottom-0 rounded-full bg-amber-500"
           style={{ left: p.left, width: p.size, height: p.size }}
           animate={{
             y: [0, -(typeof window !== "undefined" ? 700 : 700)],
@@ -123,7 +123,7 @@ function ShimmerSweep() {
       animate={{ x: ["-100%", "200%"] }}
       transition={{ duration: 4, delay: 1.5, repeat: Infinity, repeatDelay: 5, ease: "easeInOut" }}
     >
-      <div className="h-full w-1/3 bg-gradient-to-r from-transparent via-white/[0.03] to-transparent skew-x-[-20deg]" />
+      <div className="h-full w-1/3 bg-gradient-to-r from-transparent via-amber-500/[0.04] to-transparent skew-x-[-20deg]" />
     </motion.div>
   );
 }
@@ -142,7 +142,7 @@ const TICKER_WORDS = [
 export function FooterTicker() {
   const items = [...TICKER_WORDS, ...TICKER_WORDS];
   return (
-    <div className="overflow-hidden border-b border-white/5">
+    <div className="overflow-hidden border-b border-gray-200">
       <motion.div
         className="flex whitespace-nowrap py-3"
         animate={{ x: [0, `-${(100 / items.length) * TICKER_WORDS.length}%`] }}
@@ -150,10 +150,10 @@ export function FooterTicker() {
       >
         {items.map((word, i) => (
           <span key={i} className="flex items-center">
-            <span className="px-6 text-[11px] font-bold tracking-[0.3em] text-white/60">
+            <span className="px-6 text-[11px] font-bold tracking-[0.3em] text-gray-400">
               {word}
             </span>
-            <span className="h-1 w-1 rounded-full bg-amber-500/20" />
+            <span className="h-1 w-1 rounded-full bg-amber-500/30" />
           </span>
         ))}
       </motion.div>
@@ -204,7 +204,6 @@ function SocialIconsCycler() {
       setActiveIdx(idx % SOCIAL_LINKS.length);
       idx++;
     }, 1800);
-    // Start first highlight after a short delay
     const timeout = setTimeout(() => setActiveIdx(0), 600);
     return () => {
       clearInterval(interval);
@@ -221,16 +220,16 @@ function SocialIconsCycler() {
             key={social.label}
             href={social.href}
             aria-label={social.label}
-            className="relative flex h-8 w-8 items-center justify-center rounded-lg text-white"
+            className="relative flex h-8 w-8 items-center justify-center rounded-lg text-gray-500"
             animate={{
               y: isActive ? -4 : 0,
               scale: isActive ? 1.15 : 1,
               backgroundColor: isActive
                 ? social.brandBg
-                : "rgba(255, 255, 255, 0.05)",
+                : "rgba(0, 0, 0, 0.04)",
               color: isActive
                 ? social.brandColor
-                : "rgb(255, 255, 255)",
+                : "rgb(107, 114, 128)",
               boxShadow: isActive
                 ? `0 4px 15px ${social.brandGlow}, 0 0 20px ${social.brandGlow}`
                 : "0 0 0px rgba(0, 0, 0, 0)",
@@ -242,12 +241,11 @@ function SocialIconsCycler() {
             whileHover={{ y: -4, scale: 1.15 }}
           >
             {social.icon}
-            {/* Glow ring when active — uses brand color */}
             <AnimatePresence>
               {isActive && (
                 <motion.span
                   className="absolute inset-0 rounded-lg"
-                  style={{ borderWidth: 1, borderStyle: "solid", borderColor: `${social.brandColor}66` }}
+                  style={{ borderWidth: 1, borderStyle: "solid", borderColor: `${social.brandColor}44` }}
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 1.2 }}
@@ -267,12 +265,12 @@ function SocialIconsCycler() {
 function AnimatedFlag() {
   const FLAG_COLORS = [
     { color: "bg-orange-500", delay: 0 },
-    { color: "bg-white", delay: 0.12 },
+    { color: "bg-white border border-gray-200", delay: 0.12 },
     { color: "bg-green-500", delay: 0.24 },
   ];
 
   return (
-    <div className="flex items-center gap-1.5 text-xs text-white">
+    <div className="flex items-center gap-1.5 text-xs text-gray-700">
       <div className="relative flex gap-px overflow-hidden">
         {FLAG_COLORS.map((stripe, i) => (
           <motion.span
@@ -291,9 +289,8 @@ function AnimatedFlag() {
             }}
           />
         ))}
-        {/* Shimmer light sweep across flag */}
         <motion.span
-          className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+          className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
           animate={{ x: ["-100%", "200%"] }}
           transition={{
             duration: 1.8,
@@ -304,7 +301,7 @@ function AnimatedFlag() {
         />
       </div>
       <motion.span
-        className="footer-link-shimmer"
+        className="footer-link-shimmer-light"
         style={{ animationDelay: "1s" }}
       >
         Made in India
@@ -317,21 +314,44 @@ const VIEW_ONCE = { once: false, amount: 0.05 as const };
 
 export function Footer() {
   return (
-    <footer className="relative overflow-hidden bg-[#0c0f1a]">
-      {/* <FooterTicker /> */}
+    <footer className="relative overflow-hidden bg-white border-t border-gray-100">
+      {/* Subtle dot grid pattern */}
+      <div className="pointer-events-none absolute inset-0 opacity-[0.4]">
+        <div
+          className="h-full w-full"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 1px 1px, rgba(245,158,11,0.25) 1px, transparent 0)",
+            backgroundSize: "32px 32px",
+          }}
+        />
+      </div>
 
-      {/* Persistent effects — always running */}
+      {/* Diagonal crosshatch accent */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage:
+            "linear-gradient(45deg, rgba(245,158,11,0.5) 1px, transparent 1px), linear-gradient(-45deg, rgba(245,158,11,0.5) 1px, transparent 1px)",
+          backgroundSize: "60px 60px",
+        }}
+      />
+
+      {/* Edge fade so pattern doesn't end abruptly */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white via-transparent to-white" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-white via-transparent to-white" />
+
       <ShimmerSweep />
       <FloatingParticles />
 
       {/* Ambient background glow */}
       <motion.div
-        className="pointer-events-none absolute top-0 left-1/4 h-[500px] w-[500px] rounded-full bg-amber-500/[0.03] blur-[120px]"
+        className="pointer-events-none absolute top-0 left-1/4 h-[500px] w-[500px] rounded-full bg-amber-500/[0.05] blur-[120px]"
         animate={{ x: [0, 60, 0], y: [0, -30, 0] }}
         transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
-        className="pointer-events-none absolute right-0 bottom-0 h-[400px] w-[400px] rounded-full bg-orange-500/[0.02] blur-[100px]"
+        className="pointer-events-none absolute right-0 bottom-0 h-[400px] w-[400px] rounded-full bg-orange-500/[0.04] blur-[100px]"
         animate={{ x: [0, -40, 0], y: [0, 40, 0] }}
         transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
       />
@@ -355,18 +375,18 @@ export function Footer() {
                 animate={{
                   boxShadow: [
                     "0 0 0px rgba(245,158,11,0)",
-                    "0 0 20px rgba(245,158,11,0.4)",
+                    "0 0 20px rgba(245,158,11,0.3)",
                     "0 0 0px rgba(245,158,11,0)",
                   ],
                 }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
               />
-              <span className="footer-shimmer-text text-xl font-bold text-white">
+              <span className="footer-shimmer-text-light text-xl font-bold text-gray-900">
                 Log<span className="text-amber-500">sabha</span>
               </span>
             </Link>
 
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-white">
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-gray-700">
               India's premier political analysis and campaign strategy platform.
               Delivering data-driven insights for informed political decisions.
             </p>
@@ -378,7 +398,7 @@ export function Footer() {
                   <a
                     key={text}
                     href="#"
-                    className="footer-legal-shimmer text-xs transition-colors"
+                    className="footer-legal-shimmer-light text-xs transition-colors"
                     style={{ animationDelay: `${i * 1.2}s` }}
                   >
                     {text}
@@ -402,7 +422,7 @@ export function Footer() {
                   ease: [0.16, 1, 0.3, 1],
                 }}
               >
-                <h3 className="text-sm font-semibold tracking-wide text-white">
+                <h3 className="text-sm font-semibold tracking-wide text-gray-900">
                   {category}
                 </h3>
                 <ul className="mt-4 space-y-2.5">
@@ -419,11 +439,11 @@ export function Footer() {
                     >
                       <Link
                         to={link.href}
-                        className="footer-link-shimmer group inline-flex items-center gap-1 text-sm transition-colors"
+                        className="footer-link-shimmer-light group inline-flex items-center gap-1 text-sm transition-colors"
                         style={{ animationDelay: `${catIdx * 0.8 + linkIdx * 0.4}s` }}
                       >
                         {link.label}
-                        <ArrowUpRight className="h-3 w-3 text-amber-400 opacity-0 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
+                        <ArrowUpRight className="h-3 w-3 text-amber-500 opacity-0 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
                       </Link>
                     </motion.li>
                   ))}
@@ -432,9 +452,6 @@ export function Footer() {
             ))}
           </div>
         </div>
-
-        {/* Newsletter — shimmer border */}
-  
 
         <AnimatedDivider />
 
@@ -447,7 +464,7 @@ export function Footer() {
           transition={{ duration: 0.6, delay: 0.4 }}
         >
           {/* Copyright */}
-          <p className="text-xs text-white">
+          <p className="text-xs text-gray-600">
             &copy; {new Date().getFullYear()} Logsabha. All rights reserved.
           </p>
 
