@@ -314,7 +314,10 @@ const VIEW_ONCE = { once: false, amount: 0.05 as const };
 
 export function Footer() {
   return (
-    <footer className="relative overflow-hidden bg-white border-t border-gray-100">
+    <footer className="relative overflow-hidden bg-white">
+      {/* Blend gradient from dark contact section into light footer */}
+      <div className="pointer-events-none absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#0b1120] via-[#0b1120]/40 to-transparent" />
+
       {/* Subtle dot grid pattern */}
       <div className="pointer-events-none absolute inset-0 opacity-[0.4]">
         <div
