@@ -107,26 +107,61 @@ function TypewriterText() {
   );
 }
 
+// ─── Typewriter Placeholder Hook ───
+
+function useTypewriterPlaceholder(phrases: string[], active: boolean) {
+  const [phraseIdx, setPhraseIdx] = useState(0);
+  const [charIdx, setCharIdx] = useState(0);
+  const [deleting, setDeleting] = useState(false);
+
+  useEffect(() => {
+    if (!active) return;
+    const phrase = phrases[phraseIdx];
+    let timeout: ReturnType<typeof setTimeout>;
+
+    if (!deleting && charIdx < phrase.length) {
+      timeout = setTimeout(() => setCharIdx((c) => c + 1), 70);
+    } else if (!deleting && charIdx === phrase.length) {
+      timeout = setTimeout(() => setDeleting(true), 1800);
+    } else if (deleting && charIdx > 0) {
+      timeout = setTimeout(() => setCharIdx((c) => c - 1), 35);
+    } else {
+      setDeleting(false);
+      setPhraseIdx((p) => (p + 1) % phrases.length);
+    }
+
+    return () => clearTimeout(timeout);
+  }, [charIdx, deleting, phraseIdx, phrases, active]);
+
+  return phrases[phraseIdx].slice(0, charIdx);
+}
+
 // ─── Animated Input ───
+
+const NAME_PHRASES = ["Your Name", "Enter full name", "e.g. Rahul Sharma"];
+const EMAIL_PHRASES = ["Your Email", "Enter email address", "e.g. name@example.com"];
+const MESSAGE_PHRASES = ["Your Message", "How can we help you?", "Tell us about your project...", "Share your ideas with us..."];
 
 function AnimatedInput({
   type = "text",
-  placeholder,
   name,
   value,
   onChange,
   delay,
   textarea = false,
+  phrases,
 }: {
   type?: string;
-  placeholder: string;
   name: string;
   value: string;
   onChange: (v: string) => void;
   delay: number;
   textarea?: boolean;
+  phrases: string[];
 }) {
   const [focused, setFocused] = useState(false);
+  const showTypewriter = !focused && value.length === 0;
+  const typewriterText = useTypewriterPlaceholder(phrases, showTypewriter);
   const Tag = textarea ? "textarea" : "input";
 
   return (
@@ -135,7 +170,6 @@ function AnimatedInput({
         <Tag
           type={textarea ? undefined : type}
           name={name}
-          placeholder={placeholder}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onFocus={() => setFocused(true)}
@@ -147,6 +181,15 @@ function AnimatedInput({
               : "border-white/10 hover:border-white/20"
           }`}
         />
+        {/* Typewriter placeholder overlay */}
+        {showTypewriter && (
+          <div className="pointer-events-none absolute top-0 left-0 flex items-start px-4 py-3">
+            <span className="text-sm text-slate-500">
+              {typewriterText}
+            </span>
+            <span className="ml-0.5 inline-block animate-pulse text-sm text-amber-500">|</span>
+          </div>
+        )}
         {/* Bottom highlight bar */}
         <motion.div
           className="absolute bottom-0 left-1/2 h-[2px] -translate-x-1/2 rounded-full bg-gradient-to-r from-amber-500/0 via-amber-500 to-amber-500/0"
@@ -333,27 +376,27 @@ export function ContactSection() {
 
               <div className="flex flex-1 flex-col space-y-3">
                 <AnimatedInput
-                  placeholder="Your Name"
                   name="name"
                   value={form.name}
                   onChange={(v) => setForm((f) => ({ ...f, name: v }))}
                   delay={0.2}
+                  phrases={NAME_PHRASES}
                 />
                 <AnimatedInput
                   type="email"
-                  placeholder="Your Email"
                   name="email"
                   value={form.email}
                   onChange={(v) => setForm((f) => ({ ...f, email: v }))}
                   delay={0.3}
+                  phrases={EMAIL_PHRASES}
                 />
                 <AnimatedInput
-                  placeholder="Your Message"
                   name="message"
                   value={form.message}
                   onChange={(v) => setForm((f) => ({ ...f, message: v }))}
                   delay={0.4}
                   textarea
+                  phrases={MESSAGE_PHRASES}
                 />
 
                 {/* Submit button */}

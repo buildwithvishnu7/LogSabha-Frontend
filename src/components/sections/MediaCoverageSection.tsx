@@ -401,10 +401,10 @@ export function MediaCoverageSection() {
       {/* ── Grid Background Image ── */}
       <div className="pointer-events-none absolute inset-0">
         <img
-          src="/images/grid-bg.png"
+          src="/images/media-bg-2.jpg"
           alt=""
           aria-hidden="true"
-          className="h-full w-full object-cover opacity-20"
+          className="h-full w-full object-cover opacity-30"
         />
         {/* Edge vignette to fade into white */}
         <div

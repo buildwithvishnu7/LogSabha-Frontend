@@ -466,7 +466,7 @@ export function HinduForJusticeSection() {
               transition={{ duration: 0.4 }}
             >
               <img
-                src="/images/Indic-Law-Justice.jpeg"
+                src="/images/HFF.jpeg"
                 alt="Hindu For Justice"
                 className="h-full min-h-[260px] w-full object-cover"
                 onError={(e) => {

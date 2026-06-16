@@ -41,7 +41,7 @@ function SideBadge({
             exit={{ opacity: 0, x: 8 }}
             transition={{ duration: 0.2 }}
           >
-            <span className="badge-shimmer text-[11px] font-bold tracking-wider uppercase">
+            <span className="badge-shimmer text-sm font-bold tracking-wider uppercase">
               {badge.label}
             </span>
           </motion.span>

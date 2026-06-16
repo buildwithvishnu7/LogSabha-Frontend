@@ -53,14 +53,14 @@ interface Article {
 
 const FEATURED_ARTICLE: Article = {
   id: "featured-1",
-  title: "The Evolution of Coalition Politics in Modern India",
+  title: "अरब देशों के तेल की हेकड़ी निकालेगा हमारा खुद का 'एथेनॉल', मगर गाड़ियों को पूरी तरह से एथेनॉल के लिए तैयार करना बेहद जरुरी",
   excerpt:
-    "An in-depth analysis of how coalition governments have shaped India's political landscape and the emerging trends in regional party alliances that are redefining democratic dynamics.",
-  image: "/images/editorial/featured.jpg",
+    "भारत की ऊर्जा स्वतंत्रता की दिशा में एथेनॉल एक क्रांतिकारी कदम है। अरब तेल पर निर्भरता कम करने के लिए वाहनों को एथेनॉल-रेडी बनाना अब सबसे बड़ी प्राथमिकता।",
+  image: "/images/editorial/ethanol-article.webp",
   category: "Featured Analysis",
   categoryColor: "bg-amber-500",
-  date: "April 20, 2026",
-  readTime: "8 min read",
+  date: "June 15, 2026",
+  readTime: "5 min read",
 };
 
 const SIDEBAR_ARTICLES: Article[] = [

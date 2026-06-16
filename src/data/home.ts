@@ -98,7 +98,7 @@ export const homeData: HomePageData = {
         title: "Political Analytics",
         description:
           "Advanced data analytics and predictive modeling for election forecasting and political trend analysis.",
-        image: "/images/PA.jpg",
+        image: "/images/Political Analysis.jpeg",
         stats: [
           { value: 98, suffix: "%", label: "ACCURACY" },
           { value: 500, suffix: "+", label: "REPORTS DELIVERED" },

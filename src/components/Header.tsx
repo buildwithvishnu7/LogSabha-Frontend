@@ -255,17 +255,10 @@ export function Header() {
       <div className="mx-auto flex h-14 max-w-[1440px] items-center justify-between px-3 sm:h-16 sm:px-6 md:h-20 lg:h-24 lg:px-8 xl:px-12">
         {/* Logo — sits OUTSIDE the parallelogram shape */}
         <Link to="/" className="relative z-10 flex-shrink-0">
-          <motion.img
+          <img
             src={logoSrc}
             alt="The LogSabha"
             className="mt-2 h-16 w-auto sm:h-20 md:h-28 lg:mt-3 lg:h-32 xl:h-40"
-            animate={{ y: [0, 3, 0] }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-            whileHover={{ scale: 1.08, rotate: [0, -2, 2, 0] }}
           />
         </Link>
 

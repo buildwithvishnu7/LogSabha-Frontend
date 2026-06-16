@@ -27,6 +27,7 @@ const PLATFORMS: Platform[] = [
   { key: "all", label: "All", color: "text-white", bgGradient: "from-amber-500 to-amber-600", iconBg: "" },
   { key: "twitter", label: "Twitter", color: "text-sky-500", bgGradient: "from-sky-500 to-sky-600", iconBg: "bg-sky-500" },
   { key: "instagram", label: "Instagram", color: "text-pink-500", bgGradient: "from-pink-500 via-purple-500 to-orange-400", iconBg: "bg-gradient-to-br from-pink-500 via-purple-500 to-orange-400" },
+  { key: "facebook", label: "Facebook", color: "text-[#1877F2]", bgGradient: "from-[#1877F2] to-[#0d65d9]", iconBg: "bg-[#1877F2]" },
   { key: "youtube", label: "YouTube", color: "text-red-600", bgGradient: "from-red-600 to-red-700", iconBg: "bg-red-600" },
 ];
 
@@ -200,6 +201,43 @@ const SOCIAL_POSTS: SocialPost[] = [
     shares: "21.4K",
     views: "2.5M",
     link: "https://www.youtube.com/@logsabha",
+  },
+  // ── Facebook (3 posts) ──
+  {
+    id: "fb-1",
+    platform: "facebook",
+    handle: "LogSabha",
+    timeAgo: "3d ago",
+    image: "/images/social/twitter-post.jpg",
+    caption: "संसद के मानसून सत्र में उठे प्रमुख मुद्दे — किसान बिल से लेकर रक्षा बजट तक, पूरी बहस का विश्लेषण पढ़ें LogSabha पर।",
+    likes: "18.4K",
+    comments: "3.2K",
+    shares: "5.6K",
+    link: "https://www.facebook.com/logsabha",
+  },
+  {
+    id: "fb-2",
+    platform: "facebook",
+    handle: "LogSabha",
+    timeAgo: "1w ago",
+    image: "/images/social/twitter-post.jpg",
+    caption: "India's democratic journey — from the first general election in 1951 to the world's largest digital voting system. A visual timeline.",
+    likes: "24.1K",
+    comments: "4.7K",
+    shares: "8.3K",
+    link: "https://www.facebook.com/logsabha",
+  },
+  {
+    id: "fb-3",
+    platform: "facebook",
+    handle: "LogSabha",
+    timeAgo: "5d ago",
+    image: "/images/social/twitter-post.jpg",
+    caption: "क्या आप जानते हैं? भारत की संसद में अब तक के सबसे लंबे भाषण का रिकॉर्ड किसके नाम है? जानिए LogSabha के इस खास लेख में।",
+    likes: "14.8K",
+    comments: "2.9K",
+    shares: "4.2K",
+    link: "https://www.facebook.com/logsabha",
   },
 ];
 

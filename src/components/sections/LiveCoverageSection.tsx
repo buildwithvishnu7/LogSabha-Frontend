@@ -54,19 +54,19 @@ const MAIN_VIDEO = {
 const RECENT_SPEECHES: SpeechVideo[] = [
   {
     id: "speech-1",
-    title: "Modi's Speech",
+    title: "PM Modi Makes Akhilesh Yadav Laugh — Witty Remarks Lighten Up Lok Sabha Debate",
     speaker: "Parliament Session July 2024",
     videoSrc: "/videos/modis-speech.mp4",
   },
   {
     id: "speech-2",
-    title: "PM Modi Speech",
+    title: "PM Modi's Fiery Address on National Unity — Motion of Thanks in Lok Sabha",
     speaker: "Parliament Session January 2025",
     videoSrc: "/videos/pm-modi-speech.mp4",
   },
   {
     id: "speech-3",
-    title: "'Is PM Modi God' Mallikarjun Kharge's Dig At Govt Ahead Of PM Modi's Parliament Speech",
+    title: "'Is PM Modi God?' Mallikarjun Kharge's Sharp Dig At Govt Ahead Of Parliament Speech",
     speaker: "Budget Session February 2025",
     videoSrc: "/videos/is-pm-modi-god.mp4",
   },

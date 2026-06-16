@@ -24,7 +24,7 @@ export const globalData: GlobalData = {
     },
     {
       id: "rss",
-      label: "RSS",
+      label: "Rashtriya Swayamsevak Sangh",
       image: "/logo/rss.gif",
       href: "#",
       expandedHeight: 120,
