@@ -361,17 +361,13 @@ function MediaVideoCard({
 
 export function MonumentBorder() {
   const tileCount = 12;
+  const halfWidth = (tileCount / 2) * 283;
   return (
     <div className="relative mt-6 overflow-hidden">
-      <motion.div
-        className="flex items-end"
-        animate={{ x: ["0px", `-${tileCount / 2 * 283}px`] }}
-        transition={{
-          x: {
-            duration: 30,
-            repeat: Infinity,
-            ease: "linear",
-          },
+      <div
+        className="flex items-end will-change-transform"
+        style={{
+          animation: `monument-scroll ${30}s linear infinite`,
         }}
       >
         {Array.from({ length: tileCount }, (_, i) => (
@@ -384,7 +380,13 @@ export function MonumentBorder() {
             style={{ width: 283 }}
           />
         ))}
-      </motion.div>
+      </div>
+      <style>{`
+        @keyframes monument-scroll {
+          from { transform: translate3d(0, 0, 0); }
+          to { transform: translate3d(-${halfWidth}px, 0, 0); }
+        }
+      `}</style>
     </div>
   );
 }
