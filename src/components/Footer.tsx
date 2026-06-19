@@ -371,7 +371,7 @@ export function Footer() {
           >
             <Link to="/" className="inline-flex items-center gap-3">
               <motion.img
-                src="/logo/Logfinalsabha.gif"
+                src="/logo/mainlogofinal.gif"
                 alt="LogSabha"
                 className="h-20 w-20 rounded-xl object-contain"
                 whileHover={{ rotate: [0, -5, 5, 0], scale: 1.05 }}
