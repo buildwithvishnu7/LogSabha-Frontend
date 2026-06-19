@@ -258,7 +258,7 @@ export function Header() {
           <img
             src={logoSrc}
             alt="The LogSabha"
-            className="mt-2 h-16 w-auto sm:h-20 md:h-28 lg:mt-3 lg:h-32 xl:h-40"
+            className="h-12 w-auto sm:h-14 md:h-16 lg:h-26"
           />
         </Link>
 

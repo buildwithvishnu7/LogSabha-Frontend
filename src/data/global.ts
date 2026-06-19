@@ -2,7 +2,7 @@ import type { GlobalData } from "@/types";
 
 export const globalData: GlobalData = {
   nav: {
-    logo: "/logo/Logfinalsabha.gif",
+    logo: "/logo/mainlogofinal.gif",
     links: [
       { label: "Home", href: "/" },
       { label: "Political Analysis", href: "/political-analysis" },

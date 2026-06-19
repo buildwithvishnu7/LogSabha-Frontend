@@ -393,7 +393,7 @@ export function PoliticalLandscapeSection({
             </div>
 
             {/* State tooltip — auto-cycle or user hover */}
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="sync">
               {activeInfo && (
                 <motion.div
                   key={activeInfo.state.name}

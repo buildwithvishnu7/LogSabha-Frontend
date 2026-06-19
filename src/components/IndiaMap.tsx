@@ -155,7 +155,7 @@ export function IndiaMap({ states, onStateHover, hoveredStateId }: IndiaMapProps
         y: yPct,
       });
     },
-    [onStateHover, computedPaths],
+    [onStateHover],
   );
 
   if (!features) {
