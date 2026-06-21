@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect, useMemo } from "react";
 import { motion, useInView } from "motion/react";
 
-import lottieWeb from "lottie-web";
+import { loadLottieInView } from "@/lib/lottie";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
 
 // ─── Lottie icon for HFJ pillars ───
@@ -14,7 +14,7 @@ function HfjLottieIcon({ src, size = 22 }: { src: string; size?: number }) {
     if (!el) return;
     const load = (data: object) => {
       el.innerHTML = "";
-      const anim = lottieWeb.loadAnimation({ container: el, renderer: "svg", loop: true, autoplay: true, animationData: data });
+      const anim = loadLottieInView({ container: el, animationData: data });
       const recolor = () => {
         el.querySelectorAll("path,circle,rect,line,ellipse,polyline,polygon").forEach(p => {
           const s = p.getAttribute("stroke"); if (s && s !== "none" && s !== "transparent") p.setAttribute("stroke", "#f97316");
@@ -43,7 +43,7 @@ function HfjColorLottieIcon({ src, size = 18, color = "#d97706" }: { src: string
     fetch(src).then(r => r.json()).then(json => {
       if (cancelled) return;
       el.innerHTML = "";
-      const anim = lottieWeb.loadAnimation({ container: el, renderer: "svg", loop: true, autoplay: true, animationData: json });
+      const anim = loadLottieInView({ container: el, animationData: json });
       const recolor = () => {
         const c = colorRef.current;
         el.querySelectorAll("path,circle,rect,line,ellipse,polyline,polygon").forEach(p => {

@@ -3,7 +3,7 @@ import { motion, useInView } from "motion/react";
 import {
   CheckCircle,
 } from "lucide-react";
-import lottieWeb from "lottie-web";
+import { loadLottieInView } from "@/lib/lottie";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
 
 // ─── Lottie icon for contact cards ───
@@ -18,7 +18,7 @@ function ContactLottieIcon({ src, size = 22, color = "#f97316" }: { src: string;
     if (!el) return;
     const load = (data: object) => {
       el.innerHTML = "";
-      const anim = lottieWeb.loadAnimation({ container: el, renderer: "svg", loop: true, autoplay: true, animationData: data });
+      const anim = loadLottieInView({ container: el, animationData: data });
       const recolor = () => {
         const c = colorRef.current;
         el.querySelectorAll("path,circle,rect,line,ellipse,polyline,polygon").forEach(p => {

@@ -2,7 +2,7 @@ import { useRef, useEffect, useState, useMemo } from "react";
 import { motion, useInView } from "motion/react";
 import { Users, BookOpen, Heart, Play, Pause } from "lucide-react";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
-import lottieWeb from "lottie-web";
+import { loadLottieInView } from "@/lib/lottie";
 
 // ─── Lottie icon for RSS pillars ───
 const rssLottieCache: Record<string, object> = {};
@@ -16,7 +16,7 @@ function RssLottieIcon({ src, size = 22, color = "#f97316" }: { src: string; siz
     if (!el) return;
     const load = (data: object) => {
       el.innerHTML = "";
-      const anim = lottieWeb.loadAnimation({ container: el, renderer: "svg", loop: true, autoplay: true, animationData: data });
+      const anim = loadLottieInView({ container: el, animationData: data });
       const recolor = () => {
         const c = colorRef.current;
         el.querySelectorAll("path,circle,rect,line,ellipse,polyline,polygon").forEach(p => {

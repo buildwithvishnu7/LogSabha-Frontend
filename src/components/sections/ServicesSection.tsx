@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence, useInView } from "motion/react";
-import lottieWeb from "lottie-web";
+import { loadLottieInView } from "@/lib/lottie";
 import { useCountUp } from "@/hooks/useCountUp";
 import {
   ScrollReveal,
@@ -19,7 +19,7 @@ function SvcLottieIcon({ src, size = 22 }: { src: string; size?: number }) {
     if (!el) return;
     const load = (data: object) => {
       el.innerHTML = "";
-      lottieWeb.loadAnimation({ container: el, renderer: "svg", loop: true, autoplay: true, animationData: data });
+      loadLottieInView({ container: el, animationData: data });
     };
     if (svcLottieCache[src]) { load(svcLottieCache[src]); return; }
     let cancelled = false;
@@ -40,7 +40,7 @@ function SvcColorLottieIcon({ src, size = 18, color = "#d97706" }: { src: string
     fetch(src).then(r => r.json()).then(json => {
       if (cancelled) return;
       el.innerHTML = "";
-      const anim = lottieWeb.loadAnimation({ container: el, renderer: "svg", loop: true, autoplay: true, animationData: json });
+      const anim = loadLottieInView({ container: el, animationData: json });
       const recolor = () => {
         const c = colorRef.current;
         el.querySelectorAll("path,circle,rect,line,ellipse,polyline,polygon").forEach(p => {

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import lottie from "lottie-web";
+import { loadLottieInView } from "@/lib/lottie";
 import { BackgroundVideo } from "@/components/video/BackgroundVideo";
 import { IndiaMap, StateTooltip } from "@/components/IndiaMap";
 import type { HoverInfo } from "@/components/IndiaMap";
@@ -21,13 +21,7 @@ function StatLottieIcon({ src, size = 22 }: { src: string; size?: number }) {
 
     const load = (data: object) => {
       el.innerHTML = "";
-      const anim = lottie.loadAnimation({
-        container: el,
-        renderer: "svg",
-        loop: true,
-        autoplay: true,
-        animationData: data,
-      });
+      const anim = loadLottieInView({ container: el, animationData: data });
 
       const recolor = () => {
         const shapes = el.querySelectorAll("path, circle, rect, line, ellipse, polyline, polygon");

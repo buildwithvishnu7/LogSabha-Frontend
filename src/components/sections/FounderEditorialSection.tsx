@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import { motion, useInView } from "motion/react";
 import { Calendar } from "lucide-react";
-import lottieWeb from "lottie-web";
+import { loadLottieInView } from "@/lib/lottie";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
 
 // ─── Inline Lottie Icon ───
@@ -16,7 +16,7 @@ function FounderLottieIcon({ src, size = 18, color = "#ffffff" }: { src: string;
     fetch(src).then(r => r.json()).then(json => {
       if (cancelled) return;
       el.innerHTML = "";
-      const anim = lottieWeb.loadAnimation({ container: el, renderer: "svg", loop: true, autoplay: true, animationData: json });
+      const anim = loadLottieInView({ container: el, animationData: json });
       const recolor = () => {
         const c = colorRef.current;
         el.querySelectorAll("path,circle,rect,line,ellipse,polyline,polygon").forEach(p => {
