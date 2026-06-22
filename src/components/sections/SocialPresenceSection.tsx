@@ -1,6 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useInView } from "motion/react";
 import {
+  SectionInViewProvider,
+  useInViewSection,
+  useSectionInView,
+} from "@/components/motion/InViewSection";
+import {
   Heart,
   MessageCircle,
   Share2,
@@ -353,6 +358,7 @@ function SocialCard({ post, index }: { post: SocialPost; index: number }) {
   const platform = PLATFORMS.find((p) => p.key === post.platform)!;
   const slideX = index % 2 === 0 ? -60 : 60;
   const isTwitter = post.platform === "twitter";
+  const inView = useSectionInView();
 
   return (
     <motion.div
@@ -376,7 +382,7 @@ function SocialCard({ post, index }: { post: SocialPost; index: number }) {
               "linear-gradient(105deg, transparent 40%, rgba(245,158,11,0.06) 50%, transparent 60%)",
             backgroundSize: "200% 100%",
           }}
-          animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
+          animate={inView ? { backgroundPosition: ["-100% 0%", "200% 0%"] } : undefined}
           transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 1.5, ease: "easeInOut" }}
         />
         {/* Card Header */}
@@ -583,8 +589,11 @@ export function SocialPresenceSection() {
     return mixed;
   })();
 
+  const { ref: sectionRef, inView } = useInViewSection();
+
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-amber-50/60 via-orange-50/30 to-white py-4 sm:py-6 lg:py-8">
+    <SectionInViewProvider value={inView}>
+    <section ref={sectionRef} className="relative overflow-hidden bg-gradient-to-b from-amber-50/60 via-orange-50/30 to-white py-4 sm:py-6 lg:py-8">
       {/* Background dot pattern */}
       <div className="absolute inset-0 opacity-[0.035]">
         <div
@@ -624,11 +633,15 @@ export function SocialPresenceSection() {
             top: `${12 + (i % 5) * 18}%`,
             background: i % 2 === 0 ? "rgba(245,158,11,0.25)" : "rgba(249,115,22,0.2)",
           }}
-          animate={{
-            y: [0, -18 - (i % 3) * 8, 0],
-            x: [0, i % 2 === 0 ? 12 : -12, 0],
-            opacity: [0.15, 0.45, 0.15],
-          }}
+          animate={
+            inView
+              ? {
+                  y: [0, -18 - (i % 3) * 8, 0],
+                  x: [0, i % 2 === 0 ? 12 : -12, 0],
+                  opacity: [0.15, 0.45, 0.15],
+                }
+              : undefined
+          }
           transition={{
             duration: 5 + i * 0.6,
             repeat: Infinity,
@@ -708,5 +721,6 @@ export function SocialPresenceSection() {
         </ScrollReveal> */}
       </div>
     </section>
+    </SectionInViewProvider>
   );
 }

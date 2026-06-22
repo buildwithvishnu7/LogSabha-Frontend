@@ -191,7 +191,7 @@ function ArticleCard({
               "linear-gradient(120deg, transparent 30%, rgba(245,158,11,0.15) 50%, transparent 70%)",
             backgroundSize: "200% 100%",
           }}
-          animate={{ backgroundPosition: ["-200% 0%", "200% 0%"] }}
+          animate={triggered ? { backgroundPosition: ["-200% 0%", "200% 0%"] } : undefined}
           transition={{
             duration: 2,
             repeat: Infinity,
@@ -339,9 +339,11 @@ export function FounderEditorialSection() {
                 backgroundClip: "text",
                 WebkitTextFillColor: "transparent",
               }}
-              animate={{
-                backgroundPosition: ["200% center", "-200% center"],
-              }}
+              animate={
+                triggered
+                  ? { backgroundPosition: ["200% center", "-200% center"] }
+                  : undefined
+              }
               transition={{
                 duration: 5,
                 repeat: Infinity,
@@ -391,12 +393,12 @@ export function FounderEditorialSection() {
               <motion.span
                 className="pointer-events-none absolute inset-[-3px] rounded-full border-2 border-amber-500/60"
                 style={{ boxShadow: "0 0 8px rgba(245,158,11,0.2)" }}
-                animate={{ scale: [1, 1.06, 1], opacity: [0.7, 0, 0.7] }}
+                animate={triggered ? { scale: [1, 1.06, 1], opacity: [0.7, 0, 0.7] } : undefined}
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
               />
               <motion.span
                 className="pointer-events-none absolute inset-[-1px] rounded-full border-2 border-amber-500/40"
-                animate={{ scale: [1, 1.03, 1], opacity: [1, 0.2, 1] }}
+                animate={triggered ? { scale: [1, 1.03, 1], opacity: [1, 0.2, 1] } : undefined}
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
               />
               {/* Moving border glow */}
@@ -407,9 +409,11 @@ export function FounderEditorialSection() {
                     "linear-gradient(90deg, transparent, rgba(245,158,11,0.3), transparent)",
                   backgroundSize: "200% 100%",
                 }}
-                animate={{
-                  backgroundPosition: ["-200% 0%", "200% 0%"],
-                }}
+                animate={
+                  triggered
+                    ? { backgroundPosition: ["-200% 0%", "200% 0%"] }
+                    : undefined
+                }
                 transition={{
                   duration: 2.5,
                   repeat: Infinity,

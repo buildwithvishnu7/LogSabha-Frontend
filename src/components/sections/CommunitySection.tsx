@@ -623,8 +623,10 @@ function TrendingTopicCard({
 // ─── Main Section ───
 
 export function CommunitySection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { margin: "200px 0px 200px 0px" });
   return (
-    <section className="relative overflow-hidden bg-white py-4 sm:py-6 lg:py-8">
+    <section ref={sectionRef} className="relative overflow-hidden bg-white py-4 sm:py-6 lg:py-8">
       {/* Dot pattern background */}
       <div className="absolute inset-0 opacity-[0.025]">
         <div
@@ -746,12 +748,12 @@ export function CommunitySection() {
                   <motion.span
                     className="pointer-events-none absolute inset-[-3px] rounded-xl border-2 border-amber-500/70"
                     style={{ boxShadow: "0 0 8px rgba(245,158,11,0.25)" }}
-                    animate={{ scale: [1, 1.04, 1], opacity: [0.8, 0.1, 0.8] }}
+                    animate={isInView ? { scale: [1, 1.04, 1], opacity: [0.8, 0.1, 0.8] } : undefined}
                     transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                   />
                   <motion.span
                     className="pointer-events-none absolute inset-[-1px] rounded-xl border-2 border-amber-500/50"
-                    animate={{ scale: [1, 1.02, 1], opacity: [1, 0.3, 1] }}
+                    animate={isInView ? { scale: [1, 1.02, 1], opacity: [1, 0.3, 1] } : undefined}
                     transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
                   />
                   <LoopingIcon icon={UsersIcon} size={16} interval={4000} />

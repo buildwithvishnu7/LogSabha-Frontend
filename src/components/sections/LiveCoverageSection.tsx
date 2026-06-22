@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState, useCallback } from "react";
-import { motion } from "motion/react";
+import { motion, useInView } from "motion/react";
 import { loadLottieInView } from "@/lib/lottie";
 import {
   ScrollReveal,
@@ -181,7 +181,7 @@ function MainVideoPlayer({
       {/* LIVE NOW badge — visible on mobile only (overlaid on video) */}
       <motion.div
         className="pointer-events-none absolute top-3 right-3 z-10 flex items-center gap-1.5 rounded-full border border-red-300/50 bg-red-50/90 px-3 py-1.5 shadow-sm backdrop-blur-sm sm:hidden"
-        animate={{ boxShadow: ["0 0 0 0 rgba(239,68,68,0)", "0 0 0 6px rgba(239,68,68,0)"] }}
+        animate={inView ? { boxShadow: ["0 0 0 0 rgba(239,68,68,0)", "0 0 0 6px rgba(239,68,68,0)"] } : undefined}
         transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
       >
         <LiveDot />
@@ -294,13 +294,15 @@ function SpeechCard({
 
 export function LiveCoverageSection() {
   const mainIframeRef = useRef<HTMLIFrameElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const sectionInView = useInView(sectionRef, { margin: "200px 0px 200px 0px" });
   const [speechHovered, setSpeechHovered] = useState(false);
 
   const handleSpeechHoverStart = useCallback(() => setSpeechHovered(true), []);
   const handleSpeechHoverEnd = useCallback(() => setSpeechHovered(false), []);
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-white via-amber-50/20 to-white py-3 sm:py-4 lg:py-6">
+    <section ref={sectionRef} className="relative overflow-hidden bg-gradient-to-b from-white via-amber-50/20 to-white py-3 sm:py-4 lg:py-6">
       {/* Subtle background pattern */}
       <div className="absolute inset-0 opacity-[0.02]">
         <div
@@ -337,7 +339,7 @@ export function LiveCoverageSection() {
           <ScrollReveal delay={0.2} className="hidden sm:block">
             <motion.div
               className="flex items-center gap-2 rounded-full border border-red-200 bg-red-50 px-4 py-2 shadow-sm"
-              animate={{ boxShadow: ["0 0 0 0 rgba(239,68,68,0)", "0 0 0 8px rgba(239,68,68,0)"] }}
+              animate={sectionInView ? { boxShadow: ["0 0 0 0 rgba(239,68,68,0)", "0 0 0 8px rgba(239,68,68,0)"] } : undefined}
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             >
               <LiveDot />

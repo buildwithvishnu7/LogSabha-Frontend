@@ -1,9 +1,14 @@
 import { useRef, useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, useInView } from "motion/react";
 import {
   ScrollReveal,
   ScrollRevealLine,
 } from "@/components/motion/ScrollReveal";
+import {
+  SectionInViewProvider,
+  useInViewSection,
+  useSectionInView,
+} from "@/components/motion/InViewSection";
 
 // ─── News Channel Logos (scrolling ticker) ───
 
@@ -59,16 +64,18 @@ const MEDIA_ITEMS: MediaItem[] = [
 
 function LogoTicker() {
   const doubled = [...NEWS_LOGOS, ...NEWS_LOGOS, ...NEWS_LOGOS];
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { margin: "200px 0px 200px 0px" });
 
   return (
-    <div className="relative mt-5 overflow-hidden py-3">
+    <div ref={ref} className="relative mt-5 overflow-hidden py-3">
       {/* Fade edges */}
       <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-white to-transparent" />
       <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-white to-transparent" />
 
       <motion.div
         className="flex items-center gap-12"
-        animate={{ x: ["0%", "-33.33%"] }}
+        animate={inView ? { x: ["0%", "-33.33%"] } : undefined}
         transition={{
           x: {
             duration: 18,
@@ -151,6 +158,7 @@ function MediaImageCard({
   index: number;
   onImageClick: (src: string, alt: string) => void;
 }) {
+  const inView = useSectionInView();
   return (
     <motion.div
       className="group relative cursor-pointer overflow-hidden rounded-2xl bg-gray-900 shadow-lg"
@@ -175,9 +183,7 @@ function MediaImageCard({
           WebkitMaskComposite: "xor",
           padding: "2px",
         }}
-        animate={{
-          "--angle": ["0deg", "360deg"],
-        } as Record<string, string[]>}
+        animate={inView ? ({ "--angle": ["0deg", "360deg"] } as Record<string, string[]>) : undefined}
         transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
       />
 
@@ -207,7 +213,7 @@ function MediaImageCard({
               "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%)",
             backgroundSize: "200% 100%",
           }}
-          animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
+          animate={inView ? { backgroundPosition: ["-100% 0%", "200% 0%"] } : undefined}
           transition={{
             duration: 3,
             delay: 2 + index * 0.5,
@@ -247,6 +253,7 @@ function MediaVideoCard({
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const inView = useSectionInView();
 
   const handleMouseEnter = () => {
     const vid = videoRef.current;
@@ -287,9 +294,7 @@ function MediaVideoCard({
           WebkitMaskComposite: "xor",
           padding: "2px",
         }}
-        animate={{
-          "--angle": ["0deg", "360deg"],
-        } as Record<string, string[]>}
+        animate={inView ? ({ "--angle": ["0deg", "360deg"] } as Record<string, string[]>) : undefined}
         transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
       />
 
@@ -328,7 +333,7 @@ function MediaVideoCard({
               "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%)",
             backgroundSize: "200% 100%",
           }}
-          animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
+          animate={inView ? { backgroundPosition: ["-100% 0%", "200% 0%"] } : undefined}
           transition={{
             duration: 3,
             delay: 2 + index * 0.5,
@@ -395,9 +400,12 @@ export function MonumentBorder() {
 
 export function MediaCoverageSection() {
   const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null);
+  const { ref: sectionRef, inView } = useInViewSection();
 
   return (
+    <SectionInViewProvider value={inView}>
     <section
+      ref={sectionRef}
       className="relative overflow-hidden bg-white pt-8 pb-0 sm:pt-10 lg:pt-12"
     >
       {/* ── Grid Background Image ── */}
@@ -430,9 +438,7 @@ export function MediaCoverageSection() {
             <h2 className="text-2xl font-extrabold sm:text-3xl lg:text-4xl">
               <motion.span
                 className="inline-block bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 bg-clip-text text-transparent"
-                animate={{
-                  backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-                }}
+                animate={inView ? { backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] } : undefined}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                 style={{ backgroundSize: "200% 200%" }}
               >
@@ -490,5 +496,6 @@ export function MediaCoverageSection() {
         )}
       </AnimatePresence>
     </section>
+    </SectionInViewProvider>
   );
 }

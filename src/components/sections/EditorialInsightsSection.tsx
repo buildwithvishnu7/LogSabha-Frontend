@@ -5,6 +5,11 @@ import {
 } from "lucide-react";
 import { loadLottieInView } from "@/lib/lottie";
 import {
+  SectionInViewProvider,
+  useInViewSection,
+  useSectionInView,
+} from "@/components/motion/InViewSection";
+import {
   ScrollReveal,
   ScrollRevealLine,
 } from "@/components/motion/ScrollReveal";
@@ -198,6 +203,7 @@ const PARTICLES = Array.from({ length: 4 }, (_, i) => ({
 }));
 
 function FloatingParticles() {
+  const inView = useSectionInView();
   return (
     <>
       {PARTICLES.map((p) => (
@@ -210,11 +216,15 @@ function FloatingParticles() {
             left: p.left,
             top: p.top,
           }}
-          animate={{
-            y: [0, -20, 0],
-            x: [0, 10, 0],
-            opacity: [0.2, 0.5, 0.2],
-          }}
+          animate={
+            inView
+              ? {
+                  y: [0, -20, 0],
+                  x: [0, 10, 0],
+                  opacity: [0.2, 0.5, 0.2],
+                }
+              : undefined
+          }
           transition={{
             duration: p.duration,
             delay: p.delay,
@@ -230,10 +240,11 @@ function FloatingParticles() {
 // ─── Trending Badge ───
 
 function TrendingBadge() {
+  const inView = useSectionInView();
   return (
     <motion.span
       className="relative inline-flex items-center gap-1 overflow-hidden rounded-full bg-gradient-to-r from-red-500 to-orange-500 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white shadow-md shadow-red-500/20"
-      animate={{ scale: [1, 1.06, 1] }}
+      animate={inView ? { scale: [1, 1.06, 1] } : undefined}
       transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
     >
       {/* Shimmer sweep */}
@@ -244,17 +255,17 @@ function TrendingBadge() {
             "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.35) 50%, transparent 70%)",
           backgroundSize: "200% 100%",
         }}
-        animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
+        animate={inView ? { backgroundPosition: ["-100% 0%", "200% 0%"] } : undefined}
         transition={{ duration: 2, repeat: Infinity, repeatDelay: 2, ease: "easeInOut" }}
       />
       {/* Glow ring */}
       <motion.span
         className="pointer-events-none absolute inset-[-2px] rounded-full border border-red-400/60"
-        animate={{ scale: [1, 1.15, 1], opacity: [0.6, 0, 0.6] }}
+        animate={inView ? { scale: [1, 1.15, 1], opacity: [0.6, 0, 0.6] } : undefined}
         transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.span
-        animate={{ rotate: [0, -15, 15, 0] }}
+        animate={inView ? { rotate: [0, -15, 15, 0] } : undefined}
         transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 1.5, ease: "easeInOut" }}
       >
         <TrendingUp className="h-3 w-3" />
@@ -429,6 +440,7 @@ function SidebarCard({
   article: Article;
   index: number;
 }) {
+  const inView = useSectionInView();
   return (
     <motion.div
       className="group relative flex cursor-pointer gap-4 overflow-hidden rounded-xl border border-gray-100 bg-white p-3 shadow-sm transition-all duration-300 hover:border-amber-200 hover:shadow-md"
@@ -443,7 +455,7 @@ function SidebarCard({
             "linear-gradient(105deg, transparent 40%, rgba(245,158,11,0.08) 50%, transparent 60%)",
           backgroundSize: "200% 100%",
         }}
-        animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
+        animate={inView ? { backgroundPosition: ["-100% 0%", "200% 0%"] } : undefined}
         transition={{ duration: 2, repeat: Infinity, repeatDelay: 1, ease: "easeInOut" }}
       />
       {/* Thumbnail */}
@@ -483,7 +495,7 @@ function SidebarCard({
                 "linear-gradient(105deg, transparent 30%, rgba(245,158,11,0.15) 50%, transparent 70%)",
               backgroundSize: "200% 100%",
             }}
-            animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
+            animate={inView ? { backgroundPosition: ["-100% 0%", "200% 0%"] } : undefined}
             transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 4, ease: "easeInOut", delay: index * 0.3 }}
           />
           <span className={`relative ${article.categoryColor} bg-clip-text text-transparent`} style={{ WebkitBackgroundClip: "text" }}>
@@ -626,8 +638,10 @@ function ScrollingSidebar({ articles }: { articles: Article[] }) {
 // ─── Main Section ───
 
 export function EditorialInsightsSection() {
+  const { ref, inView } = useInViewSection();
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-white via-amber-50/20 to-white py-4 sm:py-6 lg:py-8">
+    <SectionInViewProvider value={inView}>
+    <section ref={ref} className="relative overflow-hidden bg-gradient-to-b from-white via-amber-50/20 to-white py-4 sm:py-6 lg:py-8">
       {/* Grid background image */}
       <div className="pointer-events-none absolute inset-0">
         <img
@@ -711,5 +725,6 @@ export function EditorialInsightsSection() {
         </motion.div>
       </div>
     </section>
+    </SectionInViewProvider>
   );
 }

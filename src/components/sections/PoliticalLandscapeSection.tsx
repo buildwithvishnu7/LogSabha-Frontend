@@ -1,6 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { loadLottieInView } from "@/lib/lottie";
+import {
+  SectionInViewProvider,
+  useInViewSection,
+  useSectionInView,
+} from "@/components/motion/InViewSection";
 import { BackgroundVideo } from "@/components/video/BackgroundVideo";
 import { IndiaMap, StateTooltip } from "@/components/IndiaMap";
 import type { HoverInfo } from "@/components/IndiaMap";
@@ -93,9 +98,10 @@ function FloatingStatCard({
     prevExpanded.current = isExpanded;
   }, [isExpanded, replay]);
 
+  const inView = useSectionInView();
   return (
     <motion.div
-      animate={{ y: [0, -5, 0, 4, 0] }}
+      animate={inView ? { y: [0, -5, 0, 4, 0] } : undefined}
       transition={{
         duration: 4,
         repeat: Infinity,
@@ -217,8 +223,11 @@ export function PoliticalLandscapeSection({
     return { ...s, numericValue: parsed.num, parsedSuffix: parsed.suffix };
   });
 
+  const { ref: sectionRef, inView } = useInViewSection();
+
   return (
-    <section className="relative min-h-screen w-full overflow-hidden bg-[#0c0c1d]">
+    <SectionInViewProvider value={inView}>
+    <section ref={sectionRef} className="relative min-h-screen w-full overflow-hidden bg-[#0c0c1d]">
       <div className="absolute top-0 left-0 right-0 z-[2] h-40 bg-gradient-to-b from-black/80 via-black/40 to-transparent" />
       <div className="absolute top-0 left-0 right-0 z-[2] h-20 bg-gradient-to-b from-[#0c0c1d] to-transparent" />
 
@@ -449,5 +458,6 @@ export function PoliticalLandscapeSection({
       <div className="absolute bottom-0 left-0 right-0 z-[2] h-20 bg-gradient-to-t from-[#0c0c1d] to-transparent" />
       <div className="absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.4)_100%)]" />
     </section>
+    </SectionInViewProvider>
   );
 }

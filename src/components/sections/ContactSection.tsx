@@ -410,10 +410,14 @@ export function ContactSection() {
                     {/* Pulse ring */}
                     <motion.span
                       className="pointer-events-none absolute inset-[-2px] rounded-xl border-2 border-amber-400/50"
-                      animate={{
-                        scale: [1, 1.04, 1],
-                        opacity: [0.6, 0, 0.6],
-                      }}
+                      animate={
+                        isInView
+                          ? {
+                              scale: [1, 1.04, 1],
+                              opacity: [0.6, 0, 0.6],
+                            }
+                          : undefined
+                      }
                       transition={{
                         duration: 2,
                         repeat: Infinity,

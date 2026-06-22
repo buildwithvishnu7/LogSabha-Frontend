@@ -1,5 +1,9 @@
 import { useRef, useState, useEffect } from "react";
 import { motion, useInView } from "motion/react";
+import {
+  SectionInViewProvider,
+  useSectionInView,
+} from "@/components/motion/InViewSection";
 import { Users, FileText, TrendingUp } from "lucide-react";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
 
@@ -143,6 +147,7 @@ function ShimmerText({
   className?: string;
   speed?: number;
 }) {
+  const shimmerInView = useSectionInView();
   return (
     <motion.span
       className={className}
@@ -154,7 +159,7 @@ function ShimmerText({
         backgroundClip: "text",
         WebkitTextFillColor: "transparent",
       }}
-      animate={{ backgroundPosition: ["200% center", "-200% center"] }}
+      animate={shimmerInView ? { backgroundPosition: ["200% center", "-200% center"] } : undefined}
       transition={{ duration: speed, repeat: Infinity, ease: "easeInOut" }}
     >
       {children}
@@ -176,7 +181,7 @@ function QuoteBox({ triggered }: { triggered: boolean }) {
               "linear-gradient(90deg, transparent, rgba(245,158,11,0.3), transparent)",
             backgroundSize: "200% 100%",
           }}
-          animate={{ backgroundPosition: ["-200% 0%", "200% 0%"] }}
+          animate={triggered ? { backgroundPosition: ["-200% 0%", "200% 0%"] } : undefined}
           transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
         />
 
@@ -242,6 +247,7 @@ export function LogSabhaStorySection() {
   }, [isInView]);
 
   return (
+    <SectionInViewProvider value={triggered}>
     <section ref={sectionRef} className="relative overflow-hidden">
       {/* Background image */}
       <div className="absolute inset-0">
@@ -316,5 +322,6 @@ export function LogSabhaStorySection() {
         </div>
       </div>
     </section>
+    </SectionInViewProvider>
   );
 }

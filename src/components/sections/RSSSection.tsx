@@ -60,16 +60,18 @@ const TYPEWRITER_PHRASES = [
 
 export function Ticker() {
   const items = [...TICKER_ITEMS, ...TICKER_ITEMS];
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { margin: "200px 0px 200px 0px" });
 
   return (
-    <div className="relative overflow-hidden bg-gradient-to-r from-orange-500 via-orange-600 to-orange-500">
+    <div ref={ref} className="relative overflow-hidden bg-gradient-to-r from-orange-500 via-orange-600 to-orange-500">
       {/* Edge fades */}
       <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-orange-500 to-transparent" />
       <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-orange-500 to-transparent" />
 
       <motion.div
         className="flex whitespace-nowrap py-3.5"
-        animate={{ x: [0, `-${(100 / items.length) * TICKER_ITEMS.length}%`] }}
+        animate={inView ? { x: [0, `-${(100 / items.length) * TICKER_ITEMS.length}%`] } : undefined}
         transition={{
           x: {
             duration: 25,
@@ -508,13 +510,17 @@ export function RSSSection() {
                         WebkitTextFillColor: "transparent",
                         backgroundClip: "text",
                       }}
-                      animate={{
-                        backgroundPosition: [
-                          "0% 50%",
-                          "100% 50%",
-                          "0% 50%",
-                        ],
-                      }}
+                      animate={
+                        triggered
+                          ? {
+                              backgroundPosition: [
+                                "0% 50%",
+                                "100% 50%",
+                                "0% 50%",
+                              ],
+                            }
+                          : undefined
+                      }
                       transition={{
                         duration: 6,
                         repeat: Infinity,
@@ -535,13 +541,17 @@ export function RSSSection() {
                       WebkitBackgroundClip: "text",
                       WebkitTextFillColor: "transparent",
                     }}
-                    animate={{
-                      backgroundPosition: [
-                        "0% 50%",
-                        "100% 50%",
-                        "0% 50%",
-                      ],
-                    }}
+                    animate={
+                      triggered
+                        ? {
+                            backgroundPosition: [
+                              "0% 50%",
+                              "100% 50%",
+                              "0% 50%",
+                            ],
+                          }
+                        : undefined
+                    }
                     transition={{
                       duration: 4,
                       repeat: Infinity,
@@ -604,12 +614,12 @@ export function RSSSection() {
                     <motion.span
                       className="pointer-events-none absolute inset-[-3px] rounded-xl border-2 border-orange-500/70"
                       style={{ boxShadow: "0 0 8px rgba(249,115,22,0.25)" }}
-                      animate={{ scale: [1, 1.06, 1], opacity: [0.8, 0, 0.8] }}
+                      animate={triggered ? { scale: [1, 1.06, 1], opacity: [0.8, 0, 0.8] } : undefined}
                       transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                     />
                     <motion.span
                       className="pointer-events-none absolute inset-[-1px] rounded-xl border-2 border-orange-500/50"
-                      animate={{ scale: [1, 1.03, 1], opacity: [1, 0.2, 1] }}
+                      animate={triggered ? { scale: [1, 1.03, 1], opacity: [1, 0.2, 1] } : undefined}
                       transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
                     />
                     और जानें

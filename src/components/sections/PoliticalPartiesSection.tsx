@@ -772,7 +772,7 @@ export function PoliticalPartiesSection() {
                   className="absolute left-2 top-1/2 z-30 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-amber-200/50 bg-white/90 shadow-lg backdrop-blur-sm hover:bg-white sm:h-11 sm:w-11"
                 >
                   <motion.div
-                    animate={{ x: [0, -5, 0] }}
+                    animate={triggered ? { x: [0, -5, 0] } : undefined}
                     transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
                   >
                     <ChevronLeft className="h-5 w-5 text-amber-600" />
@@ -792,7 +792,7 @@ export function PoliticalPartiesSection() {
                   className="absolute right-2 top-1/2 z-30 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-amber-200/50 bg-white/90 shadow-lg backdrop-blur-sm hover:bg-white sm:h-11 sm:w-11"
                 >
                   <motion.div
-                    animate={{ x: [0, 5, 0] }}
+                    animate={triggered ? { x: [0, 5, 0] } : undefined}
                     transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
                   >
                     <ChevronRight className="h-5 w-5 text-amber-600" />

@@ -417,13 +417,17 @@ export function HinduForJusticeSection() {
                           "linear-gradient(90deg, #f59e0b, #ea580c, #fbbf24, #f97316, #f59e0b)",
                         backgroundSize: "200% 100%",
                       }}
-                      animate={{
-                        backgroundPosition: [
-                          "0% 50%",
-                          "100% 50%",
-                          "0% 50%",
-                        ],
-                      }}
+                      animate={
+                        triggered
+                          ? {
+                              backgroundPosition: [
+                                "0% 50%",
+                                "100% 50%",
+                                "0% 50%",
+                              ],
+                            }
+                          : undefined
+                      }
                       transition={{
                         duration: 4,
                         repeat: Infinity,
