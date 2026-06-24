@@ -115,15 +115,21 @@ function ScrollLogo({ src, sectionRef }: { src: string; sectionRef: React.RefObj
     offset: ["start start", "end start"],
   });
 
-  // Position: half-visible at bottom-center → top-left
-  const x = useTransform(scrollYProgress, [0, 1], ["50vw", "5vw"]);
-  const y = useTransform(scrollYProgress, [0, 1], ["100vh", "2vh"]);
-  const scale = useTransform(scrollYProgress, [0, 0.8, 1], [1, 0.5, 0.25]);
-  const opacity = useTransform(scrollYProgress, [0, 0.1, 0.85, 1], [1, 1, 1, 0]);
+  // Position: half-visible at bottom-center → top-left.
+  // The whole fly-into-header merge completes within the first ~45% of the hero
+  // scroll so the watermark is fully gone BEFORE the next section becomes the
+  // dominant view — otherwise it lingers as a faint "second logo" if the user
+  // stops mid-scroll. At progress 0.45 the hero is still ~55% visible (dominant).
+  const x = useTransform(scrollYProgress, [0, 0.45], ["50vw", "5vw"]);
+  const y = useTransform(scrollYProgress, [0, 0.45], ["100vh", "2vh"]);
+  const scale = useTransform(scrollYProgress, [0, 0.35, 0.45], [1, 0.5, 0.25]);
+  const opacity = useTransform(scrollYProgress, [0, 0.08, 0.38, 0.45], [1, 1, 1, 0]);
 
   // 3D rotations linked to scroll
-  const rotateY = useTransform(scrollYProgress, [0, 0.5, 1], [0, 180, 360]);
-  const rotateX = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 15, -10, 0]);
+  const rotateY = useTransform(scrollYProgress, [0, 0.22, 0.45], [0, 180, 360]);
+  const rotateX = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.45], [0, 15, -10, 0]);
+
+  const glowScale = useTransform(scrollYProgress, [0, 0.22, 0.45], [1.2, 1.5, 0.8]);
 
   return (
     <motion.div
@@ -151,7 +157,7 @@ function ScrollLogo({ src, sectionRef }: { src: string; sectionRef: React.RefObj
           className="absolute inset-0 rounded-full blur-xl"
           style={{
             background: "radial-gradient(circle, rgba(245,158,11,0.4) 0%, transparent 70%)",
-            scale: useTransform(scrollYProgress, [0, 0.5, 1], [1.2, 1.5, 0.8]),
+            scale: glowScale,
           }}
         />
 
