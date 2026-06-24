@@ -472,9 +472,22 @@ function ScrollingPosts({ posts }: { posts: Post[] }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const isPausedRef = useRef(false);
   const resumeTimerRef = useRef<number>(0);
+  // The auto-scrolling capped box only makes sense in the lg+ two-column layout.
+  // Below lg it traps touch scrolling, so render a plain list that flows with
+  // the page and lets the user scroll on into the next section.
+  const [isDesktop, setIsDesktop] = useState(false);
 
-  // Auto-scroll via setInterval
   useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const update = () => setIsDesktop(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  // Auto-scroll via setInterval — desktop only
+  useEffect(() => {
+    if (!isDesktop) return;
     const el = scrollRef.current;
     if (!el) return;
 
@@ -489,10 +502,11 @@ function ScrollingPosts({ posts }: { posts: Post[] }) {
     }, 30);
 
     return () => clearInterval(id);
-  }, []);
+  }, [isDesktop]);
 
-  // Explicit wheel handler (non-passive) so manual scroll always works
+  // Explicit wheel handler (non-passive) so manual scroll always works — desktop only
   useEffect(() => {
+    if (!isDesktop) return;
     const el = scrollRef.current;
     if (!el) return;
 
@@ -517,10 +531,11 @@ function ScrollingPosts({ posts }: { posts: Post[] }) {
 
     el.addEventListener("wheel", onWheel, { passive: false });
     return () => el.removeEventListener("wheel", onWheel);
-  }, []);
+  }, [isDesktop]);
 
-  // Touch support — pause on touch, resume after
+  // Touch support — pause on touch, resume after — desktop only
   useEffect(() => {
+    if (!isDesktop) return;
     const el = scrollRef.current;
     if (!el) return;
 
@@ -540,8 +555,20 @@ function ScrollingPosts({ posts }: { posts: Post[] }) {
       el.removeEventListener("touchstart", onTouchStart);
       el.removeEventListener("touchend", onTouchEnd);
     };
-  }, []);
+  }, [isDesktop]);
 
+  // Mobile / tablet: plain list, no inner scroll trap — page scrolls naturally
+  if (!isDesktop) {
+    return (
+      <div className="flex flex-col gap-5">
+        {posts.map((post) => (
+          <PostCard key={post.id} post={post} />
+        ))}
+      </div>
+    );
+  }
+
+  // Desktop: auto-scrolling, looping capped container
   const doubled = [...posts, ...posts];
 
   return (

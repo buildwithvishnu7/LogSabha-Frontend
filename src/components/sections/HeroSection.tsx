@@ -245,7 +245,7 @@ export function HeroSection({ data }: { data: HeroData }) {
   const [videoPlaying, setVideoPlaying] = useState(false);
 
   return (
-    <section ref={sectionRef} className="relative h-screen w-full overflow-hidden">
+    <section ref={sectionRef} className="relative h-[100svh] w-full overflow-hidden sm:h-screen">
       {/* Logo that moves diagonally into header on scroll */}
       <ScrollLogo src={data.watermarkLogo} sectionRef={sectionRef} />
       <BackgroundVideo src={data.videoSrc} poster={data.posterSrc} onPlaying={() => setVideoPlaying(true)} className="object-contain sm:object-cover" />
@@ -285,7 +285,7 @@ export function HeroSection({ data }: { data: HeroData }) {
 
       {/* Content */}
       <div
-        className="relative z-10 mx-auto flex h-full max-w-[1440px] flex-col items-start justify-end pl-16 pr-3 pb-12 sm:pl-20 sm:pr-6 sm:pb-16 md:pb-20 lg:pr-8 lg:pb-24 xl:pr-12"
+        className="relative z-10 mx-auto flex h-full max-w-[1440px] flex-col items-start justify-end pl-5 pr-24 pb-16 sm:pl-20 sm:pr-6 sm:pb-16 md:pb-20 lg:pr-8 lg:pb-24 xl:pr-12"
         style={{ perspective: "1000px" }}
       >
         {/* 3D heading */}
