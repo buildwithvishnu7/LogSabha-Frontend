@@ -599,19 +599,6 @@ export function Header() {
             </AnimatePresence>
           </div>
 
-          {/* Mobile Search — circular icon (visible below md) */}
-          <motion.button
-            className={cn(
-              "relative flex h-9 w-9 items-center justify-center rounded-full transition-colors duration-500 md:hidden",
-              scrolled ? "bg-gray-100/80 text-gray-500" : "bg-white/10 text-white/80",
-            )}
-            whileTap={{ scale: 0.9 }}
-            whileHover={{ scale: 1.1 }}
-            onClick={() => setMobileMenuOpen(true)}
-          >
-            <LottieIcon src="/lottie/search (1).json" size={18} color={scrolled ? "#6b7280" : "#ffffff"} />
-          </motion.button>
-
           {/* Hamburger — animated morph between menu and X */}
           <motion.button
             className={cn(

@@ -234,9 +234,9 @@ export function PoliticalLandscapeSection({
       <BackgroundVideo src={data.backgroundVideo} poster={data.backgroundPoster} />
       <div className="absolute inset-0 z-[1] bg-black/60" />
 
-      <div className="relative z-10 mx-auto flex min-h-screen max-w-[1440px] flex-col justify-center pl-16 pr-4 py-16 sm:pl-20 sm:pr-6 sm:py-20 lg:flex-row lg:items-center lg:gap-10 lg:pr-8 xl:gap-12 xl:pr-12">
+      <div className="relative z-10 mx-auto flex min-h-screen max-w-[1440px] flex-col justify-start px-5 py-12 sm:justify-center sm:px-6 sm:py-20 lg:flex-row lg:items-center lg:gap-10 lg:pl-20 lg:pr-8 xl:gap-12 xl:pr-12">
         {/* Left — text */}
-        <div className="flex-1 lg:max-w-[480px]">
+        <div className="lg:flex-1 lg:max-w-[480px]">
           {/* Heading — word-by-word with shimmer + bounce */}
           <motion.h2
             className="text-2xl font-extrabold leading-tight sm:text-3xl lg:text-4xl"
@@ -310,7 +310,7 @@ export function PoliticalLandscapeSection({
         </div>
 
         {/* Right — Map + Cards */}
-        <div className="relative mt-10 flex-1 sm:mt-12 lg:mt-0">
+        <div className="relative mt-6 sm:mt-12 lg:mt-0 lg:flex-1">
           {/* Map container — responsive sizing */}
           <div className="relative mx-auto aspect-square w-full max-w-[280px] sm:max-w-[380px] md:max-w-[420px] lg:max-w-[520px]">
             {/* Map — z-10 so states are hoverable */}

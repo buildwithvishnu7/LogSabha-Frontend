@@ -656,10 +656,13 @@ export function PoliticalPartiesSection() {
   }, [activeIndex, cardWidths, getMaxScroll]);
 
   const handleScrollClick = (direction: "left" | "right") => {
-    const maxScroll = getMaxScroll();
-    setScrollOffset((prev) =>
-      Math.max(0, Math.min(prev + (direction === "left" ? -300 : 300), maxScroll)),
+    // Advance the active (expanded) party — the auto-scroll effect repositions
+    // the strip to reveal it. Pause auto-play briefly so the manual choice sticks.
+    setIsUserHovering(true);
+    setActiveIndex((prev) =>
+      Math.max(0, Math.min(prev + (direction === "left" ? -1 : 1), PARTIES.length - 1)),
     );
+    window.setTimeout(() => setIsUserHovering(false), 4000);
   };
 
   const handleHoverStart = (index: number) => {

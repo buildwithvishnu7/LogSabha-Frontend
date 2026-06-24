@@ -440,7 +440,7 @@ function SocialCard({ post, index }: { post: SocialPost; index: number }) {
         ) : (
           <>
             {/* Image with overlay effects (Instagram / YouTube) — stretches to fill */}
-            <div className="relative mx-3 flex-1 overflow-hidden rounded-xl">
+            <div className="relative mx-3 aspect-[16/10] overflow-hidden rounded-xl lg:aspect-auto lg:flex-1">
               <img
                 src={post.image}
                 alt={post.caption}

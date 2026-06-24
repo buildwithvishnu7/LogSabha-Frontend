@@ -100,11 +100,13 @@ function ServiceTab({
   isActive,
   onClick,
   index,
+  variant = "desktop",
 }: {
   service: ServiceItem;
   isActive: boolean;
   onClick: () => void;
   index: number;
+  variant?: string;
 }) {
   return (
     <ScrollReveal delay={0.1 + index * 0.06} direction="left">
@@ -117,7 +119,7 @@ function ServiceTab({
       >
         {isActive && (
           <motion.div
-            layoutId="service-tab-indicator"
+            layoutId={`service-tab-indicator-${variant}`}
             className="absolute inset-0 rounded-xl border border-amber-500/30 bg-amber-500/10"
             transition={{ type: "spring", stiffness: 350, damping: 30 }}
           />
@@ -324,6 +326,7 @@ export function ServicesSection({ data }: { data: ServicesData }) {
                 isActive={i === activeIndex}
                 onClick={() => handleTabClick(i)}
                 index={i}
+                variant="mobile"
               />
 
               {/* Expanded content — shows below the active tab */}
@@ -430,6 +433,7 @@ export function ServicesSection({ data }: { data: ServicesData }) {
                   isActive={i === activeIndex}
                   onClick={() => handleTabClick(i)}
                   index={i}
+                  variant="desktop"
                 />
               ))}
             </div>

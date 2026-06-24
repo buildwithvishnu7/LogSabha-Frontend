@@ -95,7 +95,7 @@ function SideBadge({
 
 export function StickyBadges({ badges }: { badges: SideBadgeType[] }) {
   return (
-    <div className="fixed right-5 bottom-[104px] z-50 flex flex-col items-center gap-3 sm:right-6">
+    <div className="fixed right-6 bottom-[104px] z-50 flex w-[68px] flex-col items-center gap-3">
       {badges.map((badge, i) => (
         <SideBadge
           key={badge.id}
@@ -248,7 +248,7 @@ export function HeroSection({ data }: { data: HeroData }) {
     <section ref={sectionRef} className="relative h-screen w-full overflow-hidden">
       {/* Logo that moves diagonally into header on scroll */}
       <ScrollLogo src={data.watermarkLogo} sectionRef={sectionRef} />
-      <BackgroundVideo src={data.videoSrc} poster={data.posterSrc} onPlaying={() => setVideoPlaying(true)} />
+      <BackgroundVideo src={data.videoSrc} poster={data.posterSrc} onPlaying={() => setVideoPlaying(true)} className="object-contain sm:object-cover" />
 
       {/* Top vignette — blends with header */}
       <div className="absolute top-0 left-0 right-0 z-[2] h-40 bg-gradient-to-b from-black/40 via-black/15 to-transparent" />
