@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence, useInView } from "motion/react";
 import {
   ScrollReveal,
@@ -67,6 +67,16 @@ function LogoTicker() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { margin: "200px 0px 200px 0px" });
 
+  // Scroll noticeably faster on mobile (the small viewport makes 18s feel slow).
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
   return (
     <div ref={ref} className="relative mt-5 overflow-hidden py-3">
       {/* Fade edges */}
@@ -78,7 +88,7 @@ function LogoTicker() {
         animate={inView ? { x: ["0%", "-33.33%"] } : undefined}
         transition={{
           x: {
-            duration: 18,
+            duration: isMobile ? 10 : 18,
             repeat: Infinity,
             ease: "linear",
           },
