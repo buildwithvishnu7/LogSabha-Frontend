@@ -212,7 +212,7 @@ export function IndiaMap({ states, onStateHover, hoveredStateId }: IndiaMapProps
   }
 
   return (
-    <svg viewBox="0 0 600 600" className="h-full w-full">
+    <svg viewBox="0 0 600 600" preserveAspectRatio="xMidYMid slice" className="h-full w-full">
       {computedPaths.map((item) => (
         <StatePath
           key={item.key}
@@ -241,12 +241,12 @@ export function StateTooltip({ state }: { state: StateData }) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 8, scale: 0.92 }}
       transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-      className="pointer-events-none w-40 rounded-xl border border-white/15 bg-[#1a1a2e]/95 p-2.5 shadow-2xl backdrop-blur-lg sm:w-60 sm:p-4"
+      className="pointer-events-none w-32 rounded-xl border border-white/15 bg-[#1a1a2e]/95 p-2 shadow-2xl backdrop-blur-lg sm:w-60 sm:p-4"
     >
-      <div className="flex items-center justify-between">
-        <p className="text-xs font-bold text-white sm:text-sm">{state.name}</p>
+      <div className="flex items-center justify-between gap-1">
+        <p className="text-[11px] font-bold text-white sm:text-sm">{state.name}</p>
         <span
-          className="rounded-full px-2 py-0.5 text-[10px] font-bold"
+          className="rounded-full px-1.5 py-0.5 text-[8px] font-bold sm:px-2 sm:text-[10px]"
           style={{
             backgroundColor: `${partyColors.fill}33`,
             color: partyColors.hover,
@@ -256,12 +256,12 @@ export function StateTooltip({ state }: { state: StateData }) {
         </span>
       </div>
 
-      <div className="mt-2 space-y-1.5 sm:mt-3 sm:space-y-2">
-        <div className="flex items-center justify-between text-xs">
+      <div className="mt-1.5 space-y-1 sm:mt-3 sm:space-y-2">
+        <div className="flex items-center justify-between text-[10px] sm:text-xs">
           <span className="text-white/50">Lok Sabha Seats</span>
           <span className="font-bold text-white">{state.seats}</span>
         </div>
-        <div className="flex items-center justify-between text-xs">
+        <div className="flex items-center justify-between text-[10px] sm:text-xs">
           <span className="text-white/50">Vote Share</span>
           <span className="font-bold text-amber-400">{voteShare}%</span>
         </div>
@@ -275,7 +275,7 @@ export function StateTooltip({ state }: { state: StateData }) {
           />
         </div>
         {/* Seats bar */}
-        <div className="flex items-center gap-2 text-xs">
+        <div className="flex items-center gap-1.5 text-[10px] sm:gap-2 sm:text-xs">
           <span className="text-white/50">Seats</span>
           <div className="flex-1 h-1.5 overflow-hidden rounded-full bg-white/10">
             <div className="flex h-full">

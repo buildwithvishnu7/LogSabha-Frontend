@@ -127,20 +127,20 @@ function FloatingStatCard({
             : "none",
         }}
       >
-        <div className="flex items-center gap-3 px-4 py-3">
+        <div className="flex items-center gap-1.5 px-2 py-1.5 sm:gap-3 sm:px-4 sm:py-3">
           <motion.div
-            className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500/20 text-amber-500"
+            className="flex h-6 w-6 items-center justify-center rounded-lg bg-amber-500/20 text-amber-500 sm:h-9 sm:w-9"
             animate={{ rotate: isExpanded ? [0, -10, 10, 0] : 0 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
           >
             {iconMap[icon] ?? <StatLottieIcon src="/lottie/analytics.json" />}
           </motion.div>
           <div>
-            <p className="text-lg font-bold text-amber-400 sm:text-xl">
+            <p className="text-xs font-bold text-amber-400 sm:text-xl">
               <span ref={ref}>{count.toLocaleString()}</span>
               <span>{suffix}</span>
             </p>
-            <p className="text-[10px] text-white/60 sm:text-xs">{label}</p>
+            <p className="text-[8px] text-white/60 sm:text-xs">{label}</p>
           </div>
         </div>
 
@@ -154,13 +154,13 @@ function FloatingStatCard({
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
               className="overflow-hidden"
             >
-              <div className="border-t border-white/5 px-4 py-2">
-                <p className="text-[10px] text-white/40">{detail}</p>
-                <div className="mt-1.5 flex gap-0.5">
+              <div className="border-t border-white/5 px-2 py-1.5 sm:px-4 sm:py-2">
+                <p className="text-[8px] text-white/40 sm:text-[10px]">{detail}</p>
+                <div className="mt-1 flex gap-0.5 sm:mt-1.5">
                   {Array.from({ length: 12 }).map((_, i) => (
                     <motion.div
                       key={i}
-                      className="h-2 w-2 rounded-[2px]"
+                      className="h-1.5 w-1.5 rounded-[2px] sm:h-2 sm:w-2"
                       style={{
                         backgroundColor:
                           i < 8
@@ -310,9 +310,9 @@ export function PoliticalLandscapeSection({
         </div>
 
         {/* Right — Map + Cards */}
-        <div className="relative mt-6 sm:mt-12 lg:mt-0 lg:flex-1">
+        <div className="relative -mx-3 mt-6 sm:mx-0 sm:mt-12 lg:mt-0 lg:flex-1">
           {/* Map container — responsive sizing */}
-          <div className="relative mx-auto aspect-square w-full max-w-[280px] sm:max-w-[380px] md:max-w-[420px] lg:max-w-[520px]">
+          <div className="relative mx-auto aspect-[5/6] w-full max-w-[380px] sm:aspect-square sm:max-w-[380px] md:max-w-[420px] lg:max-w-[520px]">
             {/* Map — z-10 so states are hoverable */}
             <div className="relative z-10 h-full w-full">
               <IndiaMap
@@ -336,8 +336,8 @@ export function PoliticalLandscapeSection({
               <motion.line x1="88%" y1="85%" x2="62%" y2="70%" stroke="url(#lineGrad)" strokeWidth="1" strokeDasharray="4 4" initial={{ pathLength: 0, opacity: 0 }} whileInView={{ pathLength: 1, opacity: 1 }} viewport={{ once: false }} transition={{ delay: 1.0, duration: 0.8 }} />
             </svg>
 
-            {/* Floating stat cards — hidden on mobile, shown sm+ */}
-            <div className="absolute inset-0 z-20 hidden overflow-visible sm:block" style={{ pointerEvents: "none" }}>
+            {/* Floating stat cards — float around the map on all sizes */}
+            <div className="absolute inset-0 z-20 overflow-visible" style={{ pointerEvents: "none" }}>
               <div style={{ pointerEvents: "auto" }}>
                 <FloatingStatCard
                   icon="users"
@@ -346,7 +346,7 @@ export function PoliticalLandscapeSection({
                   label={stats[0]?.label ?? "Lok Sabha Seats"}
                   detail="Total parliamentary constituencies"
                   bounceDelay={0}
-                  className="absolute -left-6 -top-8"
+                  className="absolute left-0 top-2 sm:-left-6 sm:-top-8"
                   expanded={hoveredCardIndex !== null ? hoveredCardIndex === 0 : autoCardIndex === 0}
                   onUserHover={(h) => setHoveredCardIndex(h ? 0 : null)}
                 />
@@ -360,7 +360,7 @@ export function PoliticalLandscapeSection({
                   label={stats[1]?.label ?? "States Covered"}
                   detail="Complete state-level analysis"
                   bounceDelay={0.8}
-                  className="absolute -right-8 -top-2"
+                  className="absolute right-0 top-2 sm:-right-8 sm:-top-2"
                   expanded={hoveredCardIndex !== null ? hoveredCardIndex === 1 : autoCardIndex === 1}
                   onUserHover={(h) => setHoveredCardIndex(h ? 1 : null)}
                 />
@@ -374,7 +374,7 @@ export function PoliticalLandscapeSection({
                   label={stats[2]?.label ?? "Campaigns"}
                   detail="Successfully managed campaigns"
                   bounceDelay={2}
-                  className="absolute bottom-0 left-[5%]"
+                  className="absolute bottom-6 left-0 sm:bottom-0 sm:left-[5%]"
                   expanded={hoveredCardIndex !== null ? hoveredCardIndex === 2 : autoCardIndex === 2}
                   onUserHover={(h) => setHoveredCardIndex(h ? 2 : null)}
                 />
@@ -388,7 +388,7 @@ export function PoliticalLandscapeSection({
                   label={stats[3]?.label ?? "Accuracy"}
                   detail="Prediction accuracy rate"
                   bounceDelay={2.4}
-                  className="absolute -right-8 bottom-4"
+                  className="absolute right-0 bottom-6 sm:-right-8 sm:bottom-4"
                   expanded={hoveredCardIndex !== null ? hoveredCardIndex === 3 : autoCardIndex === 3}
                   onUserHover={(h) => setHoveredCardIndex(h ? 3 : null)}
                 />
@@ -412,8 +412,8 @@ export function PoliticalLandscapeSection({
             </AnimatePresence>
           </div>
 
-          {/* Mobile stat grid — shown only on small screens */}
-          <div className="mt-6 grid grid-cols-2 gap-3 sm:hidden">
+          {/* Mobile stat grid — replaced by floating cards above */}
+          <div className="hidden">
             <FloatingStatCard
               icon="users"
               numericValue={stats[0]?.numericValue ?? 543}

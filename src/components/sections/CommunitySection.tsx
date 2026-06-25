@@ -557,11 +557,13 @@ function ScrollingPosts({ posts }: { posts: Post[] }) {
     };
   }, [isDesktop]);
 
-  // Mobile / tablet: plain list, no inner scroll trap — page scrolls naturally
+  // Mobile / tablet: plain list of just the first 3 posts, no inner scroll trap.
+  // The user scrolls through these 3 cards and the page continues to the next
+  // section (no infinite loop).
   if (!isDesktop) {
     return (
       <div className="flex flex-col gap-5">
-        {posts.map((post) => (
+        {posts.slice(0, 3).map((post) => (
           <PostCard key={post.id} post={post} />
         ))}
       </div>

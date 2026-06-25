@@ -542,8 +542,20 @@ function ScrollingSidebar({ articles }: { articles: Article[] }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const isPausedRef = useRef(false);
   const resumeTimerRef = useRef<number>(0);
+  // Below lg the auto-scrolling capped box traps touch scrolling. On mobile we
+  // render a plain list of just the first 4 articles so the page scrolls through
+  // them and on into the next section (no infinite loop).
+  const [isDesktop, setIsDesktop] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const update = () => setIsDesktop(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
 
   useEffect(() => {
+    if (!isDesktop) return;
     const el = scrollRef.current;
     if (!el) return;
 
@@ -558,9 +570,10 @@ function ScrollingSidebar({ articles }: { articles: Article[] }) {
     }, 30);
 
     return () => clearInterval(id);
-  }, []);
+  }, [isDesktop]);
 
   useEffect(() => {
+    if (!isDesktop) return;
     const el = scrollRef.current;
     if (!el) return;
 
@@ -583,9 +596,10 @@ function ScrollingSidebar({ articles }: { articles: Article[] }) {
 
     el.addEventListener("wheel", onWheel, { passive: false });
     return () => el.removeEventListener("wheel", onWheel);
-  }, []);
+  }, [isDesktop]);
 
   useEffect(() => {
+    if (!isDesktop) return;
     const el = scrollRef.current;
     if (!el) return;
 
@@ -605,7 +619,18 @@ function ScrollingSidebar({ articles }: { articles: Article[] }) {
       el.removeEventListener("touchstart", onTouchStart);
       el.removeEventListener("touchend", onTouchEnd);
     };
-  }, []);
+  }, [isDesktop]);
+
+  // Mobile / tablet: plain list of the first 4 articles, no inner scroll trap.
+  if (!isDesktop) {
+    return (
+      <div className="flex flex-col gap-3">
+        {articles.slice(0, 4).map((article, i) => (
+          <SidebarCard key={article.id} article={article} index={i} />
+        ))}
+      </div>
+    );
+  }
 
   const doubled = [...articles, ...articles];
 
@@ -718,7 +743,7 @@ export function EditorialInsightsSection() {
               visible: { opacity: 1, x: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
             }}
           >
-            <div className="h-[480px] overflow-hidden rounded-2xl border border-gray-100 bg-white p-2 shadow-sm lg:h-[580px]">
+            <div className="lg:h-[580px] lg:overflow-hidden lg:rounded-2xl lg:border lg:border-gray-100 lg:bg-white lg:p-2 lg:shadow-sm">
               <ScrollingSidebar articles={SIDEBAR_ARTICLES} />
             </div>
           </motion.div>

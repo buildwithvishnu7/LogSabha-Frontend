@@ -121,7 +121,11 @@ function ScrollLogo({ src, sectionRef }: { src: string; sectionRef: React.RefObj
   // dominant view — otherwise it lingers as a faint "second logo" if the user
   // stops mid-scroll. At progress 0.45 the hero is still ~55% visible (dominant).
   const x = useTransform(scrollYProgress, [0, 0.45], ["50vw", "5vw"]);
-  const y = useTransform(scrollYProgress, [0, 0.45], ["100vh", "2vh"]);
+  // Use svh (small viewport height) for the start so the half-visible logo sits
+  // at the actually-visible bottom on load — on real mobile browsers 100vh is
+  // the larger height behind the address bar, which pushed it off-screen until
+  // the user scrolled.
+  const y = useTransform(scrollYProgress, [0, 0.45], ["100svh", "2svh"]);
   const scale = useTransform(scrollYProgress, [0, 0.35, 0.45], [1, 0.5, 0.25]);
   const opacity = useTransform(scrollYProgress, [0, 0.08, 0.38, 0.45], [1, 1, 1, 0]);
 
