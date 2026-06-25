@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback, memo } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef, memo } from "react";
 import { motion } from "motion/react";
 import { geoMercator, geoPath, geoCentroid } from "d3-geo";
 import { feature } from "topojson-client";
@@ -140,12 +140,17 @@ export function IndiaMap({ states, onStateHover, hoveredStateId }: IndiaMapProps
     });
   }, [features, pathGenerator, states, projection]);
 
+  // Pause the mobile auto-cycle for a few seconds after the user interacts.
+  const pausedUntilRef = useRef(0);
+
   const handleEnter = useCallback(
     (item: (typeof computedPaths)[number], e: React.MouseEvent) => {
       if (!item.stateData) return;
       // Get position relative to the SVG container
       const svg = (e.target as SVGElement).closest("svg");
       if (!svg) return;
+      // A user interaction pauses the auto-cycle so their selection sticks.
+      pausedUntilRef.current = Date.now() + 5000;
       // Use centroid position mapped to percentage of container
       const xPct = (item.cx / 600) * 100;
       const yPct = (item.cy / 600) * 100;
@@ -157,6 +162,46 @@ export function IndiaMap({ states, onStateHover, hoveredStateId }: IndiaMapProps
     },
     [onStateHover],
   );
+
+  // ─── Mobile auto-cycle ───
+  // Touch screens have no hover, so the state tooltips never appear. On mobile
+  // (< lg) cycle through the states one-by-one, highlighting each and showing
+  // its tooltip. Desktop keeps pure hover behaviour (cycle disabled).
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 1023px)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  const statesWithData = useMemo(
+    () => computedPaths.filter((p) => p.stateData),
+    [computedPaths],
+  );
+
+  // Keep the latest callback in a ref so the interval below isn't torn down and
+  // restarted every time the parent re-renders (which would reset the cycle to
+  // the first state and freeze it there).
+  const onStateHoverRef = useRef(onStateHover);
+  onStateHoverRef.current = onStateHover;
+  const cycleIndexRef = useRef(0);
+
+  useEffect(() => {
+    if (!isMobile || statesWithData.length === 0) return;
+    const id = setInterval(() => {
+      if (Date.now() < pausedUntilRef.current) return;
+      const item = statesWithData[cycleIndexRef.current % statesWithData.length];
+      cycleIndexRef.current += 1;
+      onStateHoverRef.current({
+        state: item.stateData!,
+        x: (item.cx / 600) * 100,
+        y: (item.cy / 600) * 100,
+      });
+    }, 2200);
+    return () => clearInterval(id);
+  }, [isMobile, statesWithData]);
 
   if (!features) {
     return (
@@ -196,10 +241,10 @@ export function StateTooltip({ state }: { state: StateData }) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 8, scale: 0.92 }}
       transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-      className="pointer-events-none w-48 rounded-xl border border-white/15 bg-[#1a1a2e]/95 p-3 shadow-2xl backdrop-blur-lg sm:w-60 sm:p-4"
+      className="pointer-events-none w-40 rounded-xl border border-white/15 bg-[#1a1a2e]/95 p-2.5 shadow-2xl backdrop-blur-lg sm:w-60 sm:p-4"
     >
       <div className="flex items-center justify-between">
-        <p className="text-sm font-bold text-white">{state.name}</p>
+        <p className="text-xs font-bold text-white sm:text-sm">{state.name}</p>
         <span
           className="rounded-full px-2 py-0.5 text-[10px] font-bold"
           style={{
@@ -211,7 +256,7 @@ export function StateTooltip({ state }: { state: StateData }) {
         </span>
       </div>
 
-      <div className="mt-3 space-y-2">
+      <div className="mt-2 space-y-1.5 sm:mt-3 sm:space-y-2">
         <div className="flex items-center justify-between text-xs">
           <span className="text-white/50">Lok Sabha Seats</span>
           <span className="font-bold text-white">{state.seats}</span>
