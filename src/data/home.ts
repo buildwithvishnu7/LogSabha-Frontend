@@ -7,7 +7,7 @@ export const homeData: HomePageData = {
     subtitle: "Political Research & Analysis Wing of Bharat",
     videoSrc: "/videos/pre-comp-3-1.mp4",
     posterSrc: "/videos/hero-poster.jpg",
-    watermarkLogo: "/logo/Logfinalsabha.gif",
+    watermarkLogo: "/logo/mainlogofinal.gif",
     stats: [
       { label: "Civil Secretariat", value: "₹540", unit: "Crore" },
       { label: "17 Projects", value: "₹1,200", unit: "Crore" },
@@ -53,7 +53,7 @@ export const homeData: HomePageData = {
       { id: "PB", name: "Punjab", seats: 13, ndaSeats: 0, indiaSeats: 7, otherSeats: 6, rulingParty: "AAP" },
       { id: "RJ", name: "Rajasthan", seats: 25, ndaSeats: 14, indiaSeats: 8, otherSeats: 3, rulingParty: "BJP" },
       { id: "SK", name: "Sikkim", seats: 1, ndaSeats: 1, indiaSeats: 0, otherSeats: 0, rulingParty: "SKM" },
-      { id: "TN", name: "Tamil Nadu", seats: 39, ndaSeats: 0, indiaSeats: 22, otherSeats: 17, rulingParty: "DMK" },
+      { id: "TN", name: "Tamil Nadu", seats: 39, ndaSeats: 0, indiaSeats: 22, otherSeats: 17, rulingParty: "TMC" },
       { id: "TS", name: "Telangana", seats: 17, ndaSeats: 8, indiaSeats: 8, otherSeats: 1, rulingParty: "INC" },
       { id: "TR", name: "Tripura", seats: 2, ndaSeats: 2, indiaSeats: 0, otherSeats: 0, rulingParty: "BJP" },
       { id: "UP", name: "Uttar Pradesh", seats: 80, ndaSeats: 33, indiaSeats: 43, otherSeats: 4, rulingParty: "BJP" },

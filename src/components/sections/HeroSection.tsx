@@ -144,7 +144,9 @@ function ScrollLogo({ src, sectionRef }: { src: string; sectionRef: React.RefObj
         scale,
         opacity,
         translateX: "-50%",
-        translateY: "-50%",
+        // Pull up more than 50% so a clear half of the emblem shows above the
+        // fold (the logo art sits low in its image, so a flat 50% looked like less).
+        translateY: "-60%",
         perspective: 800,
       }}
     >
@@ -170,7 +172,7 @@ function ScrollLogo({ src, sectionRef }: { src: string; sectionRef: React.RefObj
           src={src}
           alt=""
           aria-hidden="true"
-          className="relative h-36 w-auto drop-shadow-[0_0_20px_rgba(245,158,11,0.5)] sm:h-40 md:h-48 lg:h-56"
+          className="relative h-36 w-auto drop-shadow-[0_0_20px_rgba(245,158,11,0.5)] sm:h-40 md:h-44 lg:h-48"
         />
       </motion.div>
     </motion.div>

@@ -12,6 +12,9 @@ const NAME_MAP: Record<string, string> = {
   "NCT of Delhi": "Delhi",
   "Andaman & Nicobar Island": "Andaman & Nicobar Islands",
   "Dadara & Nagar Havelli": "Dadra & Nagar Haveli",
+  // Ladakh is a separate geometry in the map data — fold it into J&K so the
+  // whole region is covered/coloured instead of only half.
+  Ladakh: "Jammu & Kashmir",
 };
 
 // Party → color mapping for state fills
