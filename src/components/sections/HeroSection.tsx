@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
 import { BackgroundVideo } from "@/components/video/BackgroundVideo";
-import type { HeroData, HeroStat, SideBadge as SideBadgeType } from "@/types";
+import type { HeroData, SideBadge as SideBadgeType } from "@/types";
 
 // ─── Side Badge ───
 
@@ -179,76 +179,6 @@ function ScrollLogo({ src, sectionRef }: { src: string; sectionRef: React.RefObj
   );
 }
 
-// ─── Rotating Stats ───
-
-function RotatingStats({ stats }: { stats: HeroStat[] }) {
-  const [currentStat, setCurrentStat] = useState(0);
-
-  useEffect(() => {
-    if (stats.length === 0) return;
-    const interval = setInterval(() => {
-      setCurrentStat((prev) => (prev + 1) % stats.length);
-    }, 3500);
-    return () => clearInterval(interval);
-  }, [stats.length]);
-
-  if (stats.length === 0) return null;
-
-  return (
-    <div className="text-left">
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={currentStat}
-          initial={{ opacity: 0, y: 30, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: -30, scale: 0.95 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <motion.p
-            className="text-[10px] font-bold tracking-widest text-white uppercase sm:text-sm md:text-base lg:text-lg"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.15, duration: 0.5 }}
-          >
-            {stats[currentStat].label}
-          </motion.p>
-
-          <motion.div
-            className="mt-1 flex items-baseline gap-2 sm:mt-2"
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.25, duration: 0.5 }}
-          >
-            <span className="text-2xl font-extrabold text-amber-500 sm:text-3xl md:text-4xl lg:text-6xl">
-              {stats[currentStat].value}
-            </span>
-            <span className="text-base font-bold text-amber-400 sm:text-lg md:text-xl lg:text-3xl">
-              {stats[currentStat].unit}
-            </span>
-          </motion.div>
-        </motion.div>
-      </AnimatePresence>
-
-      <div className="mt-4 flex gap-1.5 sm:mt-6">
-        {stats.map((_, i) => (
-          <motion.div
-            key={i}
-            className="h-1.5 rounded-full"
-            animate={{
-              width: i === currentStat ? 20 : 6,
-              backgroundColor:
-                i === currentStat
-                  ? "rgb(245, 158, 11)"
-                  : "rgba(255, 255, 255, 0.4)",
-            }}
-            transition={{ duration: 0.3 }}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
 // ─── Hero Section ───
 
 export function HeroSection({ data }: { data: HeroData }) {
@@ -405,11 +335,6 @@ export function HeroSection({ data }: { data: HeroData }) {
             {data.subtitle}
           </motion.p>
         </motion.div>
-
-        {/* Rotating stats — left aligned below subtitle */}
-        <div className="mt-6 max-w-2xl sm:mt-8">
-          <RotatingStats stats={data.stats} />
-        </div>
       </div>
     </section>
   );
