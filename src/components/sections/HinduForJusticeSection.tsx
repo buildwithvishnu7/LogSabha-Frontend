@@ -465,7 +465,7 @@ export function HinduForJusticeSection() {
 
             {/* Pillar Cards — 2×2 grid */}
             <div className="mt-8 grid gap-4 sm:grid-cols-2 sm:gap-5">
-              {hfj.pillars.map((pillar, i) => (
+              {hfj.pillars.map((pillar: Pillar, i: number) => (
                 <PillarCard
                   key={i}
                   pillar={pillar}

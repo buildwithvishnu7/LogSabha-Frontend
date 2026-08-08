@@ -582,7 +582,7 @@ export function SocialPresenceSection() {
 
   const filteredPosts = (() => {
     if (activeFilter !== "all") {
-      return social.posts.filter((p) => p.platform === activeFilter).slice(0, POSTS_PER_FILTER);
+      return social.posts.filter((p: SocialPost) => p.platform === activeFilter).slice(0, POSTS_PER_FILTER);
     }
     const platformKeys = PLATFORMS.filter((p) => p.key !== "all").map((p) => p.key);
     const mixed: SocialPost[] = [];
@@ -590,7 +590,7 @@ export function SocialPresenceSection() {
     while (mixed.length < POSTS_PER_FILTER) {
       for (const key of platformKeys) {
         if (mixed.length >= POSTS_PER_FILTER) break;
-        const post = social.posts.filter((p) => p.platform === key)[round];
+        const post = social.posts.filter((p: SocialPost) => p.platform === key)[round];
         if (post) mixed.push(post);
       }
       round++;
@@ -703,7 +703,7 @@ export function SocialPresenceSection() {
               className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
               layout
             >
-              {filteredPosts.map((post, i) => (
+              {filteredPosts.map((post: SocialPost, i: number) => (
                 <SocialCard key={post.id} post={post} index={i} />
               ))}
             </motion.div>

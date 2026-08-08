@@ -446,7 +446,7 @@ export function ContactSection() {
             </ScrollReveal>
 
             <div className="flex flex-col gap-2">
-              {contact.contactInfo.map((item, i) => (
+              {contact.contactInfo.map((item: ContactItem, i: number) => (
                 <ContactCard key={i} item={item} index={i} />
               ))}
             </div>

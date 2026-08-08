@@ -375,7 +375,7 @@ export function FounderEditorialSection() {
 
         {/* Article Cards */}
         <div className="mt-4 grid gap-3 sm:mt-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-4">
-          {founder.articles.map((article, i) => (
+          {founder.articles.map((article: EditorialArticle, i: number) => (
             <ArticleCard
               key={i}
               article={article}
