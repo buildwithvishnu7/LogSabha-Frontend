@@ -17,6 +17,7 @@ import {
   ScrollReveal,
   ScrollRevealLine,
 } from "@/components/motion/ScrollReveal";
+import { useSocialPresence } from "@/hooks/useSocialPresence";
 
 // ─── Platform Config ───
 
@@ -245,6 +246,13 @@ const SOCIAL_POSTS: SocialPost[] = [
     link: "https://www.facebook.com/logsabha",
   },
 ];
+
+// Used until the API responds, or if it's unreachable.
+const FALLBACK_SOCIAL = {
+  title: "Our",
+  titleHighlight: "Social Presence",
+  posts: SOCIAL_POSTS,
+};
 
 const POSTS_PER_FILTER = 3;
 
@@ -569,10 +577,12 @@ export function StatsBar() {
 
 export function SocialPresenceSection() {
   const [activeFilter, setActiveFilter] = useState("all");
+  const { data } = useSocialPresence();
+  const social = data ?? FALLBACK_SOCIAL;
 
   const filteredPosts = (() => {
     if (activeFilter !== "all") {
-      return SOCIAL_POSTS.filter((p) => p.platform === activeFilter).slice(0, POSTS_PER_FILTER);
+      return social.posts.filter((p) => p.platform === activeFilter).slice(0, POSTS_PER_FILTER);
     }
     const platformKeys = PLATFORMS.filter((p) => p.key !== "all").map((p) => p.key);
     const mixed: SocialPost[] = [];
@@ -580,7 +590,7 @@ export function SocialPresenceSection() {
     while (mixed.length < POSTS_PER_FILTER) {
       for (const key of platformKeys) {
         if (mixed.length >= POSTS_PER_FILTER) break;
-        const post = SOCIAL_POSTS.filter((p) => p.platform === key)[round];
+        const post = social.posts.filter((p) => p.platform === key)[round];
         if (post) mixed.push(post);
       }
       round++;
@@ -656,9 +666,9 @@ export function SocialPresenceSection() {
         <div className="flex flex-col items-center text-center">
           <ScrollReveal delay={0.15}>
             <h2 className="text-2xl font-extrabold text-gray-900 sm:text-3xl lg:text-4xl">
-              Our{" "}
+              {social.title}{" "}
               <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">
-                Social Presence
+                {social.titleHighlight}
               </span>
             </h2>
           </ScrollReveal>

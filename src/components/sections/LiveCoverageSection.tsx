@@ -7,6 +7,7 @@ import {
 } from "@/components/motion/ScrollReveal";
 import { LoopingIcon } from "@/components/LoopingIcon";
 import BroadcastIcon from "@/components/ui/broadcast-icon";
+import { useLiveCoverage } from "@/hooks/useLiveCoverage";
 
 // ─── Inline Lottie Icon ───
 function LiveLottieIcon({ src, size = 18, color = "#f59e0b" }: { src: string; size?: number; color?: string }) {
@@ -39,44 +40,35 @@ function LiveLottieIcon({ src, size = 18, color = "#f59e0b" }: { src: string; si
 // ─── Data ───
 
 interface SpeechVideo {
-  id: string;
+  id?: string;
   title: string;
   speaker: string;
   videoSrc: string;
 }
 
-const MAIN_VIDEO = {
-  tag: "Parliament",
-  title: "PM Modi's Remarks in Lok Sabha — Parliament Session",
-  youtubeUrl: "https://www.youtube.com/watch?v=kTB6g92Usmw",
-};
+interface MainVideo {
+  tag: string;
+  title: string;
+  youtubeUrl: string;
+}
 
-const RECENT_SPEECHES: SpeechVideo[] = [
-  {
-    id: "speech-1",
-    title: "PM Modi Makes Akhilesh Yadav Laugh — Witty Remarks Lighten Up Lok Sabha Debate",
-    speaker: "Parliament Session July 2024",
-    videoSrc: "/videos/modis-speech.mp4",
-  },
-  {
-    id: "speech-2",
-    title: "PM Modi's Fiery Address on National Unity — Motion of Thanks in Lok Sabha",
-    speaker: "Parliament Session January 2025",
-    videoSrc: "/videos/pm-modi-speech.mp4",
-  },
-  {
-    id: "speech-3",
-    title: "'Is PM Modi God?' Mallikarjun Kharge's Sharp Dig At Govt Ahead Of Parliament Speech",
-    speaker: "Budget Session February 2025",
-    videoSrc: "/videos/is-pm-modi-god.mp4",
-  },
-  {
-    id: "speech-4",
-    title: "Winter Session: Future in India — Nitin Gadkari Explains Growth, Safety & Rules in Lok Sabha",
-    speaker: "Winter Session December 2024",
-    videoSrc: "/videos/winter-session-v.mp4",
-  },
-];
+// Used until the API responds, or if it's unreachable.
+const FALLBACK_LIVE = {
+  title: "Live",
+  titleHighlight: "Political Coverage",
+  subtitle: "Watch live sessions and recent parliamentary speeches",
+  mainVideo: {
+    tag: "Parliament",
+    title: "PM Modi's Remarks in Lok Sabha — Parliament Session",
+    youtubeUrl: "https://www.youtube.com/watch?v=kTB6g92Usmw",
+  } as MainVideo,
+  speeches: [
+    { title: "PM Modi Makes Akhilesh Yadav Laugh — Witty Remarks Lighten Up Lok Sabha Debate", speaker: "Parliament Session July 2024", videoSrc: "/videos/modis-speech.mp4" },
+    { title: "PM Modi's Fiery Address on National Unity — Motion of Thanks in Lok Sabha", speaker: "Parliament Session January 2025", videoSrc: "/videos/pm-modi-speech.mp4" },
+    { title: "'Is PM Modi God?' Mallikarjun Kharge's Sharp Dig At Govt Ahead Of Parliament Speech", speaker: "Budget Session February 2025", videoSrc: "/videos/is-pm-modi-god.mp4" },
+    { title: "Winter Session: Future in India — Nitin Gadkari Explains Growth, Safety & Rules in Lok Sabha", speaker: "Winter Session December 2024", videoSrc: "/videos/winter-session-v.mp4" },
+  ] as SpeechVideo[],
+};
 
 // ─── Live Pulse Dot ───
 
@@ -114,9 +106,11 @@ function getYouTubeEmbedUrl(url: string, autoplay = true): string {
 function MainVideoPlayer({
   isPausedByHover,
   iframeRef,
+  mainVideo,
 }: {
   isPausedByHover: boolean;
   iframeRef: React.RefObject<HTMLIFrameElement | null>;
+  mainVideo: MainVideo;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
@@ -159,8 +153,8 @@ function MainVideoPlayer({
       {inView && (
         <iframe
           ref={iframeRef}
-          src={getYouTubeEmbedUrl(MAIN_VIDEO.youtubeUrl)}
-          title={MAIN_VIDEO.title}
+          src={getYouTubeEmbedUrl(mainVideo.youtubeUrl)}
+          title={mainVideo.title}
           className="absolute inset-0 h-full w-full"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
@@ -174,7 +168,7 @@ function MainVideoPlayer({
       {/* Tag */}
       <div className="pointer-events-none absolute top-4 left-4 z-10">
         <span className="rounded-md bg-amber-500/90 px-3 py-1 text-[11px] font-bold tracking-wide text-white uppercase backdrop-blur-sm">
-          {MAIN_VIDEO.tag}
+          {mainVideo.tag}
         </span>
       </div>
 
@@ -193,7 +187,7 @@ function MainVideoPlayer({
       {/* Title overlay */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 p-5 sm:p-6">
         <h3 className="text-lg font-bold text-white sm:text-xl lg:text-2xl">
-          {MAIN_VIDEO.title}
+          {mainVideo.title}
         </h3>
       </div>
     </motion.div>
@@ -297,6 +291,8 @@ export function LiveCoverageSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const sectionInView = useInView(sectionRef, { margin: "200px 0px 200px 0px" });
   const [speechHovered, setSpeechHovered] = useState(false);
+  const { data } = useLiveCoverage();
+  const live = data ?? FALLBACK_LIVE;
 
   const handleSpeechHoverStart = useCallback(() => setSpeechHovered(true), []);
   const handleSpeechHoverEnd = useCallback(() => setSpeechHovered(false), []);
@@ -321,16 +317,16 @@ export function LiveCoverageSection() {
           <div>
             <ScrollReveal>
               <h2 className="text-2xl font-extrabold text-gray-900 sm:text-3xl lg:text-4xl">
-                Live{" "}
+                {live.title}{" "}
                 <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 bg-clip-text text-transparent">
-                  Political Coverage
+                  {live.titleHighlight}
                 </span>
               </h2>
             </ScrollReveal>
 
             <ScrollReveal delay={0.15}>
               <p className="mt-1.5 text-xs leading-relaxed text-gray-500 sm:text-sm lg:text-base">
-                Watch live sessions and recent parliamentary speeches
+                {live.subtitle}
               </p>
             </ScrollReveal>
           </div>
@@ -357,7 +353,11 @@ export function LiveCoverageSection() {
 
         {/* ── Main Video ── */}
         <div className="mt-3 lg:mt-4">
-          <MainVideoPlayer isPausedByHover={speechHovered} iframeRef={mainIframeRef} />
+          <MainVideoPlayer
+            isPausedByHover={speechHovered}
+            iframeRef={mainIframeRef}
+            mainVideo={live.mainVideo}
+          />
         </div>
 
         {/* ── From the Archives ── */}
@@ -386,8 +386,8 @@ export function LiveCoverageSection() {
           </ScrollReveal>
 
           <div className="scrollbar-hide -mx-4 mt-4 flex gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-4">
-            {RECENT_SPEECHES.map((speech, i) => (
-              <div key={speech.id} className="w-[240px] flex-shrink-0 sm:w-auto">
+            {live.speeches.map((speech, i) => (
+              <div key={i} className="w-[240px] flex-shrink-0 sm:w-auto">
                 <SpeechCard
                   speech={speech}
                   index={i}

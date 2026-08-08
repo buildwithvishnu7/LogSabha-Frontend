@@ -3,6 +3,7 @@ import { motion, useInView } from "motion/react";
 
 import { loadLottieInView } from "@/lib/lottie";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
+import { useHinduForJustice } from "@/hooks/useHinduForJustice";
 
 // ─── Lottie icon for HFJ pillars ───
 const hfjLottieCache: Record<string, object> = {};
@@ -61,43 +62,55 @@ function HfjColorLottieIcon({ src, size = 18, color = "#d97706" }: { src: string
 
 // ─── Data ───
 
-const PILLARS = [
-  {
-    lottieSrc: "/lottie/justice.json",
-    title: "Justice & Equality",
-    description:
-      "Advocating for equitable treatment and constitutional rights for all communities within the democratic framework.",
-    color: "#f97316",
-  },
-  {
-    lottieSrc: "/lottie/museum.json",
-    title: "Cultural Preservation",
-    description:
-      "Preserving India's rich cultural heritage and promoting awareness of historical traditions and values.",
-    color: "#f97316",
-  },
-  {
-    lottieSrc: "/lottie/heart.json",
-    title: "Social Welfare",
-    description:
-      "Community-driven welfare programs focusing on education, healthcare, and economic empowerment.",
-    color: "#f97316",
-  },
-  {
-    lottieSrc: "/lottie/shield.json",
-    title: "Legal Advocacy",
-    description:
-      "Providing legal support and advocacy for issues affecting community rights and social justice.",
-    color: "#f97316",
-  },
-];
+interface Pillar {
+  lottieSrc: string;
+  title: string;
+  description: string;
+}
 
-const TYPEWRITER_PHRASES = [
-  "Social Justice & Community Welfare Initiative",
-  "Empowering Communities Through Unity",
-  "Defending Constitutional Rights for All",
-  "Building a Just & Equitable Society",
-];
+// Used until the API responds, or if it's unreachable.
+const FALLBACK_HFJ = {
+  logo: "/logo/HFJ-logo-final-new.gif",
+  title: "Hindu For",
+  titleHighlight: "Justice",
+  image: "/images/HFF.jpeg",
+  mission:
+    "Committed to fostering unity, justice, and cultural awareness through community-driven initiatives across India.",
+  ctaLabel: "Read More",
+  ctaLink: "#",
+  typewriterPhrases: [
+    "Social Justice & Community Welfare Initiative",
+    "Empowering Communities Through Unity",
+    "Defending Constitutional Rights for All",
+    "Building a Just & Equitable Society",
+  ],
+  pillars: [
+    {
+      lottieSrc: "/lottie/justice.json",
+      title: "Justice & Equality",
+      description:
+        "Advocating for equitable treatment and constitutional rights for all communities within the democratic framework.",
+    },
+    {
+      lottieSrc: "/lottie/museum.json",
+      title: "Cultural Preservation",
+      description:
+        "Preserving India's rich cultural heritage and promoting awareness of historical traditions and values.",
+    },
+    {
+      lottieSrc: "/lottie/heart.json",
+      title: "Social Welfare",
+      description:
+        "Community-driven welfare programs focusing on education, healthcare, and economic empowerment.",
+    },
+    {
+      lottieSrc: "/lottie/shield.json",
+      title: "Legal Advocacy",
+      description:
+        "Providing legal support and advocacy for issues affecting community rights and social justice.",
+    },
+  ] as Pillar[],
+};
 
 // ─── Multi-Phrase Typewriter ───
 
@@ -163,7 +176,7 @@ function PillarCard({
   index,
   triggered,
 }: {
-  pillar: (typeof PILLARS)[0];
+  pillar: Pillar;
   index: number;
   triggered: boolean;
 }) {
@@ -272,6 +285,8 @@ export function HinduForJusticeSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: false, amount: 0.15 });
   const [triggered, setTriggered] = useState(false);
+  const { data } = useHinduForJustice();
+  const hfj = data ?? FALLBACK_HFJ;
 
   useEffect(() => {
     setTriggered(isInView);
@@ -385,7 +400,7 @@ export function HinduForJusticeSection() {
                   }}
                 >
                   <motion.img
-                    src="/logo/HFJ-logo-final-new.gif"
+                    src={hfj.logo}
                     alt="Hindu For Justice"
                     className="h-16 w-16 rounded-xl object-contain shadow-md sm:h-20 sm:w-20"
                     whileHover={{ scale: 1.2, rotate: 15 }}
@@ -409,7 +424,7 @@ export function HinduForJusticeSection() {
                 </motion.div>
                 <div>
                   <h2 className="text-2xl font-extrabold text-gray-900 sm:text-3xl lg:text-4xl">
-                    Hindu For{" "}
+                    {hfj.title}{" "}
                     <motion.span
                       className="inline-block bg-clip-text text-transparent"
                       style={{
@@ -434,12 +449,12 @@ export function HinduForJusticeSection() {
                         ease: "easeInOut",
                       }}
                     >
-                      Justice
+                      {hfj.titleHighlight}
                     </motion.span>
                   </h2>
                   <p className="mt-0.5 text-sm font-medium text-gray-500 sm:text-base">
                     <TypewriterText
-                      phrases={TYPEWRITER_PHRASES}
+                      phrases={hfj.typewriterPhrases}
                       triggered={triggered}
                       className="text-xs font-medium text-gray-500 sm:text-sm lg:text-base"
                     />
@@ -450,9 +465,9 @@ export function HinduForJusticeSection() {
 
             {/* Pillar Cards — 2×2 grid */}
             <div className="mt-8 grid gap-4 sm:grid-cols-2 sm:gap-5">
-              {PILLARS.map((pillar, i) => (
+              {hfj.pillars.map((pillar, i) => (
                 <PillarCard
-                  key={pillar.title}
+                  key={i}
                   pillar={pillar}
                   index={i}
                   triggered={triggered}
@@ -470,7 +485,7 @@ export function HinduForJusticeSection() {
               transition={{ duration: 0.4 }}
             >
               <img
-                src="/images/HFF.jpeg"
+                src={hfj.image}
                 alt="Hindu For Justice"
                 className="h-full min-h-[260px] w-full object-cover"
                 onError={(e) => {
@@ -549,11 +564,10 @@ export function HinduForJusticeSection() {
               }}
             >
               <p className="text-sm leading-relaxed text-gray-600">
-                Committed to fostering unity, justice, and cultural awareness
-                through community-driven initiatives across India.
+                {hfj.mission}
               </p>
               <motion.a
-                href="#"
+                href={hfj.ctaLink}
                 className="relative mt-3 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-amber-500/20 transition-shadow hover:shadow-lg hover:shadow-amber-500/30"
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.97 }}
@@ -569,7 +583,7 @@ export function HinduForJusticeSection() {
                   animate={{ scale: [1, 1.03, 1], opacity: [1, 0.2, 1] }}
                   transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
                 />
-                Read More
+                {hfj.ctaLabel}
                 <HfjColorLottieIcon src="/lottie/fast-forward.json" size={22} color="#ffffff" />
               </motion.a>
             </motion.div>

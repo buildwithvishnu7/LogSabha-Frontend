@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import { loadLottieInView } from "@/lib/lottie";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
+import { useContact } from "@/hooks/useContact";
 
 // ─── Lottie icon for contact cards ───
 const contactLottieCache: Record<string, object> = {};
@@ -38,34 +39,27 @@ function ContactLottieIcon({ src, size = 22, color = "#f97316" }: { src: string;
 
 // ─── Data ───
 
-const CONTACT_INFO = [
-  {
-    lottieSrc: "/lottie/location.json",
-    label: "Noida Office",
-    lines: ["206 Second Floor, Tower 1, Assotech Business Cresterra, Plot No-22, Sector 135, Noida - 201301, Uttar Pradesh, India"],
-    color: "#f97316",
-  },
-  {
-    lottieSrc: "/lottie/location.json",
-    label: "Lucknow Office",
-    lines: ["Vibhuti Khand, Gomti Nagar, Lucknow - 226010, Uttar Pradesh, India"],
-    color: "#f97316",
-  },
-  {
-    lottieSrc: "/lottie/message.json",
-    label: "Email",
-    lines: ["logsabhabharat@gmail.com"],
-    color: "#22c55e",
-    href: "mailto:logsabhabharat@gmail.com",
-  },
-  {
-    lottieSrc: "/lottie/contact.json",
-    label: "Phone",
-    lines: ["+91 9839773333"],
-    color: "#3b82f6",
-    href: "tel:+919839773333",
-  },
-];
+interface ContactItem {
+  lottieSrc: string;
+  label: string;
+  lines: string[];
+  color: string;
+  href?: string;
+}
+
+// Used until the API responds, or if it's unreachable.
+const FALLBACK_CONTACT = {
+  title: "Get in",
+  titleHighlight: "Touch",
+  description:
+    "Have questions about political analytics, campaign strategies, or partnership opportunities? Our team is ready to assist you. Reach out through any of the channels below.",
+  contactInfo: [
+    { lottieSrc: "/lottie/location.json", label: "Noida Office", lines: ["206 Second Floor, Tower 1, Assotech Business Cresterra, Plot No-22, Sector 135, Noida - 201301, Uttar Pradesh, India"], color: "#f97316" },
+    { lottieSrc: "/lottie/location.json", label: "Lucknow Office", lines: ["Vibhuti Khand, Gomti Nagar, Lucknow - 226010, Uttar Pradesh, India"], color: "#f97316" },
+    { lottieSrc: "/lottie/message.json", label: "Email", lines: ["logsabhabharat@gmail.com"], color: "#22c55e", href: "mailto:logsabhabharat@gmail.com" },
+    { lottieSrc: "/lottie/contact.json", label: "Phone", lines: ["+91 9839773333"], color: "#3b82f6", href: "tel:+919839773333" },
+  ] as ContactItem[],
+};
 
 const TYPEWRITER_PHRASES = [
   "We'd love to hear from you...",
@@ -208,7 +202,7 @@ function ContactCard({
   item,
   index,
 }: {
-  item: (typeof CONTACT_INFO)[0];
+  item: ContactItem;
   index: number;
 }) {
   const content = (
@@ -276,6 +270,8 @@ function ContactCard({
 export function ContactSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: false, amount: 0.2 });
+  const { data } = useContact();
+  const contact = data ?? FALLBACK_CONTACT;
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -329,9 +325,9 @@ export function ContactSection() {
         <div className="flex flex-col items-center text-center">
           <ScrollReveal>
             <h2 className="text-2xl font-extrabold text-white sm:text-3xl lg:text-4xl">
-              Get in{" "}
+              {contact.title}{" "}
               <span className="bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">
-                Touch
+                {contact.titleHighlight}
               </span>
             </h2>
           </ScrollReveal>
@@ -445,15 +441,13 @@ export function ContactSection() {
           <div className="flex flex-col gap-5">
             <ScrollReveal delay={0.1} direction="right">
               <p className="text-sm leading-relaxed text-slate-400">
-                Have questions about political analytics, campaign strategies, or
-                partnership opportunities? Our team is ready to assist you. Reach
-                out through any of the channels below.
+                {contact.description}
               </p>
             </ScrollReveal>
 
             <div className="flex flex-col gap-2">
-              {CONTACT_INFO.map((item, i) => (
-                <ContactCard key={item.label} item={item} index={i} />
+              {contact.contactInfo.map((item, i) => (
+                <ContactCard key={i} item={item} index={i} />
               ))}
             </div>
 

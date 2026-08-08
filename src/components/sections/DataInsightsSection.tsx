@@ -7,6 +7,7 @@ import {
   animate,
 } from "motion/react";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
+import { useDataInsights } from "@/hooks/useDataInsights";
 
 // ─── Continuous Looping Typewriter ───
 
@@ -17,13 +18,13 @@ const DATA_TYPEWRITER_PHRASES = [
   "From voter turnout to coalition patterns — data tells the story of India's elections.",
 ];
 
-function LoopingTypewriter({ className }: { className?: string }) {
+function LoopingTypewriter({ className, phrases = DATA_TYPEWRITER_PHRASES }: { className?: string; phrases?: string[] }) {
   const ref = useRef<HTMLParagraphElement>(null);
   const isInView = useInView(ref, { once: false, amount: 0.5 });
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [displayedCount, setDisplayedCount] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
-  const currentPhrase = DATA_TYPEWRITER_PHRASES[phraseIndex];
+  const currentPhrase = phrases[phraseIndex % phrases.length];
   const chars = useMemo(() => [...currentPhrase], [currentPhrase]);
 
   useEffect(() => {
@@ -36,7 +37,7 @@ function LoopingTypewriter({ className }: { className?: string }) {
 
     if (isDeleting && displayedCount === 0) {
       setIsDeleting(false);
-      setPhraseIndex((i) => (i + 1) % DATA_TYPEWRITER_PHRASES.length);
+      setPhraseIndex((i) => (i + 1) % phrases.length);
       return;
     }
 
@@ -1116,6 +1117,8 @@ export function DataInsightsSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: false, amount: 0.2 });
   const triggered = isInView;
+  const { data } = useDataInsights();
+  const bottomStats = data?.bottomStats ?? BOTTOM_STATS;
 
   return (
     <section
@@ -1143,10 +1146,10 @@ export function DataInsightsSection() {
         <div className="flex flex-col items-center text-center">
           <ScrollReveal>
             <h2 className="overflow-visible bg-gradient-to-r from-orange-400 via-amber-400 to-orange-500 bg-clip-text pb-2 text-2xl leading-tight font-extrabold text-transparent sm:text-3xl lg:text-4xl">
-              Data Insights &amp; Analytics
+              {data?.title ?? "Data Insights & Analytics"}
             </h2>
           </ScrollReveal>
-          <LoopingTypewriter className="mt-2 max-w-xl text-xs text-gray-500 sm:text-sm lg:text-base" />
+          <LoopingTypewriter phrases={data?.typewriterPhrases} className="mt-2 max-w-xl text-xs text-gray-500 sm:text-sm lg:text-base" />
           <ScrollReveal delay={0.25}>
             <div className="mt-5 h-[3px] w-12 rounded-full bg-blue-500" />
           </ScrollReveal>
@@ -1167,8 +1170,8 @@ export function DataInsightsSection() {
 
         {/* ── Bottom Stats ── */}
         <div className="mt-6 grid grid-cols-2 gap-4 sm:mt-8 md:grid-cols-4">
-          {BOTTOM_STATS.map((stat, i) => (
-            <StatCard key={stat.label} stat={stat} index={i} />
+          {bottomStats.map((stat: (typeof BOTTOM_STATS)[0], i: number) => (
+            <StatCard key={i} stat={stat} index={i} />
           ))}
         </div>
       </div>

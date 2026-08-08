@@ -3,6 +3,8 @@ import { motion, useInView } from "motion/react";
 import { Users, BookOpen, Heart, Play, Pause } from "lucide-react";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
 import { loadLottieInView } from "@/lib/lottie";
+import { useNewsTicker } from "@/hooks/useNewsTicker";
+import { useRss } from "@/hooks/useRss";
 
 // ─── Lottie icon for RSS pillars ───
 const rssLottieCache: Record<string, object> = {};
@@ -59,7 +61,9 @@ const TYPEWRITER_PHRASES = [
 // ─── Infinite Ticker ───
 
 export function Ticker() {
-  const items = [...TICKER_ITEMS, ...TICKER_ITEMS];
+  const { data } = useNewsTicker();
+  const tickerItems: string[] = data?.items?.length ? data.items : TICKER_ITEMS;
+  const items = [...tickerItems, ...tickerItems];
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { margin: "200px 0px 200px 0px" });
 
@@ -71,7 +75,7 @@ export function Ticker() {
 
       <motion.div
         className="flex whitespace-nowrap py-3.5"
-        animate={inView ? { x: [0, `-${(100 / items.length) * TICKER_ITEMS.length}%`] } : undefined}
+        animate={inView ? { x: [0, `-${(100 / items.length) * tickerItems.length}%`] } : undefined}
         transition={{
           x: {
             duration: 25,
@@ -179,6 +183,20 @@ const PILLARS = [
   },
 ];
 
+// Used until the API responds, or if it's unreachable.
+const FALLBACK_RSS = {
+  logo: "/logo/rss.gif",
+  title: "राष्ट्रीय स्वयंसेवक संघ",
+  tagline: "वह शुरुआत जिसने भारत को नई दिशा दी",
+  description:
+    "आज राष्ट्रीय स्वयंसेवक संघ भारत के सबसे बड़े स्वयंसेवी संगठनों में से एक माना जाता है। इसके कार्य और प्रभाव को समझने के लिए उसके मूल विचार, स्थापना की पृष्ठभूमि और संस्थापक दृष्टि को जानना आवश्यक है।",
+  videoSrc: "/videos/RSS-vid.mp4",
+  ctaLabel: "और जानें",
+  ctaLink: "#",
+  typewriterPhrases: TYPEWRITER_PHRASES,
+  pillars: PILLARS,
+};
+
 function PillarCard({
   pillar,
   index,
@@ -276,7 +294,7 @@ function PillarCard({
 
 // ─── Video Player ───
 
-function VideoPlayer({ triggered }: { triggered: boolean }) {
+function VideoPlayer({ triggered, videoSrc }: { triggered: boolean; videoSrc: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -323,7 +341,7 @@ function VideoPlayer({ triggered }: { triggered: boolean }) {
         preload="metadata"
         poster=""
       >
-        <source src="/videos/RSS-vid.mp4" type="video/mp4" />
+        <source src={videoSrc} type="video/mp4" />
       </video>
 
       {/* Play/Pause overlay */}
@@ -363,6 +381,8 @@ export function RSSSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: false, amount: 0.2 });
   const [triggered, setTriggered] = useState(false);
+  const { data } = useRss();
+  const rss = data ?? FALLBACK_RSS;
 
   useEffect(() => {
     setTriggered(isInView);
@@ -479,7 +499,7 @@ export function RSSSection() {
                   {/* Logo + Title */}
                   <div className="flex items-center gap-3">
                     <motion.img
-                      src="/logo/rss.gif"
+                      src={rss.logo}
                       alt="RSS"
                       className="h-11 w-11 object-contain sm:h-13 sm:w-13"
                       animate={
@@ -527,7 +547,7 @@ export function RSSSection() {
                         ease: "easeInOut",
                       }}
                     >
-                      राष्ट्रीय स्वयंसेवक संघ
+                      {rss.title}
                     </motion.h2>
                   </div>
 
@@ -558,29 +578,26 @@ export function RSSSection() {
                       ease: "easeInOut",
                     }}
                   >
-                    वह शुरुआत जिसने भारत को नई दिशा दी
+                    {rss.tagline}
                   </motion.p>
 
                   {/* Subheading — Multi-phrase Typewriter */}
                   <TypewriterText
-                    phrases={TYPEWRITER_PHRASES}
+                    phrases={rss.typewriterPhrases}
                     triggered={triggered}
                     className="mt-3 text-sm font-bold text-gray-800"
                   />
 
                   {/* Description */}
                   <p className="mt-2 text-xs leading-relaxed text-gray-500 sm:text-sm lg:text-base">
-                    आज राष्ट्रीय स्वयंसेवक संघ भारत के सबसे बड़े स्वयंसेवी संगठनों
-                    में से एक माना जाता है। इसके कार्य और प्रभाव को समझने के लिए
-                    उसके मूल विचार, स्थापना की पृष्ठभूमि और संस्थापक दृष्टि को जानना
-                    आवश्यक है।
+                    {rss.description}
                   </p>
 
                   {/* Pillars */}
                   <div className="mt-4 flex gap-2 sm:gap-3">
-                    {PILLARS.map((pillar, i) => (
+                    {rss.pillars.map((pillar: (typeof PILLARS)[0], i: number) => (
                       <PillarCard
-                        key={pillar.label}
+                        key={i}
                         pillar={pillar}
                         index={i}
                         triggered={triggered}
@@ -590,7 +607,7 @@ export function RSSSection() {
 
                   {/* CTA — breathing glow + pulse ring */}
                   <motion.a
-                    href="#"
+                    href={rss.ctaLink}
                     className="relative mt-4 inline-flex items-center gap-2 rounded-xl bg-orange-500 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-orange-600"
                     animate={
                       triggered
@@ -622,14 +639,14 @@ export function RSSSection() {
                       animate={triggered ? { scale: [1, 1.03, 1], opacity: [1, 0.2, 1] } : undefined}
                       transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
                     />
-                    और जानें
+                    {rss.ctaLabel}
                     <RssLottieIcon src="/lottie/fast-forward.json" size={22} color="#ffffff" />
                   </motion.a>
                 </div>
 
                 {/* Right: Video */}
                 <div className="relative h-[280px] overflow-hidden rounded-xl bg-orange-950/5 sm:h-[340px] lg:absolute lg:inset-y-0 lg:right-0 lg:h-auto lg:w-[380px] xl:w-[420px]">
-                  <VideoPlayer triggered={triggered} />
+                  <VideoPlayer triggered={triggered} videoSrc={rss.videoSrc} />
                 </div>
               </div>
             </div>

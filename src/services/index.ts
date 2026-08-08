@@ -1,9 +1,8 @@
 // ┌─────────────────────────────────────────────────────┐
 // │  DATA SOURCE SWAP POINT                             │
 // │                                                     │
-// │  Currently: static data from src/data/              │
-// │  To switch to API: change "./static" → "./api"      │
-// │  That's it — zero component changes needed.         │
+// │  Now: live Public API (with static fallback).       │
+// │  To go back to pure static: change "./api" → "./static".│
 // └─────────────────────────────────────────────────────┘
 
-export { getHomeData, getGlobalData } from "./static";
+export { getHomeData, getGlobalData, getParties } from "./api";

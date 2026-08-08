@@ -82,6 +82,22 @@ export interface ServicesData {
   services: ServiceItem[];
 }
 
+// ─── Political Parties ───
+export interface PoliticalParty {
+  id: string;
+  shortName: string;
+  fullName: string;
+  established: number;
+  logo: string;
+  backgroundImage: string;
+  themeColor: string;
+  themeColorRgb: string;
+  description: string;
+  lokSabhaSeats: number;
+  statesRuled: number;
+  president: string;
+}
+
 // ─── Generic Section ───
 export interface SectionData {
   id: string;

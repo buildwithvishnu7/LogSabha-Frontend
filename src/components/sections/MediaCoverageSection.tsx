@@ -9,6 +9,7 @@ import {
   useInViewSection,
   useSectionInView,
 } from "@/components/motion/InViewSection";
+import { useMediaCoverage } from "@/hooks/useMediaCoverage";
 
 // ─── News Channel Logos (scrolling ticker) ───
 
@@ -60,10 +61,18 @@ const MEDIA_ITEMS: MediaItem[] = [
   },
 ];
 
+// Used until the API responds, or if it's unreachable.
+const FALLBACK_MEDIA = {
+  title: "Media Coverage",
+  subtitle: "Featured across India's leading news networks",
+  newsLogos: NEWS_LOGOS,
+  mediaItems: MEDIA_ITEMS,
+};
+
 // ─── Logo Ticker ───
 
-function LogoTicker() {
-  const doubled = [...NEWS_LOGOS, ...NEWS_LOGOS, ...NEWS_LOGOS];
+function LogoTicker({ logos }: { logos: { name: string; src: string }[] }) {
+  const doubled = [...logos, ...logos, ...logos];
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { margin: "200px 0px 200px 0px" });
 
@@ -411,6 +420,8 @@ export function MonumentBorder() {
 export function MediaCoverageSection() {
   const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null);
   const { ref: sectionRef, inView } = useInViewSection();
+  const { data } = useMediaCoverage();
+  const media = data ?? FALLBACK_MEDIA;
 
   return (
     <SectionInViewProvider value={inView}>
@@ -452,14 +463,14 @@ export function MediaCoverageSection() {
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                 style={{ backgroundSize: "200% 200%" }}
               >
-                Media Coverage
+                {media.title}
               </motion.span>
             </h2>
           </ScrollReveal>
 
           <ScrollReveal delay={0.1}>
             <p className="mt-1.5 text-xs text-gray-500 sm:text-sm lg:text-base">
-              Featured across India's leading news networks
+              {media.subtitle}
             </p>
           </ScrollReveal>
         </div>
@@ -471,22 +482,22 @@ export function MediaCoverageSection() {
 
         {/* ── Logo Ticker ── */}
         <ScrollReveal delay={0.15}>
-          <LogoTicker />
+          <LogoTicker logos={media.newsLogos} />
         </ScrollReveal>
 
         {/* ── Media Grid ── */}
         <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4 lg:gap-5">
-          {MEDIA_ITEMS.map((item, i) =>
+          {media.mediaItems.map((item: MediaItem, i: number) =>
             item.type === "image" ? (
               <MediaImageCard
-                key={item.id}
+                key={i}
                 item={item}
                 index={i}
                 onImageClick={(src, alt) => setLightbox({ src, alt })}
               />
             ) : (
               <MediaVideoCard
-                key={item.id}
+                key={i}
                 item={item}
                 index={i}
               />

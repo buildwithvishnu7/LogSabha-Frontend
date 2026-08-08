@@ -19,6 +19,7 @@ import {
 import { LoopingIcon } from "@/components/LoopingIcon";
 import UsersIcon from "@/components/ui/users-icon";
 import MessageCircleIcon from "@/components/ui/message-circle-icon";
+import { useCommunity } from "@/hooks/useCommunity";
 
 // ─── Badge Lottie Icon ───
 function BadgeLottie({ src, size = 16, color = "#d97706", bold = false }: { src: string; size?: number; color?: string | null; bold?: boolean }) {
@@ -189,6 +190,13 @@ const TRENDING_TOPICS: TrendingTopic[] = [
     gradient: "from-emerald-900/90 via-teal-900/80 to-emerald-950/90",
   },
 ];
+
+// Used until the API responds, or if it's unreachable.
+const FALLBACK_COMMUNITY = {
+  title: "Join the Conversation",
+  posts: POSTS,
+  trendingTopics: TRENDING_TOPICS,
+};
 
 // ─── Slot Machine Animation ───
 
@@ -654,6 +662,8 @@ function TrendingTopicCard({
 export function CommunitySection() {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { margin: "200px 0px 200px 0px" });
+  const { data } = useCommunity();
+  const community = data ?? FALLBACK_COMMUNITY;
   return (
     <section ref={sectionRef} className="relative overflow-hidden bg-white py-4 sm:py-6 lg:py-8">
       {/* Dot pattern background */}
@@ -673,7 +683,7 @@ export function CommunitySection() {
         <div className="flex flex-col items-center text-center">
           <ScrollReveal>
             <h2 className="community-title-shimmer text-2xl font-extrabold sm:text-3xl lg:text-4xl">
-              Join the Conversation
+              {community.title}
             </h2>
           </ScrollReveal>
 
@@ -720,7 +730,7 @@ export function CommunitySection() {
               </div>
             </ScrollReveal>
 
-            <ScrollingPosts posts={POSTS} />
+            <ScrollingPosts posts={community.posts} />
           </div>
 
           {/* Right: Sidebar — stretch to match posts height */}
@@ -809,7 +819,7 @@ export function CommunitySection() {
                 </div>
 
                 <div className="flex flex-1 flex-col gap-3">
-                  {TRENDING_TOPICS.map((topic, i) => (
+                  {community.trendingTopics.map((topic: TrendingTopic, i: number) => (
                     <TrendingTopicCard
                       key={topic.name}
                       topic={topic}

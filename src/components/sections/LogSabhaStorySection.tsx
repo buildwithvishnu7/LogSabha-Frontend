@@ -6,6 +6,7 @@ import {
 } from "@/components/motion/InViewSection";
 import { Users, FileText, TrendingUp } from "lucide-react";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
+import { useLogSabhaStory } from "@/hooks/useLogSabhaStory";
 
 // ─── Slot Machine Drum Digit (spins through 0-9 twice then lands) ───
 
@@ -169,7 +170,19 @@ function ShimmerText({
 
 // ─── Quote Shimmer Border ───
 
-function QuoteBox({ triggered }: { triggered: boolean }) {
+function QuoteBox({
+  triggered,
+  quote,
+  author,
+  subheading,
+  description,
+}: {
+  triggered: boolean;
+  quote: string;
+  author: string;
+  subheading: string;
+  description: string;
+}) {
   return (
     <ScrollReveal delay={0.2}>
       <div className="relative mx-auto max-w-4xl overflow-hidden rounded-2xl border-2 border-amber-500/50 bg-black/40 px-4 py-4 backdrop-blur-md sm:px-6 sm:py-5">
@@ -192,11 +205,8 @@ function QuoteBox({ triggered }: { triggered: boolean }) {
           animate={triggered ? { opacity: 1 } : {}}
           transition={{ duration: 1, delay: 0.5 }}
         >
-          &ldquo;Non-violence has to be observed in thought, word and deed. The measure of our
-          non-violence will be the measure of our success.&rdquo;
-          <span className="mt-1 block text-amber-400 not-italic">
-            — Sardar Vallabhbhai Patel
-          </span>
+          &ldquo;{quote}&rdquo;
+          <span className="mt-1 block text-amber-400 not-italic">— {author}</span>
         </motion.p>
 
         {/* Subheading */}
@@ -206,9 +216,7 @@ function QuoteBox({ triggered }: { triggered: boolean }) {
           animate={triggered ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, delay: 0.8 }}
         >
-          <ShimmerText speed={5}>
-            Beyond Predictions: Shaping the Future of Indian Politics
-          </ShimmerText>
+          <ShimmerText speed={5}>{subheading}</ShimmerText>
         </motion.h3>
 
         {/* Description */}
@@ -218,11 +226,7 @@ function QuoteBox({ triggered }: { triggered: boolean }) {
           animate={triggered ? { opacity: 1 } : {}}
           transition={{ duration: 1, delay: 1.1 }}
         >
-          The LogSabha&apos;s success goes beyond simply predicting Loksabha and state election
-          results. We are committed to providing comprehensive political analysis, conducting
-          in-depth surveys, and developing effective campaign strategies. This comprehensive
-          approach has made us a trusted partner for political parties, media houses, and
-          businesses alike.
+          {description}
         </motion.p>
       </div>
     </ScrollReveal>
@@ -231,16 +235,37 @@ function QuoteBox({ triggered }: { triggered: boolean }) {
 
 // ─── Main Section ───
 
-const STATS = [
-  { value: 10, suffix: "M+", label: "Citizens Empowered", icon: Users, color: "#f59e0b" },
-  { value: 500, suffix: "+", label: "Data Reports", icon: FileText, color: "#fb923c" },
-  { value: 95, suffix: "%", label: "Accuracy Rate", icon: TrendingUp, color: "#f97316" },
-];
+// icon NAME (from the API) → lucide component
+const STAT_ICONS: Record<string, typeof Users> = {
+  users: Users,
+  "file-text": FileText,
+  "trending-up": TrendingUp,
+};
+const STAT_COLORS = ["#f59e0b", "#fb923c", "#f97316"];
+
+// Used until the API responds, or if it's unreachable.
+const FALLBACK_STORY = {
+  title: "The LogSabha Story",
+  backgroundImage: "/images/LogSabhaStory.png",
+  quote:
+    "Non-violence has to be observed in thought, word and deed. The measure of our non-violence will be the measure of our success.",
+  quoteAuthor: "Sardar Vallabhbhai Patel",
+  subheading: "Beyond Predictions: Shaping the Future of Indian Politics",
+  description:
+    "The LogSabha's success goes beyond simply predicting Loksabha and state election results. We are committed to providing comprehensive political analysis, conducting in-depth surveys, and developing effective campaign strategies. This comprehensive approach has made us a trusted partner for political parties, media houses, and businesses alike.",
+  stats: [
+    { value: 10, suffix: "M+", label: "Citizens Empowered", icon: "users" },
+    { value: 500, suffix: "+", label: "Data Reports", icon: "file-text" },
+    { value: 95, suffix: "%", label: "Accuracy Rate", icon: "trending-up" },
+  ],
+};
 
 export function LogSabhaStorySection() {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: false, amount: 0.15 });
   const [triggered, setTriggered] = useState(false);
+  const { data } = useLogSabhaStory();
+  const story = data ?? FALLBACK_STORY;
 
   useEffect(() => {
     setTriggered(isInView);
@@ -252,7 +277,7 @@ export function LogSabhaStorySection() {
       {/* Background image */}
       <div className="absolute inset-0">
         <img
-          src="/images/LogSabhaStory.png"
+          src={story.backgroundImage}
           alt=""
           className="h-full w-full object-cover"
         />
@@ -298,23 +323,29 @@ export function LogSabhaStorySection() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
           <ShimmerText className="text-2xl font-extrabold sm:text-3xl lg:text-4xl" speed={5}>
-            The LogSabha Story
+            {story.title}
           </ShimmerText>
         </motion.h2>
 
         {/* Quote Box */}
-        <QuoteBox triggered={triggered} />
+        <QuoteBox
+          triggered={triggered}
+          quote={story.quote}
+          author={story.quoteAuthor}
+          subheading={story.subheading}
+          description={story.description}
+        />
 
         {/* Stats */}
         <div className="mt-4 flex flex-wrap justify-center gap-3 sm:gap-4 lg:gap-6">
-          {STATS.map((stat, i) => (
+          {story.stats.map((stat: any, i: number) => (
             <SlotMachineStat
               key={stat.label}
-              endValue={stat.value}
+              endValue={Number(stat.value)}
               suffix={stat.suffix}
               label={stat.label}
-              icon={stat.icon}
-              iconColor={stat.color}
+              icon={STAT_ICONS[stat.icon] ?? Users}
+              iconColor={STAT_COLORS[i % STAT_COLORS.length]}
               triggered={triggered}
               delay={i * 200}
             />

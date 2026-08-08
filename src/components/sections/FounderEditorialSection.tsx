@@ -3,6 +3,7 @@ import { motion, useInView } from "motion/react";
 import { Calendar } from "lucide-react";
 import { loadLottieInView } from "@/lib/lottie";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
+import { useFounderEditorial } from "@/hooks/useFounderEditorial";
 
 // ─── Inline Lottie Icon ───
 function FounderLottieIcon({ src, size = 18, color = "#ffffff" }: { src: string; size?: number; color?: string }) {
@@ -35,35 +36,38 @@ function FounderLottieIcon({ src, size = 18, color = "#ffffff" }: { src: string;
 // ─── Data ───
 
 interface EditorialArticle {
-  id: string;
+  id?: string;
   title: string;
   image: string;
   date: string;
 }
 
-const ARTICLES: EditorialArticle[] = [
-  {
-    id: "fe-1",
-    title:
-      "निःस्वार्थ सेवा की भावना में अमर हुआ कर्तव्य: लेफ्टिनेंट शशांक तिवारी",
-    image: "/images/editorial/featured.jpg",
-    date: "June 12, 2026",
-  },
-  {
-    id: "fe-2",
-    title:
-      "रियो से ऋषिकेश: आचार्य विश्वनाथ जोनास मसेती की सनातन धर्म यात्रा",
-    image: "/images/editorial/regional.webp",
-    date: "June 11, 2026",
-  },
-  {
-    id: "fe-3",
-    title:
-      "उपरबेड़ा से राष्ट्रपति भवन तक: राष्ट्रपति द्रौपदी मुर्मू की प्रेरणादायक कहानी",
-    image: "/images/editorial/parliament.webp",
-    date: "June 11, 2026",
-  },
-];
+// Used until the API responds, or if it's unreachable.
+const FALLBACK_FOUNDER = {
+  title: "कलम का संकल्प, संदीप (शिवा) संस्थापक, लोगसभा",
+  subtitle: "ना झुके, ना रुके - धर्म, राष्ट्र और संस्कृति के लिए समर्पित संकल्प |",
+  backgroundVideo: "/videos/candle-bg.mp4",
+  backgroundPoster: "/images/tri-bg.jpg",
+  ctaLabel: "Read More",
+  ctaLink: "#",
+  articles: [
+    {
+      title: "निःस्वार्थ सेवा की भावना में अमर हुआ कर्तव्य: लेफ्टिनेंट शशांक तिवारी",
+      image: "/images/editorial/featured.jpg",
+      date: "June 12, 2026",
+    },
+    {
+      title: "रियो से ऋषिकेश: आचार्य विश्वनाथ जोनास मसेती की सनातन धर्म यात्रा",
+      image: "/images/editorial/regional.webp",
+      date: "June 11, 2026",
+    },
+    {
+      title: "उपरबेड़ा से राष्ट्रपति भवन तक: राष्ट्रपति द्रौपदी मुर्मू की प्रेरणादायक कहानी",
+      image: "/images/editorial/parliament.webp",
+      date: "June 11, 2026",
+    },
+  ] as EditorialArticle[],
+};
 
 // ─── Candle Flame (SVG) ───
 
@@ -230,6 +234,8 @@ export function FounderEditorialSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: false, amount: 0.15 });
   const [triggered, setTriggered] = useState(false);
+  const { data } = useFounderEditorial();
+  const founder = data ?? FALLBACK_FOUNDER;
 
   useEffect(() => {
     setTriggered(isInView);
@@ -254,9 +260,9 @@ export function FounderEditorialSection() {
           muted
           playsInline
           className="absolute inset-0 h-full w-full object-cover"
-          poster="/images/tri-bg.jpg"
+          poster={founder.backgroundPoster}
         >
-          <source src="/videos/candle-bg.mp4" type="video/mp4" />
+          <source src={founder.backgroundVideo} type="video/mp4" />
         </video>
         {/* Dark overlay to keep text readable */}
         <div className="absolute inset-0 bg-black/60" />
@@ -350,7 +356,7 @@ export function FounderEditorialSection() {
                 ease: "easeInOut",
               }}
             >
-              कलम का संकल्प, संदीप (शिवा) संस्थापक, लोगसभा
+              {founder.title}
             </motion.span>
           </h2>
         </ScrollReveal>
@@ -358,8 +364,7 @@ export function FounderEditorialSection() {
         {/* Subtitle */}
         <ScrollReveal delay={0.15}>
           <p className="mx-auto mt-2 max-w-xl text-center text-[10px] leading-relaxed text-amber-200/50 sm:text-xs lg:text-sm">
-            ना झुके, ना रुके - धर्म, राष्ट्र और संस्कृति के लिए समर्पित संकल्प
-            |
+            {founder.subtitle}
           </p>
         </ScrollReveal>
 
@@ -370,9 +375,9 @@ export function FounderEditorialSection() {
 
         {/* Article Cards */}
         <div className="mt-4 grid gap-3 sm:mt-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-4">
-          {ARTICLES.map((article, i) => (
+          {founder.articles.map((article, i) => (
             <ArticleCard
-              key={article.id}
+              key={i}
               article={article}
               index={i}
               triggered={triggered}
@@ -384,7 +389,7 @@ export function FounderEditorialSection() {
         <ScrollReveal delay={0.5}>
           <div className="mt-4 flex justify-center sm:mt-5">
             <motion.a
-              href="#"
+              href={founder.ctaLink}
               className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full border border-amber-500/50 bg-gradient-to-r from-amber-600/20 to-orange-600/20 px-8 py-3 text-sm font-semibold text-amber-400 backdrop-blur-sm transition-all hover:border-amber-400 hover:text-white"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}
@@ -421,7 +426,7 @@ export function FounderEditorialSection() {
                 }}
               />
               <span className="relative z-10 flex items-center gap-2">
-                Read More
+                {founder.ctaLabel}
                 <FounderLottieIcon src="/lottie/fast-forward.json" size={22} color="#fbbf24" />
               </span>
             </motion.a>

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, forwardRef } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { Menu, X } from "lucide-react";
 // AnimatedIcons no longer needed — using Flaticon Lottie for all header icons
@@ -81,6 +81,8 @@ export function FlatIcon({ src, size = 24, className = "" }: { src: string; size
 }
 import { cn } from "@/lib/utils";
 import { useGlobalData } from "@/hooks/useGlobalData";
+import { useAuthStore } from "@/stores/authStore";
+import { logoutUser } from "@/services/auth";
 
 // ─── Typewriter placeholder search input ───
 const PLACEHOLDER_PHRASES = [
@@ -160,7 +162,21 @@ export function Header() {
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const accountContainerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
+  const navigate = useNavigate();
+  const user = useAuthStore((s) => s.user);
   const hasAnimated = useRef(false);
+
+  const go = (path: string) => {
+    setAccountOpen(false);
+    setMobileMenuOpen(false);
+    navigate(path);
+  };
+  const onLogout = async () => {
+    setAccountOpen(false);
+    setMobileMenuOpen(false);
+    await logoutUser();
+    navigate("/");
+  };
 
   const isActive = (href: string) => {
     if (href === "/") return location.pathname === "/";
@@ -565,35 +581,67 @@ export function Header() {
                   transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
                   className="absolute right-0 top-full mt-2 w-44 overflow-hidden rounded-xl border border-gray-200 bg-white p-1.5 shadow-lg sm:w-48"
                 >
-                  <motion.button
-                    whileHover={{ backgroundColor: "rgba(245, 158, 11, 0.08)", x: 4 }}
-                    className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-left text-sm text-gray-600 transition-colors hover:text-gray-900"
-                  >
-                    <motion.div whileHover={{ rotate: 15 }}>
-                      <LottieIcon src="/lottie/add-user.json" size={24} color="#f59e0b" />
-                    </motion.div>
-                    Login
-                  </motion.button>
-                  <motion.button
-                    whileHover={{ backgroundColor: "rgba(245, 158, 11, 0.08)", x: 4 }}
-                    className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-left text-sm text-gray-600 transition-colors hover:text-gray-900"
-                  >
-                    <motion.svg
-                      className="h-4 w-4 text-amber-500"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      whileHover={{ rotate: 15 }}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
-                      />
-                    </motion.svg>
-                    Sign Up
-                  </motion.button>
+                  {user ? (
+                    <>
+                      <div className="px-3 pb-1.5 pt-1 text-xs text-gray-400">
+                        Signed in as{" "}
+                        <span className="font-medium text-gray-600">
+                          {user.name}
+                        </span>
+                      </div>
+                      <motion.button
+                        whileHover={{ backgroundColor: "rgba(245, 158, 11, 0.08)", x: 4 }}
+                        onClick={() => go("/account")}
+                        className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-left text-sm text-gray-600 transition-colors hover:text-gray-900"
+                      >
+                        <motion.div whileHover={{ rotate: 15 }}>
+                          <LottieIcon src="/lottie/add-user.json" size={24} color="#f59e0b" />
+                        </motion.div>
+                        My Account
+                      </motion.button>
+                      <motion.button
+                        whileHover={{ backgroundColor: "rgba(239, 68, 68, 0.08)", x: 4 }}
+                        onClick={onLogout}
+                        className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-left text-sm text-gray-600 transition-colors hover:text-red-600"
+                      >
+                        Log out
+                      </motion.button>
+                    </>
+                  ) : (
+                    <>
+                      <motion.button
+                        whileHover={{ backgroundColor: "rgba(245, 158, 11, 0.08)", x: 4 }}
+                        onClick={() => go("/login")}
+                        className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-left text-sm text-gray-600 transition-colors hover:text-gray-900"
+                      >
+                        <motion.div whileHover={{ rotate: 15 }}>
+                          <LottieIcon src="/lottie/add-user.json" size={24} color="#f59e0b" />
+                        </motion.div>
+                        Login
+                      </motion.button>
+                      <motion.button
+                        whileHover={{ backgroundColor: "rgba(245, 158, 11, 0.08)", x: 4 }}
+                        onClick={() => go("/signup")}
+                        className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-left text-sm text-gray-600 transition-colors hover:text-gray-900"
+                      >
+                        <motion.svg
+                          className="h-4 w-4 text-amber-500"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          whileHover={{ rotate: 15 }}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+                          />
+                        </motion.svg>
+                        Sign Up
+                      </motion.button>
+                    </>
+                  )}
                 </motion.div>
               )}
             </AnimatePresence>
@@ -717,15 +765,25 @@ export function Header() {
                   </svg>
                 </motion.button>
 
-                {/* Login / Sign Up */}
+                {/* Login / Sign Up / Account */}
                 <motion.button
+                  onClick={() => go(user ? "/account" : "/login")}
                   className="mt-3 flex w-full items-center justify-center gap-2 rounded-full bg-amber-500 py-3 text-sm font-semibold text-white shadow-lg shadow-amber-500/25"
                   whileTap={{ scale: 0.97 }}
                   whileHover={{ boxShadow: "0 0 20px rgba(245,158,11,0.4)" }}
                 >
                   <LottieIcon src="/lottie/add-user.json" size={18} color="#ffffff" />
-                  Login / Sign Up
+                  {user ? "My Account" : "Login / Sign Up"}
                 </motion.button>
+                {user && (
+                  <motion.button
+                    onClick={onLogout}
+                    className="mt-2 flex w-full items-center justify-center gap-2 rounded-full border border-gray-200 py-2.5 text-sm font-medium text-gray-600"
+                    whileTap={{ scale: 0.97 }}
+                  >
+                    Log out
+                  </motion.button>
+                )}
               </div>
             </motion.div>
           </>

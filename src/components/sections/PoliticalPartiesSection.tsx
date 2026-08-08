@@ -34,25 +34,12 @@ function BadgeLottieIcon({ src, size = 18, color = "#f59e0b" }: { src: string; s
 import { AnimatedLucideIcon } from "@/components/AnimatedLucideIcon";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
 import { useCountUp } from "@/hooks/useCountUp";
+import { useParties } from "@/hooks/useParties";
+import type { PoliticalParty } from "@/types";
 
-// ─── Party Data ───
+// ─── Party Data (fallback, used only if the Public API is unreachable) ───
 
-export interface PoliticalParty {
-  id: string;
-  shortName: string;
-  fullName: string;
-  established: number;
-  logo: string;
-  backgroundImage: string;
-  themeColor: string;
-  themeColorRgb: string;
-  description: string;
-  lokSabhaSeats: number;
-  statesRuled: number;
-  president: string;
-}
-
-const PARTIES: PoliticalParty[] = [
+const FALLBACK_PARTIES: PoliticalParty[] = [
   {
     id: "bjp",
     shortName: "BJP",
@@ -574,6 +561,11 @@ function PartyStrip({
 // ─── Main Section ───
 
 export function PoliticalPartiesSection() {
+  // Live parties from the Public API; fall back to the bundled list if the API
+  // is unreachable so the section never renders empty.
+  const { data: partiesFromApi } = useParties();
+  const PARTIES = partiesFromApi ?? FALLBACK_PARTIES;
+
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: false, amount: 0.2 });
   const [triggered, setTriggered] = useState(false);
@@ -596,7 +588,7 @@ export function PoliticalPartiesSection() {
     const totalWidth =
       (PARTIES.length - 1) * (cardWidths.collapsed + gap) + cardWidths.expanded;
     return Math.max(0, totalWidth - el.clientWidth);
-  }, [cardWidths]);
+  }, [cardWidths, PARTIES.length]);
 
   const canScrollLeft = scrollOffset > 5;
   const canScrollRight = getMaxScroll() > 0 && scrollOffset < getMaxScroll() - 5;
@@ -606,7 +598,7 @@ export function PoliticalPartiesSection() {
     autoTimerRef.current = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % PARTIES.length);
     }, 3500);
-  }, []);
+  }, [PARTIES.length]);
 
   useEffect(() => {
     if (triggered && !isUserHovering) {

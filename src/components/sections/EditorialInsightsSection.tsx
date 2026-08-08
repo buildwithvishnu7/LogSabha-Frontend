@@ -13,6 +13,7 @@ import {
   ScrollReveal,
   ScrollRevealLine,
 } from "@/components/motion/ScrollReveal";
+import { useEditorialInsights } from "@/hooks/useEditorialInsights";
 
 // ─── Inline Lottie Icon ───
 function LottieIcon({ src, size = 18, color = "#ffffff" }: { src: string; size?: number; color?: string }) {
@@ -147,13 +148,21 @@ const TYPEWRITER_PHRASES = [
   "Your window into the evolving story of Indian governance and democratic progress.",
 ];
 
-function LoopingTypewriter({ className }: { className?: string }) {
+// Used until the API responds, or if it's unreachable.
+const FALLBACK_EDITORIAL = {
+  title: "Editorial Insights",
+  typewriterPhrases: TYPEWRITER_PHRASES,
+  featured: FEATURED_ARTICLE,
+  articles: SIDEBAR_ARTICLES,
+};
+
+function LoopingTypewriter({ className, phrases = TYPEWRITER_PHRASES }: { className?: string; phrases?: string[] }) {
   const ref = useRef<HTMLParagraphElement>(null);
   const isInView = useInView(ref, { once: false, amount: 0.5 });
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [displayedCount, setDisplayedCount] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
-  const currentPhrase = TYPEWRITER_PHRASES[phraseIndex];
+  const currentPhrase = phrases[phraseIndex % phrases.length];
   const chars = useMemo(() => [...currentPhrase], [currentPhrase]);
 
   useEffect(() => {
@@ -166,7 +175,7 @@ function LoopingTypewriter({ className }: { className?: string }) {
 
     if (isDeleting && displayedCount === 0) {
       setIsDeleting(false);
-      setPhraseIndex((i) => (i + 1) % TYPEWRITER_PHRASES.length);
+      setPhraseIndex((i) => (i + 1) % phrases.length);
       return;
     }
 
@@ -664,6 +673,8 @@ function ScrollingSidebar({ articles }: { articles: Article[] }) {
 
 export function EditorialInsightsSection() {
   const { ref, inView } = useInViewSection();
+  const { data } = useEditorialInsights();
+  const editorial = data ?? FALLBACK_EDITORIAL;
   return (
     <SectionInViewProvider value={inView}>
     <section ref={ref} className="relative overflow-hidden bg-gradient-to-b from-white via-amber-50/20 to-white py-4 sm:py-6 lg:py-8">
@@ -699,7 +710,7 @@ export function EditorialInsightsSection() {
           <ScrollReveal delay={0.15}>
             <h2 className="overflow-visible pb-1 text-2xl font-extrabold leading-tight text-gray-900 sm:text-3xl lg:text-4xl">
               <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 bg-clip-text text-transparent">
-                Editorial Insights
+                {editorial.title}
               </span>
             </h2>
           </ScrollReveal>
@@ -709,7 +720,7 @@ export function EditorialInsightsSection() {
             className="mx-auto mt-2 h-[3px] w-12 rounded-full bg-amber-500"
           />
 
-          <LoopingTypewriter className="mt-2 max-w-xl text-xs leading-relaxed text-gray-500 sm:text-sm lg:text-base" />
+          <LoopingTypewriter phrases={editorial.typewriterPhrases} className="mt-2 max-w-xl text-xs leading-relaxed text-gray-500 sm:text-sm lg:text-base" />
         </div>
 
         {/* ── Content Grid ── */}
@@ -733,7 +744,7 @@ export function EditorialInsightsSection() {
               visible: { opacity: 1, x: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
             }}
           >
-            <FeaturedCard article={FEATURED_ARTICLE} />
+            <FeaturedCard article={editorial.featured} />
           </motion.div>
 
           {/* Right: Scrollable Sidebar */}
@@ -744,7 +755,7 @@ export function EditorialInsightsSection() {
             }}
           >
             <div className="lg:h-[580px] lg:overflow-hidden lg:rounded-2xl lg:border lg:border-gray-100 lg:bg-white lg:p-2 lg:shadow-sm">
-              <ScrollingSidebar articles={SIDEBAR_ARTICLES} />
+              <ScrollingSidebar articles={editorial.articles} />
             </div>
           </motion.div>
         </motion.div>
