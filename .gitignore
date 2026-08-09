@@ -34,3 +34,6 @@ dist-ssr
 # Next.js
 .next/
 next-env.d.ts
+
+# Designer reference prototype (283MB, not source)
+reference/
