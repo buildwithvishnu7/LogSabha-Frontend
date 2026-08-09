@@ -1,3 +1,8 @@
+"use client";
+
+// Homepage — same composition as the Vite app's routes/Home.tsx.
+// "use client" here makes every imported section a client component (they're
+// all animation-heavy); Next still server-renders their HTML for SEO.
 import { useHomeData } from "@/hooks/useHomeData";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { PoliticalLandscapeSection } from "@/components/sections/PoliticalLandscapeSection";
@@ -13,7 +18,10 @@ import { SocialPresenceSection } from "@/components/sections/SocialPresenceSecti
 import { HinduForJusticeSection } from "@/components/sections/HinduForJusticeSection";
 import { FounderEditorialSection } from "@/components/sections/FounderEditorialSection";
 import { EditorialInsightsSection } from "@/components/sections/EditorialInsightsSection";
-import { MediaCoverageSection, MonumentBorder } from "@/components/sections/MediaCoverageSection";
+import {
+  MediaCoverageSection,
+  MonumentBorder,
+} from "@/components/sections/MediaCoverageSection";
 import { Footer } from "@/components/Footer";
 import { FloatingChatButton } from "@/components/FloatingChatButton";
 

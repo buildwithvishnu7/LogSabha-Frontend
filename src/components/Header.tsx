@@ -1,5 +1,8 @@
+"use client";
+
 import { useState, useEffect, useRef, forwardRef } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { Menu, X } from "lucide-react";
 // AnimatedIcons no longer needed — using Flaticon Lottie for all header icons
@@ -161,26 +164,26 @@ export function Header() {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const accountContainerRef = useRef<HTMLDivElement>(null);
-  const location = useLocation();
-  const navigate = useNavigate();
+  const pathname = usePathname();
+  const router = useRouter();
   const user = useAuthStore((s) => s.user);
   const hasAnimated = useRef(false);
 
   const go = (path: string) => {
     setAccountOpen(false);
     setMobileMenuOpen(false);
-    navigate(path);
+    router.push(path);
   };
   const onLogout = async () => {
     setAccountOpen(false);
     setMobileMenuOpen(false);
     await logoutUser();
-    navigate("/");
+    router.push("/");
   };
 
   const isActive = (href: string) => {
-    if (href === "/") return location.pathname === "/";
-    return location.pathname === href || location.pathname.startsWith(href + "/");
+    if (href === "/") return pathname === "/";
+    return pathname === href || pathname.startsWith(href + "/");
   };
 
   useEffect(() => {
@@ -201,7 +204,7 @@ export function Header() {
 
   useEffect(() => {
     setMobileMenuOpen(false);
-  }, [location.pathname]);
+  }, [pathname]);
 
   useEffect(() => {
     if (searchOpen && searchInputRef.current) {
@@ -270,7 +273,7 @@ export function Header() {
 
       <div className="mx-auto flex h-14 max-w-[1440px] items-center justify-between px-3 sm:h-16 sm:px-6 md:h-20 lg:h-24 lg:px-8 xl:px-12">
         {/* Logo — sits OUTSIDE the parallelogram shape */}
-        <Link to="/" className="relative z-10 flex-shrink-0">
+        <Link href="/" className="relative z-10 flex-shrink-0">
           <img
             src={logoSrc}
             alt="The LogSabha"
@@ -291,7 +294,7 @@ export function Header() {
                 ease: [0.16, 1, 0.3, 1],
               }}
             >
-              <Link to={link.href}>
+              <Link href={link.href}>
                 <motion.span
                   className={cn(
                     "group relative inline-block rounded-lg px-2.5 py-2 text-[13px] font-medium transition-colors duration-500 xl:px-3 xl:text-sm",
@@ -738,7 +741,7 @@ export function Header() {
                     transition={{ delay: 0.1 + i * 0.04, duration: 0.3 }}
                   >
                     <Link
-                      to={link.href}
+                      href={link.href}
                       onClick={() => setMobileMenuOpen(false)}
                       className={cn(
                         "block border-b border-gray-50 py-3.5 text-[15px] font-medium text-gray-700 transition-colors hover:text-amber-600",

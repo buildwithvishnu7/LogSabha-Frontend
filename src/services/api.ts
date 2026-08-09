@@ -7,7 +7,7 @@ import type {
   PoliticalParty,
 } from "@/types";
 
-const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:4000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 
 // Small typed GET against the Public API. Throws on non-2xx so callers can
 // decide whether to fall back.

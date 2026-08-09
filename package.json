@@ -4,10 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
+    "dev": "next dev -p 5173",
+    "build": "next build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "start": "next start -p 5173"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",
@@ -24,10 +24,10 @@
     "lottie-react": "^2.4.1",
     "lucide-react": "^1.17.0",
     "motion": "^12.40.0",
+    "next": "^15.5.23",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-player": "^3.4.0",
-    "react-router-dom": "^7.16.0",
     "tailwind-merge": "^3.6.0",
     "three": "^0.184.0",
     "topojson-client": "^3.1.0",
@@ -35,22 +35,19 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@tailwindcss/vite": "^4.3.0",
+    "@tailwindcss/postcss": "^4.3.3",
     "@types/d3-geo": "^3.1.0",
     "@types/geojson": "^7946.0.16",
     "@types/node": "^24.12.4",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@types/topojson-client": "^3.1.5",
-    "@vitejs/plugin-react": "^6.0.1",
     "eslint": "^10.3.0",
     "eslint-plugin-react-hooks": "^7.1.1",
-    "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.6.0",
     "prettier": "^3.8.3",
     "tailwindcss": "^4.3.0",
     "typescript": "~6.0.2",
-    "typescript-eslint": "^8.59.2",
-    "vite": "^8.0.12"
+    "typescript-eslint": "^8.59.2"
   }
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import {
   ArrowUpRight,
 } from "lucide-react";
@@ -369,7 +369,7 @@ export function Footer() {
             viewport={VIEW_ONCE}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           >
-            <Link to="/" className="inline-flex items-center gap-3">
+            <Link href="/" className="inline-flex items-center gap-3">
               <motion.img
                 src="/logo/mainlogofinal.gif"
                 alt="LogSabha"
@@ -441,7 +441,7 @@ export function Footer() {
                       }}
                     >
                       <Link
-                        to={link.href}
+                        href={link.href}
                         className="footer-link-shimmer-light group inline-flex items-center gap-1 text-sm transition-colors"
                         style={{ animationDelay: `${catIdx * 0.8 + linkIdx * 0.4}s` }}
                       >

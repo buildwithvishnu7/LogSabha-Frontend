@@ -1,10 +1,14 @@
+"use client";
+
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { loginUser } from "@/services/auth";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { registerUser } from "@/services/auth";
 import { AuthCard, Field, SubmitButton } from "@/components/auth/AuthCard";
 
-export default function Login() {
-  const navigate = useNavigate();
+export default function Signup() {
+  const router = useRouter();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -13,12 +17,16 @@ export default function Login() {
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters.");
+      return;
+    }
     setLoading(true);
     try {
-      await loginUser({ email, password });
-      navigate("/account");
+      await registerUser({ name, email, password });
+      router.push("/account");
     } catch (err: any) {
-      setError(err?.message ?? "Sign in failed.");
+      setError(err?.message ?? "Sign up failed.");
     } finally {
       setLoading(false);
     }
@@ -26,18 +34,25 @@ export default function Login() {
 
   return (
     <AuthCard
-      title="Welcome back"
-      subtitle="Sign in to your LogSabha account"
+      title="Create your account"
+      subtitle="Join LogSabha"
       footer={
         <>
-          Don't have an account?{" "}
-          <Link to="/signup" className="font-semibold text-amber-600">
-            Sign up
+          Already have an account?{" "}
+          <Link href="/login" className="font-semibold text-amber-600">
+            Sign in
           </Link>
         </>
       }
     >
       <form onSubmit={onSubmit}>
+        <Field
+          label="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Priya Sharma"
+          required
+        />
         <Field
           label="Email"
           type="email"
@@ -51,11 +66,11 @@ export default function Login() {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="••••••••"
+          placeholder="At least 8 characters"
           required
         />
         {error && <p className="mb-3 text-sm text-red-600">{error}</p>}
-        <SubmitButton loading={loading}>Sign in</SubmitButton>
+        <SubmitButton loading={loading}>Create account</SubmitButton>
       </form>
     </AuthCard>
   );

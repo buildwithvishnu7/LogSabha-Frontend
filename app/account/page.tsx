@@ -1,16 +1,38 @@
-import { useNavigate } from "react-router-dom";
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/authStore";
 import { logoutUser } from "@/services/auth";
 
-// The gated example: only reachable when logged in (see ProtectedRoute).
+// Gated page: client-side redirect when no session. (The API is the real
+// guard — this is UX. Was ProtectedRoute + Account in the Vite app.)
 export default function Account() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const user = useAuthStore((s) => s.user);
+  const accessToken = useAuthStore((s) => s.accessToken);
+
+  // Zustand persist hydrates after mount — gate all auth-dependent UI on
+  // `mounted` so the server HTML and first client render match.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  useEffect(() => {
+    if (mounted && !accessToken) router.replace("/login");
+  }, [mounted, accessToken, router]);
 
   const onLogout = async () => {
     await logoutUser();
-    navigate("/");
+    router.push("/");
   };
+
+  if (!mounted || !accessToken) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gray-50">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-amber-500 border-t-transparent" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 pt-28 pb-12">
@@ -26,8 +48,8 @@ export default function Account() {
         </div>
 
         <div className="mt-8 rounded-xl bg-amber-50 p-4 text-sm text-amber-800">
-          🎉 You're signed in. This page is protected — visiting <code>/account</code>{" "}
-          without a session redirects to login.
+          🎉 You're signed in. This page is protected — visiting{" "}
+          <code>/account</code> without a session redirects to login.
         </div>
 
         <button

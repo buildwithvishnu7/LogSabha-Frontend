@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 // Shared shell for the login / signup screens.
 export function AuthCard({
@@ -15,7 +15,7 @@ export function AuthCard({
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 pt-28 pb-12">
       <div className="w-full max-w-md rounded-2xl border border-gray-100 bg-white p-8 shadow-xl">
-        <Link to="/" className="mb-6 flex justify-center">
+        <Link href="/" className="mb-6 flex justify-center">
           <img
             src="/logo/mainlogofinal.gif"
             alt="LogSabha"
