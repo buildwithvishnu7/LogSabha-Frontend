@@ -6,7 +6,8 @@ export function useCountUp(end: number, duration: number = 3500) {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLSpanElement>(null);
 
-  // Observe viewport visibility — triggers once when scrolled into view
+  // Observe viewport visibility — re-triggers EVERY time the element scrolls
+  // back into view (the observer stays connected on purpose).
   useEffect(() => {
     if (!ref.current) return;
 
@@ -15,7 +16,6 @@ export function useCountUp(end: number, duration: number = 3500) {
         if (entry.isIntersecting) {
           setIsVisible(true);
           setTrigger((t) => t + 1);
-          observer.disconnect();
         }
       },
       { threshold: 0.3 },

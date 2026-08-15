@@ -6,6 +6,7 @@ import { useGlobalData } from "@/hooks/useGlobalData";
 import { fetchMe } from "@/services/auth";
 import { Header } from "@/components/Header";
 import { StickyBadges } from "@/components/sections/HeroSection";
+import { FloatingChatButton } from "@/components/FloatingChatButton";
 
 // Global site chrome: smooth scrolling, session validation, header + badges.
 // (Was AppContent in the Vite app.)
@@ -22,6 +23,7 @@ export function SiteChrome() {
     <>
       <Header />
       {globalData && <StickyBadges badges={globalData.sideBadges} />}
+      <FloatingChatButton />
     </>
   );
 }

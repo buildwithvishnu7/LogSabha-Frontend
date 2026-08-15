@@ -90,7 +90,7 @@ export const homeData: HomePageData = {
           "Target audience identification",
           "Message crafting & positioning",
         ],
-        learnMoreLink: "/services/campaign-strategy",
+        learnMoreLink: "/services#strategy",
       },
       {
         id: "political-analytics",
@@ -108,7 +108,7 @@ export const homeData: HomePageData = {
           "Sentiment analysis & tracking",
           "Demographic profiling",
         ],
-        learnMoreLink: "/services/political-analytics",
+        learnMoreLink: "/services#constituency",
       },
       {
         id: "voter-outreach",
@@ -126,7 +126,7 @@ export const homeData: HomePageData = {
           "Community engagement programs",
           "Volunteer network management",
         ],
-        learnMoreLink: "/services/voter-outreach",
+        learnMoreLink: "/services#campaigning",
       },
       {
         id: "media-management",
@@ -144,7 +144,7 @@ export const homeData: HomePageData = {
           "Social media strategy",
           "Crisis communication response",
         ],
-        learnMoreLink: "/services/media-management",
+        learnMoreLink: "/services#campaigning",
       },
       {
         id: "opposition-research",
@@ -162,7 +162,7 @@ export const homeData: HomePageData = {
           "Policy gap analysis",
           "Historical voting pattern study",
         ],
-        learnMoreLink: "/services/opposition-research",
+        learnMoreLink: "/services#survey",
       },
       {
         id: "digital-campaigns",
@@ -180,7 +180,7 @@ export const homeData: HomePageData = {
           "Content creation & distribution",
           "Online reputation monitoring",
         ],
-        learnMoreLink: "/services/digital-campaigns",
+        learnMoreLink: "/services#campaigning",
       },
     ],
   },

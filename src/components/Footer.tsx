@@ -1,3 +1,8 @@
+"use client";
+
+// Uses hooks and motion, so it is a client component in its own right. Until
+// the first server-component page imported it, every caller was already
+// "use client" and it inherited the boundary — which hid the missing directive.
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import Link from "next/link";
@@ -7,18 +12,20 @@ import {
 
 
 
+// Every href must resolve to a route in app/. Two entries pointed at /news,
+// which has never existed — the editorial archive is /blog.
 const FOOTER_LINKS = {
   Platform: [
     { label: "Political Analysis", href: "/political-analysis" },
     { label: "Campaign Strategy", href: "/services" },
     { label: "Election Data", href: "/political-analysis" },
-    { label: "Media Coverage", href: "/news" },
+    { label: "Hindu For Justice", href: "/hindu-for-justice" },
   ],
   Resources: [
-    { label: "Blog", href: "/blog" },
-    { label: "News", href: "/news" },
+    { label: "Editorial Insights", href: "/blog" },
+    { label: "RSS · 100 Years", href: "/rss" },
+    { label: "Museum Gallery", href: "/rss-museum" },
     { label: "Case Studies", href: "/services" },
-    { label: "Reports", href: "/political-analysis" },
   ],
   Company: [
     { label: "About Us", href: "/about" },

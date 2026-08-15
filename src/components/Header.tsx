@@ -26,6 +26,13 @@ function LottieIcon({ src, size = 24, color = "", className = "" }: { src: strin
       if (!c) return;
       const shapes = el.querySelectorAll("path, circle, rect, line, ellipse, polyline, polygon");
       shapes.forEach((p) => {
+        // Lottie assets ship solid background <rect> layers — recoloring them
+        // paints the whole icon box (the "white pill" bug). Make them invisible.
+        if (p.tagName.toLowerCase() === "rect") {
+          p.setAttribute("fill", "none");
+          p.setAttribute("stroke", "none");
+          return;
+        }
         const stroke = p.getAttribute("stroke");
         if (stroke && stroke !== "none" && stroke !== "transparent") p.setAttribute("stroke", c);
         const fill = p.getAttribute("fill");
@@ -169,6 +176,16 @@ export function Header() {
   const user = useAuthStore((s) => s.user);
   const hasAnimated = useRef(false);
 
+  // Routes whose hero is LIGHT. The unscrolled nav paints its text near-white
+  // through bg-clip-text (built for the homepage's dark video hero), so on a
+  // light hero it renders white-on-white and the nav disappears. Those pages
+  // get the dark treatment from the top instead of only after scrolling.
+  const LIGHT_HERO_ROUTES = ["/services", "/political-analysis"];
+  const lightHero = LIGHT_HERO_ROUTES.some(
+    (r) => pathname === r || pathname.startsWith(r + "/"),
+  );
+  const darkNav = scrolled || lightHero;
+
   const go = (path: string) => {
     setAccountOpen(false);
     setMobileMenuOpen(false);
@@ -282,7 +299,7 @@ export function Header() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden items-center gap-2 xl:flex xl:gap-3">
+        <nav className="hidden items-center gap-2 xl:flex xl:gap-2">
           {navLinks.map((link, i) => (
             <motion.div
               key={link.href}
@@ -297,8 +314,12 @@ export function Header() {
               <Link href={link.href}>
                 <motion.span
                   className={cn(
-                    "group relative inline-block rounded-lg px-2.5 py-2 text-[13px] font-medium transition-colors duration-500 xl:px-3 xl:text-sm",
-                    scrolled ? "text-gray-600" : "text-white/90",
+                    // xl:px-2 rather than xl:px-3: nine nav items need 831px of
+                    // the 835px between the logo and the action icons at the
+                    // 1280px breakpoint where this nav first appears. Trimming
+                    // 4px a side buys ~72px of breathing room.
+                    "group relative inline-block rounded-lg px-2.5 py-2 text-[13px] font-medium transition-colors duration-500 xl:px-2 xl:text-sm",
+                    darkNav ? "text-gray-600" : "text-white/90",
                     isActive(link.href) && "text-amber-600",
                   )}
                   whileHover="hover"
@@ -310,7 +331,7 @@ export function Header() {
                   {/* Border — only on active tab with orbiting animation */}
                   {isActive(link.href) && (
                     <span className="pointer-events-none absolute -inset-[2px] rounded-lg">
-                      <span className={cn("absolute inset-0 rounded-lg border", scrolled ? "border-gray-300/60" : "border-white/20")} />
+                      <span className={cn("absolute inset-0 rounded-lg border", darkNav ? "border-gray-300/60" : "border-white/20")} />
                       <motion.span
                         className="absolute inset-[-1px] rounded-lg"
                         style={{
@@ -333,7 +354,7 @@ export function Header() {
                   <motion.span
                     className={cn(
                       "absolute inset-0 -z-20 rounded-lg",
-                      scrolled ? "bg-amber-50" : "bg-white/10",
+                      darkNav ? "bg-amber-50" : "bg-white/10",
                     )}
                     initial={{ opacity: 0, scale: 0.85 }}
                     animate={isActive(link.href) ? { opacity: 1, scale: 1 } : undefined}
@@ -346,7 +367,7 @@ export function Header() {
                   {/* Shimmer + glow text — continuous animation */}
                   <span
                     className={cn(
-                      scrolled ? "nav-text-shimmer-dark" : "nav-text-shimmer-light",
+                      darkNav ? "nav-text-shimmer-dark" : "nav-text-shimmer-light",
                     )}
                     style={{ animationDelay: `${i * 0.4}s, ${i * 0.4}s` }}
                   >
@@ -437,28 +458,28 @@ export function Header() {
                   onClick={() => setSearchOpen(true)}
                   className={cn(
                     "relative flex h-9 w-9 items-center justify-center rounded-full transition-colors duration-500 sm:h-10 sm:w-10",
-                    scrolled ? "text-gray-500 hover:text-gray-800" : "text-white/80 hover:text-white",
+                    darkNav ? "text-gray-500 hover:text-gray-800" : "text-white/80 hover:text-white",
                   )}
                 >
                   {/* Breathing pulse ring — visible on both backgrounds */}
                   <motion.span
                     className={cn(
                       "absolute inset-[-3px] rounded-full",
-                      scrolled ? "border-2 border-amber-500/70" : "border-2 border-amber-400/50",
+                      darkNav ? "border-2 border-amber-500/70" : "border-2 border-amber-400/50",
                     )}
-                    style={{ boxShadow: scrolled ? "0 0 8px rgba(245,158,11,0.25)" : "0 0 8px rgba(245,158,11,0.15)" }}
+                    style={{ boxShadow: darkNav ? "0 0 8px rgba(245,158,11,0.25)" : "0 0 8px rgba(245,158,11,0.15)" }}
                     animate={{ scale: [1, 1.25, 1], opacity: [0.8, 0.1, 0.8] }}
                     transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                   />
                   <motion.span
                     className={cn(
                       "absolute inset-[-1px] rounded-full",
-                      scrolled ? "border-2 border-amber-500/50" : "border-2 border-amber-400/35",
+                      darkNav ? "border-2 border-amber-500/50" : "border-2 border-amber-400/35",
                     )}
                     animate={{ scale: [1, 1.12, 1], opacity: [1, 0.3, 1] }}
                     transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
                   />
-                  <LottieIcon src="/lottie/search (1).json" size={28} color={scrolled ? "#6b7280" : "#ffffff"} />
+                  <LottieIcon src="/lottie/search (1).json" size={28} color={darkNav ? "#6b7280" : "#ffffff"} />
                 </motion.button>
               )}
             </AnimatePresence>
@@ -506,7 +527,7 @@ export function Header() {
               animate={{ rotate: 360 }}
               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
             >
-              <LottieIcon src="/lottie/worldwide.json" size={24} color={scrolled ? "#6b7280" : "#ffffff"} />
+              <LottieIcon src="/lottie/worldwide.json" size={24} color={darkNav ? "#6b7280" : "#ffffff"} />
             </motion.div>
             <span>EN</span>
             <motion.svg
@@ -540,8 +561,8 @@ export function Header() {
               onClick={() => setAccountOpen(!accountOpen)}
               className={cn(
                 "relative flex h-9 w-9 items-center justify-center rounded-full transition-colors duration-500 sm:h-10 sm:w-10",
-                scrolled ? "text-gray-500 hover:text-gray-800" : "text-white/80 hover:text-white",
-                accountOpen && (scrolled ? "bg-gray-100 text-gray-800" : "bg-white/10 text-white"),
+                darkNav ? "text-gray-500 hover:text-gray-800" : "text-white/80 hover:text-white",
+                accountOpen && (darkNav ? "bg-gray-100 text-gray-800" : "bg-white/10 text-white"),
               )}
             >
               {/* Orbiting highlighted border arc */}
@@ -572,7 +593,7 @@ export function Header() {
                   style={{ transformOrigin: "center" }}
                 />
               </svg>
-              <LottieIcon src="/lottie/add-user.json" size={28} color={scrolled ? "#6b7280" : "#ffffff"} />
+              <LottieIcon src="/lottie/add-user.json" size={28} color={darkNav ? "#6b7280" : "#ffffff"} />
             </motion.button>
 
             <AnimatePresence>
@@ -654,7 +675,7 @@ export function Header() {
           <motion.button
             className={cn(
               "relative z-10 flex h-9 w-9 items-center justify-center rounded-full transition-colors duration-500 xl:hidden",
-              scrolled ? "bg-gray-100/80 text-gray-700" : "bg-white/10 text-white",
+              darkNav ? "bg-gray-100/80 text-gray-700" : "bg-white/10 text-white",
             )}
             whileTap={{ scale: 0.85, rotate: 90 }}
             whileHover={{ scale: 1.1 }}
