@@ -15,6 +15,12 @@ import { Footer } from "@/components/Footer";
 export default function RssPage() {
   return (
     <>
+      {/* Reading progress, driven by the document's own scroll timeline — no
+          listener, no rAF, and it runs off the main thread. */}
+      <div
+        aria-hidden
+        className="sd-progress fixed inset-x-0 top-0 z-50 h-[3px] bg-[#FF7D0A]"
+      />
       <RssHero />
       <FoundationSection />
       <FounderSection />

@@ -6,8 +6,8 @@ import { ArrowDown, ArrowRight, Mail, MapPin, Phone, Check } from "lucide-react"
 import { Typewriter } from "@/components/motion/Typewriter";
 import { contactData } from "@/data/contact";
 
-/* Reference palette: navy hero #0A1E3F, heading #1B3A6B, body #1F2A44,
-   muted #54617C, saffron #E67300, panel #F2F5FA. Sharp 3px shapes. */
+/* Reference palette: navy hero #0B1120, heading #0A0A0A, body #6B7280,
+   muted #9CA3AF, saffron #F59E0B, panel #F5F5F5. Sharp 3px shapes. */
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -19,20 +19,20 @@ export function ContactHero() {
   const { hero } = contactData;
 
   return (
-    <section ref={ref} className="relative overflow-hidden bg-[#0A1E3F] pt-28 sm:pt-32">
+    <section ref={ref} className="relative overflow-hidden bg-[#0B1120] pt-28 sm:pt-32">
       <div className="relative z-10 mx-auto max-w-5xl px-4 pb-12 text-center sm:px-6 sm:pb-14">
         <motion.span
-          className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.22em] text-[#FFD9AE]"
+          className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-wide text-[#FBBF24]"
           initial={{ opacity: 0, y: 12 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.55 }}
         >
-          <span className="h-px w-7 bg-[#E67300]" />
+          <span className="h-px w-7 bg-[#F59E0B]" />
           {hero.kicker}
         </motion.span>
 
         <h1
-          className="mt-4 text-[2.5rem] font-extrabold leading-[1.22] tracking-[1px] sm:text-[3.75rem] lg:text-[4.5rem] text-white"
+          className="mt-4 text-3xl font-extrabold leading-[1.22] tracking-tight text-white sm:text-4xl"
           aria-label={hero.title}
         >
           {hero.title.split("").map((ch, i) => (
@@ -50,7 +50,7 @@ export function ContactHero() {
         </h1>
 
         <motion.p
-          className="mt-4 text-[15px] leading-loose text-[#C9D6EA] sm:text-base"
+          className="mt-4 text-sm leading-relaxed text-[#9CA3AF] sm:text-base"
           initial={{ opacity: 0, y: 16 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, delay: 0.6 }}
@@ -60,8 +60,7 @@ export function ContactHero() {
 
         <motion.a
           href="#enquiry"
-          className="mt-7 inline-flex h-10 w-10 items-center justify-center border border-white/30 text-white"
-          style={{ borderRadius: 3 }}
+          className="mt-7 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/30 text-white"
           initial={{ opacity: 0 }}
           animate={inView ? { opacity: 1 } : {}}
           transition={{ delay: 0.8 }}
@@ -87,10 +86,6 @@ export function ContactHero() {
           className="block h-auto w-full select-none opacity-70"
           width={2561}
           height={218}
-          style={{
-            WebkitMaskImage: "linear-gradient(180deg, transparent 0, #000 30%)",
-            maskImage: "linear-gradient(180deg, transparent 0, #000 30%)",
-          }}
         />
       </motion.div>
     </section>
@@ -123,13 +118,13 @@ function Field({
       viewport={{ once: false, amount: 0.4 }}
       transition={{ duration: 0.5, delay, ease: EASE }}
     >
-      <label htmlFor={id} className="block text-[11px] font-bold tracking-[0.16em] text-[#54617C]">
+      <label htmlFor={id} className="block text-[10px] font-bold uppercase tracking-wide text-[#9CA3AF]">
         {label}
-        {required && <span className="ml-1 text-[#E67300]">*</span>}
+        {required && <span className="ml-1 text-[#F59E0B]">*</span>}
       </label>
       {children}
       {/* Reserve the error row so validation messages never nudge the layout. */}
-      <span className="mt-1 block min-h-[16px] text-[12px] font-medium text-[#C0392B]">
+      <span className="mt-1 block min-h-[16px] text-[12px] font-medium text-[#DC2626]">
         {error ?? ""}
       </span>
     </motion.div>
@@ -137,7 +132,7 @@ function Field({
 }
 
 const inputCls =
-  "mt-1.5 w-full border border-[#14213D]/15 bg-white px-3.5 py-2.5 text-[15px] text-[#1F2A44] outline-none transition-colors placeholder:text-[#9AA6BC] focus:border-[#E67300] focus:ring-2 focus:ring-[#E67300]/20";
+  "mt-1.5 w-full rounded-xl border border-[#E5E7EB] bg-white px-3.5 py-2.5 text-sm text-[#0A0A0A] outline-none transition-colors placeholder:text-[#9CA3AF] focus:border-[#F59E0B] focus:ring-2 focus:ring-[#F59E0B]/30";
 
 export function ContactEnquiry() {
   const { enquiry, offices, mail, phone, form, success } = contactData;
@@ -175,20 +170,20 @@ export function ContactEnquiry() {
 
   return (
     <section id="enquiry" className="scroll-mt-24 bg-white py-14 sm:py-20">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+      <div className="mx-auto max-w-[1440px] px-4 sm:px-6">
         <motion.span
-          className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.22em] text-[#A85200]"
+          className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-wide text-[#D97706]"
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: false, amount: 0.6 }}
           transition={{ duration: 0.55 }}
         >
-          <span className="h-px w-7 bg-[#E67300]" />
+          <span className="h-px w-7 bg-[#F59E0B]" />
           {enquiry.kicker}
         </motion.span>
 
         <motion.h2
-          className="mt-3 text-3xl font-bold leading-[1.2] text-[#1B3A6B] sm:text-[2.8rem]"
+          className="mt-3 text-2xl font-bold leading-[1.25] text-[#0A0A0A] sm:text-3xl"
           initial={{ opacity: 0, y: 22 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: false, amount: 0.5 }}
@@ -198,7 +193,7 @@ export function ContactEnquiry() {
         </motion.h2>
 
         <motion.p
-          className="mt-3 max-w-2xl text-[15px] leading-loose text-[#1F2A44]"
+          className="mt-3 max-w-2xl text-sm leading-relaxed text-[#6B7280]"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: false, amount: 0.4 }}
@@ -218,19 +213,18 @@ export function ContactEnquiry() {
               transition={{ duration: 0.6, ease: EASE }}
             >
               <span
-                className="grid h-11 w-11 shrink-0 place-items-center bg-[#F2F5FA] text-[#E67300]"
-                style={{ borderRadius: 3 }}
+                className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#F5F5F5] text-[#F59E0B]"
               >
                 <MapPin className="h-5 w-5" />
               </span>
               <div>
-                <h3 className="text-lg font-bold text-[#1B3A6B]">Address</h3>
+                <h3 className="text-lg font-bold text-[#0A0A0A]">Address</h3>
                 {offices.map((o) => (
                   <div key={o.label} className="mt-3">
-                    <span className="block text-[11px] font-bold tracking-[0.16em] text-[#A85200]">
+                    <span className="block text-[11px] font-bold tracking-[0.16em] text-[#D97706]">
                       {o.label}
                     </span>
-                    <address className="mt-1 not-italic text-sm leading-relaxed text-[#54617C]">
+                    <address className="mt-1 not-italic text-sm leading-relaxed text-[#9CA3AF]">
                       {o.lines.map((l) => (
                         <span key={l} className="block">
                           {l}
@@ -255,16 +249,15 @@ export function ContactEnquiry() {
                 transition={{ duration: 0.6, delay: 0.1 + i * 0.08, ease: EASE }}
               >
                 <span
-                  className="grid h-11 w-11 shrink-0 place-items-center bg-[#F2F5FA] text-[#E67300]"
-                  style={{ borderRadius: 3 }}
+                  className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#F5F5F5] text-[#F59E0B]"
                 >
                   {row.icon}
                 </span>
                 <div>
-                  <h3 className="text-lg font-bold text-[#1B3A6B]">{row.title}</h3>
+                  <h3 className="text-lg font-bold text-[#0A0A0A]">{row.title}</h3>
                   <a
                     href={row.href}
-                    className="mt-1 inline-block text-[15px] text-[#54617C] underline-offset-4 transition-colors hover:text-[#E67300] hover:underline"
+                    className="mt-1 inline-block text-[15px] text-[#9CA3AF] underline-offset-4 transition-colors hover:text-[#F59E0B] hover:underline"
                   >
                     {row.value}
                   </a>
@@ -275,8 +268,7 @@ export function ContactEnquiry() {
 
           {/* form */}
           <div
-            className="relative border border-[#14213D]/10 bg-[#F2F5FA] p-6 sm:p-8"
-            style={{ borderRadius: 3 }}
+            className="relative rounded-xl border border-[#E5E7EB] bg-[#F5F5F5] p-6 shadow-lg sm:p-8"
           >
             {/* Deliberately NOT AnimatePresence mode="wait" here. That mode holds
                 the outgoing child until its exit animation finishes — and if the
@@ -293,19 +285,18 @@ export function ContactEnquiry() {
                   transition={{ duration: 0.45, ease: EASE }}
                 >
                   <motion.span
-                    className="grid h-14 w-14 place-items-center bg-[#E67300] text-white"
-                    style={{ borderRadius: 3 }}
+                    className="grid h-14 w-14 place-items-center rounded-full bg-[#F59E0B] text-white shadow-[0_0_20px_rgba(245,158,11,0.5)]"
                     initial={{ scale: 0, rotate: -20 }}
                     animate={{ scale: 1, rotate: 0 }}
                     transition={{ type: "spring", stiffness: 260, damping: 16, delay: 0.1 }}
                   >
                     <Check className="h-7 w-7" />
                   </motion.span>
-                  <h3 className="mt-5 text-2xl font-bold text-[#1B3A6B]">{success.title}</h3>
-                  <p className="mt-2 max-w-sm text-[15px] leading-loose text-[#54617C]">{success.body}</p>
+                  <h3 className="mt-5 text-2xl font-bold text-[#0A0A0A]">{success.title}</h3>
+                  <p className="mt-2 max-w-sm text-sm leading-relaxed text-[#9CA3AF]">{success.body}</p>
                   <button
                     onClick={reset}
-                    className="mt-6 inline-flex items-center gap-2 text-[13px] font-bold tracking-[1px] text-[#E67300] transition-colors hover:text-[#A85200]"
+                    className="mt-6 inline-flex items-center gap-2 text-[13px] font-bold tracking-[1px] text-[#F59E0B] transition-colors hover:text-[#D97706] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B] focus-visible:ring-offset-2"
                   >
                     {success.again}
                     <ArrowRight className="h-4 w-4" />
@@ -325,7 +316,6 @@ export function ContactEnquiry() {
                       id="c-name"
                       type="text"
                       className={inputCls}
-                      style={{ borderRadius: 3 }}
                       placeholder={form.fields.name.placeholder}
                       value={values.name}
                       onChange={set("name")}
@@ -337,7 +327,6 @@ export function ContactEnquiry() {
                       id="c-email"
                       type="email"
                       className={inputCls}
-                      style={{ borderRadius: 3 }}
                       placeholder={form.fields.email.placeholder}
                       value={values.email}
                       onChange={set("email")}
@@ -351,7 +340,6 @@ export function ContactEnquiry() {
                       id="c-phone"
                       type="tel"
                       className={inputCls}
-                      style={{ borderRadius: 3 }}
                       placeholder={form.fields.phone.placeholder}
                       value={values.phone}
                       onChange={set("phone")}
@@ -364,7 +352,6 @@ export function ContactEnquiry() {
                       id="c-message"
                       rows={5}
                       className={`${inputCls} resize-y`}
-                      style={{ borderRadius: 3 }}
                       placeholder={form.fields.message.placeholder}
                       value={values.message}
                       onChange={set("message")}
@@ -373,8 +360,7 @@ export function ContactEnquiry() {
 
                   <motion.button
                     type="submit"
-                    className="group relative mt-2 inline-flex items-center gap-2 overflow-hidden bg-[#E67300] px-7 py-3 text-[13px] font-bold tracking-[1.5px] text-white"
-                    style={{ borderRadius: 3 }}
+                    className="group relative mt-2 inline-flex items-center gap-2 overflow-hidden rounded-full bg-[#F59E0B] px-7 py-3 text-[13px] font-bold tracking-wide text-white shadow-[0_0_20px_rgba(245,158,11,0.5)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B] focus-visible:ring-offset-2"
                     whileHover={{ y: -2 }}
                     whileTap={{ scale: 0.97 }}
                   >
@@ -392,7 +378,7 @@ export function ContactEnquiry() {
                     <ArrowRight className="h-4 w-4" />
                   </motion.button>
 
-                  <p className="pt-2 text-[12px] text-[#54617C]">{form.note}</p>
+                  <p className="pt-2 text-[12px] text-[#9CA3AF]">{form.note}</p>
                 </motion.form>
               )}
           </div>

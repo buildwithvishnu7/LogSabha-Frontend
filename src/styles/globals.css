@@ -593,3 +593,103 @@
     transform: scaleX(0.97) skewX(-1deg);
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   SCROLL-DRIVEN ANIMATION LAYER
+   Native CSS scroll timelines (Chrome/Edge 115+, Firefox 132+, Safari 18+).
+   These run OFF the main thread, so they stay smooth under load and never
+   depend on IntersectionObserver — which is what our JS reveals rely on today.
+
+   Everything lives inside @supports so unsupported browsers simply show the
+   content, never a permanently-hidden element. prefers-reduced-motion opts out.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+
+    /* fade + rise as the element enters the viewport */
+    .sd-rise {
+      animation: sd-rise-kf linear both;
+      animation-timeline: view();
+      animation-range: entry 5% cover 32%;
+    }
+    @keyframes sd-rise-kf {
+      from { opacity: 0; transform: translateY(34px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    .sd-fade {
+      animation: sd-fade-kf linear both;
+      animation-timeline: view();
+      animation-range: entry 5% cover 30%;
+    }
+    @keyframes sd-fade-kf { from { opacity: 0 } to { opacity: 1 } }
+
+    /* slide in from the side — for split layouts */
+    .sd-in-left  { animation: sd-in-left-kf  linear both; animation-timeline: view(); animation-range: entry 5% cover 34%; }
+    .sd-in-right { animation: sd-in-right-kf linear both; animation-timeline: view(); animation-range: entry 5% cover 34%; }
+    @keyframes sd-in-left-kf  { from { opacity: 0; transform: translateX(-46px) } to { opacity: 1; transform: none } }
+    @keyframes sd-in-right-kf { from { opacity: 0; transform: translateX(46px)  } to { opacity: 1; transform: none } }
+
+    /* wipe reveal — reads as a curtain lifting off the image */
+    .sd-wipe {
+      animation: sd-wipe-kf linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 38%;
+    }
+    @keyframes sd-wipe-kf {
+      from { clip-path: inset(0 0 100% 0); opacity: .35 }
+      to   { clip-path: inset(0 0 0 0);    opacity: 1 }
+    }
+
+    /* the element drifts against the scroll for the whole time it is on screen */
+    .sd-parallax      { animation: sd-par-kf  linear both; animation-timeline: view(); animation-range: cover; }
+    .sd-parallax-slow { animation: sd-pars-kf linear both; animation-timeline: view(); animation-range: cover; }
+    @keyframes sd-par-kf  { from { transform: translateY(7%)  } to { transform: translateY(-7%)  } }
+    @keyframes sd-pars-kf { from { transform: translateY(3.5%) } to { transform: translateY(-3.5%) } }
+
+    /* slow zoom on a photograph while it crosses the viewport */
+    .sd-kenburns { animation: sd-ken-kf linear both; animation-timeline: view(); animation-range: cover; }
+    @keyframes sd-ken-kf { from { transform: scale(1.1) } to { transform: scale(1) } }
+
+    /* sticky headline that dims and lifts as its section scrolls past */
+    .sd-recede { animation: sd-recede-kf linear both; animation-timeline: view(); animation-range: exit 0% exit 100%; }
+    @keyframes sd-recede-kf { from { opacity: 1; transform: none } to { opacity: 0; transform: translateY(-26px) } }
+
+    /* horizontal rule that draws itself in */
+    .sd-draw { animation: sd-draw-kf linear both; animation-timeline: view(); animation-range: entry 10% cover 26%; transform-origin: left center; }
+    @keyframes sd-draw-kf { from { transform: scaleX(0) } to { transform: scaleX(1) } }
+
+    /* page-level progress: drive a bar off the document scroll timeline */
+    .sd-progress { animation: sd-progress-kf linear both; animation-timeline: scroll(root); transform-origin: left center; }
+    @keyframes sd-progress-kf { from { transform: scaleX(0) } to { transform: scaleX(1) } }
+
+    /* stagger: children step their range so a row resolves left-to-right.
+       Set --sd-n on the child (1..8). */
+    .sd-stagger > * {
+      animation: sd-rise-kf linear both;
+      animation-timeline: view();
+      animation-range: entry calc(2% + (var(--sd-n, 1) * 3%)) cover calc(28% + (var(--sd-n, 1) * 3%));
+    }
+  }
+}
+
+/* Sub-pixel-stable transforms for the animated layers above */
+.sd-rise, .sd-fade, .sd-in-left, .sd-in-right, .sd-wipe,
+.sd-parallax, .sd-parallax-slow, .sd-kenburns, .sd-stagger > * {
+  will-change: transform, opacity;
+}
+
+/* The WebGL chakra fills its layer regardless of when react-three-fiber's
+   ResizeObserver first measures. Without this the canvas can sit at its 300x150
+   intrinsic default if the observer fires late (background tab, slow mount). */
+[data-chakra-3d],
+[data-chakra-3d] > div {
+  width: 100%;
+  height: 100%;
+}
+[data-chakra-3d] canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}

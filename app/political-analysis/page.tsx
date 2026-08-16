@@ -9,6 +9,13 @@ import { Footer } from "@/components/Footer";
 export default function PoliticalAnalysisPage() {
   return (
     <>
+      {/* D4: at 390px this page is ~20,000px tall with no way to gauge position.
+          Progress runs off the document's own scroll timeline — no listener,
+          no rAF, and it stays on the compositor. */}
+      <div
+        aria-hidden
+        className="sd-progress fixed inset-x-0 top-0 z-50 h-[3px] bg-[#F59E0B]"
+      />
       <PaHero />
       <PaBody />
       <Footer />

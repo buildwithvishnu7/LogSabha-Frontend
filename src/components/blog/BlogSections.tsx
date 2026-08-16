@@ -7,8 +7,8 @@ import { ArrowDown, ArrowRight } from "lucide-react";
 import { Typewriter } from "@/components/motion/Typewriter";
 import { blogPosts, blogKinds, type BlogKind, type BlogPost } from "@/data/blog";
 
-/* Reference palette: navy hero #0A1E3F, heading #1B3A6B, body #1F2A44,
-   muted #54617C, saffron #E67300 / #A85200, archive panel #F5F7FB. */
+/* Reference palette: navy hero #0B1120, heading #0A0A0A, body #6B7280,
+   muted #9CA3AF, saffron #F59E0B / #D97706, archive panel #F5F5F5. */
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -30,8 +30,7 @@ export function pick(post: BlogPost, lang: Lang) {
 export function LangToggle({ lang, onChange }: { lang: Lang; onChange: (l: Lang) => void }) {
   return (
     <div
-      className="inline-flex items-center gap-1 border border-white/25 p-1"
-      style={{ borderRadius: 3 }}
+      className="inline-flex items-center gap-1 rounded-full border border-white/25 p-1"
       role="group"
       aria-label="Article language"
     >
@@ -44,15 +43,13 @@ export function LangToggle({ lang, onChange }: { lang: Lang; onChange: (l: Lang)
           onClick={() => onChange(o.id)}
           aria-pressed={lang === o.id}
           className={`relative px-3 py-1 text-[12px] font-bold tracking-wide transition-colors ${
-            lang === o.id ? "text-[#0A1E3F]" : "text-white/70 hover:text-white"
-          }`}
-          style={{ borderRadius: 3 }}
+            lang === o.id ? "text-[#0B1120]" : "text-white/70 hover:text-white"
+          } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B] focus-visible:ring-offset-2`}
         >
           {lang === o.id && (
             <motion.span
               layoutId="blog-lang-pill"
-              className="absolute inset-0 -z-10 bg-[#FFD9AE]"
-              style={{ borderRadius: 3 }}
+              className="absolute inset-0 -z-10 bg-[#FBBF24]"
               transition={{ type: "spring", stiffness: 420, damping: 34 }}
             />
           )}
@@ -71,10 +68,10 @@ function BlogHero({ lang, setLang }: { lang: Lang; setLang: (l: Lang) => void })
   const title = "EDITORIAL INSIGHTS";
 
   return (
-    <section ref={ref} className="relative overflow-hidden bg-[#0A1E3F] pt-28 pb-14 sm:pt-32 sm:pb-16">
+    <section ref={ref} className="relative overflow-hidden bg-[#0B1120] pt-28 pb-14 sm:pt-32 sm:pb-16">
       <div className="relative z-10 mx-auto max-w-5xl px-4 text-center sm:px-6">
         <h1
-          className="text-[2.5rem] font-extrabold leading-[1.22] tracking-[1px] sm:text-[3.75rem] lg:text-[4.5rem] text-white"
+          className="text-3xl font-extrabold leading-[1.22] tracking-tight text-white sm:text-4xl"
           aria-label={title}
         >
           {title.split("").map((ch, i) => (
@@ -92,7 +89,7 @@ function BlogHero({ lang, setLang }: { lang: Lang; setLang: (l: Lang) => void })
         </h1>
 
         <motion.p
-          className="mx-auto mt-5 max-w-2xl text-[15px] leading-loose text-[#C9D6EA] sm:text-base"
+          className="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-[#9CA3AF] sm:text-base"
           initial={{ opacity: 0, y: 16 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, delay: 0.55 }}
@@ -110,7 +107,6 @@ function BlogHero({ lang, setLang }: { lang: Lang; setLang: (l: Lang) => void })
           <a
             href="#latest"
             className="inline-flex h-9 w-9 items-center justify-center border border-white/30 text-white"
-            style={{ borderRadius: 3 }}
             aria-label="Scroll to the latest story"
           >
             <motion.span animate={{ y: [0, 4, 0] }} transition={{ duration: 1.7, repeat: Infinity }}>
@@ -131,18 +127,18 @@ function LeadStory({ post, lang }: { post: BlogPost; lang: Lang }) {
     <section id="latest" className="scroll-mt-24 bg-white py-14 sm:py-20">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <motion.span
-          className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.22em] text-[#A85200]"
+          className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.22em] text-[#D97706]"
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: false, amount: 0.6 }}
           transition={{ duration: 0.55 }}
         >
-          <span className="h-px w-7 bg-[#E67300]" />
+          <span className="h-px w-7 bg-[#F59E0B]" />
           LEAD STORY
         </motion.span>
 
         <motion.h2
-          className="mt-3 text-3xl font-bold leading-[1.2] text-[#1B3A6B] sm:text-[2.6rem]"
+          className="mt-3 text-2xl font-bold leading-[1.25] text-[#0A0A0A] sm:text-3xl"
           initial={{ opacity: 0, y: 22 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: false, amount: 0.5 }}
@@ -155,8 +151,8 @@ function LeadStory({ post, lang }: { post: BlogPost; lang: Lang }) {
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-12">
             {post.img && (
               <motion.figure
-                className="relative overflow-hidden"
-                style={{ borderRadius: 3, maxWidth: post.imgW }}
+                className="relative overflow-hidden rounded-xl"
+                style={{ maxWidth: post.imgW }}
                 initial={{ opacity: 0, y: 26 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: false, amount: 0.25 }}
@@ -179,18 +175,18 @@ function LeadStory({ post, lang }: { post: BlogPost; lang: Lang }) {
               viewport={{ once: false, amount: 0.3 }}
               transition={{ duration: 0.7, delay: 0.1, ease: EASE }}
             >
-              <span className="inline-flex items-center gap-2 text-[11px] font-bold tracking-[0.18em] text-[#A85200]">
+              <span className="inline-flex items-center gap-2 text-[10px] font-bold tracking-wide text-[#D97706]">
                 {c.topic}
-                <span className="h-1 w-1 rounded-full bg-[#E67300]" />
-                <span className="text-[#54617C]">{post.date}</span>
+                <span className="h-1 w-1 rounded-full bg-[#F59E0B]" />
+                <span className="text-[#9CA3AF]">{post.date}</span>
               </span>
-              <h3 className="mt-3 text-xl font-bold leading-[1.5] text-[#1B3A6B] transition-colors group-hover:text-[#E67300] sm:text-2xl">
+              <h3 className="mt-3 text-xl font-bold leading-[1.5] text-[#0A0A0A] transition-colors group-hover:text-[#F59E0B] sm:text-2xl">
                 {c.title}
               </h3>
               {c.note && (
-                <p className="mt-3 text-[15px] leading-loose text-[#1F2A44]">{c.note}</p>
+                <p className="mt-3 text-sm leading-relaxed text-[#6B7280]">{c.note}</p>
               )}
-              <span className="mt-5 inline-flex items-center gap-2 text-[13px] font-bold tracking-[1px] text-[#E67300]">
+              <span className="mt-5 inline-flex items-center gap-2 text-[13px] font-bold tracking-[1px] text-[#F59E0B]">
                 READ THE FULL REPORT
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </span>
@@ -212,12 +208,11 @@ function ArchiveCard({ post, lang, i }: { post: BlogPost; lang: Lang; i: number 
       initial={{ opacity: 0, y: 22 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, delay: Math.min(i, 6) * 0.05, ease: EASE }}
-      className="group flex h-full flex-col border border-[#14213D]/10 bg-white p-5 transition-shadow hover:shadow-[0_16px_36px_-22px_rgba(20,33,61,0.5)]"
-      style={{ borderRadius: 3 }}
+      className="group flex h-full flex-col rounded-xl border border-[#E5E7EB] bg-white p-5 shadow-lg transition-shadow hover:shadow-xl"
     >
       <Link href={`/blog/${post.slug}`} className="flex h-full flex-col">
         {post.img && (
-          <span className="mb-4 block overflow-hidden" style={{ borderRadius: 3 }}>
+          <span className="mb-4 block overflow-hidden">
             <img
               src={post.img}
               alt={post.alt || c.title}
@@ -228,18 +223,18 @@ function ArchiveCard({ post, lang, i }: { post: BlogPost; lang: Lang; i: number 
             />
           </span>
         )}
-        <span className="flex items-center gap-2 text-[10px] font-bold tracking-[0.18em] text-[#A85200]">
+        <span className="flex items-center gap-2 text-[10px] font-bold tracking-[0.18em] text-[#D97706]">
           {c.topic}
-          <span className="h-1 w-1 rounded-full bg-[#E67300]" />
-          <span className="font-semibold text-[#54617C]">{post.date}</span>
+          <span className="h-1 w-1 rounded-full bg-[#F59E0B]" />
+          <span className="font-semibold text-[#9CA3AF]">{post.date}</span>
         </span>
-        <h3 className="mt-2.5 text-[15px] font-bold leading-[1.55] text-[#1B3A6B] transition-colors group-hover:text-[#E67300]">
+        <h3 className="mt-2.5 text-[15px] font-bold leading-[1.55] text-[#0A0A0A] transition-colors group-hover:text-[#F59E0B]">
           {c.title}
         </h3>
         {c.note && (
-          <p className="mt-2 line-clamp-3 text-[13px] leading-relaxed text-[#54617C]">{c.note}</p>
+          <p className="mt-2 line-clamp-3 text-[13px] leading-relaxed text-[#9CA3AF]">{c.note}</p>
         )}
-        <span className="mt-auto pt-4 text-[12px] font-bold tracking-[1px] text-[#E67300]">
+        <span className="mt-auto pt-4 text-[12px] font-bold tracking-[1px] text-[#F59E0B]">
           READ →
         </span>
       </Link>
@@ -252,11 +247,11 @@ function Archive({ posts, lang }: { posts: BlogPost[]; lang: Lang }) {
   const shown = useMemo(() => (kind === "all" ? posts : posts.filter((p) => p.kind === kind)), [posts, kind]);
 
   return (
-    <section id="archive" className="scroll-mt-24 bg-[#F5F7FB] py-14 sm:py-20">
+    <section id="archive" className="scroll-mt-24 bg-[#F5F5F5] py-14 sm:py-20">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <motion.h2
-            className="text-2xl font-bold leading-[1.2] text-[#1B3A6B] sm:text-[2.2rem]"
+            className="text-2xl font-bold leading-[1.25] text-[#0A0A0A] sm:text-3xl"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false, amount: 0.5 }}
@@ -274,15 +269,13 @@ function Archive({ posts, lang }: { posts: BlogPost[]; lang: Lang }) {
                   onClick={() => setKind(k.id)}
                   aria-pressed={kind === k.id}
                   className={`relative px-3.5 py-1.5 text-[12px] font-bold transition-colors ${
-                    kind === k.id ? "text-white" : "text-[#1B3A6B] hover:text-[#E67300]"
-                  }`}
-                  style={{ borderRadius: 3 }}
+                    kind === k.id ? "text-white" : "text-[#0A0A0A] hover:text-[#F59E0B]"
+                  } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B] focus-visible:ring-offset-2`}
                 >
                   {kind === k.id && (
                     <motion.span
                       layoutId="blog-kind-pill"
-                      className="absolute inset-0 -z-10 bg-[#1B3A6B]"
-                      style={{ borderRadius: 3 }}
+                      className="absolute inset-0 -z-10 bg-[#0A0A0A]"
                       transition={{ type: "spring", stiffness: 420, damping: 34 }}
                     />
                   )}
@@ -307,7 +300,7 @@ function Archive({ posts, lang }: { posts: BlogPost[]; lang: Lang }) {
         </motion.div>
 
         {shown.length === 0 && (
-          <p className="mt-10 text-center text-[15px] text-[#54617C]">Nothing filed under this yet.</p>
+          <p className="mt-10 text-center text-[15px] text-[#9CA3AF]">Nothing filed under this yet.</p>
         )}
       </div>
     </section>

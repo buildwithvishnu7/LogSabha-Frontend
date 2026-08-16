@@ -15,6 +15,7 @@ function LottieIcon({ src, size = 24, color = "", className = "" }: { src: strin
   const containerRef = useRef<HTMLDivElement>(null);
   const colorRef = useRef(color);
   colorRef.current = color;
+  const animRef = useRef<{ destroy: () => void } | null>(null);
 
   // Load animation once
   useEffect(() => {
@@ -43,6 +44,19 @@ function LottieIcon({ src, size = 24, color = "", className = "" }: { src: strin
       });
     };
 
+    // recolor used to run on EVERY enterFrame — a full querySelectorAll over
+    // the icon's shapes plus attribute writes, 60x a second, for every Lottie
+    // icon on the page. That is permanent main-thread work and it showed up as
+    // ~800ms of jank on each route change. Lottie can still swap shapes between
+    // frames, so we keep re-checking, just at 4Hz instead of 60Hz.
+    let lastRecolor = 0;
+    const recolorThrottled = () => {
+      const now = performance.now();
+      if (now - lastRecolor < 250) return;
+      lastRecolor = now;
+      recolor();
+    };
+
     const load = (data: object) => {
       el.innerHTML = "";
       const anim = lottie.loadAnimation({
@@ -52,8 +66,9 @@ function LottieIcon({ src, size = 24, color = "", className = "" }: { src: strin
         autoplay: true,
         animationData: data,
       });
+      animRef.current = anim;
       anim.addEventListener("DOMLoaded", recolor);
-      anim.addEventListener("enterFrame", recolor);
+      anim.addEventListener("enterFrame", recolorThrottled);
     };
 
     if (lottieCache[src]) { load(lottieCache[src]); return; }
@@ -64,7 +79,14 @@ function LottieIcon({ src, size = 24, color = "", className = "" }: { src: strin
       .then((json) => { lottieCache[src] = json; if (!cancelled) load(json); })
       .catch(() => {});
 
-    return () => { cancelled = true; el.innerHTML = ""; };
+    // destroy() matters: without it the lottie instance keeps its rAF loop
+    // running after unmount, so every remount stacked another animation.
+    return () => {
+      cancelled = true;
+      animRef.current?.destroy();
+      animRef.current = null;
+      el.innerHTML = "";
+    };
   }, [src]);
 
   return (

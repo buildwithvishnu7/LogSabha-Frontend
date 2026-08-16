@@ -12,6 +12,7 @@ import {
 import { ChevronDown, ChevronLeft, ChevronRight, ArrowDown } from "lucide-react";
 import { SlotNumber } from "@/components/motion/SlotNumber";
 import { Typewriter } from "@/components/motion/Typewriter";
+import { ChakraLayer } from "@/components/three/ChakraLayer";
 import { rssData } from "@/data/rss";
 import { rssEras, rssYears, type RssYear } from "@/data/rss-timeline";
 
@@ -200,6 +201,11 @@ export function RssHero() {
         stroke="#7A3305"
         duration={180}
       />
+
+      {/* Real WebGL chakra over the flat ones. Self-guarding: it mounts only on
+          capable, motion-permitting desktops and lazy-loads three.js, so the
+          flat chakras above remain the baseline everywhere else. */}
+      <ChakraLayer className="opacity-[0.55] mix-blend-screen" />
 
       {/* rising embers */}
       {inView &&

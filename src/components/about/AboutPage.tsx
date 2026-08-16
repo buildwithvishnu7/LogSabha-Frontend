@@ -5,7 +5,7 @@ import { motion, useInView, useScroll, useSpring } from "motion/react";
 import { ArrowDown, Quote } from "lucide-react";
 import { SlotNumber } from "@/components/motion/SlotNumber";
 import { Typewriter } from "@/components/motion/Typewriter";
-import { HERO_DISPLAY, HERO_SUB, SECTION_Y } from "@/styles/tokens";
+import { HERO_SUB, SECTION_Y } from "@/styles/tokens";
 import {
   aboutSections,
   aboutYears,
@@ -13,8 +13,8 @@ import {
   type AboutSection,
 } from "@/data/about-page";
 
-/* Reference palette: navy hero #0A1E3F, heading #1B3A6B, body #1F2A44,
-   muted #54617C, saffron #E67300 / #A85200, panel #F5F7FB. Sharp 3px shapes. */
+/* Reference palette: navy hero #0B1120, heading #0A0A0A, body #6B7280,
+   muted #9CA3AF, saffron #F59E0B / #D97706, panel #F5F5F5. Sharp 3px shapes. */
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -26,7 +26,7 @@ export function AboutProgress() {
   return (
     <motion.div
       aria-hidden
-      className="fixed inset-x-0 top-0 z-50 h-[3px] origin-left bg-[#E67300]"
+      className="fixed inset-x-0 top-0 z-50 h-[3px] origin-left bg-[#F59E0B]"
       style={{ scaleX: x }}
     />
   );
@@ -44,9 +44,9 @@ function Hero({ section }: { section: AboutSection }) {
     | undefined;
 
   return (
-    <section ref={ref} className="relative overflow-hidden bg-[#0A1E3F] pt-28 sm:pt-32">
+    <section ref={ref} className="relative overflow-hidden bg-[#0B1120] pt-28 sm:pt-32">
       <div className="relative z-10 mx-auto max-w-5xl px-4 pb-12 text-center sm:px-6 sm:pb-14">
-        <h1 className={`${HERO_DISPLAY} text-white`} aria-label={title}>
+        <h1 className={`text-3xl font-extrabold leading-[1.22] tracking-tight text-white sm:text-4xl`} aria-label={title}>
           {title.split("").map((ch, i) => (
             <motion.span
               key={i}
@@ -63,7 +63,7 @@ function Hero({ section }: { section: AboutSection }) {
 
         {sub && (
           <motion.p
-            className={`mx-auto mt-6 max-w-3xl ${HERO_SUB} text-[#C9D6EA]`}
+            className={`mx-auto mt-6 max-w-3xl ${HERO_SUB} text-[#9CA3AF]`}
             initial={{ opacity: 0, y: 18 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.5 }}
@@ -75,7 +75,6 @@ function Hero({ section }: { section: AboutSection }) {
         <motion.a
           href="#journey"
           className="mt-8 inline-flex h-10 w-10 items-center justify-center border border-white/30 text-white"
-          style={{ borderRadius: 3 }}
           initial={{ opacity: 0 }}
           animate={inView ? { opacity: 1 } : {}}
           transition={{ delay: 0.75 }}
@@ -102,10 +101,6 @@ function Hero({ section }: { section: AboutSection }) {
             width={img.w}
             height={img.h}
             className="block h-auto w-full select-none opacity-70"
-            style={{
-              WebkitMaskImage: "linear-gradient(180deg, transparent 0, #000 30%)",
-              maskImage: "linear-gradient(180deg, transparent 0, #000 30%)",
-            }}
           />
         </motion.div>
       )}
@@ -119,10 +114,10 @@ function PullQuote({ section }: { section: AboutSection }) {
   const text = (section.flow.find((n) => n.t === "p") as { text: string } | undefined)?.text;
   if (!text) return null;
   return (
-    <section className={`bg-[linear-gradient(#FFFFFF,#F5F7FB)] ${SECTION_Y}`}>
+    <section className={`bg-[linear-gradient(#FFFFFF,#F5F5F5)] ${SECTION_Y}`}>
       <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
         <motion.span
-          className="inline-block text-[#E67300]"
+          className="inline-block text-[#F59E0B]"
           initial={{ opacity: 0, scale: 0.7, rotate: -12 }}
           whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
           viewport={{ once: false, amount: 0.6 }}
@@ -131,7 +126,7 @@ function PullQuote({ section }: { section: AboutSection }) {
           <Quote className="h-10 w-10" />
         </motion.span>
         <motion.blockquote
-          className="mt-5 text-xl font-medium leading-[1.7] text-[#1B3A6B] sm:text-[1.6rem]"
+          className="mt-5 text-lg font-medium leading-[1.7] text-[#0A0A0A] sm:text-xl"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: false, amount: 0.4 }}
@@ -162,9 +157,9 @@ function Node({
   if (node.t === "img") {
     return (
       <motion.figure
-        className="group my-8 overflow-hidden"
+        className="group my-8 overflow-hidden rounded-xl"
         // capped at the file's own width so nothing is ever blown up
-        style={{ borderRadius: 3, maxWidth: node.w }}
+        style={{ maxWidth: node.w }}
         initial={{ opacity: 0, y: 28 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: false, amount: 0.2 }}
@@ -179,7 +174,7 @@ function Node({
           className="block h-auto w-full transition-transform duration-[1.4s] group-hover:scale-[1.03]"
         />
         {node.alt && (
-          <figcaption className="mt-2 text-[12px] italic text-[#54617C]">{node.alt}</figcaption>
+          <figcaption className="mt-2 text-[12px] italic text-[#9CA3AF]">{node.alt}</figcaption>
         )}
       </motion.figure>
     );
@@ -189,7 +184,7 @@ function Node({
     const big = node.level <= 2;
     return (
       <motion.h3
-        className={`${big ? "mt-9 text-xl sm:text-2xl" : "mt-7 text-base sm:text-lg"} font-bold leading-[1.35] text-[#1B3A6B] first:mt-0`}
+        className={`${big ? "mt-9 text-lg sm:text-xl" : "mt-7 text-base"} font-bold leading-[1.35] text-[#0A0A0A] first:mt-0`}
         initial={{ opacity: 0, y: 18 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: false, amount: 0.5 }}
@@ -203,8 +198,7 @@ function Node({
   if (node.t === "quote") {
     return (
       <motion.blockquote
-        className={`my-6 border-l-[3px] border-[#E67300] px-5 py-4 text-[15px] italic leading-loose text-[#1F2A44] ${panel ? "bg-white" : "bg-[#F5F7FB]"}`}
-        style={{ borderRadius: 3 }}
+        className={`my-6 border-l-[3px] border-[#F59E0B] px-5 py-4 text-[15px] italic leading-loose text-[#6B7280] ${panel ? "bg-white" : "bg-[#F5F5F5]"}`}
         initial={{ opacity: 0, x: 18 }}
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: false, amount: 0.4 }}
@@ -218,7 +212,7 @@ function Node({
   if (node.t === "li") {
     return (
       <motion.li
-        className="ml-5 list-disc py-1 text-[15px] leading-loose text-[#1F2A44]"
+        className="ml-5 list-disc py-1 text-sm leading-relaxed text-[#6B7280]"
         initial={{ opacity: 0, x: 16 }}
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: false, amount: 0.4 }}
@@ -231,7 +225,7 @@ function Node({
 
   return (
     <motion.p
-      className="mt-4 text-[15px] leading-loose text-[#1F2A44]"
+      className="mt-4 text-sm leading-relaxed text-[#6B7280]"
       initial={{ opacity: 0, y: 14 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: false, amount: 0.25 }}
@@ -248,7 +242,7 @@ function FlowSection({ section }: { section: AboutSection }) {
   return (
     <section
       id={section.id}
-      className={`scroll-mt-24 ${SECTION_Y} ${panel ? "bg-[#F5F7FB]" : "bg-white"}`}
+      className={`scroll-mt-24 ${SECTION_Y} ${panel ? "bg-[#F5F5F5]" : "bg-white"}`}
     >
       <div className="mx-auto max-w-3xl px-4 sm:px-6">
         {section.flow.map((n, i) => (
@@ -268,16 +262,16 @@ function YearSection({ section }: { section: AboutSection }) {
   return (
     <section
       id={section.id}
-      className={`scroll-mt-20 ${SECTION_Y} ${panel ? "bg-[#F5F7FB]" : "bg-white"}`}
+      className={`scroll-mt-20 ${SECTION_Y} ${panel ? "bg-[#F5F5F5]" : "bg-white"}`}
     >
       <div className="mx-auto max-w-3xl px-4 sm:px-6">
         {/* The giant numeral is the reference's spine device for the archive. */}
         <div className="flex items-baseline gap-4">
-          <span className="text-[3.5rem] font-extrabold leading-none text-[#E67300]/25 sm:text-[5rem]">
+          <span className="text-4xl font-extrabold leading-none text-[#F59E0B]/25 sm:text-[3.5rem]">
             <SlotNumber value={String(section.year)} digitWidth="0.6em" />
           </span>
           <motion.span
-            className="h-[3px] flex-1 origin-left bg-[#14213D]/10"
+            className="h-[3px] flex-1 origin-left bg-[#0A0A0A]/10"
             initial={{ scaleX: 0 }}
             whileInView={{ scaleX: 1 }}
             viewport={{ once: false, amount: 0.6 }}
@@ -365,13 +359,13 @@ function YearRail() {
               href={`#y${y}`}
               aria-current={active === y ? "true" : undefined}
               className={`relative block px-2.5 py-1 text-[12px] font-bold tabular-nums transition-colors ${
-                active === y ? "text-[#E67300]" : "text-[#54617C]/50 hover:text-[#1B3A6B]"
-              }`}
+                active === y ? "text-[#F59E0B]" : "text-[#9CA3AF]/50 hover:text-[#0A0A0A]"
+              } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B] focus-visible:ring-offset-2`}
             >
               {active === y && (
                 <motion.span
                   layoutId="about-year-active"
-                  className="absolute inset-y-0 left-0 w-[3px] bg-[#E67300]"
+                  className="absolute inset-y-0 left-0 w-[3px] bg-[#F59E0B]"
                   transition={{ type: "spring", stiffness: 420, damping: 34 }}
                 />
               )}

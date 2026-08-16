@@ -15,7 +15,7 @@ function Progress() {
   return (
     <motion.div
       aria-hidden
-      className="fixed inset-x-0 top-0 z-50 h-[3px] origin-left bg-[#E67300]"
+      className="fixed inset-x-0 top-0 z-50 h-[3px] origin-left bg-[#F59E0B]"
       style={{ scaleX: x }}
     />
   );
@@ -44,12 +44,12 @@ export function PostView({ post }: { post: BlogPost }) {
       <Progress />
 
       {/* masthead */}
-      <section className="bg-[#0A1E3F] pt-24 pb-10 sm:pt-28 sm:pb-12">
+      <section className="bg-[#0B1120] pt-24 pb-10 sm:pt-28 sm:pb-12">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <Link
               href="/blog"
-              className="inline-flex items-center gap-2 text-[12px] font-bold tracking-[1px] text-[#FFD9AE] transition-colors hover:text-white"
+              className="inline-flex items-center gap-2 text-[12px] font-bold tracking-[1px] text-[#FBBF24] transition-colors hover:text-white"
             >
               <ArrowLeft className="h-4 w-4" />
               {lang === "hi" ? "सभी लेख" : "ALL ARTICLES"}
@@ -58,7 +58,7 @@ export function PostView({ post }: { post: BlogPost }) {
           </div>
 
           <motion.span
-            className="mt-7 flex flex-wrap items-center gap-2 text-[11px] font-bold tracking-[0.18em] text-[#FFC98A]"
+            className="mt-7 flex flex-wrap items-center gap-2 text-[10px] font-bold tracking-wide text-[#FBBF24]"
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -66,8 +66,8 @@ export function PostView({ post }: { post: BlogPost }) {
             {c.topic}
             {post.date && (
               <>
-                <span className="h-1 w-1 rounded-full bg-[#E67300]" />
-                <span className="font-semibold text-[#9FB2CC]">
+                <span className="h-1 w-1 rounded-full bg-[#F59E0B]" />
+                <span className="font-semibold text-[#9CA3AF]">
                   {post.date}
                   {post.time ? ` · ${post.time}` : ""}
                 </span>
@@ -76,7 +76,7 @@ export function PostView({ post }: { post: BlogPost }) {
           </motion.span>
 
           <motion.h1
-            className="mt-3 text-[1.5rem] font-bold leading-[1.55] text-white sm:text-[1.9rem]"
+            className="mt-3 text-xl font-bold leading-[1.45] text-white sm:text-2xl"
             initial={{ opacity: 0, y: 22 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.08, ease: EASE }}
@@ -86,7 +86,7 @@ export function PostView({ post }: { post: BlogPost }) {
 
           {post.author && (
             <motion.p
-              className="mt-4 text-[13px] text-[#9FB2CC]"
+              className="mt-4 text-[13px] text-[#9CA3AF]"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.35 }}
@@ -102,7 +102,7 @@ export function PostView({ post }: { post: BlogPost }) {
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           {post.img && (
             <motion.figure
-              className="mb-8"
+              className="mb-8 overflow-hidden rounded-xl"
               style={{ maxWidth: post.imgW }}
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
@@ -114,18 +114,16 @@ export function PostView({ post }: { post: BlogPost }) {
                 width={post.imgW}
                 height={post.imgH}
                 className="block h-auto w-full"
-                style={{ borderRadius: 3 }}
               />
               {c.caption && (
-                <figcaption className="mt-2 text-[12px] italic text-[#54617C]">{c.caption}</figcaption>
+                <figcaption className="mt-2 text-[12px] italic text-[#9CA3AF]">{c.caption}</figcaption>
               )}
             </motion.figure>
           )}
 
           {c.note && (
             <motion.p
-              className="border-l-[3px] border-[#E67300] bg-[#F5F7FB] px-5 py-4 text-[17px] font-medium leading-loose text-[#1F2A44]"
-              style={{ borderRadius: 3 }}
+              className="rounded-xl border-l-[3px] border-[#F59E0B] bg-[#F5F5F5] px-5 py-4 text-base font-medium leading-relaxed text-[#6B7280]"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
@@ -139,9 +137,9 @@ export function PostView({ post }: { post: BlogPost }) {
               {c.body.map((para, i) => (
                 <motion.p
                   key={i}
-                  className={`mt-4 text-[16px] leading-[1.95] text-[#1F2A44] ${
+                  className={`mt-4 text-base leading-[1.9] text-[#6B7280] ${
                     i === 0
-                      ? "first-letter:mr-2 first-letter:float-left first-letter:text-[3.2rem] first-letter:font-extrabold first-letter:leading-[0.85] first-letter:text-[#E67300]"
+                      ? "first-letter:mr-2 first-letter:float-left first-letter:text-[3.2rem] first-letter:font-extrabold first-letter:leading-[0.85] first-letter:text-[#F59E0B]"
                       : ""
                   }`}
                   initial={{ opacity: 0, y: 14 }}
@@ -157,20 +155,19 @@ export function PostView({ post }: { post: BlogPost }) {
             // Most entries in this archive are filed as headline + note; the
             // reference shows a "pending" panel rather than an empty article.
             <div
-              className="mt-8 border border-dashed border-[#14213D]/20 bg-[#F5F7FB] px-6 py-8 text-center"
-              style={{ borderRadius: 3 }}
+              className="mt-8 rounded-xl border border-dashed border-[#E5E7EB] bg-[#F5F5F5] px-6 py-8 text-center"
             >
-              <span className="text-[11px] font-bold tracking-[0.18em] text-[#A85200]">
+              <span className="text-[10px] font-bold tracking-wide text-[#D97706]">
                 {lang === "hi" ? "पूरी रिपोर्ट शीघ्र" : "FULL REPORT COMING"}
               </span>
-              <p className="mx-auto mt-2 max-w-lg text-[15px] leading-loose text-[#54617C]">
+              <p className="mx-auto mt-2 max-w-lg text-sm leading-relaxed text-[#9CA3AF]">
                 {lang === "hi"
                   ? "इस विषय पर विस्तृत रिपोर्ट तैयार की जा रही है। तब तक ऊपर दिया सार पढ़ें।"
                   : "A detailed report on this story is being prepared. The summary above carries the essentials for now."}
               </p>
               <Link
                 href="/blog#archive"
-                className="mt-5 inline-flex items-center gap-2 text-[13px] font-bold tracking-[1px] text-[#E67300] transition-colors hover:text-[#A85200]"
+                className="mt-5 inline-flex items-center gap-2 text-[13px] font-bold tracking-[1px] text-[#F59E0B] transition-colors hover:text-[#D97706]"
               >
                 {lang === "hi" ? "अन्य लेख पढ़ें" : "BROWSE THE ARCHIVE"}
                 <ArrowRight className="h-4 w-4" />
@@ -179,8 +176,8 @@ export function PostView({ post }: { post: BlogPost }) {
           )}
 
           {/* share */}
-          <div className="mt-10 flex items-center gap-3 border-t border-[#14213D]/10 pt-6">
-            <span className="text-[11px] font-bold tracking-[0.18em] text-[#54617C]">
+          <div className="mt-10 flex items-center gap-3 border-t border-[#0A0A0A]/10 pt-6">
+            <span className="text-[10px] font-bold tracking-wide text-[#9CA3AF]">
               {lang === "hi" ? "साझा करें" : "SHARE"}
             </span>
             {shares.map((s) => (
@@ -190,8 +187,7 @@ export function PostView({ post }: { post: BlogPost }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={s.label}
-                className="grid h-9 w-9 place-items-center border border-[#14213D]/15 text-[14px] font-bold text-[#1B3A6B] transition-colors hover:border-[#E67300] hover:text-[#E67300]"
-                style={{ borderRadius: 3 }}
+                className="grid h-9 w-9 place-items-center border border-[#0A0A0A]/15 text-[14px] font-bold text-[#0A0A0A] transition-colors hover:border-[#F59E0B] hover:text-[#F59E0B]"
               >
                 {s.id}
               </a>
@@ -201,15 +197,15 @@ export function PostView({ post }: { post: BlogPost }) {
       </article>
 
       {/* related */}
-      <section className="bg-[#F5F7FB] py-14 sm:py-20">
+      <section className="bg-[#F5F5F5] py-14 sm:py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="flex items-end justify-between gap-4">
-            <h2 className="text-xl font-bold text-[#1B3A6B] sm:text-2xl">
+            <h2 className="text-xl font-bold text-[#0A0A0A] sm:text-2xl">
               {lang === "hi" ? "संबंधित लेख" : "Related Reading"}
             </h2>
             <Link
               href="/blog#archive"
-              className="text-[12px] font-bold tracking-[1px] text-[#E67300] transition-colors hover:text-[#A85200]"
+              className="text-[12px] font-bold tracking-[1px] text-[#F59E0B] transition-colors hover:text-[#D97706]"
             >
               {lang === "hi" ? "सभी" : "ALL"} →
             </Link>
@@ -228,15 +224,14 @@ export function PostView({ post }: { post: BlogPost }) {
                 >
                   <Link
                     href={`/blog/${r.slug}`}
-                    className="group block h-full border border-[#14213D]/10 bg-white p-5 transition-shadow hover:shadow-[0_16px_36px_-22px_rgba(20,33,61,0.5)]"
-                    style={{ borderRadius: 3 }}
+                    className="group block h-full rounded-xl border border-[#E5E7EB] bg-white p-5 shadow-lg transition-shadow hover:shadow-xl"
                   >
-                    <span className="flex items-center gap-2 text-[10px] font-bold tracking-[0.18em] text-[#A85200]">
+                    <span className="flex items-center gap-2 text-[10px] font-bold tracking-[0.18em] text-[#D97706]">
                       {rc.topic}
-                      <span className="h-1 w-1 rounded-full bg-[#E67300]" />
-                      <span className="font-semibold text-[#54617C]">{r.date}</span>
+                      <span className="h-1 w-1 rounded-full bg-[#F59E0B]" />
+                      <span className="font-semibold text-[#9CA3AF]">{r.date}</span>
                     </span>
-                    <h3 className="mt-2.5 text-[15px] font-bold leading-[1.55] text-[#1B3A6B] transition-colors group-hover:text-[#E67300]">
+                    <h3 className="mt-2.5 text-[15px] font-bold leading-[1.55] text-[#0A0A0A] transition-colors group-hover:text-[#F59E0B]">
                       {rc.title}
                     </h3>
                   </Link>
