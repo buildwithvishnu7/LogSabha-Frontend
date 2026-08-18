@@ -693,3 +693,12 @@
   width: 100% !important;
   height: 100% !important;
 }
+
+/* Anchor jumps, rail clicks and in-page links glide instead of teleporting.
+   Native, so it costs nothing and never fights the browser's own scrolling the
+   way a rAF-driven smooth-scroll library does (which is why Lenis came out). */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}

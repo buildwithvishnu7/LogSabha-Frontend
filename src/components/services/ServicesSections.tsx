@@ -8,7 +8,8 @@ import {
   useTransform,
   useMotionValueEvent,
   useReducedMotion,
-  AnimatePresence,
+  useSpring,
+  type MotionValue,
 } from "motion/react";
 import { ArrowDown, ArrowRight } from "lucide-react";
 import { SlotNumber } from "@/components/motion/SlotNumber";
@@ -251,6 +252,58 @@ function Stage({ block, index }: { block: ServiceBlock; index: number }) {
   );
 }
 
+/** One stage, permanently mounted, faded in and out by scroll position.
+ *
+ *  This is the fix for the blink: swapping stages through AnimatePresence
+ *  unmounts one and mounts the next, so the browser paints a frame with neither
+ *  — a hard cut. Here every stage stays in the tree and only its opacity moves,
+ *  with the fade windows overlapping so one is always arriving as another
+ *  leaves. Nothing ever mounts mid-scroll. */
+function StageLayer({
+  block,
+  index,
+  total,
+  progress,
+}: {
+  block: ServiceBlock;
+  index: number;
+  total: number;
+  progress: MotionValue<number>;
+}) {
+  const span = 1 / total;
+  const start = index * span;
+  const end = start + span;
+  const fade = span * 0.45; // generous overlap — no gap between stages
+
+  const opacity = useTransform(
+    progress,
+    [start - fade, start + fade * 0.35, end - fade * 0.35, end + fade],
+    [0, 1, 1, 0],
+  );
+  const y = useTransform(
+    progress,
+    [start - fade, start + fade * 0.35, end - fade * 0.35, end + fade],
+    [36, 0, 0, -36],
+  );
+  const scale = useTransform(
+    progress,
+    [start - fade, start + fade * 0.35, end - fade * 0.35, end + fade],
+    [0.985, 1, 1, 0.985],
+  );
+  // Only the stage that is actually visible should take clicks.
+  const pointerEvents = useTransform(opacity, (o) => (o > 0.6 ? "auto" : "none"));
+
+  return (
+    <motion.div
+      className="absolute inset-0"
+      style={{ opacity, y, scale, pointerEvents }}
+      aria-hidden={undefined}
+    >
+      <Stage block={block} index={index} />
+    </motion.div>
+  );
+}
+
 /** The six disciplines rendered as one pinned sequence: the stage holds still
  *  while the page scrolls, and the discipline advances under it. Six identical
  *  stacked blocks read as a list; this reads as a single piece. */
@@ -259,16 +312,51 @@ function PinnedSequence() {
   const [active, setActive] = useState(0);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
 
-  useMotionValueEvent(scrollYProgress, "change", (v) => {
+  // Spring the progress before anything reads it. Raw scroll is 1:1 with the
+  // wheel and reads as twitchy; a light spring gives the whole sequence weight
+  // without the input lag a smooth-scroll library introduces.
+  const progress = useSpring(scrollYProgress, {
+    stiffness: 120,
+    damping: 30,
+    restDelta: 0.0005,
+  });
+
+  useMotionValueEvent(progress, "change", (v) => {
     const i = Math.min(BLOCKS.length - 1, Math.max(0, Math.floor(v * BLOCKS.length)));
     setActive((prev) => (prev === i ? prev : i));
   });
 
-  const railScale = useTransform(scrollYProgress, [0, 1], [0, 1]);
+  const railScale = useTransform(progress, [0, 1], [0, 1]);
+  const auroraX = useTransform(progress, [0, 1], ["-12%", "12%"]);
+  const auroraY = useTransform(progress, [0, 1], ["8%", "-8%"]);
 
   return (
     <div ref={ref} style={{ height: `${BLOCKS.length * 100}vh` }} className="relative">
-      <div className="sticky top-0 flex h-svh flex-col overflow-hidden bg-[#F5F5F5] pt-20 pb-8">
+      <div className="sticky top-0 flex h-svh flex-col overflow-hidden bg-[#FAFAFA] pt-20 pb-8">
+        {/* Living background: two soft amber fields drifting against the scroll,
+            over a fine grid. Gives the pinned stage depth so it doesn't read as
+            a flat panel for six screens. Transform-only, so it stays cheap. */}
+        <motion.span
+          aria-hidden
+          className="pointer-events-none absolute -left-1/4 top-0 h-[70vh] w-[70vh] rounded-full bg-[radial-gradient(circle,rgba(245,158,11,0.16),transparent_65%)] blur-2xl"
+          style={{ x: auroraX, y: auroraY }}
+        />
+        <motion.span
+          aria-hidden
+          className="pointer-events-none absolute -right-1/4 bottom-0 h-[60vh] w-[60vh] rounded-full bg-[radial-gradient(circle,rgba(249,115,22,0.13),transparent_65%)] blur-2xl"
+          style={{ x: auroraY, y: auroraX }}
+        />
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-[0.35]"
+          style={{
+            backgroundImage:
+              "linear-gradient(to right, rgba(10,10,10,0.045) 1px, transparent 1px), linear-gradient(to bottom, rgba(10,10,10,0.045) 1px, transparent 1px)",
+            backgroundSize: "64px 64px",
+            maskImage: "radial-gradient(120% 90% at 50% 40%, #000 30%, transparent 78%)",
+            WebkitMaskImage: "radial-gradient(120% 90% at 50% 40%, #000 30%, transparent 78%)",
+          }}
+        />
         {/* progress rail across the top of the stage */}
         <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-6">
           <div className="h-px w-full bg-[#0A0A0A]/10">
@@ -307,18 +395,17 @@ function PinnedSequence() {
           </ol>
         </div>
 
-        <div className="mx-auto w-full max-w-[1440px] flex-1 px-4 py-6 sm:px-6">
-          <AnimatePresence initial={false}>
-            <motion.div
-              key={active}
-              className="h-full"
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: EASE }}
-            >
-              <Stage block={BLOCKS[active]} index={active} />
-            </motion.div>
-          </AnimatePresence>
+        {/* All six mounted, crossfaded by scroll — never unmounted, never a cut. */}
+        <div className="relative mx-auto w-full max-w-[1440px] flex-1 px-4 py-6 sm:px-6">
+          {BLOCKS.map((b, i) => (
+            <StageLayer
+              key={b.id}
+              block={b}
+              index={i}
+              total={BLOCKS.length}
+              progress={progress}
+            />
+          ))}
         </div>
       </div>
     </div>

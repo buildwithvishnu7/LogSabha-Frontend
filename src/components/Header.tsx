@@ -288,10 +288,8 @@ export function Header() {
         <motion.div
           className="h-full w-full backdrop-blur-md"
           animate={{
-            backgroundColor: scrolled ? "rgba(255, 255, 255, 0.95)" : "rgba(255, 255, 255, 0.08)",
-            boxShadow: scrolled
-              ? "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)"
-              : "0 0 0 0 rgba(0, 0, 0, 0)",
+            backgroundColor: scrolled ? "rgba(255, 255, 255, 0.92)" : "rgba(255, 255, 255, 0.06)",
+            boxShadow: scrolled ? "0 8px 30px -12px rgba(10,10,10,0.18)" : "0 0 0 0 rgba(0,0,0,0)",
           }}
           transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
           style={{
@@ -310,7 +308,13 @@ export function Header() {
         style={{ width: "100%" }}
       />
 
-      <div className="mx-auto flex h-14 max-w-[1440px] items-center justify-between px-3 sm:h-16 sm:px-6 md:h-20 lg:h-24 lg:px-8 xl:px-12">
+      <motion.div
+          // initial matters: without it the bar is content-height for the frame
+          // before motion first runs, which reads as a jump on load.
+          initial={{ height: 72 }}
+          animate={{ height: scrolled ? 56 : 72 }}
+ transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+          className="mx-auto flex max-w-[1440px] items-center justify-between px-3 sm:px-6 lg:px-8 xl:px-12">
         {/* Logo — sits OUTSIDE the parallelogram shape */}
         <Link href="/" className="relative z-10 flex-shrink-0">
           <img
@@ -373,25 +377,36 @@ export function Header() {
                   )}
 
                   {/* Background highlight on hover + active */}
+                  {/* One shared pill, not one per link: layoutId lets it travel
+                      between items so the active state glides instead of
+                      blinking out here and in over there. */}
+                  {isActive(link.href) && (
+                    <motion.span
+                      layoutId="nav-active-pill"
+                      className={cn(
+                        "absolute inset-0 -z-20 rounded-full",
+                        darkNav ? "bg-amber-100/80" : "bg-white/15",
+                      )}
+                      transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                    />
+                  )}
                   <motion.span
                     className={cn(
-                      "absolute inset-0 -z-20 rounded-lg",
-                      darkNav ? "bg-amber-50" : "bg-white/10",
+                      "absolute inset-0 -z-30 rounded-full opacity-0",
+                      darkNav ? "bg-gray-900/[0.06]" : "bg-white/10",
                     )}
-                    initial={{ opacity: 0, scale: 0.85 }}
-                    animate={isActive(link.href) ? { opacity: 1, scale: 1 } : undefined}
-                    variants={{
-                      hover: { opacity: 1, scale: 1 },
-                    }}
+                    variants={{ hover: { opacity: 1 } }}
                     transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                   />
 
                   {/* Shimmer + glow text — continuous animation */}
                   <span
                     className={cn(
-                      darkNav ? "nav-text-shimmer-dark" : "nav-text-shimmer-light",
+                      "relative transition-colors duration-300",
+                      darkNav
+                        ? isActive(link.href) ? "text-gray-900" : "text-gray-600 hover:text-gray-900"
+                        : isActive(link.href) ? "text-white" : "text-white/75 hover:text-white",
                     )}
-                    style={{ animationDelay: `${i * 0.4}s, ${i * 0.4}s` }}
                   >
                     {link.label}
                   </span>
@@ -728,7 +743,7 @@ export function Header() {
             </AnimatePresence>
           </motion.button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Mobile Sidebar Menu */}
       <AnimatePresence>
