@@ -22,8 +22,14 @@ function SlotDigit({
   width: string;
 }) {
   const total = SLOT_CYCLES * 10 + target;
+
+  // The TARGET sits at index 0, so the reel's resting position already shows
+  // the right digit. It used to sit last, which meant that whenever the spin
+  // did not run — reduced motion, a background tab, an observer that never
+  // fired — the component displayed 0 instead of the real number. That is a
+  // correctness bug, not a missing animation: "01" rendered as "00".
   const digits: number[] = [];
-  for (let i = 0; i <= total; i++) digits.push(i % 10);
+  for (let i = 0; i <= total; i++) digits.push((target - i + 10 * (SLOT_CYCLES + 1)) % 10);
 
   return (
     <span
@@ -31,9 +37,14 @@ function SlotDigit({
       style={{ height: `${DIGIT_H}em`, width, fontVariantNumeric: "tabular-nums" }}
     >
       <motion.span
+        // Remounting on `active` restarts initial -> animate, which is how the
+        // reel replays on scroll-back. The target is always the ANIMATE state,
+        // never the idle one, so the digit is correct even if the spin is
+        // skipped entirely.
+        key={active ? "spin" : "idle"}
         className="block will-change-transform"
-        initial={{ y: 0 }}
-        animate={active ? { y: `${-total * DIGIT_H}em` } : { y: 0 }}
+        initial={{ y: `${-total * DIGIT_H}em` }}
+        animate={{ y: 0 }}
         transition={{
           duration: 1.25 + total * 0.012,
           delay,

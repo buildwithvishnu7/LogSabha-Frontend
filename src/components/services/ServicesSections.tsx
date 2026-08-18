@@ -38,8 +38,7 @@ export function ServicesHero() {
   return (
     <section ref={ref} className="relative min-h-[92svh] overflow-hidden bg-[#0B1120]">
       {/* Photograph as atmosphere, not subject: heavily tinted and parallaxed, so
-          it carries depth without competing with the type. Replaces the old
-          2561x218 crowd sliver, which could only ever show a slice of a crowd. */}
+          it carries depth without competing with the type. */}
       <motion.div className="absolute inset-0" style={{ y: bgY }}>
         <img
           src="/images/editorial-bg.jpg"

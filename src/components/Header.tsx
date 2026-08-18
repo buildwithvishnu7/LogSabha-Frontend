@@ -308,13 +308,9 @@ export function Header() {
         style={{ width: "100%" }}
       />
 
-      <motion.div
-          // initial matters: without it the bar is content-height for the frame
-          // before motion first runs, which reads as a jump on load.
-          initial={{ height: 72 }}
-          animate={{ height: scrolled ? 56 : 72 }}
- transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-          className="mx-auto flex max-w-[1440px] items-center justify-between px-3 sm:px-6 lg:px-8 xl:px-12">
+      {/* Fixed height, not animated: the logo deliberately overhangs the bar,
+          and a shrinking bar cropped it. Taller than the original for room. */}
+      <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-3 sm:h-20 sm:px-6 md:h-24 lg:h-28 lg:px-8 xl:px-12">
         {/* Logo — sits OUTSIDE the parallelogram shape */}
         <Link href="/" className="relative z-10 flex-shrink-0">
           <img
@@ -743,7 +739,7 @@ export function Header() {
             </AnimatePresence>
           </motion.button>
         </div>
-      </motion.div>
+      </div>
 
       {/* Mobile Sidebar Menu */}
       <AnimatePresence>
