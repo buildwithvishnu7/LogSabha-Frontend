@@ -10,10 +10,10 @@
 export const theme = {
   // ─── Colors ───
   colors: {
-    primary: "#f59e0b",        // amber-500
-    primaryLight: "#fbbf24",   // amber-400
-    primaryDark: "#d97706",    // amber-600
-    primaryGlow: "rgba(245, 158, 11, 0.3)",
+    primary: "#ff9933",        // amber-500
+    primaryLight: "#ffc27a",   // amber-400
+    primaryDark: "#e87d12",    // amber-600
+    primaryGlow: "rgba(255,153,51,0.3)",
 
     background: "#ffffff",
     foreground: "#0a0a0a",
@@ -22,9 +22,9 @@ export const theme = {
     border: "#e5e5e5",
 
     // Dark surfaces (hero, map section, badges)
-    darkBg: "#0c0c1d",
-    darkSurface: "#1a1a2e",
-    darkBorder: "rgba(245, 158, 11, 0.3)",
+    darkBg: "#0a1e3f",
+    darkSurface: "#12306b",
+    darkBorder: "rgba(255,153,51,0.3)",
 
     // Alliance colors
     nda: "#4ade80",     // green-400
@@ -33,7 +33,7 @@ export const theme = {
     // Semantic
     success: "#22c55e",
     error: "#ef4444",
-    warning: "#f59e0b",
+    warning: "#ff9933",
   },
 
   // ─── Typography ───

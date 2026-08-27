@@ -7,8 +7,16 @@ export interface RssYear {
   lead: string;
   body: string;
   caption: string;
+  /** Empty for four years — 1932, 1944, 1950 and 1967 have no plate. Two of
+   *  those are recorded as broken on the source site. The gap is kept rather
+   *  than filled with a stand-in. */
   image: string;
   alt: string;
+  /** Intrinsic pixel size, stamped from the reference build so each figure
+   *  reserves its box before the file lands — 96 photographs on one page.
+   *  Absent exactly where `image` is empty. */
+  w?: number;
+  h?: number;
 }
 
 export interface RssEra {
@@ -132,8 +140,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "राष्ट्रीय स्वयंसेवक संघ ने स्थापना के 100 वर्ष पूर्ण होने के अवसर पर देशव्यापी कार्यक्रम आयोजित किए। विभिन्न राज्यों और शहरों में संगठन यात्रा, समाज संपर्क कार्यक्रम और सेवा गतिविधियों का आयोजन किया गया। विदेशों में रहने वाले प्रवासी स्वयंसेवकों के साथ संपर्क और संगठनात्मक गतिविधियों का विस्तार किया गया।",
     "caption": "संगठन की ऐतिहासिक यात्रा को राष्ट्रीय और वैश्विक स्तर पर नई पहचान मिली।",
-    "image": "/images/rss/y2025.png",
-    "alt": "Bhagwat speaking at \"100 वर्ष की संघ यात्रा\" event stage with flowers"
+    "image": "/images/rss/y2025.jpg",
+    "alt": "Bhagwat speaking at \"100 वर्ष की संघ यात्रा\" event stage with flowers",
+    "w": 266,
+    "h": 350
   },
   {
     "year": 2024,
@@ -141,8 +151,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "देशभर में सांस्कृतिक जागरण, सामाजिक समरसता और राष्ट्रीय एकता को मजबूत करने के उद्देश्य से विभिन्न कार्यक्रम आयोजित किए गए। स्वयंसेवक संपर्क अभियान, सांस्कृतिक कार्यक्रम और समाज संवाद गतिविधियों को विस्तार दिया गया। विभिन्न सामाजिक और धार्मिक आयोजनों में स्वयंसेवकों की भागीदारी रही।",
     "caption": "सांस्कृतिक पहचान और सामाजिक एकता को मजबूत आधार मिला।",
-    "image": "/images/rss/y2024.png",
-    "alt": "uniformed band with drums marching at event"
+    "image": "/images/rss/y2024.jpg",
+    "alt": "uniformed band with drums marching at event",
+    "w": 293,
+    "h": 300
   },
   {
     "year": 2023,
@@ -150,8 +162,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "स्थापना के 100 वर्ष पूर्ण होने की तैयारी के तहत देशभर में समाज संपर्क अभियान चलाए गए। विभिन्न वर्गों, शिक्षण संस्थानों और संगठनों के साथ संवाद कार्यक्रम आयोजित किए गए। शाखा विस्तार और स्वयंसेवक प्रशिक्षण गतिविधियों को गति देकर संगठनात्मक आधार को मजबूत किया गया।",
     "caption": "संगठन विस्तार और समाज सहभागिता को नई दिशा और सुदृढ़ आधार मिला।",
-    "image": "/images/rss/y2023.png",
-    "alt": "mass danda (staff) drill on ground"
+    "image": "/images/rss/y2023.jpg",
+    "alt": "mass danda (staff) drill on ground",
+    "w": 267,
+    "h": 304
   },
   {
     "year": 2022,
@@ -159,8 +173,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "कोविड-19 की दूसरी लहर के दौरान स्वयंसेवकों ने देशभर में राहत कार्यों में सक्रिय भूमिका निभाई। ऑक्सीजन, दवाइयों और भोजन वितरण के साथ सहायता अभियान संचालित किए गए। अस्पतालों और जरूरतमंद परिवारों तक सहयोग पहुंचाकर सेवा कार्यों को व्यापक स्तर पर आगे बढ़ाया गया।",
     "caption": "राष्ट्रीय संकट के समय सेवा कार्यों में संगठन की भूमिका और सामाजिक विश्वास मजबूत हुआ।",
-    "image": "/images/rss/y2022.png",
-    "alt": "covid relief collage (ambulance, sanitization, oxygen)"
+    "image": "/images/rss/y2022.jpg",
+    "alt": "covid relief collage (ambulance, sanitization, oxygen)",
+    "w": 400,
+    "h": 320
   },
   {
     "year": 2021,
@@ -168,8 +184,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "कोविड-19 महामारी के दौरान स्वयंसेवकों ने देशभर में बड़े स्तर पर सेवा कार्य किए। लॉकडाउन के समय भोजन, मास्क और आवश्यक सामग्री वितरण के अभियान चलाए गए। प्रशासन और अस्पतालों के साथ सहयोग करते हुए जरूरतमंद परिवारों तक सहायता पहुंचाई गई।",
     "caption": "राष्ट्रीय संकट के समय सेवा कार्यों में संगठन की व्यापक सामाजिक भागीदारी स्थापित हुई।",
-    "image": "/images/rss/y2021.png",
-    "alt": "two elderly men exchanging flower bouquet"
+    "image": "/images/rss/y2021.jpg",
+    "alt": "two elderly men exchanging flower bouquet",
+    "w": 249,
+    "h": 270
   },
   {
     "year": 2020,
@@ -177,8 +195,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "राम मंदिर पर सुप्रीम कोर्ट के निर्णय और अनुच्छेद 370 हटाए जाने के बाद देशभर में समाज संवाद और जागरूकता अभियान चलाए गए। स्वयंसेवकों ने सामाजिक समरसता और राष्ट्रीय एकता बनाए रखने में सक्रिय भूमिका निभाई।",
     "caption": "राष्ट्रीय विषयों पर समाज समन्वय और एकता को सुदृढ़ आधार मिला।",
-    "image": "/images/rss/y2020.png",
-    "alt": "swayamsevaks with saffron flag amid white-shirt crowd"
+    "image": "/images/rss/y2020.jpg",
+    "alt": "swayamsevaks with saffron flag amid white-shirt crowd",
+    "w": 400,
+    "h": 360
   },
   {
     "year": 2019,
@@ -186,8 +206,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "देशभर में सांस्कृतिक जागरण, सामाजिक समरसता और राष्ट्रीय एकता को मजबूत करने के उद्देश्य से विभिन्न कार्यक्रम आयोजित किए गए। स्वयंसेवक संपर्क अभियान, सांस्कृतिक कार्यक्रम और समाज संवाद गतिविधियों को विस्तार दिया गया। विभिन्न सामाजिक और धार्मिक आयोजनों में स्वयंसेवकों की भागीदारी रही।",
     "caption": "सांस्कृतिक पहचान और सामाजिक एकता को मजबूत आधार मिला।",
-    "image": "/images/rss/y2019.png",
-    "alt": "route march with staves on city road"
+    "image": "/images/rss/y2019.jpg",
+    "alt": "route march with staves on city road",
+    "w": 400,
+    "h": 336
   },
   {
     "year": 2018,
@@ -195,8 +217,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "स्वयंसेवक संपर्क और संगठन विस्तार को गति देने के लिए विभिन्न अभियान चलाए गए। सामाजिक और शैक्षणिक संस्थानों के माध्यम से युवाओं और समाज के अलग-अलग वर्गों तक पहुंच बनाई गई। शाखा गतिविधियों और प्रशिक्षण कार्यक्रमों को सुदृढ़ किया गया।",
     "caption": "संगठन विस्तार और समाज जुड़ाव को नई दिशा मिली।",
-    "image": "/images/rss/y2018.png",
-    "alt": "mass physical drill on field"
+    "image": "/images/rss/y2018.jpg",
+    "alt": "mass physical drill on field",
+    "w": 400,
+    "h": 360
   },
   {
     "year": 2017,
@@ -204,8 +228,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "सामाजिक समरसता को मजबूत करने के उद्देश्य से देशभर में दलित संपर्क अभियान चलाया गया। स्वयंसेवकों ने विभिन्न समुदायों के बीच संवाद और सहयोग को बढ़ाने के प्रयास किए।",
     "caption": "सामाजिक समरसता और राष्ट्रीय एकता को मजबूत आधार मिला।",
-    "image": "/images/rss/y2017.png",
-    "alt": "sunset mass gathering, large flowing saffron flag"
+    "image": "/images/rss/y2017.jpg",
+    "alt": "sunset mass gathering, large flowing saffron flag",
+    "w": 400,
+    "h": 360
   },
   {
     "year": 2015,
@@ -213,8 +239,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "राष्ट्रीय स्वयंसेवक संघ ने 90 वर्ष पूर्ण होने पर देशभर में विशेष कार्यक्रम आयोजित किए। संगठन की ऐतिहासिक यात्रा को प्रदर्शित करते हुए शाखा विस्तार और जनसंपर्क अभियानों को गति दी गई। युवा स्वयंसेवकों को जोड़ने के लिए प्रशिक्षण और नेतृत्व विकास कार्यक्रमों को सुदृढ़ किया गया।",
     "caption": "संगठन विस्तार और युवा सहभागिता को नई गति और दिशा मिली।",
-    "image": "/images/rss/y2015.png",
-    "alt": "salute drill lines on ground"
+    "image": "/images/rss/y2015.jpg",
+    "alt": "salute drill lines on ground",
+    "w": 400,
+    "h": 252
   },
   {
     "year": 2014,
@@ -222,8 +250,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "केंद्र में नई सरकार बनने के बाद देशभर में समाज संवाद और संपर्क कार्यक्रमों को गति दी गई। विभिन्न सामाजिक वर्गों और संस्थानों के साथ संवाद स्थापित कर राष्ट्रीय विषयों पर जागरूकता बढ़ाई गई। स्वयंसेवकों ने समाज के साथ जुड़ाव को मजबूत करने में सक्रिय भूमिका निभाई।",
     "caption": "समाज संपर्क और राष्ट्रीय चेतना को व्यापक स्तर पर सुदृढ़ आधार मिला।",
-    "image": "/images/rss/y2014.png",
-    "alt": "swearing-in ceremony at Rashtrapati Bhavan steps"
+    "image": "/images/rss/y2014.jpg",
+    "alt": "swearing-in ceremony at Rashtrapati Bhavan steps",
+    "w": 400,
+    "h": 359
   },
   {
     "year": 2013,
@@ -231,8 +261,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "उत्तराखंड में आई भीषण प्राकृतिक आपदा के दौरान स्वयंसेवकों ने राहत और बचाव कार्यों में सक्रिय भूमिका निभाई। प्रभावित क्षेत्रों में भोजन, चिकित्सा सहायता और राहत सामग्री उपलब्ध कराई गई। पुनर्वास कार्यों में भी सहयोग देकर सेवा गतिविधियों को प्रभावी रूप से संचालित किया गया।",
     "caption": "आपदा के समय सेवा कार्यों में संगठन की विश्वसनीयता और भूमिका मजबूत हुई।",
-    "image": "/images/rss/y2013.png",
-    "alt": "Uttarakhand disaster relief 4-photo collage"
+    "image": "/images/rss/y2013.jpg",
+    "alt": "Uttarakhand disaster relief 4-photo collage",
+    "w": 400,
+    "h": 360
   },
   {
     "year": 2012,
@@ -240,8 +272,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "संगठन संचालन और सेवा गतिविधियों को स्थिर दिशा देने के लिए प्रशिक्षण कार्यक्रमों का विस्तार किया गया। शाखा विस्तार और स्वयंसेवक संपर्क अभियानों को गति देकर संगठनात्मक ढांचे को मजबूत किया गया।",
     "caption": "संगठनात्मक संरचना और प्रशिक्षण व्यवस्था को सुदृढ़ आधार मिला।",
-    "image": "/images/rss/y2012.png",
-    "alt": "podium speech at \"स्वयंसेवक एकत्रीकरण\" stage"
+    "image": "/images/rss/y2012.jpg",
+    "alt": "podium speech at \"स्वयंसेवक एकत्रीकरण\" stage",
+    "w": 400,
+    "h": 320
   },
   {
     "year": 2011,
@@ -249,8 +283,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "विभिन्न सामाजिक और सांस्कृतिक आयोजनों के माध्यम से देशभर में समाज जागरण अभियान चलाए गए। विभिन्न समुदायों और वर्गों की भागीदारी से संगठनात्मक संपर्क और संवाद को विस्तार मिला। स्वयंसेवकों ने जनसंपर्क गतिविधियों के माध्यम से समाज जुड़ाव को मजबूत किया।",
     "caption": "समाज जागरण और जनसहभागिता को राष्ट्रीय स्तर पर नई पहचान मिली।",
-    "image": "/images/rss/y2011.png",
-    "alt": "colorful 3D people-figures illustration"
+    "image": "/images/rss/y2011.jpg",
+    "alt": "colorful 3D people-figures illustration",
+    "w": 400,
+    "h": 192
   },
   {
     "year": 2010,
@@ -258,8 +294,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "उत्तर कर्नाटक में आई भीषण बाढ़ के दौरान स्वयंसेवकों ने राहत कार्यों में सक्रिय भूमिका निभाई। प्रभावित क्षेत्रों में राहत सामग्री, भोजन और आवश्यक सहायता पहुंचाई गई। पुनर्वास कार्यों के माध्यम से समाज सेवा गतिविधियों को प्रभावी रूप से आगे बढ़ाया गया।",
     "caption": "आपदा के समय सेवा कार्यों में संगठन की सक्रिय भूमिका और विश्वसनीयता मजबूत हुई।",
-    "image": "/images/rss/y2010.png",
-    "alt": "flood relief collage (N. Karnataka)"
+    "image": "/images/rss/y2010.jpg",
+    "alt": "flood relief collage (N. Karnataka)",
+    "w": 400,
+    "h": 360
   },
   {
     "year": 2009,
@@ -267,8 +305,10 @@ export const rssYears: RssYear[] = [
     "lead": "सरसंघचालक - मोहन भागवत",
     "body": "राष्ट्रीय स्वयंसेवक संघ में नेतृत्व परिवर्तन के साथ मोहन भागवत ने सरसंघचालक का दायित्व संभाला। संगठन विस्तार, युवा संपर्क और शाखा गतिविधियों को नई दिशा दी गई। संगठन संचालन और प्रशिक्षण प्रणाली को अधिक प्रभावी बनाने पर विशेष ध्यान दिया गया।",
     "caption": "नेतृत्व परिवर्तन के साथ संगठन को नई ऊर्जा और स्पष्ट दिशा प्राप्त हुई।",
-    "image": "/images/rss/y2009.png",
-    "alt": "Bhagwat double-portrait collage with saffron flag"
+    "image": "/images/rss/y2009.jpg",
+    "alt": "Bhagwat double-portrait collage with saffron flag",
+    "w": 400,
+    "h": 240
   },
   {
     "year": 2008,
@@ -276,8 +316,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "विदेशों में रहने वाले स्वयंसेवकों के साथ संपर्क कार्यक्रमों को विस्तार दिया गया। विभिन्न देशों में सांस्कृतिक और सामाजिक गतिविधियों के माध्यम से संगठन की पहुंच को बढ़ाया गया। प्रवासी भारतीयों के साथ जुड़ाव के प्रयासों को सुदृढ़ किया गया।",
     "caption": "वैश्विक स्तर पर संगठन की पहचान और संपर्क मजबूत हुआ।",
-    "image": "/images/rss/y2008.png",
-    "alt": "salute drill row, blue sky"
+    "image": "/images/rss/y2008.jpg",
+    "alt": "salute drill row, blue sky",
+    "w": 400,
+    "h": 267
   },
   {
     "year": 2007,
@@ -285,8 +327,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "देशभर में स्वयंसेवक संपर्क और संगठन विस्तार को गति देने के लिए अभियान चलाए गए। युवाओं और समाज के विभिन्न वर्गों तक पहुंच बढ़ाने के प्रयास किए गए। शाखा गतिविधियों और प्रशिक्षण कार्यक्रमों को सुदृढ़ किया गया।",
     "caption": "स्वयंसेवक नेटवर्क और संगठन विस्तार को नई गति मिली।",
-    "image": "/images/rss/y2007.png",
-    "alt": "b/w march illustration, orange flag accent"
+    "image": "/images/rss/y2007.jpg",
+    "alt": "b/w march illustration, orange flag accent",
+    "w": 378,
+    "h": 205
   },
   {
     "year": 2006,
@@ -294,8 +338,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "संगठन संचालन को अधिक व्यवस्थित और प्रभावी बनाने के लिए संरचनात्मक सुधार किए गए। स्वयंसेवक प्रशिक्षण कार्यक्रमों को विस्तार दिया गया। शाखा गतिविधियों में कार्यपद्धति को सुदृढ़ कर संगठनात्मक ढांचे को मजबूत किया गया।",
     "caption": "संगठन संचालन और प्रशिक्षण व्यवस्था को सुदृढ़ आधार प्राप्त हुआ।",
-    "image": "/images/rss/y2006.png",
-    "alt": "orange card — RSS राष्ट्रीय स्वयंसेवी संघ logo"
+    "image": "/images/rss/y2006.jpg",
+    "alt": "orange card — RSS राष्ट्रीय स्वयंसेवी संघ logo",
+    "w": 400,
+    "h": 360
   },
   {
     "year": 2005,
@@ -303,8 +349,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "सेवा भारती और सहयोगी संगठनों के माध्यम से शिक्षा, स्वास्थ्य और समाज सहायता परियोजनाओं का देशभर में विस्तार किया गया। ग्रामीण और वंचित क्षेत्रों में सेवा कार्यों को सुदृढ़ किया गया। स्वयंसेवकों के माध्यम से समाज के विभिन्न वर्गों तक सहायता पहुंचाई गई।",
     "caption": "सेवा गतिविधियों के माध्यम से समाज सहयोग और संगठन की पहुंच मजबूत हुई।",
-    "image": "/images/rss/y2005.png",
-    "alt": "marching drummers with red sashes"
+    "image": "/images/rss/y2005.jpg",
+    "alt": "marching drummers with red sashes",
+    "w": 400,
+    "h": 359
   },
   {
     "year": 2004,
@@ -312,8 +360,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "दक्षिण भारत और तटीय क्षेत्रों में आई सुनामी आपदा के दौरान स्वयंसेवकों ने राहत और बचाव कार्यों में सक्रिय भूमिका निभाई। प्रभावित परिवारों को भोजन, चिकित्सा सहायता और आवश्यक सामग्री उपलब्ध कराई गई। पुनर्वास कार्यों के माध्यम से सेवा गतिविधियों को प्रभावी रूप से संचालित किया गया।",
     "caption": "प्राकृतिक आपदा के समय सेवा कार्यों में संगठन की भूमिका राष्ट्रीय स्तर पर मजबूत हुई।",
-    "image": "/images/rss/y2004.png",
-    "alt": "volunteers carrying food vessel under umbrella (tsunami relief)"
+    "image": "/images/rss/y2004.jpg",
+    "alt": "volunteers carrying food vessel under umbrella (tsunami relief)",
+    "w": 400,
+    "h": 344
   },
   {
     "year": 2003,
@@ -321,8 +371,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "शिक्षा सहायता, स्वास्थ्य सेवा और समाज सहयोग कार्यक्रमों को विभिन्न क्षेत्रों में विस्तार दिया गया। ग्रामीण और वंचित समाज के बीच संपर्क गतिविधियों को सुदृढ़ किया गया। स्वयंसेवक प्रशिक्षण और शाखा विस्तार अभियानों को गति दी गई।",
     "caption": "समाज सहायता कार्यक्रमों और स्वयंसेवक नेटवर्क को व्यापक विस्तार मिला।",
-    "image": "/images/rss/y2003.png",
-    "alt": "band with steel drums on wet road"
+    "image": "/images/rss/y2003.jpg",
+    "alt": "band with steel drums on wet road",
+    "w": 400,
+    "h": 360
   },
   {
     "year": 2002,
@@ -330,8 +382,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "संगठनात्मक संरचना को मजबूत करने और सेवा गतिविधियों को प्रभावी बनाने के लिए विभिन्न कार्यक्रम संचालित किए गए। स्वयंसेवक संपर्क और प्रशिक्षण अभियानों को गति देकर संगठनात्मक आधार को सुदृढ़ किया गया। समाज के विभिन्न वर्गों के साथ जुड़ाव को बढ़ाया गया।",
     "caption": "संगठन विस्तार और सेवा गतिविधियों को नई दिशा और मजबूती मिली।",
-    "image": "/images/rss/y2002.png",
-    "alt": "RSS flag roundel over mass ground formation"
+    "image": "/images/rss/y2002.jpg",
+    "alt": "RSS flag roundel over mass ground formation",
+    "w": 400,
+    "h": 359
   },
   {
     "year": 2001,
@@ -339,8 +393,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "गुजरात के भुज में आए विनाशकारी भूकंप के दौरान स्वयंसेवकों ने बड़े स्तर पर राहत और बचाव कार्य किए। प्रभावित क्षेत्रों में भोजन, चिकित्सा सहायता और राहत सामग्री उपलब्ध कराई गई। पुनर्वास कार्यों में भी सक्रिय सहयोग प्रदान किया गया।",
     "caption": "राष्ट्रीय आपदा के समय सेवा कार्यों में संगठन की क्षमता और विश्वसनीयता स्थापित हुई।",
-    "image": "/images/rss/y2001.png",
-    "alt": "hospital relief photo (Bhuj earthquake)"
+    "image": "/images/rss/y2001.jpg",
+    "alt": "hospital relief photo (Bhuj earthquake)",
+    "w": 400,
+    "h": 364
   },
   {
     "year": 2000,
@@ -348,8 +404,10 @@ export const rssYears: RssYear[] = [
     "lead": "सरसंघचालक - के. एस. सुदर्शन",
     "body": "राष्ट्रीय स्वयंसेवक संघ में नेतृत्व परिवर्तन के साथ के. एस. सुदर्शन ने सरसंघचालक का दायित्व संभाला। संगठन संचालन, वैचारिक मार्गदर्शन और शाखा विस्तार कार्यक्रमों को नई दिशा दी गई। स्वयंसेवक प्रशिक्षण और संगठनात्मक ढांचे को अधिक व्यवस्थित बनाने के प्रयास किए गए।",
     "caption": "नेतृत्व परिवर्तन के साथ संगठन को नई रणनीतिक दिशा और स्थिरता प्राप्त हुई।",
-    "image": "/images/rss/y2000.png",
-    "alt": "K. S. Sudarshan portrait, hand on chest"
+    "image": "/images/rss/y2000.jpg",
+    "alt": "K. S. Sudarshan portrait, hand on chest",
+    "w": 400,
+    "h": 216
   },
   {
     "year": 1999,
@@ -357,8 +415,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "देशभर में सामाजिक, सांस्कृतिक और वैचारिक विषयों पर संवाद कार्यक्रम आयोजित किए गए। शिक्षण संस्थानों, सामाजिक संगठनों और युवाओं के साथ संपर्क अभियानों को गति दी गई। संगठन विस्तार और स्वयंसेवक नेटवर्क को मजबूत करने के प्रयास किए गए।",
     "caption": "राष्ट्रीय स्तर पर वैचारिक प्रभाव और समाज संपर्क गतिविधियों को विस्तार मिला।",
-    "image": "/images/rss/y1999.png",
-    "alt": "sea of saffron flags over white-clad gathering"
+    "image": "/images/rss/y1999.jpg",
+    "alt": "sea of saffron flags over white-clad gathering",
+    "w": 400,
+    "h": 360
   },
   {
     "year": 1998,
@@ -366,8 +426,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "केंद्र में पहली बार भाजपा नेतृत्व वाली सरकार बनने के बाद राष्ट्रीय विषयों पर वैचारिक चर्चा को गति मिली। स्वयंसेवकों ने समाज संपर्क और जनसंवाद कार्यक्रमों के माध्यम से राष्ट्रीय विचारों को व्यापक स्तर पर प्रसारित किया।",
     "caption": "राष्ट्रीय स्तर पर वैचारिक प्रभाव और संगठन की पहचान को नई मजबूती मिली।",
-    "image": "/images/rss/y1998.png",
-    "alt": "Atal Bihari Vajpayee speaking"
+    "image": "/images/rss/y1998.jpg",
+    "alt": "Atal Bihari Vajpayee speaking",
+    "w": 400,
+    "h": 204
   },
   {
     "year": 1997,
@@ -375,8 +437,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "देशभर में शाखा विस्तार और स्वयंसेवक प्रशिक्षण कार्यक्रमों को सुदृढ़ किया गया। युवाओं और समाज के विभिन्न वर्गों से संपर्क गतिविधियों को विस्तार दिया गया। संगठनात्मक ढांचे को अधिक प्रभावी बनाने के प्रयास किए गए।",
     "caption": "स्वयंसेवक नेटवर्क और संगठन विस्तार को नई गति मिली।",
-    "image": "/images/rss/y1997.png",
-    "alt": "illustrated standing swayamsevaks with staves"
+    "image": "/images/rss/y1997.jpg",
+    "alt": "illustrated standing swayamsevaks with staves",
+    "w": 410,
+    "h": 208
   },
   {
     "year": 1996,
@@ -384,8 +448,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "संगठनात्मक संरचना को मजबूत करने और समाज संपर्क कार्यक्रमों को प्रभावी बनाने के लिए विभिन्न प्रयास किए गए। स्वयंसेवक प्रशिक्षण और शाखा गतिविधियों को सुदृढ़ किया गया। विभिन्न सामाजिक वर्गों के साथ जुड़ाव को बढ़ाया गया।",
     "caption": "संगठन संचालन और समाज संपर्क गतिविधियों को सुदृढ़ आधार मिला।",
-    "image": "/images/rss/y1996.png",
-    "alt": "mass staff-drill formation at dusk"
+    "image": "/images/rss/y1996.jpg",
+    "alt": "mass staff-drill formation at dusk",
+    "w": 400,
+    "h": 160
   },
   {
     "year": 1995,
@@ -393,8 +459,10 @@ export const rssYears: RssYear[] = [
     "lead": "सरसंघचालक - प्रो. राजेंद्र सिंह (रज्जू भैया)",
     "body": "नेतृत्व परिवर्तन के बाद संगठन गतिविधियों को अधिक प्रभावी ढंग से संचालित करने और विस्तार देने पर ध्यान केंद्रित किया गया। स्वयंसेवक संपर्क अभियानों को मजबूत किया गया और शाखा विस्तार कार्यक्रमों को योजनाबद्ध रूप से आगे बढ़ाया गया। प्रशिक्षण और संगठन संचालन प्रणाली को अधिक सुदृढ़ बनाने के प्रयास किए गए।",
     "caption": "नेतृत्व परिवर्तन के बाद संगठन को नई दिशा और स्थिरता प्राप्त हुई।",
-    "image": "/images/rss/y1995.png",
-    "alt": "Prof. Rajendra Singh elderly portrait"
+    "image": "/images/rss/y1995.jpg",
+    "alt": "Prof. Rajendra Singh elderly portrait",
+    "w": 397,
+    "h": 256
   },
   {
     "year": 1994,
@@ -402,8 +470,10 @@ export const rssYears: RssYear[] = [
     "lead": "सरसंघचालक - प्रो. राजेंद्र सिंह (रज्जू भैया)",
     "body": "राष्ट्रीय स्वयंसेवक संघ में नेतृत्व परिवर्तन के साथ राजेंद्र सिंह ने सरसंघचालक का दायित्व संभाला। संगठन की कार्यप्रणाली को नए दृष्टिकोण से देखने और वैचारिक आधार को स्पष्ट करने पर विशेष बल दिया गया। स्वयंसेवकों के मार्गदर्शन और बौद्धिक विकास के लिए प्रशिक्षण कार्यक्रमों को अधिक व्यवस्थित किया गया।",
     "caption": "नेतृत्व परिवर्तन के साथ संगठन को नई ऊर्जा और स्पष्ट वैचारिक दिशा प्राप्त हुई।",
-    "image": "/images/rss/y1994.png",
-    "alt": "two leaders in black caps seated"
+    "image": "/images/rss/y1994.jpg",
+    "alt": "two leaders in black caps seated",
+    "w": 400,
+    "h": 222
   },
   {
     "year": 1993,
@@ -411,8 +481,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "प्रतिबंध की अवधि के बाद संगठन गतिविधियों को पुनः व्यवस्थित किया गया। स्वयंसेवक संपर्क और वैचारिक संवाद कार्यक्रमों को गति दी गई। शाखा विस्तार और संगठनात्मक ढांचे को पुनः सुदृढ़ किया गया।",
     "caption": "चुनौतीपूर्ण परिस्थितियों के बाद संगठन की संरचना और सक्रियता मजबूत हुई।",
-    "image": "/images/rss/y1993.png",
-    "alt": "dense route march with raised staves"
+    "image": "/images/rss/y1993.jpg",
+    "alt": "dense route march with raised staves",
+    "w": 400,
+    "h": 209
   },
   {
     "year": 1992,
@@ -420,8 +492,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "अयोध्या की घटनाओं के बाद संगठन पर प्रतिबंध लगाया गया। इस दौरान स्वयंसेवकों ने वैकल्पिक माध्यमों से समाज संपर्क और वैचारिक गतिविधियों को जारी रखा। कठिन परिस्थितियों में संगठनात्मक एकता और सक्रियता बनाए रखी गई।",
     "caption": "चुनौतीपूर्ण समय में संगठन की प्रतिबद्धता और संरचना मजबूत बनी रही।",
-    "image": "/images/rss/y1992.png",
-    "alt": "street rally, Om saffron flags"
+    "image": "/images/rss/y1992.jpg",
+    "alt": "street rally, Om saffron flags",
+    "w": 400,
+    "h": 359
   },
   {
     "year": 1991,
@@ -429,8 +503,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "शिक्षण संस्थानों और छात्र संगठनों के माध्यम से युवाओं से संपर्क कार्यक्रमों को गति दी गई। नेतृत्व विकास और समाज जागरूकता गतिविधियों के माध्यम से संगठन विस्तार को नई दिशा मिली।",
     "caption": "युवा संपर्क और समाज जागरूकता गतिविधियों को व्यापक विस्तार मिला।",
-    "image": "/images/rss/y1991.png",
-    "alt": "painting — leader addressing seated volunteers, saffron flag"
+    "image": "/images/rss/y1991.jpg",
+    "alt": "painting — leader addressing seated volunteers, saffron flag",
+    "w": 400,
+    "h": 225
   },
   {
     "year": 1990,
@@ -438,8 +514,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "राम मंदिर आंदोलन के समर्थन में निकाली गई राम रथ यात्रा के दौरान स्वयंसेवकों ने विभिन्न क्षेत्रों में जनसंपर्क और संगठनात्मक गतिविधियों में सक्रिय भूमिका निभाई। यात्रा मार्गों पर व्यवस्था सहयोग और समाज जागरण कार्यक्रमों को गति दी गई।",
     "caption": "सांस्कृतिक विषयों पर समाज सहभागिता और संगठन सक्रियता को व्यापक विस्तार मिला।",
-    "image": "/images/rss/y1990.png",
-    "alt": "b/w rath yatra photo, garlanded leaders on rath"
+    "image": "/images/rss/y1990.jpg",
+    "alt": "b/w rath yatra photo, garlanded leaders on rath",
+    "w": 397,
+    "h": 320
   },
   {
     "year": 1989,
@@ -447,8 +525,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "राम मंदिर निर्माण का विषय राष्ट्रीय स्तर पर प्रमुख मुद्दा बना। देशभर में समाज जागरण और जनसंपर्क कार्यक्रम संचालित किए गए। विभिन्न मंचों के माध्यम से सांस्कृतिक और ऐतिहासिक विषयों पर संवाद को विस्तार मिला।",
     "caption": "राष्ट्रीय स्तर पर सांस्कृतिक विषयों पर व्यापक जनजागरण का वातावरण बना।",
-    "image": "/images/rss/y1989.png",
-    "alt": "b/w sadhus holding shilanyas brick"
+    "image": "/images/rss/y1989.jpg",
+    "alt": "b/w sadhus holding shilanyas brick",
+    "w": 400,
+    "h": 128
   },
   {
     "year": 1988,
@@ -456,8 +536,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "देशभर में शाखा विस्तार और स्वयंसेवक संपर्क अभियान चलाए गए। युवाओं और समाज के विभिन्न वर्गों के साथ जुड़ाव को मजबूत किया गया। सांस्कृतिक और सामाजिक कार्यक्रमों के माध्यम से संगठनात्मक नेटवर्क को विस्तार मिला।",
     "caption": "स्वयंसेवक नेटवर्क और समाज संपर्क गतिविधियों को नई गति मिली।",
-    "image": "/images/rss/y1988.png",
-    "alt": "route march, staves shouldered"
+    "image": "/images/rss/y1988.jpg",
+    "alt": "route march, staves shouldered",
+    "w": 400,
+    "h": 360
   },
   {
     "year": 1987,
@@ -465,8 +547,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "स्वयंसेवक प्रशिक्षण कार्यक्रमों को सुदृढ़ किया गया और संगठन संचालन को अधिक व्यवस्थित बनाने के प्रयास किए गए। शाखा गतिविधियों और नेतृत्व विकास कार्यक्रमों को गति दी गई।",
     "caption": "संगठनात्मक संरचना और प्रशिक्षण व्यवस्था मजबूत हुई।",
-    "image": "/images/rss/y1987.png",
-    "alt": "march with tall red flags"
+    "image": "/images/rss/y1987.jpg",
+    "alt": "march with tall red flags",
+    "w": 400,
+    "h": 360
   },
   {
     "year": 1986,
@@ -474,8 +558,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "सांस्कृतिक चेतना और समाज जागरण को बढ़ावा देने के लिए विभिन्न कार्यक्रम संचालित किए गए। स्वयंसेवक संपर्क और शाखा विस्तार गतिविधियों को सुदृढ़ कर संगठनात्मक आधार को मजबूत किया गया।",
     "caption": "सांस्कृतिक जागरण और संगठन विस्तार को नई दिशा मिली।",
-    "image": "/images/rss/y1986.png",
-    "alt": "march with orange pennant flags"
+    "image": "/images/rss/y1986.jpg",
+    "alt": "march with orange pennant flags",
+    "w": 400,
+    "h": 336
   },
   {
     "year": 1985,
@@ -483,8 +569,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "देशभर में सांस्कृतिक जागरण और समाज संपर्क को मजबूत करने के लिए विभिन्न अभियान चलाए गए। सामाजिक और धार्मिक मंचों के माध्यम से जनजागरण गतिविधियों को गति दी गई। स्वयंसेवकों ने विभिन्न वर्गों के साथ जुड़ाव को सुदृढ़ किया।",
     "caption": "सांस्कृतिक चेतना और समाज सहभागिता को व्यापक आधार मिला।",
-    "image": "/images/rss/y1985.png",
-    "alt": "painting — community meal at sunset"
+    "image": "/images/rss/y1985.jpg",
+    "alt": "painting — community meal at sunset",
+    "w": 340,
+    "h": 340
   },
   {
     "year": 1984,
@@ -492,8 +580,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "राम जन्मभूमि से जुड़ा विषय राष्ट्रीय स्तर पर प्रमुखता से उभरने लगा। विभिन्न क्षेत्रों में समाज जागरण और जनसंपर्क कार्यक्रम आयोजित किए गए। सांस्कृतिक और धार्मिक मंचों के माध्यम से संवाद और सहभागिता को गति मिली।",
     "caption": "सांस्कृतिक विषयों पर राष्ट्रीय स्तर पर जनजागरण को नई दिशा मिली।",
-    "image": "/images/rss/y1984.png",
-    "alt": "b/w crowd around janmabhoomi rath van"
+    "image": "/images/rss/y1984.jpg",
+    "alt": "b/w crowd around janmabhoomi rath van",
+    "w": 386,
+    "h": 318
   },
   {
     "year": 1983,
@@ -501,8 +591,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "देशभर में समाज जागरण और संगठन विस्तार के लिए अभियान चलाए गए। युवाओं और विभिन्न सामाजिक वर्गों से संपर्क बढ़ाने के प्रयास किए गए। सांस्कृतिक कार्यक्रमों के माध्यम से संगठनात्मक नेटवर्क को सुदृढ़ किया गया।",
     "caption": "समाज संपर्क और संगठन विस्तार गतिविधियों को व्यापक गति मिली।",
-    "image": "/images/rss/y1983.png",
-    "alt": "painting — saffron-clad guide teaching seated youths"
+    "image": "/images/rss/y1983.jpg",
+    "alt": "painting — saffron-clad guide teaching seated youths",
+    "w": 340,
+    "h": 340
   },
   {
     "year": 1982,
@@ -510,8 +602,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "विभिन्न सांस्कृतिक और सामाजिक कार्यक्रमों के माध्यम से समाज के विभिन्न वर्गों के साथ जुड़ाव को मजबूत किया गया। स्वयंसेवकों ने जनसंपर्क गतिविधियों के माध्यम से संगठनात्मक विस्तार को आगे बढ़ाया।",
     "caption": "सांस्कृतिक चेतना और समाज सहभागिता को सुदृढ़ आधार मिला।",
-    "image": "/images/rss/y1982.png",
-    "alt": "volunteers seated on lawn, hillside"
+    "image": "/images/rss/y1982.jpg",
+    "alt": "volunteers seated on lawn, hillside",
+    "w": 310,
+    "h": 330
   },
   {
     "year": 1981,
@@ -519,8 +613,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "स्वयंसेवक प्रशिक्षण कार्यक्रमों को मजबूत किया गया और शाखा विस्तार गतिविधियों को गति दी गई। संगठन संचालन और नेतृत्व विकास कार्यक्रमों के माध्यम से संगठनात्मक ढांचे को सुदृढ़ किया गया।",
     "caption": "संगठनात्मक संरचना और स्वयंसेवक प्रशिक्षण को नई मजबूती मिली।",
-    "image": "/images/rss/y1981.png",
-    "alt": "march with large Om saffron flag"
+    "image": "/images/rss/y1981.jpg",
+    "alt": "march with large Om saffron flag",
+    "w": 330,
+    "h": 308
   },
   {
     "year": 1980,
@@ -528,8 +624,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "जनता पार्टी के विभाजन के बाद भारतीय जनता पार्टी का गठन हुआ, जिसमें वैचारिक रूप से जुड़े कार्यकर्ताओं की सक्रिय भागीदारी रही। लोकतांत्रिक राजनीति में राष्ट्रीय विचारों को नई दिशा देने के प्रयास किए गए।",
     "caption": "वैचारिक राजनीतिक सहभागिता को राष्ट्रीय स्तर पर नई पहचान मिली।",
-    "image": "/images/rss/y1980.png",
-    "alt": "b/w tent rally, speaker pointing"
+    "image": "/images/rss/y1980.jpg",
+    "alt": "b/w tent rally, speaker pointing",
+    "w": 400,
+    "h": 333
   },
   {
     "year": 1979,
@@ -537,8 +635,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "आपातकाल के बाद लोकतांत्रिक व्यवस्था में सक्रिय भागीदारी के लिए स्वयंसेवकों ने समाज संपर्क और जनसंवाद कार्यक्रम चलाए। विभिन्न सामाजिक और राजनीतिक मंचों के माध्यम से जागरूकता अभियान संचालित किए गए।",
     "caption": "लोकतांत्रिक प्रक्रिया में समाज सहभागिता और वैचारिक संवाद को गति मिली।",
-    "image": "/images/rss/y1979.png",
-    "alt": "march with big orange flags"
+    "image": "/images/rss/y1979.jpg",
+    "alt": "march with big orange flags",
+    "w": 400,
+    "h": 360
   },
   {
     "year": 1978,
@@ -546,8 +646,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "आपातकाल के बाद संगठन गतिविधियों को पुनः सक्रिय किया गया। स्वयंसेवक संपर्क अभियान और शाखा विस्तार कार्यक्रमों को गति दी गई। प्रशिक्षण और संगठन संचालन को सुदृढ़ करने के प्रयास किए गए।",
     "caption": "संगठन सक्रियता और समाज संपर्क गतिविधियों को नई ऊर्जा मिली।",
-    "image": "/images/rss/y1978.png",
-    "alt": "RSS Om sunburst emblem card"
+    "image": "/images/rss/y1978.jpg",
+    "alt": "RSS Om sunburst emblem card",
+    "w": 400,
+    "h": 360
   },
   {
     "year": 1977,
@@ -555,8 +657,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "आपातकाल समाप्त होने के बाद लोकतांत्रिक व्यवस्था की पुनर्स्थापना हुई। स्वयंसेवकों ने समाज संपर्क और जनजागरण गतिविधियों के माध्यम से संगठन को पुनः सुदृढ़ किया।",
     "caption": "लोकतांत्रिक मूल्यों और संगठन सक्रियता को नई दिशा मिली।",
-    "image": "/images/rss/y1977.png",
-    "alt": "b/w street celebration around jeep"
+    "image": "/images/rss/y1977.jpg",
+    "alt": "b/w street celebration around jeep",
+    "w": 400,
+    "h": 353
   },
   {
     "year": 1976,
@@ -564,8 +668,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "देश में आपातकाल के दौरान संगठन पर प्रतिबंध के बावजूद स्वयंसेवकों ने वैकल्पिक माध्यमों से गतिविधियों को जारी रखा। कठिन परिस्थितियों में भी संगठनात्मक एकता और वैचारिक प्रतिबद्धता को बनाए रखा गया।",
     "caption": "चुनौतीपूर्ण परिस्थितियों में संगठन की दृढ़ता और सक्रियता मजबूत बनी रही।",
-    "image": "/images/rss/y1976.png",
-    "alt": "collage — field drill, emergency newspaper, Indira Gandhi"
+    "image": "/images/rss/y1976.jpg",
+    "alt": "collage — field drill, emergency newspaper, Indira Gandhi",
+    "w": 416,
+    "h": 489
   },
   {
     "year": 1975,
@@ -573,8 +679,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "देश में आपातकाल घोषित होने के बाद राष्ट्रीय स्वयंसेवक संघ पर प्रतिबंध लगाया गया। संगठन से जुड़े हजारों स्वयंसेवकों को गिरफ्तार किया गया। प्रतिबंध के बावजूद स्वयंसेवकों ने वैकल्पिक माध्यमों से समाज संपर्क और वैचारिक गतिविधियों को जारी रखा।",
     "caption": "चुनौतीपूर्ण परिस्थितियों में संगठन की प्रतिबद्धता और सक्रियता बनी रही।",
-    "image": "/images/rss/y1975.png",
-    "alt": "b/w collage — Indira Gandhi, jailed leader behind bars"
+    "image": "/images/rss/y1975.jpg",
+    "alt": "b/w collage — Indira Gandhi, jailed leader behind bars",
+    "w": 400,
+    "h": 360
   },
   {
     "year": 1974,
@@ -582,8 +690,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "आपातकाल से पूर्व के समय में संगठन विस्तार और समाज संपर्क अभियानों को गति दी गई। स्वयंसेवक प्रशिक्षण कार्यक्रम और शाखा विस्तार गतिविधियों को सुदृढ़ किया गया।",
     "caption": "संगठन नेटवर्क और स्वयंसेवक प्रशिक्षण को नई मजबूती मिली।",
-    "image": "/images/rss/y1974.png",
-    "alt": "rows with staves held forward"
+    "image": "/images/rss/y1974.jpg",
+    "alt": "rows with staves held forward",
+    "w": 400,
+    "h": 144
   },
   {
     "year": 1973,
@@ -591,8 +701,10 @@ export const rssYears: RssYear[] = [
     "lead": "सरसंघचालक - बालासाहेब देवरस",
     "body": "राष्ट्रीय स्वयंसेवक संघ में नेतृत्व परिवर्तन के साथ बालासाहेब देवरस ने सरसंघचालक का दायित्व संभाला। संगठन संचालन, समाज संपर्क और स्वयंसेवक प्रशिक्षण कार्यक्रमों को नई दिशा दी गई।",
     "caption": "नेतृत्व परिवर्तन के साथ संगठन को नई रणनीतिक दिशा और सक्रियता मिली।",
-    "image": "/images/rss/y1973.png",
-    "alt": "Balasaheb Deoras portrait painting"
+    "image": "/images/rss/y1973.jpg",
+    "alt": "Balasaheb Deoras portrait painting",
+    "w": 400,
+    "h": 336
   },
   {
     "year": 1972,
@@ -600,8 +712,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "देशभर में शाखा विस्तार और स्वयंसेवक प्रशिक्षण कार्यक्रमों को सुदृढ़ किया गया। युवाओं और समाज के विभिन्न वर्गों से संपर्क गतिविधियों को बढ़ाया गया।",
     "caption": "स्वयंसेवक नेटवर्क और संगठन विस्तार गतिविधियों को नई गति मिली।",
-    "image": "/images/rss/y1972.png",
-    "alt": "salute pledge rows on field"
+    "image": "/images/rss/y1972.jpg",
+    "alt": "salute pledge rows on field",
+    "w": 400,
+    "h": 352
   },
   {
     "year": 1971,
@@ -609,8 +723,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "संगठनात्मक गतिविधियों को सुदृढ़ करने और समाज संपर्क कार्यक्रमों को विस्तार देने के प्रयास किए गए। विभिन्न क्षेत्रों में स्वयंसेवकों की सक्रिय भागीदारी से संगठनात्मक आधार मजबूत हुआ।",
     "caption": "संगठन संरचना और समाज जुड़ाव को सुदृढ़ आधार मिला।",
-    "image": "/images/rss/y1971.png",
-    "alt": "long marching column, dramatic dusk sky"
+    "image": "/images/rss/y1971.jpg",
+    "alt": "long marching column, dramatic dusk sky",
+    "w": 400,
+    "h": 360
   },
   {
     "year": 1970,
@@ -618,8 +734,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "सामाजिक और सांस्कृतिक संगठनों के माध्यम से समाज संपर्क गतिविधियों को व्यापक स्तर पर बढ़ाया गया। विभिन्न क्षेत्रों में स्वयंसेवक नेटवर्क को मजबूत करने और जनजागरण कार्यक्रमों को संचालित किया गया।",
     "caption": "संगठन की सामाजिक भागीदारी और संपर्क गतिविधियों को नई गति मिली।",
-    "image": "/images/rss/y1970.png",
-    "alt": "route march, khaki trousers era"
+    "image": "/images/rss/y1970.jpg",
+    "alt": "route march, khaki trousers era",
+    "w": 400,
+    "h": 360
   },
   {
     "year": 1969,
@@ -627,8 +745,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "देशभर में स्वयंसेवक संपर्क और शाखा विस्तार कार्यक्रमों को गति दी गई। विभिन्न सामाजिक वर्गों के साथ संवाद और सहभागिता को बढ़ाया गया।",
     "caption": "संगठन नेटवर्क और समाज संपर्क गतिविधियों को सुदृढ़ आधार मिला।",
-    "image": "/images/rss/y1969.png",
-    "alt": "illustration — volunteer waving giant RSS 100 flag"
+    "image": "/images/rss/y1969.jpg",
+    "alt": "illustration — volunteer waving giant RSS 100 flag",
+    "w": 400,
+    "h": 241
   },
   {
     "year": 1968,
@@ -636,8 +756,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "शिक्षण संस्थानों और छात्र संगठनों के माध्यम से युवाओं के साथ संपर्क कार्यक्रमों को सुदृढ़ किया गया। नेतृत्व विकास और वैचारिक संवाद गतिविधियों को विस्तार दिया गया।",
     "caption": "युवा संपर्क और छात्र नेतृत्व निर्माण गतिविधियों को नई दिशा मिली।",
-    "image": "/images/rss/y1968.png",
-    "alt": "schoolboys in uniform with staves"
+    "image": "/images/rss/y1968.jpg",
+    "alt": "schoolboys in uniform with staves",
+    "w": 400,
+    "h": 248
   },
   {
     "year": 1967,
@@ -654,8 +776,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "देशभर में शाखाओं की संख्या बढ़ाने और स्वयंसेवक संपर्क कार्यक्रमों को विस्तार देने के प्रयास किए गए। सामाजिक और सांस्कृतिक गतिविधियों के माध्यम से संगठनात्मक नेटवर्क को मजबूत किया गया।",
     "caption": "स्वयंसेवक नेटवर्क और संगठन विस्तार गतिविधियों को नई गति मिली।",
-    "image": "/images/rss/y1966.png",
-    "alt": "vast seated gathering, saffron flag right"
+    "image": "/images/rss/y1966.jpg",
+    "alt": "vast seated gathering, saffron flag right",
+    "w": 400,
+    "h": 360
   },
   {
     "year": 1965,
@@ -663,8 +787,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "भारत-पाक युद्ध के दौरान स्वयंसेवकों ने नागरिक सहायता और राहत कार्यों में सक्रिय भूमिका निभाई। सीमावर्ती क्षेत्रों में राहत सामग्री, रक्तदान और प्रशासनिक सहयोग गतिविधियों को संचालित किया गया।",
     "caption": "राष्ट्रीय सुरक्षा और समाज सेवा में संगठन की सक्रिय भूमिका मजबूत हुई।",
-    "image": "/images/rss/y1965.png",
-    "alt": "b/w tank on transporter"
+    "image": "/images/rss/y1965.jpg",
+    "alt": "b/w tank on transporter",
+    "w": 400,
+    "h": 128
   },
   {
     "year": 1964,
@@ -672,8 +798,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "देशभर में स्वयंसेवक संपर्क और शाखा विस्तार कार्यक्रमों को गति दी गई। विभिन्न सामाजिक वर्गों के साथ संवाद और सहभागिता को बढ़ाया गया।",
     "caption": "संगठन नेटवर्क और समाज संपर्क गतिविधियों को सुदृढ़ आधार मिला।",
-    "image": "/images/rss/y1964.png",
-    "alt": "sepia mass march past reviewing crowd"
+    "image": "/images/rss/y1964.jpg",
+    "alt": "sepia mass march past reviewing crowd",
+    "w": 400,
+    "h": 120
   },
   {
     "year": 1963,
@@ -681,8 +809,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "गणतंत्र दिवस परेड में स्वयंसेवकों की सहभागिता ने संगठन की अनुशासन और क्षमता को राष्ट्रीय स्तर पर प्रदर्शित किया। इस अवसर ने संगठन की पहचान और प्रशिक्षण प्रणाली को व्यापक पहचान दिलाई।",
     "caption": "राष्ट्रीय स्तर पर संगठन की अनुशासन और क्षमता को व्यापक मान्यता मिली।",
-    "image": "/images/rss/y1963.png",
-    "alt": "b/w Rajpath republic-day parade"
+    "image": "/images/rss/y1963.jpg",
+    "alt": "b/w Rajpath republic-day parade",
+    "w": 280,
+    "h": 352
   },
   {
     "year": 1962,
@@ -690,8 +820,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "भारत-चीन युद्ध के दौरान स्वयंसेवकों ने नागरिक सहायता, राहत सामग्री वितरण और प्रशासनिक सहयोग में सक्रिय भूमिका निभाई। सैनिक परिवारों के समर्थन और समाज सहायता गतिविधियों को विस्तार दिया गया।",
     "caption": "राष्ट्रीय संकट के समय सेवा कार्यों में संगठन की भूमिका मजबूत हुई।",
-    "image": "/images/rss/y1962.png",
-    "alt": "b/w soldiers with packs resting"
+    "image": "/images/rss/y1962.jpg",
+    "alt": "b/w soldiers with packs resting",
+    "w": 400,
+    "h": 128
   },
   {
     "year": 1961,
@@ -699,8 +831,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "देशभर में शाखा विस्तार और स्वयंसेवक प्रशिक्षण कार्यक्रमों को सुदृढ़ किया गया। समाज संपर्क और नेतृत्व विकास गतिविधियों को गति दी गई।",
     "caption": "स्वयंसेवक नेटवर्क और संगठन विस्तार गतिविधियों को सुदृढ़ आधार मिला।",
-    "image": "/images/rss/y1961.png",
-    "alt": "b/w lineup at attention, black caps"
+    "image": "/images/rss/y1961.jpg",
+    "alt": "b/w lineup at attention, black caps",
+    "w": 400,
+    "h": 192
   },
   {
     "year": 1960,
@@ -708,8 +842,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "स्वामी विवेकानंद की स्मृति को राष्ट्रीय स्तर पर सम्मान देने के उद्देश्य से कन्याकुमारी में विवेकानंद रॉक मेमोरियल निर्माण आंदोलन की शुरुआत की गई। देशभर में जनसंपर्क और सहयोग अभियान चलाकर समाज की भागीदारी सुनिश्चित की गई।",
     "caption": "राष्ट्रीय सांस्कृतिक प्रेरणा और जनसहभागिता को व्यापक समर्थन मिला।",
-    "image": "/images/rss/y1960.png",
-    "alt": "Swami Vivekananda sepia portrait"
+    "image": "/images/rss/y1960.jpg",
+    "alt": "Swami Vivekananda sepia portrait",
+    "w": 400,
+    "h": 328
   },
   {
     "year": 1959,
@@ -717,8 +853,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "देशभर में सांस्कृतिक कार्यक्रमों और समाज जागरण गतिविधियों को विस्तार दिया गया। स्वयंसेवकों ने विभिन्न मंचों के माध्यम से समाज के अलग-अलग वर्गों तक पहुंच बनाई।",
     "caption": "सांस्कृतिक चेतना और समाज सहभागिता को नई गति मिली।",
-    "image": "/images/rss/y1959.png",
-    "alt": "composite — tricolor, march rows, inset historic photo"
+    "image": "/images/rss/y1959.jpg",
+    "alt": "composite — tricolor, march rows, inset historic photo",
+    "w": 400,
+    "h": 360
   },
   {
     "year": 1958,
@@ -726,8 +864,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "स्वयंसेवक संपर्क और शाखा विस्तार कार्यक्रमों को सुदृढ़ किया गया। विभिन्न क्षेत्रों में संगठनात्मक गतिविधियों को संतुलित रूप से विस्तार दिया गया।",
     "caption": "संगठन नेटवर्क और समाज संपर्क गतिविधियों को सुदृढ़ आधार मिला।",
-    "image": "/images/rss/y1958.png",
-    "alt": "march with many orange flags"
+    "image": "/images/rss/y1958.jpg",
+    "alt": "march with many orange flags",
+    "w": 400,
+    "h": 360
   },
   {
     "year": 1957,
@@ -735,8 +875,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "स्वयंसेवक प्रशिक्षण कार्यक्रमों को मजबूत किया गया और संगठन संचालन को अधिक व्यवस्थित बनाने के प्रयास किए गए। नेतृत्व विकास और शाखा गतिविधियों को गति दी गई।",
     "caption": "संगठन संचालन और प्रशिक्षण व्यवस्था को नई मजबूती मिली।",
-    "image": "/images/rss/y1957.png",
-    "alt": "b/w march illustration with flag"
+    "image": "/images/rss/y1957.jpg",
+    "alt": "b/w march illustration with flag",
+    "w": 290,
+    "h": 190
   },
   {
     "year": 1956,
@@ -744,8 +886,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "देशभर में शाखाओं की संख्या बढ़ाने और स्वयंसेवक संपर्क कार्यक्रमों को विस्तार देने के प्रयास किए गए। सामाजिक और सांस्कृतिक गतिविधियों के माध्यम से संगठनात्मक आधार को मजबूत किया गया।",
     "caption": "स्वयंसेवक नेटवर्क और संगठन विस्तार गतिविधियों को सुदृढ़ आधार मिला।",
-    "image": "/images/rss/y1956.png",
-    "alt": "aerial view — vast ground formation"
+    "image": "/images/rss/y1956.jpg",
+    "alt": "aerial view — vast ground formation",
+    "w": 400,
+    "h": 296
   },
   {
     "year": 1955,
@@ -753,8 +897,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "देशभर में सामाजिक, सांस्कृतिक और वैचारिक विषयों पर संवाद कार्यक्रमों को विस्तार दिया गया। स्वयंसेवकों ने विभिन्न मंचों के माध्यम से समाज जागरूकता और संपर्क गतिविधियों को सुदृढ़ किया।",
     "caption": "वैचारिक संवाद और समाज संपर्क गतिविधियों को व्यापक आधार मिला।",
-    "image": "/images/rss/y1955.png",
-    "alt": "b/w stave-fighting drill"
+    "image": "/images/rss/y1955.jpg",
+    "alt": "b/w stave-fighting drill",
+    "w": 400,
+    "h": 360
   },
   {
     "year": 1954,
@@ -762,8 +908,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "शाखा विस्तार और स्वयंसेवक संपर्क कार्यक्रमों को गति दी गई। विभिन्न क्षेत्रों में संगठनात्मक गतिविधियों को सुदृढ़ करने के प्रयास किए गए।",
     "caption": "संगठन नेटवर्क और स्वयंसेवक संपर्क गतिविधियों को नई गति मिली।",
-    "image": "/images/rss/y1954.png",
-    "alt": "mass surya-namaskar style drill"
+    "image": "/images/rss/y1954.jpg",
+    "alt": "mass surya-namaskar style drill",
+    "w": 400,
+    "h": 336
   },
   {
     "year": 1953,
@@ -771,8 +919,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "सामाजिक और सांस्कृतिक कार्यक्रमों के माध्यम से समाज जागरण गतिविधियों को विस्तार दिया गया। स्वयंसेवकों ने विभिन्न वर्गों के साथ जुड़ाव को सुदृढ़ किया।",
     "caption": "समाज जागरण और संगठन विस्तार गतिविधियों को सुदृढ़ आधार मिला।",
-    "image": "/images/rss/y1953.png",
-    "alt": "b/w 1950s public gathering, vintage car"
+    "image": "/images/rss/y1953.jpg",
+    "alt": "b/w 1950s public gathering, vintage car",
+    "w": 400,
+    "h": 152
   },
   {
     "year": 1952,
@@ -780,8 +930,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "भारतीय जनसंघ के गठन के बाद लोकतांत्रिक राजनीति में वैचारिक सहभागिता को गति मिली। स्वयंसेवकों ने समाज संपर्क और जनसंवाद कार्यक्रमों के माध्यम से राष्ट्रीय विचारों को व्यापक स्तर पर प्रसारित किया।",
     "caption": "वैचारिक राजनीतिक सहभागिता को राष्ट्रीय स्तर पर नई पहचान मिली।",
-    "image": "/images/rss/y1952.png",
-    "alt": "b/w seated group under bower"
+    "image": "/images/rss/y1952.jpg",
+    "alt": "b/w seated group under bower",
+    "w": 400,
+    "h": 120
   },
   {
     "year": 1951,
@@ -789,8 +941,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "डॉ. श्यामा प्रसाद मुखर्जी के नेतृत्व में भारतीय जनसंघ की स्थापना की गई। इस स्थापना ने लोकतांत्रिक राजनीति में वैचारिक आधार पर राष्ट्रीय विषयों को नई दिशा प्रदान की।",
     "caption": "लोकतांत्रिक राजनीतिक क्षेत्र में वैचारिक राष्ट्रवादी दृष्टिकोण को नई पहचान मिली।",
-    "image": "/images/rss/y1951.png",
-    "alt": "two b/w portraits side by side"
+    "image": "/images/rss/y1951.jpg",
+    "alt": "two b/w portraits side by side",
+    "w": 400,
+    "h": 360
   },
   {
     "year": 1950,
@@ -807,8 +961,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "सरकारी प्रतिबंध हटने के बाद संगठन गतिविधियों को पुनः सक्रिय किया गया। स्वयंसेवक संपर्क और शाखा विस्तार कार्यक्रमों को पुनः गति दी गई।",
     "caption": "चुनौतीपूर्ण परिस्थितियों के बाद संगठन की सक्रियता और संरचना मजबूत हुई।",
-    "image": "/images/rss/y1949.png",
-    "alt": "silhouetted marchers with staves"
+    "image": "/images/rss/y1949.jpg",
+    "alt": "silhouetted marchers with staves",
+    "w": 400,
+    "h": 187
   },
   {
     "year": 1948,
@@ -816,8 +972,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "महात्मा गांधी की हत्या के बाद संगठन पर प्रतिबंध लगाया गया। इस दौरान स्वयंसेवकों ने वैकल्पिक माध्यमों से समाज संपर्क और वैचारिक गतिविधियों को बनाए रखा।",
     "caption": "कठिन परिस्थितियों में संगठन की प्रतिबद्धता और सक्रियता बनी रही।",
-    "image": "/images/rss/y1948.png",
-    "alt": "dramatic low-angle stave march"
+    "image": "/images/rss/y1948.jpg",
+    "alt": "dramatic low-angle stave march",
+    "w": 400,
+    "h": 188
   },
   {
     "year": 1947,
@@ -825,8 +983,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "देश विभाजन के समय स्वयंसेवकों ने शरणार्थियों और प्रभावित परिवारों के लिए राहत कार्यों में सक्रिय भूमिका निभाई। भोजन, आवास और सुरक्षा सहायता उपलब्ध कराई गई।",
     "caption": "राष्ट्रीय संकट के समय सेवा कार्यों में संगठन की भूमिका व्यापक रूप से सामने आई।",
-    "image": "/images/rss/y1947.png",
-    "alt": "b/w street procession with bicycles"
+    "image": "/images/rss/y1947.jpg",
+    "alt": "b/w street procession with bicycles",
+    "w": 400,
+    "h": 296
   },
   {
     "year": 1946,
@@ -834,8 +994,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "देशभर में शाखा विस्तार और स्वयंसेवक संपर्क कार्यक्रमों को सुदृढ़ किया गया। युवाओं और समाज के विभिन्न वर्गों से जुड़ाव को बढ़ाने के प्रयास किए गए।",
     "caption": "संगठन नेटवर्क और समाज संपर्क गतिविधियों को सुदृढ़ आधार मिला।",
-    "image": "/images/rss/y1946.png",
-    "alt": "b/w salute rows on maidan"
+    "image": "/images/rss/y1946.jpg",
+    "alt": "b/w salute rows on maidan",
+    "w": 400,
+    "h": 320
   },
   {
     "year": 1945,
@@ -843,8 +1005,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "देश के विभिन्न क्षेत्रों में शाखाओं का विस्तार किया गया और स्वयंसेवक संपर्क कार्यक्रमों को गति दी गई। युवाओं को संगठन से जोड़ने के लिए विशेष अभियान संचालित किए गए।",
     "caption": "संगठन विस्तार और स्वयंसेवक नेटवर्क को व्यापक गति मिली।",
-    "image": "/images/rss/y1945.png",
-    "alt": "संघ परिवार flag graphic card"
+    "image": "/images/rss/y1945.jpg",
+    "alt": "संघ परिवार flag graphic card",
+    "w": 400,
+    "h": 241
   },
   {
     "year": 1944,
@@ -861,8 +1025,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "स्वयंसेवकों के लिए वैचारिक प्रशिक्षण और नेतृत्व विकास कार्यक्रमों को सुदृढ़ किया गया। संगठन संचालन और अनुशासन पर विशेष ध्यान दिया गया।",
     "caption": "वैचारिक प्रशिक्षण और नेतृत्व निर्माण गतिविधियों को नई मजबूती मिली।",
-    "image": "/images/rss/y1943.png",
-    "alt": "संघ परिवार flag graphic card"
+    "image": "/images/rss/y1943.jpg",
+    "alt": "संघ परिवार flag graphic card",
+    "w": 400,
+    "h": 241
   },
   {
     "year": 1942,
@@ -870,8 +1036,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "शाखा संचालन प्रणाली को अधिक व्यवस्थित और प्रभावी बनाने के प्रयास किए गए। संगठनात्मक ढांचे को सुदृढ़ कर प्रशिक्षण कार्यक्रमों को विस्तार दिया गया।",
     "caption": "संगठन संचालन और शाखा गतिविधियों को स्थिर दिशा मिली।",
-    "image": "/images/rss/y1942.png",
-    "alt": "saffron flag over sun illustration"
+    "image": "/images/rss/y1942.jpg",
+    "alt": "saffron flag over sun illustration",
+    "w": 400,
+    "h": 360
   },
   {
     "year": 1941,
@@ -879,8 +1047,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "द्वितीय विश्व युद्ध के दौरान राष्ट्रीय परिस्थितियों के बीच संगठन गतिविधियों को संतुलित रूप से जारी रखा गया। स्वयंसेवकों के माध्यम से समाज संपर्क और प्रशिक्षण कार्यक्रम संचालित किए गए।",
     "caption": "चुनौतीपूर्ण परिस्थितियों में संगठन की सक्रियता और निरंतरता बनी रही।",
-    "image": "/images/rss/y1941.png",
-    "alt": "b/w seated leaders group"
+    "image": "/images/rss/y1941.jpg",
+    "alt": "b/w seated leaders group",
+    "w": 381,
+    "h": 140
   },
   {
     "year": 1940,
@@ -888,8 +1058,10 @@ export const rssYears: RssYear[] = [
     "lead": "सरसंघचालक - माधव सदाशिव गोलवलकर (गुरुजी)",
     "body": "डॉ. केशव बलिराम हेडगेवार के निधन के बाद गुरुजी माधव सदाशिव गोलवलकर ने सरसंघचालक का दायित्व संभाला। संगठन विस्तार, वैचारिक मार्गदर्शन और प्रशिक्षण व्यवस्था को नई दिशा दी गई।",
     "caption": "नेतृत्व परिवर्तन के साथ संगठन को स्थिरता और दीर्घकालिक दिशा प्राप्त हुई।",
-    "image": "/images/rss/y1940.png",
-    "alt": "Golwalkar writing at desk"
+    "image": "/images/rss/y1940.jpg",
+    "alt": "Golwalkar writing at desk",
+    "w": 400,
+    "h": 240
   },
   {
     "year": 1939,
@@ -897,8 +1069,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "Officer Training Camp (OTC) प्रशिक्षण प्रणाली को राष्ट्रीय स्तर पर विस्तार दिया गया। विभिन्न क्षेत्रों से स्वयंसेवकों ने प्रशिक्षण शिविरों में भाग लिया और संगठनात्मक क्षमता को मजबूत किया।",
     "caption": "राष्ट्रीय स्तर पर प्रशिक्षण प्रणाली को सुदृढ़ आधार मिला।",
-    "image": "/images/rss/y1939.png",
-    "alt": "b/w field exercise, white dhotis, smoke"
+    "image": "/images/rss/y1939.jpg",
+    "alt": "b/w field exercise, white dhotis, smoke",
+    "w": 400,
+    "h": 288
   },
   {
     "year": 1938,
@@ -906,8 +1080,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "देश के विभिन्न क्षेत्रों में शाखाओं का विस्तार किया गया। स्वयंसेवक संपर्क और समाज जुड़ाव गतिविधियों को गति दी गई।",
     "caption": "संगठन विस्तार और स्वयंसेवक नेटवर्क को नई दिशा मिली।",
-    "image": "/images/rss/y1938.png",
-    "alt": "b/w march illustration with saffron flag"
+    "image": "/images/rss/y1938.jpg",
+    "alt": "b/w march illustration with saffron flag",
+    "w": 282,
+    "h": 229
   },
   {
     "year": 1937,
@@ -915,8 +1091,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "विभिन्न क्षेत्रों में स्वयंसेवक संपर्क कार्यक्रमों को सुदृढ़ किया गया। युवाओं और समाज के विभिन्न वर्गों के साथ जुड़ाव को बढ़ाया गया।",
     "caption": "समाज संपर्क और संगठन विस्तार गतिविधियों को सुदृढ़ आधार मिला।",
-    "image": "/images/rss/y1937.png",
-    "alt": "maroon bugler silhouette illustration"
+    "image": "/images/rss/y1937.jpg",
+    "alt": "maroon bugler silhouette illustration",
+    "w": 400,
+    "h": 336
   },
   {
     "year": 1936,
@@ -924,8 +1102,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "स्वयंसेवक प्रशिक्षण कार्यक्रमों को मजबूत किया गया और संगठन संचालन प्रणाली को अधिक प्रभावी बनाने के प्रयास किए गए। नेतृत्व विकास गतिविधियों को गति दी गई।",
     "caption": "संगठन संरचना और प्रशिक्षण व्यवस्था को सुदृढ़ आधार प्राप्त हुआ।",
-    "image": "/images/rss/y1936.png",
-    "alt": "orange RSS राष्ट्रीय स्वयंसेवी संघ logo card"
+    "image": "/images/rss/y1936.jpg",
+    "alt": "orange RSS राष्ट्रीय स्वयंसेवी संघ logo card",
+    "w": 400,
+    "h": 360
   },
   {
     "year": 1935,
@@ -933,8 +1113,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "मध्य भारत से बाहर विभिन्न प्रांतों में शाखाओं का विस्तार किया गया। नए क्षेत्रों में स्वयंसेवक संपर्क और संगठनात्मक गतिविधियों को गति दी गई।",
     "caption": "संगठन को क्षेत्रीय स्तर से राष्ट्रीय विस्तार की दिशा मिली।",
-    "image": "/images/rss/y1935.png",
-    "alt": "orange RSS logo card"
+    "image": "/images/rss/y1935.jpg",
+    "alt": "orange RSS logo card",
+    "w": 400,
+    "h": 360
   },
   {
     "year": 1934,
@@ -942,8 +1124,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "विभिन्न प्रांतों में शाखा विस्तार की शुरुआत की गई। स्वयंसेवकों के माध्यम से समाज संपर्क और संगठन निर्माण गतिविधियों को आगे बढ़ाया गया।",
     "caption": "संगठन विस्तार और स्वयंसेवक नेटवर्क को नई गति मिली।",
-    "image": "/images/rss/y1934.png",
-    "alt": "color photo — instructor before formation rows"
+    "image": "/images/rss/y1934.jpg",
+    "alt": "color photo — instructor before formation rows",
+    "w": 400,
+    "h": 224
   },
   {
     "year": 1933,
@@ -951,8 +1135,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "विभिन्न शहरों और क्षेत्रों में स्वयंसेवक संपर्क कार्यक्रमों को विस्तार दिया गया। युवाओं को संगठन से जोड़ने के प्रयास किए गए।",
     "caption": "स्वयंसेवक नेटवर्क और संगठन संपर्क गतिविधियों को सुदृढ़ आधार मिला।",
-    "image": "/images/rss/y1933.png",
-    "alt": "mass white-clad gathering, saffron flag foreground"
+    "image": "/images/rss/y1933.jpg",
+    "alt": "mass white-clad gathering, saffron flag foreground",
+    "w": 400,
+    "h": 360
   },
   {
     "year": 1932,
@@ -969,8 +1155,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "स्वयंसेवक प्रशिक्षण और शाखा संचालन प्रणाली को मजबूत किया गया। नेतृत्व विकास और संगठनात्मक गतिविधियों को सुदृढ़ किया गया।",
     "caption": "संगठन संरचना और प्रशिक्षण व्यवस्था को नई मजबूती मिली।",
-    "image": "/images/rss/y1931.png",
-    "alt": "b/w lathi drill on playground"
+    "image": "/images/rss/y1931.jpg",
+    "alt": "b/w lathi drill on playground",
+    "w": 400,
+    "h": 360
   },
   {
     "year": 1930,
@@ -978,8 +1166,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "स्वतंत्रता आंदोलन के दौरान स्वयंसेवकों ने समाज जागरण और राष्ट्र चेतना को बढ़ावा देने के प्रयास किए। विभिन्न गतिविधियों के माध्यम से राष्ट्रीय भावना को सुदृढ़ किया गया।",
     "caption": "राष्ट्र चेतना और समाज जागरण को प्रारंभिक राष्ट्रीय पहचान मिली।",
-    "image": "/images/rss/y1930.png",
-    "alt": "uniformed rows on maidan at dusk"
+    "image": "/images/rss/y1930.jpg",
+    "alt": "uniformed rows on maidan at dusk",
+    "w": 400,
+    "h": 171
   },
   {
     "year": 1929,
@@ -987,8 +1177,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "शाखा विस्तार और स्वयंसेवक संपर्क कार्यक्रमों को गति दी गई। संगठनात्मक गतिविधियों को व्यवस्थित करने के प्रयास किए गए।",
     "caption": "स्वयंसेवक निर्माण और संगठन विस्तार को सुदृढ़ आधार मिला।",
-    "image": "/images/rss/y1929.png",
-    "alt": "composite — Hedgewar sepia portrait over drill ground"
+    "image": "/images/rss/y1929.jpg",
+    "alt": "composite — Hedgewar sepia portrait over drill ground",
+    "w": 400,
+    "h": 331
   },
   {
     "year": 1928,
@@ -996,8 +1188,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "विभिन्न क्षेत्रों में समाज संपर्क गतिविधियों को विस्तार दिया गया। संगठनात्मक ढांचे को मजबूत करने के प्रयास किए गए।",
     "caption": "संगठन संरचना और समाज जुड़ाव को नई दिशा मिली।",
-    "image": "/images/rss/y1928.png",
-    "alt": "b/w — flag with lamp emblem over vast crowd"
+    "image": "/images/rss/y1928.jpg",
+    "alt": "b/w — flag with lamp emblem over vast crowd",
+    "w": 400,
+    "h": 296
   },
   {
     "year": 1927,
@@ -1005,8 +1199,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "नियमित शाखाओं के माध्यम से स्वयंसेवक प्रशिक्षण और अनुशासन व्यवस्था को व्यवस्थित किया गया। युवाओं को संगठन से जोड़ने के लिए शाखा गतिविधियों को प्रमुख आधार बनाया गया।",
     "caption": "शाखा प्रणाली संगठन की मूल संरचना के रूप में स्थापित हुई।",
-    "image": "/images/rss/y1927.png",
-    "alt": "composite — seated leader portrait + flag march"
+    "image": "/images/rss/y1927.jpg",
+    "alt": "composite — seated leader portrait + flag march",
+    "w": 400,
+    "h": 144
   },
   {
     "year": 1926,
@@ -1014,8 +1210,10 @@ export const rssYears: RssYear[] = [
     "lead": "",
     "body": "स्थापना के बाद संगठन निर्माण और स्वयंसेवक संपर्क गतिविधियों को गति दी गई। प्रारंभिक शाखा विस्तार और प्रशिक्षण कार्यक्रमों की नींव रखी गई।",
     "caption": "संगठनात्मक आधार और स्वयंसेवक निर्माण को प्रारंभिक दिशा मिली।",
-    "image": "/images/rss/y1926.png",
-    "alt": "b/w early founders group photo, garden"
+    "image": "/images/rss/y1926.jpg",
+    "alt": "b/w early founders group photo, garden",
+    "w": 400,
+    "h": 105
   },
   {
     "year": 1925,
@@ -1023,7 +1221,9 @@ export const rssYears: RssYear[] = [
     "lead": "सरसंघचालक - डॉ. केशव बलिराम हेडगेवार",
     "body": "विजयादशमी के दिन नागपुर में डॉ. केशव बलिराम हेडगेवार द्वारा राष्ट्रीय स्वयंसेवक संघ की स्थापना की गई। संगठन का उद्देश्य राष्ट्र चेतना, अनुशासन और समाज संगठन के माध्यम से स्वयंसेवक निर्माण करना था।",
     "caption": "राष्ट्र आधारित संगठन निर्माण और स्वयंसेवक प्रशिक्षण की ऐतिहासिक शुरुआत हुई।",
-    "image": "/images/rss/y1925.png",
-    "alt": "Hedgewar painted portrait seated with staff, India map behind"
+    "image": "/images/rss/y1925.jpg",
+    "alt": "Hedgewar painted portrait seated with staff, India map behind",
+    "w": 416,
+    "h": 465
   }
 ];

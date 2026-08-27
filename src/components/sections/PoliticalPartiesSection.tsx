@@ -4,7 +4,7 @@ import { Landmark, Vote, Map, ChartNoAxesCombined, ChevronLeft, ChevronRight } f
 import { loadLottieInView } from "@/lib/lottie";
 
 // ─── Inline Lottie icon for badge ───
-function BadgeLottieIcon({ src, size = 18, color = "#f59e0b" }: { src: string; size?: number; color?: string }) {
+function BadgeLottieIcon({ src, size = 18, color = "#ff9933" }: { src: string; size?: number; color?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const colorRef = useRef(color);
   colorRef.current = color;
@@ -271,7 +271,7 @@ export function StatCounter({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: false, amount: 0.3 }}
       transition={{ duration: 0.5, delay: index * 0.1, ease: [0.25, 1, 0.5, 1] }}
-      whileHover={{ y: -4, boxShadow: "0 12px 32px rgba(245, 158, 11, 0.12)" }}
+      whileHover={{ y: -4, boxShadow: "0 12px 32px rgba(255,153,51,0.12)" }}
       className="group flex items-center gap-3 rounded-2xl border border-amber-500/20 bg-white/90 px-3 py-3 shadow-md backdrop-blur-sm transition-colors hover:border-amber-500/40 sm:gap-4 sm:px-5 sm:py-4 md:px-6 md:py-5"
     >
       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500/15 to-orange-500/10 text-amber-500 ring-1 ring-amber-500/10 sm:h-12 sm:w-12 md:h-14 md:w-14">
@@ -495,10 +495,10 @@ function PartyStrip({
           visibility: isExpanded ? "visible" : "hidden",
           transitionProperty: "visibility",
           transitionDelay: isExpanded ? "0s" : "0.5s",
-          background: `linear-gradient(to bottom, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.65) 100%)`,
+          background: `linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.65) 100%)`,
           backdropFilter: "blur(16px)",
           WebkitBackdropFilter: "blur(16px)",
-          border: `1.5px solid rgba(255, 255, 255, 0.15)`,
+          border: `1.5px solid rgba(255,255,255,0.15)`,
           boxShadow: `0 0 24px rgba(${party.themeColorRgb}, 0.15), inset 0 1px 0 rgba(255,255,255,0.08)`,
         }}
       >
@@ -669,7 +669,7 @@ export function PoliticalPartiesSection() {
   return (
     <section ref={sectionRef} className="relative overflow-hidden bg-white py-4 sm:py-6 lg:py-8">
       {/* Top blend from previous dark section */}
-      <div className="absolute top-0 left-0 right-0 z-[2] h-24 bg-gradient-to-b from-[#0c0c1d] via-[#0c0c1d]/30 to-transparent" />
+      <div className="absolute top-0 left-0 right-0 z-[2] h-24 bg-gradient-to-b from-[#0a1e3f] via-[#0a1e3f]/30 to-transparent" />
       {/* ── Video background ── */}
       <div className="pointer-events-none absolute inset-0">
         <video

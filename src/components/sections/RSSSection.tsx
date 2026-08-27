@@ -425,7 +425,7 @@ export function RSSSection() {
                     i % 3 === 0
                       ? "rgba(249,115,22,0.25)"
                       : i % 3 === 1
-                        ? "rgba(251,191,36,0.2)"
+                        ? "rgba(255,194,122,0.2)"
                         : "rgba(234,88,12,0.15)",
                 }}
                 animate={{
@@ -524,7 +524,7 @@ export function RSSSection() {
                         fontFamily: "'Cormorant Garamond', serif",
                         letterSpacing: "-0.44px",
                         backgroundImage:
-                          "linear-gradient(90deg, #1f2937, #92400e, #f59e0b, #92400e, #1f2937)",
+                          "linear-gradient(90deg, #1f2937, #7d3f05, #ff9933, #7d3f05, #1f2937)",
                         backgroundSize: "300% 100%",
                         WebkitBackgroundClip: "text",
                         WebkitTextFillColor: "transparent",

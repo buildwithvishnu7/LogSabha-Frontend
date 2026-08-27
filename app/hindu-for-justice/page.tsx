@@ -1,9 +1,16 @@
 "use client";
 
-// Hindu For Justice — long-form historical account.
-// Content auto-extracted from the designer reference into
-// src/data/hindu-for-justice.ts as an ordered node flow per section.
-import { HfjHero, HfjBody, HfjProgress } from "@/components/hfj/HfjSections";
+// Hindu For Justice — the editorial record across fourteen chapters, with a 3D
+// era timeline you travel from the 8th century to the present.
+//
+// The body now comes from src/data/hfj-chapters.ts, converted from the new
+// reference's own extraction. The previous file (src/data/hindu-for-justice.ts)
+// is left on disk untouched: it holds the same text but carries 12 duplicated
+// headings and repeats the Partition chapter, and its images were 30MB of PNG
+// against the reference's 5MB of JPEG.
+import { HfjHero, HfjProgress } from "@/components/hfj/HfjSections";
+import { EraTimelineSection } from "@/components/hfj/EraTimelineSection";
+import { HfjChapterBody } from "@/components/hfj/HfjChapterBody";
 import { Footer } from "@/components/Footer";
 
 export default function HinduForJusticePage() {
@@ -11,7 +18,8 @@ export default function HinduForJusticePage() {
     <>
       <HfjProgress />
       <HfjHero />
-      <HfjBody />
+      <EraTimelineSection />
+      <HfjChapterBody />
       <Footer />
     </>
   );

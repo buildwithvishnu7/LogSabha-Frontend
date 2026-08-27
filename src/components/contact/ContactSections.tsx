@@ -6,8 +6,8 @@ import { ArrowDown, ArrowRight, Mail, MapPin, Phone, Check } from "lucide-react"
 import { Typewriter } from "@/components/motion/Typewriter";
 import { contactData } from "@/data/contact";
 
-/* Reference palette: navy hero #0B1120, heading #0A0A0A, body #6B7280,
-   muted #9CA3AF, saffron #F59E0B, panel #F5F5F5. Sharp 3px shapes. */
+/* Reference palette: navy hero #061428, heading #0A0A0A, body #6B7280,
+   muted #9CA3AF, saffron #FF9933, panel #F5F5F5. Sharp 3px shapes. */
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -19,15 +19,15 @@ export function ContactHero() {
   const { hero } = contactData;
 
   return (
-    <section ref={ref} className="relative overflow-hidden bg-[#0B1120] pt-28 sm:pt-32">
+    <section ref={ref} className="relative overflow-hidden bg-[#061428] pt-28 sm:pt-32">
       <div className="relative z-10 mx-auto max-w-5xl px-4 pb-12 text-center sm:px-6 sm:pb-14">
         <motion.span
-          className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-wide text-[#FBBF24]"
+          className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-wide text-[#FFC27A]"
           initial={{ opacity: 0, y: 12 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.55 }}
         >
-          <span className="h-px w-7 bg-[#F59E0B]" />
+          <span className="h-px w-7 bg-[#FF9933]" />
           {hero.kicker}
         </motion.span>
 
@@ -120,7 +120,7 @@ function Field({
     >
       <label htmlFor={id} className="block text-[10px] font-bold uppercase tracking-wide text-[#9CA3AF]">
         {label}
-        {required && <span className="ml-1 text-[#F59E0B]">*</span>}
+        {required && <span className="ml-1 text-[#FF9933]">*</span>}
       </label>
       {children}
       {/* Reserve the error row so validation messages never nudge the layout. */}
@@ -132,7 +132,7 @@ function Field({
 }
 
 const inputCls =
-  "mt-1.5 w-full rounded-xl border border-[#E5E7EB] bg-white px-3.5 py-2.5 text-sm text-[#0A0A0A] outline-none transition-colors placeholder:text-[#9CA3AF] focus:border-[#F59E0B] focus:ring-2 focus:ring-[#F59E0B]/30";
+  "mt-1.5 w-full rounded-xl border border-[#E5E7EB] bg-white px-3.5 py-2.5 text-sm text-[#0A0A0A] outline-none transition-colors placeholder:text-[#9CA3AF] focus:border-[#FF9933] focus:ring-2 focus:ring-[#FF9933]/30";
 
 export function ContactEnquiry() {
   const { enquiry, offices, mail, phone, form, success } = contactData;
@@ -172,13 +172,13 @@ export function ContactEnquiry() {
     <section id="enquiry" className="scroll-mt-24 bg-white py-14 sm:py-20">
       <div className="mx-auto max-w-[1440px] px-4 sm:px-6">
         <motion.span
-          className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-wide text-[#D97706]"
+          className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-wide text-[#E87D12]"
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: false, amount: 0.6 }}
           transition={{ duration: 0.55 }}
         >
-          <span className="h-px w-7 bg-[#F59E0B]" />
+          <span className="h-px w-7 bg-[#FF9933]" />
           {enquiry.kicker}
         </motion.span>
 
@@ -213,7 +213,7 @@ export function ContactEnquiry() {
               transition={{ duration: 0.6, ease: EASE }}
             >
               <span
-                className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#F5F5F5] text-[#F59E0B]"
+                className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#F5F5F5] text-[#FF9933]"
               >
                 <MapPin className="h-5 w-5" />
               </span>
@@ -221,7 +221,7 @@ export function ContactEnquiry() {
                 <h3 className="text-lg font-bold text-[#0A0A0A]">Address</h3>
                 {offices.map((o) => (
                   <div key={o.label} className="mt-3">
-                    <span className="block text-[11px] font-bold tracking-[0.16em] text-[#D97706]">
+                    <span className="block text-[11px] font-bold tracking-[0.16em] text-[#E87D12]">
                       {o.label}
                     </span>
                     <address className="mt-1 not-italic text-sm leading-relaxed text-[#9CA3AF]">
@@ -249,7 +249,7 @@ export function ContactEnquiry() {
                 transition={{ duration: 0.6, delay: 0.1 + i * 0.08, ease: EASE }}
               >
                 <span
-                  className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#F5F5F5] text-[#F59E0B]"
+                  className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#F5F5F5] text-[#FF9933]"
                 >
                   {row.icon}
                 </span>
@@ -257,7 +257,7 @@ export function ContactEnquiry() {
                   <h3 className="text-lg font-bold text-[#0A0A0A]">{row.title}</h3>
                   <a
                     href={row.href}
-                    className="mt-1 inline-block text-[15px] text-[#9CA3AF] underline-offset-4 transition-colors hover:text-[#F59E0B] hover:underline"
+                    className="mt-1 inline-block text-[15px] text-[#9CA3AF] underline-offset-4 transition-colors hover:text-[#FF9933] hover:underline"
                   >
                     {row.value}
                   </a>
@@ -285,7 +285,7 @@ export function ContactEnquiry() {
                   transition={{ duration: 0.45, ease: EASE }}
                 >
                   <motion.span
-                    className="grid h-14 w-14 place-items-center rounded-full bg-[#F59E0B] text-white shadow-[0_0_20px_rgba(245,158,11,0.5)]"
+                    className="grid h-14 w-14 place-items-center rounded-full bg-[#FF9933] text-white shadow-[0_0_20px_rgba(255,153,51,0.5)]"
                     initial={{ scale: 0, rotate: -20 }}
                     animate={{ scale: 1, rotate: 0 }}
                     transition={{ type: "spring", stiffness: 260, damping: 16, delay: 0.1 }}
@@ -296,7 +296,7 @@ export function ContactEnquiry() {
                   <p className="mt-2 max-w-sm text-sm leading-relaxed text-[#9CA3AF]">{success.body}</p>
                   <button
                     onClick={reset}
-                    className="mt-6 inline-flex items-center gap-2 text-[13px] font-bold tracking-[1px] text-[#F59E0B] transition-colors hover:text-[#D97706] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B] focus-visible:ring-offset-2"
+                    className="mt-6 inline-flex items-center gap-2 text-[13px] font-bold tracking-[1px] text-[#FF9933] transition-colors hover:text-[#E87D12] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9933] focus-visible:ring-offset-2"
                   >
                     {success.again}
                     <ArrowRight className="h-4 w-4" />
@@ -360,7 +360,7 @@ export function ContactEnquiry() {
 
                   <motion.button
                     type="submit"
-                    className="group relative mt-2 inline-flex items-center gap-2 overflow-hidden rounded-full bg-[#F59E0B] px-7 py-3 text-[13px] font-bold tracking-wide text-white shadow-[0_0_20px_rgba(245,158,11,0.5)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B] focus-visible:ring-offset-2"
+                    className="group relative mt-2 inline-flex items-center gap-2 overflow-hidden rounded-full bg-[#FF9933] px-7 py-3 text-[13px] font-bold tracking-wide text-white shadow-[0_0_20px_rgba(255,153,51,0.5)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9933] focus-visible:ring-offset-2"
                     whileHover={{ y: -2 }}
                     whileTap={{ scale: 0.97 }}
                   >

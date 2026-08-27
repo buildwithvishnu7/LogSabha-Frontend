@@ -10,7 +10,7 @@ import BroadcastIcon from "@/components/ui/broadcast-icon";
 import { useLiveCoverage } from "@/hooks/useLiveCoverage";
 
 // ─── Inline Lottie Icon ───
-function LiveLottieIcon({ src, size = 18, color = "#f59e0b" }: { src: string; size?: number; color?: string }) {
+function LiveLottieIcon({ src, size = 18, color = "#ff9933" }: { src: string; size?: number; color?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const colorRef = useRef(color);
   colorRef.current = color;
@@ -305,7 +305,7 @@ export function LiveCoverageSection() {
           className="h-full w-full"
           style={{
             backgroundImage:
-              "radial-gradient(circle at 1px 1px, rgba(245,158,11,0.5) 1px, transparent 0)",
+              "radial-gradient(circle at 1px 1px, rgba(255,153,51,0.5) 1px, transparent 0)",
             backgroundSize: "40px 40px",
           }}
         />
@@ -380,7 +380,7 @@ export function LiveCoverageSection() {
                 className="moving-border flex items-center gap-1.5 rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-amber-500 transition-colors hover:text-amber-600"
               >
                 <span>View All</span>
-                <LiveLottieIcon src="/lottie/fast-forward.json" size={20} color="#f59e0b" />
+                <LiveLottieIcon src="/lottie/fast-forward.json" size={20} color="#ff9933" />
               </a>
             </div>
           </ScrollReveal>

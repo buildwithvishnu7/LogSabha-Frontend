@@ -196,7 +196,7 @@ function MediaImageCard({
         className="pointer-events-none absolute inset-[-2px] z-20 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
         style={{
           background:
-            "conic-gradient(from var(--angle), transparent 0%, transparent 60%, rgba(245,158,11,0.7) 80%, rgba(245,158,11,1) 85%, rgba(245,158,11,0.7) 90%, transparent 100%)",
+            "conic-gradient(from var(--angle), transparent 0%, transparent 60%, rgba(255,153,51,0.7) 80%, rgba(255,153,51,1) 85%, rgba(255,153,51,0.7) 90%, transparent 100%)",
           mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
           maskComposite: "exclude",
           WebkitMaskComposite: "xor",
@@ -307,7 +307,7 @@ function MediaVideoCard({
         className="pointer-events-none absolute inset-[-2px] z-20 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
         style={{
           background:
-            "conic-gradient(from var(--angle), transparent 0%, transparent 60%, rgba(245,158,11,0.7) 80%, rgba(245,158,11,1) 85%, rgba(245,158,11,0.7) 90%, transparent 100%)",
+            "conic-gradient(from var(--angle), transparent 0%, transparent 60%, rgba(255,153,51,0.7) 80%, rgba(255,153,51,1) 85%, rgba(255,153,51,0.7) 90%, transparent 100%)",
           mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
           maskComposite: "exclude",
           WebkitMaskComposite: "xor",

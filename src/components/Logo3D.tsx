@@ -41,7 +41,7 @@ function LogoMesh({ scrollProgress }: { scrollProgress: number }) {
         <mesh ref={glowRef} position={[0, 0, -0.05]}>
           <ringGeometry args={[1.1, 1.6, 64]} />
           <meshBasicMaterial
-            color="#f59e0b"
+            color="#ff9933"
             transparent
             opacity={0.15}
             side={THREE.DoubleSide}
@@ -56,7 +56,7 @@ function LogoMesh({ scrollProgress }: { scrollProgress: number }) {
             transparent
             alphaTest={0.1}
             side={THREE.DoubleSide}
-            emissive="#f59e0b"
+            emissive="#ff9933"
             emissiveIntensity={0.15}
           />
         </mesh>
@@ -99,7 +99,7 @@ function Particles({ count }: { count: number }) {
       </bufferGeometry>
       <pointsMaterial
         size={0.03}
-        color="#f59e0b"
+        color="#ff9933"
         transparent
         opacity={0.6}
         sizeAttenuation
@@ -119,8 +119,8 @@ export function Logo3D({ scrollProgress }: { scrollProgress: number }) {
         style={{ background: "transparent" }}
       >
         <ambientLight intensity={0.8} />
-        <pointLight position={[5, 5, 5]} intensity={0.5} color="#f59e0b" />
-        <pointLight position={[-3, -3, 3]} intensity={0.3} color="#fbbf24" />
+        <pointLight position={[5, 5, 5]} intensity={0.5} color="#ff9933" />
+        <pointLight position={[-3, -3, 3]} intensity={0.3} color="#ffc27a" />
         <LogoMesh scrollProgress={scrollProgress} />
       </Canvas>
     </div>

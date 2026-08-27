@@ -32,9 +32,9 @@ function StatLottieIcon({ src, size = 22 }: { src: string; size?: number }) {
         const shapes = el.querySelectorAll("path, circle, rect, line, ellipse, polyline, polygon");
         shapes.forEach((p) => {
           const stroke = p.getAttribute("stroke");
-          if (stroke && stroke !== "none" && stroke !== "transparent") p.setAttribute("stroke", "#f59e0b");
+          if (stroke && stroke !== "none" && stroke !== "transparent") p.setAttribute("stroke", "#ff9933");
           const fill = p.getAttribute("fill");
-          if (fill && fill !== "none" && fill !== "transparent") p.setAttribute("fill", "#f59e0b");
+          if (fill && fill !== "none" && fill !== "transparent") p.setAttribute("fill", "#ff9933");
           const sw = parseFloat(p.getAttribute("stroke-width") || "0");
           if (sw > 0 && sw < 22) p.setAttribute("stroke-width", "22");
         });
@@ -116,14 +116,14 @@ function FloatingStatCard({
         animate={{
           scale: isExpanded ? 1.05 : 1,
           borderColor: isExpanded
-            ? "rgba(245, 158, 11, 0.4)"
-            : "rgba(255, 255, 255, 0.1)",
+            ? "rgba(255,153,51,0.4)"
+            : "rgba(255,255,255,0.1)",
         }}
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-        className="cursor-default rounded-xl border bg-[#1a1a2e]/80 shadow-lg backdrop-blur-md"
+        className="cursor-default rounded-xl border bg-[#12306b]/80 shadow-lg backdrop-blur-md"
         style={{
           boxShadow: isExpanded
-            ? "0 0 20px rgba(245, 158, 11, 0.15)"
+            ? "0 0 20px rgba(255,153,51,0.15)"
             : "none",
         }}
       >
@@ -164,8 +164,8 @@ function FloatingStatCard({
                       style={{
                         backgroundColor:
                           i < 8
-                            ? "rgba(245,158,11,0.7)"
-                            : "rgba(245,158,11,0.25)",
+                            ? "rgba(255,153,51,0.7)"
+                            : "rgba(255,153,51,0.25)",
                       }}
                       initial={{ scale: 0.5 }}
                       animate={{ scale: 1 }}
@@ -227,9 +227,9 @@ export function PoliticalLandscapeSection({
 
   return (
     <SectionInViewProvider value={inView}>
-    <section ref={sectionRef} className="relative min-h-screen w-full overflow-hidden bg-[#0c0c1d]">
+    <section ref={sectionRef} className="relative min-h-screen w-full overflow-hidden bg-[#0a1e3f]">
       <div className="absolute top-0 left-0 right-0 z-[2] h-40 bg-gradient-to-b from-black/80 via-black/40 to-transparent" />
-      <div className="absolute top-0 left-0 right-0 z-[2] h-20 bg-gradient-to-b from-[#0c0c1d] to-transparent" />
+      <div className="absolute top-0 left-0 right-0 z-[2] h-20 bg-gradient-to-b from-[#0a1e3f] to-transparent" />
 
       <BackgroundVideo src={data.backgroundVideo} poster={data.backgroundPoster} />
       <div className="absolute inset-0 z-[1] bg-black/60" />
@@ -326,8 +326,8 @@ export function PoliticalLandscapeSection({
             <svg className="pointer-events-none absolute inset-0 z-[5] hidden h-full w-full overflow-visible sm:block">
               <defs>
                 <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stopColor="rgba(245,158,11,0.6)" />
-                  <stop offset="100%" stopColor="rgba(245,158,11,0.1)" />
+                  <stop offset="0%" stopColor="rgba(255,153,51,0.6)" />
+                  <stop offset="100%" stopColor="rgba(255,153,51,0.1)" />
                 </linearGradient>
               </defs>
               <motion.line x1="8%" y1="10%" x2="35%" y2="22%" stroke="url(#lineGrad)" strokeWidth="1" strokeDasharray="4 4" initial={{ pathLength: 0, opacity: 0 }} whileInView={{ pathLength: 1, opacity: 1 }} viewport={{ once: false }} transition={{ delay: 0.6, duration: 0.8 }} />
@@ -455,7 +455,7 @@ export function PoliticalLandscapeSection({
       </div>
 
       <div className="absolute bottom-0 left-0 right-0 z-[2] h-40 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-      <div className="absolute bottom-0 left-0 right-0 z-[2] h-20 bg-gradient-to-t from-[#0c0c1d] to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 z-[2] h-20 bg-gradient-to-t from-[#0a1e3f] to-transparent" />
       <div className="absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.4)_100%)]" />
     </section>
     </SectionInViewProvider>

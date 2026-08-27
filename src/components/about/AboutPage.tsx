@@ -13,8 +13,8 @@ import {
   type AboutSection,
 } from "@/data/about-page";
 
-/* Reference palette: navy hero #0B1120, heading #0A0A0A, body #6B7280,
-   muted #9CA3AF, saffron #F59E0B / #D97706, panel #F5F5F5. Sharp 3px shapes. */
+/* Reference palette: navy hero #061428, heading #0A0A0A, body #6B7280,
+   muted #9CA3AF, saffron #FF9933 / #E87D12, panel #F5F5F5. Sharp 3px shapes. */
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -26,7 +26,7 @@ export function AboutProgress() {
   return (
     <motion.div
       aria-hidden
-      className="fixed inset-x-0 top-0 z-50 h-[3px] origin-left bg-[#F59E0B]"
+      className="fixed inset-x-0 top-0 z-50 h-[3px] origin-left bg-[#FF9933]"
       style={{ scaleX: x }}
     />
   );
@@ -44,7 +44,7 @@ function Hero({ section }: { section: AboutSection }) {
     | undefined;
 
   return (
-    <section ref={ref} className="relative overflow-hidden bg-[#0B1120] pt-28 sm:pt-32">
+    <section ref={ref} className="relative overflow-hidden bg-[#061428] pt-28 sm:pt-32">
       <div className="relative z-10 mx-auto max-w-5xl px-4 pb-12 text-center sm:px-6 sm:pb-14">
         <h1 className={`text-3xl font-extrabold leading-[1.22] tracking-tight text-white sm:text-4xl`} aria-label={title}>
           {title.split("").map((ch, i) => (
@@ -117,7 +117,7 @@ function PullQuote({ section }: { section: AboutSection }) {
     <section className={`bg-[linear-gradient(#FFFFFF,#F5F5F5)] ${SECTION_Y}`}>
       <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
         <motion.span
-          className="inline-block text-[#F59E0B]"
+          className="inline-block text-[#FF9933]"
           initial={{ opacity: 0, scale: 0.7, rotate: -12 }}
           whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
           viewport={{ once: false, amount: 0.6 }}
@@ -198,7 +198,7 @@ function Node({
   if (node.t === "quote") {
     return (
       <motion.blockquote
-        className={`my-6 border-l-[3px] border-[#F59E0B] px-5 py-4 text-[15px] italic leading-loose text-[#6B7280] ${panel ? "bg-white" : "bg-[#F5F5F5]"}`}
+        className={`my-6 border-l-[3px] border-[#FF9933] px-5 py-4 text-[15px] italic leading-loose text-[#6B7280] ${panel ? "bg-white" : "bg-[#F5F5F5]"}`}
         initial={{ opacity: 0, x: 18 }}
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: false, amount: 0.4 }}
@@ -267,7 +267,7 @@ function YearSection({ section }: { section: AboutSection }) {
       <div className="mx-auto max-w-3xl px-4 sm:px-6">
         {/* The giant numeral is the reference's spine device for the archive. */}
         <div className="flex items-baseline gap-4">
-          <span className="text-4xl font-extrabold leading-none text-[#F59E0B]/25 sm:text-[3.5rem]">
+          <span className="text-4xl font-extrabold leading-none text-[#FF9933]/25 sm:text-[3.5rem]">
             <SlotNumber value={String(section.year)} digitWidth="0.6em" />
           </span>
           <motion.span
@@ -359,13 +359,13 @@ function YearRail() {
               href={`#y${y}`}
               aria-current={active === y ? "true" : undefined}
               className={`relative block px-2.5 py-1 text-[12px] font-bold tabular-nums transition-colors ${
-                active === y ? "text-[#F59E0B]" : "text-[#9CA3AF]/50 hover:text-[#0A0A0A]"
-              } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B] focus-visible:ring-offset-2`}
+                active === y ? "text-[#FF9933]" : "text-[#9CA3AF]/50 hover:text-[#0A0A0A]"
+              } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9933] focus-visible:ring-offset-2`}
             >
               {active === y && (
                 <motion.span
                   layoutId="about-year-active"
-                  className="absolute inset-y-0 left-0 w-[3px] bg-[#F59E0B]"
+                  className="absolute inset-y-0 left-0 w-[3px] bg-[#FF9933]"
                   transition={{ type: "spring", stiffness: 420, damping: 34 }}
                 />
               )}

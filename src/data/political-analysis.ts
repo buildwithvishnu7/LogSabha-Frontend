@@ -139,8 +139,8 @@ export const paSections: PaSection[] = [
     theme: "light",
     kicker: "18TH LOK SABHA",
     title: "Overall Results",
-    paragraphs: ["Nearly a billion registered electors, seven phases, and a verdict that reshaped the arithmetic of coalition government.", "The voter turnout for the 2024 Lok Sabha elections was approximately 68%, showing a slight increase from the previous election, indicating higher voter engagement and participation."],
-    blocks: [{ title: "Voter Turnout 68% POLLED The voter turnout for the 2024 Lok Sabha elections was approximately 68%, showing a slight increase from the previous election, indicating higher voter engagement and participation. 272 543 SEATS · 18TH LOK SABHA Seats by Party", body: "Warm tones mark the NDA, blues the INDIA bloc, grey the unaligned." }, { title: "Alliance Arithmetic", body: "" }, { title: "Key Outcomes", body: "" }, { title: "Major Wins and Losses", body: "The contests that drew national attention, and what they signalled about each party's standing." }],
+    paragraphs: ["Nearly a billion registered electors, seven phases, and a verdict that reshaped the arithmetic of coalition government.", "The voter turnout for the 2024 Lok Sabha election was 65.79% — a shade below the 67.40% recorded in 2019, and still close to a billion votes cast across seven phases."],
+    blocks: [{ title: "Voter Turnout 65.79% POLLED The voter turnout for the 2024 Lok Sabha election was 65.79% — a shade below the 67.40% recorded in 2019, and still close to a billion votes cast across seven phases. 272 543 SEATS · 18TH LOK SABHA Seats by Party", body: "Warm tones mark the NDA, blues the INDIA bloc, grey the unaligned." }, { title: "Alliance Arithmetic", body: "" }, { title: "Key Outcomes", body: "" }, { title: "Major Wins and Losses", body: "The contests that drew national attention, and what they signalled about each party's standing." }],
     bullets: [],
     images: [{ src: "/images/pa/rally-flag.png", alt: "Crowd at a 2024 general election rally waving the national flag" }, { src: "/images/pa/hero-crowd-clean.png", alt: "Voters gathered during the 2024 general election" }, { src: "/images/pa/poster-2024.png", alt: "Lok Sabha Elections 2024 poster showing the principal national and regional leaders" }],
   },
@@ -290,10 +290,10 @@ export const paResults = {
   lead: "Nearly a billion registered electors, seven phases, and a verdict that reshaped the arithmetic of coalition government.",
   turnout: {
     title: "Voter Turnout",
-    value: 68,
+    value: 65.79,
     suffix: "%",
     label: "POLLED",
-    body: "The voter turnout for the 2024 Lok Sabha elections was approximately 68%, showing a slight increase from the previous election, indicating higher voter engagement and participation.",
+    body: "The voter turnout for the 2024 Lok Sabha election was 65.79% — a shade below the 67.40% recorded in 2019, and still close to a billion votes cast across seven phases.",
   },
   seatChart: {
     kicker: "SEATS · 18TH LOK SABHA",

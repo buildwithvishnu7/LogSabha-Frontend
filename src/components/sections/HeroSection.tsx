@@ -64,7 +64,7 @@ function SideBadge({
           className="pointer-events-none absolute -inset-[2px] rounded-full"
           style={{
             background:
-              "conic-gradient(from var(--angle), transparent 0%, transparent 60%, rgba(245,158,11,0.8) 80%, rgba(251,191,36,1) 85%, rgba(245,158,11,0.8) 90%, transparent 100%)",
+              "conic-gradient(from var(--angle), transparent 0%, transparent 60%, rgba(255,153,51,0.8) 80%, rgba(255,194,122,1) 85%, rgba(255,153,51,0.8) 90%, transparent 100%)",
             mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
             maskComposite: "exclude",
             WebkitMaskComposite: "xor",
@@ -76,7 +76,7 @@ function SideBadge({
 
         {/* Badge circle */}
         <div
-          className="relative flex items-center justify-center rounded-full bg-gradient-to-br from-[#1a1a2e] to-[#0d0d1a] shadow-lg shadow-amber-500/20"
+          className="relative flex items-center justify-center rounded-full bg-gradient-to-br from-[#12306b] to-[#0d0d1a] shadow-lg shadow-amber-500/20"
           style={{ width: size, height: size }}
         >
           <motion.img
@@ -162,7 +162,7 @@ function ScrollLogo({ src, sectionRef }: { src: string; sectionRef: React.RefObj
         <motion.div
           className="absolute inset-0 rounded-full blur-xl"
           style={{
-            background: "radial-gradient(circle, rgba(245,158,11,0.4) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(255,153,51,0.4) 0%, transparent 70%)",
             scale: glowScale,
           }}
         />
@@ -172,7 +172,7 @@ function ScrollLogo({ src, sectionRef }: { src: string; sectionRef: React.RefObj
           src={src}
           alt=""
           aria-hidden="true"
-          className="relative h-36 w-auto drop-shadow-[0_0_20px_rgba(245,158,11,0.5)] sm:h-40 md:h-44 lg:h-48"
+          className="relative h-36 w-auto drop-shadow-[0_0_20px_rgba(255,153,51,0.5)] sm:h-40 md:h-44 lg:h-48"
         />
       </motion.div>
     </motion.div>
@@ -206,7 +206,7 @@ export function HeroSection({ data }: { data: HeroData }) {
         className="absolute inset-0 z-[1]"
         style={{
           clipPath: "polygon(0 0, 35% 0, 62% 50%, 35% 100%, 0 100%)",
-          backgroundColor: "rgba(194, 120, 40, 0.4)",
+          backgroundColor: "rgba(194,120,40,0.4)",
         }}
         animate={{ opacity: videoPlaying ? 0 : 1 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
@@ -217,7 +217,7 @@ export function HeroSection({ data }: { data: HeroData }) {
         className="absolute inset-0 z-[1]"
         style={{
           clipPath: "polygon(0 0, 42% 0, 68% 50%, 42% 100%, 0 100%)",
-          backgroundColor: "rgba(220, 160, 80, 0.15)",
+          backgroundColor: "rgba(220,160,80,0.15)",
         }}
         animate={{ opacity: videoPlaying ? 0 : 1 }}
         transition={{ duration: 0.8, ease: "easeOut" }}

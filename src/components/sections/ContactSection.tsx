@@ -171,7 +171,7 @@ function AnimatedInput({
           rows={textarea ? 5 : undefined}
           className={`w-full resize-none rounded-xl border bg-white/[0.04] px-4 py-3 text-sm text-white placeholder-slate-500 outline-none backdrop-blur-sm transition-all duration-300 ${textarea ? "flex-1 " : ""}${
             focused
-              ? "border-amber-500/60 shadow-[0_0_15px_rgba(245,158,11,0.1)]"
+              ? "border-amber-500/60 shadow-[0_0_15px_rgba(255,153,51,0.1)]"
               : "border-white/10 hover:border-white/20"
           }`}
         />
@@ -288,7 +288,7 @@ export function ContactSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden bg-[#0b1120] py-4 sm:py-6 lg:py-8"
+      className="relative overflow-hidden bg-[#061428] py-4 sm:py-6 lg:py-8"
     >
       {/* Geometric grid background */}
       <div className="pointer-events-none absolute inset-0">
@@ -296,7 +296,7 @@ export function ContactSection() {
           className="absolute inset-0 opacity-[0.04]"
           style={{
             backgroundImage:
-              "linear-gradient(rgba(245,158,11,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(245,158,11,0.3) 1px, transparent 1px)",
+              "linear-gradient(rgba(255,153,51,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255,153,51,0.3) 1px, transparent 1px)",
             backgroundSize: "60px 60px",
           }}
         />
@@ -304,12 +304,12 @@ export function ContactSection() {
           className="absolute inset-0 opacity-[0.025]"
           style={{
             backgroundImage:
-              "linear-gradient(45deg, rgba(245,158,11,0.4) 1px, transparent 1px), linear-gradient(-45deg, rgba(245,158,11,0.4) 1px, transparent 1px)",
+              "linear-gradient(45deg, rgba(255,153,51,0.4) 1px, transparent 1px), linear-gradient(-45deg, rgba(255,153,51,0.4) 1px, transparent 1px)",
             backgroundSize: "80px 80px",
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0b1120] via-transparent to-[#0b1120]" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0b1120] via-transparent to-[#0b1120]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#061428] via-transparent to-[#061428]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#061428] via-transparent to-[#061428]" />
       </div>
 
       {/* Static ambient glows — no animation for scroll performance */}
@@ -353,7 +353,7 @@ export function ContactSection() {
                   ? {
                       borderColor: [
                         "rgba(255,255,255,0.08)",
-                        "rgba(245,158,11,0.2)",
+                        "rgba(255,153,51,0.2)",
                         "rgba(255,255,255,0.08)",
                       ],
                     }

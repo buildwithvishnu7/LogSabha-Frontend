@@ -29,11 +29,11 @@ const PARTY_COLORS: Record<string, { fill: string; hover: string; stroke: string
   "JD(U)": { fill: "#16a34a", hover: "#22c55e", stroke: "#4ade80", glow: "rgba(22,163,74,0.6)" },
   JMM:  { fill: "#059669", hover: "#10b981", stroke: "#34d399", glow: "rgba(5,150,105,0.6)" },
   BSP:  { fill: "#3b82f6", hover: "#60a5fa", stroke: "#93c5fd", glow: "rgba(59,130,246,0.6)" },
-  "SS(UBT)": { fill: "#f59e0b", hover: "#fbbf24", stroke: "#fcd34d", glow: "rgba(245,158,11,0.6)" },
+  "SS(UBT)": { fill: "#ff9933", hover: "#ffc27a", stroke: "#ffd4a3", glow: "rgba(255,153,51,0.6)" },
   "CPI(M)": { fill: "#dc2626", hover: "#ef4444", stroke: "#f87171", glow: "rgba(220,38,38,0.6)" },
 };
 
-const DEFAULT_PARTY_COLOR = { fill: "#d97706", hover: "#f59e0b", stroke: "#fbbf24", glow: "rgba(245,158,11,0.6)" };
+const DEFAULT_PARTY_COLOR = { fill: "#e87d12", hover: "#ff9933", stroke: "#ffc27a", glow: "rgba(255,153,51,0.6)" };
 
 export interface HoverInfo {
   state: StateData;
@@ -69,7 +69,7 @@ const StatePath = memo(function StatePath({
       d={d}
       fill={isHovered ? colors.hover : colors.fill}
       fillOpacity={isHovered ? 1 : 0.65}
-      stroke={isHovered ? colors.stroke : "rgba(26, 26, 46, 0.6)"}
+      stroke={isHovered ? colors.stroke : "rgba(26,26,46,0.6)"}
       strokeWidth={isHovered ? 1.5 : 0.5}
       style={{
         cursor: hasData ? "pointer" : "default",
@@ -244,7 +244,7 @@ export function StateTooltip({ state }: { state: StateData }) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 8, scale: 0.92 }}
       transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-      className="pointer-events-none w-32 rounded-xl border border-white/15 bg-[#1a1a2e]/95 p-2 shadow-2xl backdrop-blur-lg sm:w-60 sm:p-4"
+      className="pointer-events-none w-32 rounded-xl border border-white/15 bg-[#12306b]/95 p-2 shadow-2xl backdrop-blur-lg sm:w-60 sm:p-4"
     >
       <div className="flex items-center justify-between gap-1">
         <p className="text-[11px] font-bold text-white sm:text-sm">{state.name}</p>

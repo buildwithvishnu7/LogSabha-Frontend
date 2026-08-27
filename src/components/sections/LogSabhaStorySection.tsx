@@ -103,7 +103,7 @@ function SlotMachineStat({
       initial={{ opacity: 0, y: 30, scale: 0.9 }}
       animate={triggered ? { opacity: 1, y: 0, scale: 1 } : {}}
       transition={{ duration: 0.7, delay: delay / 1000 + 0.3, ease: [0.16, 1, 0.3, 1] }}
-      whileHover={{ scale: 1.05, borderColor: "rgba(245, 158, 11, 0.5)" }}
+      whileHover={{ scale: 1.05, borderColor: "rgba(255,153,51,0.5)" }}
     >
       <motion.div
         className="flex h-8 w-8 items-center justify-center rounded-full"
@@ -154,7 +154,7 @@ function ShimmerText({
       className={className}
       style={{
         backgroundImage:
-          "linear-gradient(90deg, #ffffff 0%, #ffffff 30%, #fbbf24 45%, #f59e0b 50%, #fbbf24 55%, #ffffff 70%, #ffffff 100%)",
+          "linear-gradient(90deg, #ffffff 0%, #ffffff 30%, #ffc27a 45%, #ff9933 50%, #ffc27a 55%, #ffffff 70%, #ffffff 100%)",
         backgroundSize: "300% 100%",
         WebkitBackgroundClip: "text",
         backgroundClip: "text",
@@ -191,7 +191,7 @@ function QuoteBox({
           className="pointer-events-none absolute inset-0 rounded-2xl"
           style={{
             background:
-              "linear-gradient(90deg, transparent, rgba(245,158,11,0.3), transparent)",
+              "linear-gradient(90deg, transparent, rgba(255,153,51,0.3), transparent)",
             backgroundSize: "200% 100%",
           }}
           animate={triggered ? { backgroundPosition: ["-200% 0%", "200% 0%"] } : undefined}
@@ -241,7 +241,7 @@ const STAT_ICONS: Record<string, typeof Users> = {
   "file-text": FileText,
   "trending-up": TrendingUp,
 };
-const STAT_COLORS = ["#f59e0b", "#fb923c", "#f97316"];
+const STAT_COLORS = ["#ff9933", "#fb923c", "#f97316"];
 
 // Used until the API responds, or if it's unreachable.
 const FALLBACK_STORY = {

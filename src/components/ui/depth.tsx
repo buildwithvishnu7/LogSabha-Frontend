@@ -21,7 +21,7 @@ export const D = {
   blueLight: "#3B82F6",
   violet: "#7C3AED",
   orange: "#F97316",
-  amber: "#F59E0B",
+  amber: "#FF9933",
   green: "#16A34A",
 } as const;
 

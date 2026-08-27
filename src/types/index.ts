@@ -28,6 +28,14 @@ export interface SideBadge {
 export interface NavLink {
   label: string;
   href: string;
+  /** A one-line gloss shown under the label inside a dropdown. Ignored at top
+   *  level, where there is no room for it. */
+  blurb?: string;
+  /** Turns this item into a group. The item is then a disclosure button rather
+   *  than a link, so `href` is unused — the children are the destinations.
+   *  Grouping exists because the modules outgrew a single row: the reference's
+   *  own header notes that the top-level items must never wrap. */
+  children?: NavLink[];
 }
 
 export interface NavData {

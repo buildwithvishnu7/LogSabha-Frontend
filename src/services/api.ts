@@ -49,7 +49,7 @@ function apiToParty(p: any): PoliticalParty {
     established: p.foundedYear ?? 0,
     logo: p.logo ?? "",
     backgroundImage: p.backgroundImage ?? "",
-    themeColor: p.colors?.primary ?? "#f59e0b",
+    themeColor: p.colors?.primary ?? "#ff9933",
     themeColorRgb: p.colors?.primaryRgb ?? "245, 158, 11",
     description: p.description ?? "",
     lokSabhaSeats: p.lokSabhaSeats ?? 0,

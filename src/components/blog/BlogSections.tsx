@@ -7,8 +7,8 @@ import { ArrowDown, ArrowRight } from "lucide-react";
 import { Typewriter } from "@/components/motion/Typewriter";
 import { blogPosts, blogKinds, type BlogKind, type BlogPost } from "@/data/blog";
 
-/* Reference palette: navy hero #0B1120, heading #0A0A0A, body #6B7280,
-   muted #9CA3AF, saffron #F59E0B / #D97706, archive panel #F5F5F5. */
+/* Reference palette: navy hero #061428, heading #0A0A0A, body #6B7280,
+   muted #9CA3AF, saffron #FF9933 / #E87D12, archive panel #F5F5F5. */
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -43,13 +43,13 @@ export function LangToggle({ lang, onChange }: { lang: Lang; onChange: (l: Lang)
           onClick={() => onChange(o.id)}
           aria-pressed={lang === o.id}
           className={`relative px-3 py-1 text-[12px] font-bold tracking-wide transition-colors ${
-            lang === o.id ? "text-[#0B1120]" : "text-white/70 hover:text-white"
-          } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B] focus-visible:ring-offset-2`}
+            lang === o.id ? "text-[#061428]" : "text-white/70 hover:text-white"
+          } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9933] focus-visible:ring-offset-2`}
         >
           {lang === o.id && (
             <motion.span
               layoutId="blog-lang-pill"
-              className="absolute inset-0 -z-10 bg-[#FBBF24]"
+              className="absolute inset-0 -z-10 bg-[#FFC27A]"
               transition={{ type: "spring", stiffness: 420, damping: 34 }}
             />
           )}
@@ -68,7 +68,7 @@ function BlogHero({ lang, setLang }: { lang: Lang; setLang: (l: Lang) => void })
   const title = "EDITORIAL INSIGHTS";
 
   return (
-    <section ref={ref} className="relative overflow-hidden bg-[#0B1120] pt-28 pb-14 sm:pt-32 sm:pb-16">
+    <section ref={ref} className="relative overflow-hidden bg-[#061428] pt-28 pb-14 sm:pt-32 sm:pb-16">
       <div className="relative z-10 mx-auto max-w-5xl px-4 text-center sm:px-6">
         <h1
           className="text-3xl font-extrabold leading-[1.22] tracking-tight text-white sm:text-4xl"
@@ -127,13 +127,13 @@ function LeadStory({ post, lang }: { post: BlogPost; lang: Lang }) {
     <section id="latest" className="scroll-mt-24 bg-white py-14 sm:py-20">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <motion.span
-          className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.22em] text-[#D97706]"
+          className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.22em] text-[#E87D12]"
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: false, amount: 0.6 }}
           transition={{ duration: 0.55 }}
         >
-          <span className="h-px w-7 bg-[#F59E0B]" />
+          <span className="h-px w-7 bg-[#FF9933]" />
           LEAD STORY
         </motion.span>
 
@@ -175,18 +175,18 @@ function LeadStory({ post, lang }: { post: BlogPost; lang: Lang }) {
               viewport={{ once: false, amount: 0.3 }}
               transition={{ duration: 0.7, delay: 0.1, ease: EASE }}
             >
-              <span className="inline-flex items-center gap-2 text-[10px] font-bold tracking-wide text-[#D97706]">
+              <span className="inline-flex items-center gap-2 text-[10px] font-bold tracking-wide text-[#E87D12]">
                 {c.topic}
-                <span className="h-1 w-1 rounded-full bg-[#F59E0B]" />
+                <span className="h-1 w-1 rounded-full bg-[#FF9933]" />
                 <span className="text-[#9CA3AF]">{post.date}</span>
               </span>
-              <h3 className="mt-3 text-xl font-bold leading-[1.5] text-[#0A0A0A] transition-colors group-hover:text-[#F59E0B] sm:text-2xl">
+              <h3 className="mt-3 text-xl font-bold leading-[1.5] text-[#0A0A0A] transition-colors group-hover:text-[#FF9933] sm:text-2xl">
                 {c.title}
               </h3>
               {c.note && (
                 <p className="mt-3 text-sm leading-relaxed text-[#6B7280]">{c.note}</p>
               )}
-              <span className="mt-5 inline-flex items-center gap-2 text-[13px] font-bold tracking-[1px] text-[#F59E0B]">
+              <span className="mt-5 inline-flex items-center gap-2 text-[13px] font-bold tracking-[1px] text-[#FF9933]">
                 READ THE FULL REPORT
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </span>
@@ -223,18 +223,18 @@ function ArchiveCard({ post, lang, i }: { post: BlogPost; lang: Lang; i: number 
             />
           </span>
         )}
-        <span className="flex items-center gap-2 text-[10px] font-bold tracking-[0.18em] text-[#D97706]">
+        <span className="flex items-center gap-2 text-[10px] font-bold tracking-[0.18em] text-[#E87D12]">
           {c.topic}
-          <span className="h-1 w-1 rounded-full bg-[#F59E0B]" />
+          <span className="h-1 w-1 rounded-full bg-[#FF9933]" />
           <span className="font-semibold text-[#9CA3AF]">{post.date}</span>
         </span>
-        <h3 className="mt-2.5 text-[15px] font-bold leading-[1.55] text-[#0A0A0A] transition-colors group-hover:text-[#F59E0B]">
+        <h3 className="mt-2.5 text-[15px] font-bold leading-[1.55] text-[#0A0A0A] transition-colors group-hover:text-[#FF9933]">
           {c.title}
         </h3>
         {c.note && (
           <p className="mt-2 line-clamp-3 text-[13px] leading-relaxed text-[#9CA3AF]">{c.note}</p>
         )}
-        <span className="mt-auto pt-4 text-[12px] font-bold tracking-[1px] text-[#F59E0B]">
+        <span className="mt-auto pt-4 text-[12px] font-bold tracking-[1px] text-[#FF9933]">
           READ →
         </span>
       </Link>
@@ -269,8 +269,8 @@ function Archive({ posts, lang }: { posts: BlogPost[]; lang: Lang }) {
                   onClick={() => setKind(k.id)}
                   aria-pressed={kind === k.id}
                   className={`relative px-3.5 py-1.5 text-[12px] font-bold transition-colors ${
-                    kind === k.id ? "text-white" : "text-[#0A0A0A] hover:text-[#F59E0B]"
-                  } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B] focus-visible:ring-offset-2`}
+                    kind === k.id ? "text-white" : "text-[#0A0A0A] hover:text-[#FF9933]"
+                  } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9933] focus-visible:ring-offset-2`}
                 >
                   {kind === k.id && (
                     <motion.span

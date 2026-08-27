@@ -4,7 +4,7 @@
 
 /* ─── Circuit board background pattern (heropatterns.com) ─── */
 .bg-svc-circuit-board {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 304 304' width='304' height='304'%3E%3Cpath fill='%23f59e0b' fill-opacity='0.06' d='M44.1 224a5 5 0 1 1 0 2H0v-2h44.1zm160 48a5 5 0 1 1 0 2H82v-2h122.1zm57.8-46a5 5 0 1 1 0-2H304v2h-42.1zm0 16a5 5 0 1 1 0-2H304v2h-42.1zm6.2-114a5 5 0 1 1 0 2h-86.2a5 5 0 1 1 0-2h86.2zm-256-48a5 5 0 1 1 0 2H0v-2h12.1zm185.8 34a5 5 0 1 1 0-2h86.2a5 5 0 1 1 0 2h-86.2zM258 12.1a5 5 0 1 1-2 0V0h2v12.1zm-64 208a5 5 0 1 1-2 0v-54.2a5 5 0 1 1 2 0v54.2zm48-198.2V80h62v2h-64V21.9a5 5 0 1 1 2 0zm16 16V64h46v2h-48V37.9a5 5 0 1 1 2 0zm-128 96V208h16v12.1a5 5 0 1 1-2 0V210h-16v-76.1a5 5 0 1 1 2 0zm-5.9-21.9a5 5 0 1 1 0 2H114v48H85.9a5 5 0 1 1 0-2H112v-48h12.1zm-6.2 130a5 5 0 1 1 0-2H176v-74.1a5 5 0 1 1 2 0V242h-60.1zm-16-64a5 5 0 1 1 0-2H114v48h10.1a5 5 0 1 1 0 2H112v-48h-10.1zM66 284.1a5 5 0 1 1-2 0V274H50v30h-2v-32h18v12.1zM236.1 176a5 5 0 1 1 0 2H226v94h48v32h-2v-30h-48v-98h12.1zm25.8-30a5 5 0 1 1 0-2H274v44.1a5 5 0 1 1-2 0V146h-10.1zm-64 96a5 5 0 1 1 0-2H208v-80h16v-14h-42.1a5 5 0 1 1 0-2H226v18h-16v80h-12.1zm86.2-210a5 5 0 1 1 0 2H272V0h2v32h10.1zM98 101.9V146H53.9a5 5 0 1 1 0-2H96v-42.1a5 5 0 1 1 2 0zM53.9 34a5 5 0 1 1 0-2H80V0h2v34H53.9zm60.1 3.9V66H82v64H69.9a5 5 0 1 1 0-2H80V64h32V37.9a5 5 0 1 1 2 0zM101.9 82a5 5 0 1 1 0-2H128V37.9a5 5 0 1 1 2 0V82h-28.1zm16-64a5 5 0 1 1 0-2H146v44.1a5 5 0 1 1-2 0V18h-26.1zm102.2 270a5 5 0 1 1 0 2H98v14h-2v-16h124.1zM242 149.9V160h16v34h-16v62h48v48h-2v-46h-48v-66h16v-30h-16v-12.1a5 5 0 1 1 2 0zM53.9 18a5 5 0 1 1 0-2H64V2H48V0h18v18H53.9zm112 32a5 5 0 1 1 0-2H192V0h50v2h-48v48h-28.1zm-48-48a5 5 0 0 1-9.8-2h2.07a3 3 0 1 0 5.66 0H178v34h-18V21.9a5 5 0 1 1 2 0V32h14V2h-58.1zm0 96a5 5 0 1 1 0-2H137l32-32h39V21.9a5 5 0 1 1 2 0V66h-40.17l-32 32H117.9zm28.1 90.1a5 5 0 1 1-2 0v-76.51L175.59 80H224V21.9a5 5 0 1 1 2 0V82h-49.59L146 112.41v75.69zm16 32a5 5 0 1 1-2 0v-99.51L184.59 96H300.1a5 5 0 0 1 3.9-3.9v2.07a3 3 0 0 0 0 5.66v2.07a5 5 0 0 1-3.9-3.9H185.41L162 121.41v98.69zm-144-64a5 5 0 1 1-2 0v-3.51l48-48V48h32V0h2v50H66v55.41l-48 48v2.69zM50 53.9v43.51l-48 48V208h26.1a5 5 0 1 1 0 2H0v-65.41l48-48V53.9a5 5 0 1 1 2 0zm-16 16V89.41l-34 34v-2.82l32-32V69.9a5 5 0 1 1 2 0zM12.1 32a5 5 0 1 1 0 2H9.41L0 43.41V40.6L8.59 32h3.51zm265.8 18a5 5 0 1 1 0-2h18.69l7.41-7.41v2.82L297.41 50H277.9zm-16 160a5 5 0 1 1 0-2H288v-71.41l16-16v2.82l-14 14V210h-28.1zm-208 32a5 5 0 1 1 0-2H64v-22.59L40.59 194H21.9a5 5 0 1 1 0-2H41.41L66 216.59V242H53.9zm150.2 14a5 5 0 1 1 0 2H96v-56.6L56.6 162H37.9a5 5 0 1 1 0-2h19.5L98 200.6V256h106.1zm-150.2 2a5 5 0 1 1 0-2H80v-46.59L48.59 178H21.9a5 5 0 1 1 0-2H49.41L82 208.59V258H53.9zM34 39.8v1.61L9.41 66H0v-2h8.59L32 40.59V0h2v39.8zM2 300.1a5 5 0 0 1 3.9 3.9H3.83A3 3 0 0 0 0 302.17V256h18v48h-2v-46H2v42.1zM34 241v63h-2v-62H0v-2h34v1zM17 18H0v-2h16V0h2v18h-1zm273-2h14v2h-16V0h2v16zm-32 273v15h-2v-14h-14v14h-2v-16h18v1zM0 92.1A5.02 5.02 0 0 1 6 97a5 5 0 0 1-6 4.9v-2.07a3 3 0 1 0 0-5.66V92.1zM80 272h2v32h-2v-32zm37.9 32h-2.07a3 3 0 0 0-5.66 0h-2.07a5 5 0 0 1 9.8 0zM5.9 0A5.02 5.02 0 0 1 0 5.9V3.83A3 3 0 0 0 3.83 0H5.9zm294.2 0h2.07A3 3 0 0 0 304 3.83V5.9a5 5 0 0 1-3.9-5.9zm3.9 300.1v2.07a3 3 0 0 0-1.83 1.83h-2.07a5 5 0 0 1 3.9-3.9zM97 100a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0-16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-48 32a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm32 48a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-16 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm32-16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0-32a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16 32a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm32 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0-16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-16-64a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16 96a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16-144a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 32a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16-32a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16-16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-96 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16-32a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm96 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-16-64a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16-16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-32 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0-16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-16 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-16 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-16 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM49 36a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-32 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm32 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM33 68a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16-48a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 240a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16 32a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-16-64a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-16-32a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm80-176a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-16-16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm32 48a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16-16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0-32a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm112 176a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-16 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM17 180a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0-32a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM17 84a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm32 64a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16-16a3 3 0 1 0 0-6 3 3 0 0 0 0 6z'%3E%3C/path%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 304 304' width='304' height='304'%3E%3Cpath fill='%23ff9933' fill-opacity='0.06' d='M44.1 224a5 5 0 1 1 0 2H0v-2h44.1zm160 48a5 5 0 1 1 0 2H82v-2h122.1zm57.8-46a5 5 0 1 1 0-2H304v2h-42.1zm0 16a5 5 0 1 1 0-2H304v2h-42.1zm6.2-114a5 5 0 1 1 0 2h-86.2a5 5 0 1 1 0-2h86.2zm-256-48a5 5 0 1 1 0 2H0v-2h12.1zm185.8 34a5 5 0 1 1 0-2h86.2a5 5 0 1 1 0 2h-86.2zM258 12.1a5 5 0 1 1-2 0V0h2v12.1zm-64 208a5 5 0 1 1-2 0v-54.2a5 5 0 1 1 2 0v54.2zm48-198.2V80h62v2h-64V21.9a5 5 0 1 1 2 0zm16 16V64h46v2h-48V37.9a5 5 0 1 1 2 0zm-128 96V208h16v12.1a5 5 0 1 1-2 0V210h-16v-76.1a5 5 0 1 1 2 0zm-5.9-21.9a5 5 0 1 1 0 2H114v48H85.9a5 5 0 1 1 0-2H112v-48h12.1zm-6.2 130a5 5 0 1 1 0-2H176v-74.1a5 5 0 1 1 2 0V242h-60.1zm-16-64a5 5 0 1 1 0-2H114v48h10.1a5 5 0 1 1 0 2H112v-48h-10.1zM66 284.1a5 5 0 1 1-2 0V274H50v30h-2v-32h18v12.1zM236.1 176a5 5 0 1 1 0 2H226v94h48v32h-2v-30h-48v-98h12.1zm25.8-30a5 5 0 1 1 0-2H274v44.1a5 5 0 1 1-2 0V146h-10.1zm-64 96a5 5 0 1 1 0-2H208v-80h16v-14h-42.1a5 5 0 1 1 0-2H226v18h-16v80h-12.1zm86.2-210a5 5 0 1 1 0 2H272V0h2v32h10.1zM98 101.9V146H53.9a5 5 0 1 1 0-2H96v-42.1a5 5 0 1 1 2 0zM53.9 34a5 5 0 1 1 0-2H80V0h2v34H53.9zm60.1 3.9V66H82v64H69.9a5 5 0 1 1 0-2H80V64h32V37.9a5 5 0 1 1 2 0zM101.9 82a5 5 0 1 1 0-2H128V37.9a5 5 0 1 1 2 0V82h-28.1zm16-64a5 5 0 1 1 0-2H146v44.1a5 5 0 1 1-2 0V18h-26.1zm102.2 270a5 5 0 1 1 0 2H98v14h-2v-16h124.1zM242 149.9V160h16v34h-16v62h48v48h-2v-46h-48v-66h16v-30h-16v-12.1a5 5 0 1 1 2 0zM53.9 18a5 5 0 1 1 0-2H64V2H48V0h18v18H53.9zm112 32a5 5 0 1 1 0-2H192V0h50v2h-48v48h-28.1zm-48-48a5 5 0 0 1-9.8-2h2.07a3 3 0 1 0 5.66 0H178v34h-18V21.9a5 5 0 1 1 2 0V32h14V2h-58.1zm0 96a5 5 0 1 1 0-2H137l32-32h39V21.9a5 5 0 1 1 2 0V66h-40.17l-32 32H117.9zm28.1 90.1a5 5 0 1 1-2 0v-76.51L175.59 80H224V21.9a5 5 0 1 1 2 0V82h-49.59L146 112.41v75.69zm16 32a5 5 0 1 1-2 0v-99.51L184.59 96H300.1a5 5 0 0 1 3.9-3.9v2.07a3 3 0 0 0 0 5.66v2.07a5 5 0 0 1-3.9-3.9H185.41L162 121.41v98.69zm-144-64a5 5 0 1 1-2 0v-3.51l48-48V48h32V0h2v50H66v55.41l-48 48v2.69zM50 53.9v43.51l-48 48V208h26.1a5 5 0 1 1 0 2H0v-65.41l48-48V53.9a5 5 0 1 1 2 0zm-16 16V89.41l-34 34v-2.82l32-32V69.9a5 5 0 1 1 2 0zM12.1 32a5 5 0 1 1 0 2H9.41L0 43.41V40.6L8.59 32h3.51zm265.8 18a5 5 0 1 1 0-2h18.69l7.41-7.41v2.82L297.41 50H277.9zm-16 160a5 5 0 1 1 0-2H288v-71.41l16-16v2.82l-14 14V210h-28.1zm-208 32a5 5 0 1 1 0-2H64v-22.59L40.59 194H21.9a5 5 0 1 1 0-2H41.41L66 216.59V242H53.9zm150.2 14a5 5 0 1 1 0 2H96v-56.6L56.6 162H37.9a5 5 0 1 1 0-2h19.5L98 200.6V256h106.1zm-150.2 2a5 5 0 1 1 0-2H80v-46.59L48.59 178H21.9a5 5 0 1 1 0-2H49.41L82 208.59V258H53.9zM34 39.8v1.61L9.41 66H0v-2h8.59L32 40.59V0h2v39.8zM2 300.1a5 5 0 0 1 3.9 3.9H3.83A3 3 0 0 0 0 302.17V256h18v48h-2v-46H2v42.1zM34 241v63h-2v-62H0v-2h34v1zM17 18H0v-2h16V0h2v18h-1zm273-2h14v2h-16V0h2v16zm-32 273v15h-2v-14h-14v14h-2v-16h18v1zM0 92.1A5.02 5.02 0 0 1 6 97a5 5 0 0 1-6 4.9v-2.07a3 3 0 1 0 0-5.66V92.1zM80 272h2v32h-2v-32zm37.9 32h-2.07a3 3 0 0 0-5.66 0h-2.07a5 5 0 0 1 9.8 0zM5.9 0A5.02 5.02 0 0 1 0 5.9V3.83A3 3 0 0 0 3.83 0H5.9zm294.2 0h2.07A3 3 0 0 0 304 3.83V5.9a5 5 0 0 1-3.9-5.9zm3.9 300.1v2.07a3 3 0 0 0-1.83 1.83h-2.07a5 5 0 0 1 3.9-3.9zM97 100a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0-16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-48 32a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm32 48a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-16 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm32-16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0-32a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16 32a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm32 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0-16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-16-64a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16 96a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16-144a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 32a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16-32a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16-16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-96 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16-32a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm96 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-16-64a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16-16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-32 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0-16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-16 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-16 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-16 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM49 36a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-32 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm32 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM33 68a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16-48a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 240a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16 32a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-16-64a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-16-32a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm80-176a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-16-16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm32 48a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16-16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0-32a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm112 176a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-16 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM17 180a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0-32a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM17 84a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm32 64a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm16-16a3 3 0 1 0 0-6 3 3 0 0 0 0 6z'%3E%3C/path%3E%3C/svg%3E");
 }
 
 /* ─── Icon animations now handled by Framer Motion (see icon-animations.ts) ─── */
@@ -23,13 +23,62 @@
 
 @theme {
   /* Typography */
-  --font-sans: "Inter Variable", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-poppins), "Inter Variable", "Inter", ui-sans-serif, system-ui, sans-serif;
 
-  /* Brand Colors */
-  --color-brand: #f59e0b;
-  --color-brand-light: #fbbf24;
-  --color-brand-dark: #d97706;
-  --color-brand-glow: rgba(245, 158, 11, 0.3);
+  /* ─────────────────────────────────────────────────────────────
+     Brand — flag saffron, per the client brief's saffron / white /
+     dark-blue palette. These are the reference's --brand tokens.
+     ───────────────────────────────────────────────────────────── */
+  --color-brand: #ff9933;
+  --color-brand-light: #ffc27a;
+  --color-brand-dark: #e87d12;   /* passes contrast on white */
+  --color-brand-soft: #fff4e6;
+  --color-brand-glow: rgba(255,153,51,0.55);
+
+  /* Dark blue family */
+  --color-navy: #0a1e3f;
+  --color-navy-deep: #061428;
+  --color-blue: #12306b;
+  --color-blue-bright: #1b6ec2;
+  --color-flag-green: #138808;
+
+  /* ─────────────────────────────────────────────────────────────
+     Tailwind's amber/orange scales, remapped onto saffron.
+
+     The palette was never centralised: 279 utility uses (amber-500
+     alone appears 123 times) reference Tailwind's own scale, not
+     --color-brand, so changing the brand token would have missed
+     nearly all of them. Redefining the scale itself recolours every
+     one of those uses without editing a single component — the same
+     trick the reference CSS uses with its `--amber: var(--brand)`
+     aliases. Ramp is built around the three brand stops:
+     400 = brand-light, 500 = brand, 600 = brand-dark.
+     ───────────────────────────────────────────────────────────── */
+  --color-amber-50: #fff8f0;
+  --color-amber-100: #fff4e6;
+  --color-amber-200: #ffe4c4;
+  --color-amber-300: #ffd4a3;
+  --color-amber-400: #ffc27a;
+  --color-amber-500: #ff9933;
+  --color-amber-600: #e87d12;
+  --color-amber-700: #c96608;
+  --color-amber-800: #a15206;
+  --color-amber-900: #7d3f05;
+  --color-amber-950: #4a2503;
+
+  /* Orange runs a touch deeper so the two stay distinguishable where
+     a component pairs them (28 uses of orange-500 sit next to amber). */
+  --color-orange-50: #fff4e6;
+  --color-orange-100: #ffe8cc;
+  --color-orange-200: #ffd2a1;
+  --color-orange-300: #ffb35c;
+  --color-orange-400: #fa9a2b;
+  --color-orange-500: #f0851a;
+  --color-orange-600: #e87d12;
+  --color-orange-700: #c26308;
+  --color-orange-800: #964c06;
+  --color-orange-900: #7d3f05;
+  --color-orange-950: #451f02;
 
   /* Surface Colors */
   --color-background: #ffffff;
@@ -54,13 +103,19 @@
   --color-destructive: #ef4444;
   --color-destructive-foreground: #fafafa;
 
-  /* Dark Surfaces (hero, map, badges) */
-  --color-dark-bg: #0c0c1d;
-  --color-dark-surface: #1a1a2e;
+  /* Dark Surfaces (hero, map, badges) — the brief's dark blue, not the
+     old near-black purple, so dark sections read as one family with
+     the saffron rather than as a separate theme. */
+  --color-dark-bg: #0a1e3f;
+  --color-dark-surface: #12306b;
 
-  /* Alliance Colors */
-  --color-nda: #4ade80;
-  --color-india-alliance: #60a5fa;
+  /* Alliance Colors — saffron / blue / green, matching the reference's
+     --nda / --india / --oth. The old green+blue pair read as neither
+     party's actual colours. */
+  --color-nda: #ff9933;
+  --color-india-alliance: #1b6ec2;
+  --color-alliance-other: #138808;
+  --color-alliance-none: #c7d2de;
 
   /* Sidebar */
   --color-sidebar-background: #fafafa;
@@ -148,7 +203,7 @@
   background-image: linear-gradient(
     90deg,
     var(--color-brand) 0%, var(--color-brand) 25%,
-    #fcd34d 40%, #ffffff 50%, #fcd34d 60%,
+    #ffd4a3 40%, #ffffff 50%, #ffd4a3 60%,
     var(--color-brand) 75%, var(--color-brand) 100%
   );
   background-size: 300% 100%;
@@ -165,7 +220,7 @@
   background-image: linear-gradient(
     90deg,
     #e2e8f0 0%, #e2e8f0 30%,
-    #fcd34d 45%, #ffffff 50%, #fcd34d 55%,
+    #ffd4a3 45%, #ffffff 50%, #ffd4a3 55%,
     #e2e8f0 70%, #e2e8f0 100%
   );
   background-size: 300% 100%;
@@ -176,34 +231,6 @@
 }
 
 /* ─── Nav Text ─── */
-
-.nav-text-shimmer-dark {
-  background-image: linear-gradient(
-    90deg,
-    #4b5563 0%, #4b5563 35%,
-    var(--color-brand-dark) 50%,
-    #4b5563 65%, #4b5563 100%
-  );
-  background-size: 200% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: shimmer-sweep 4s ease-in-out infinite, glow-pulse 3s ease-in-out infinite;
-}
-
-.nav-text-shimmer-light {
-  background-image: linear-gradient(
-    90deg,
-    rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.9) 35%,
-    var(--color-brand-light) 50%,
-    rgba(255,255,255,0.9) 65%, rgba(255,255,255,0.9) 100%
-  );
-  background-size: 200% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: shimmer-sweep 4s ease-in-out infinite, glow-pulse 3s ease-in-out infinite;
-}
 
 /* ─── Section text animations (dark backgrounds) ─── */
 
@@ -225,7 +252,7 @@
   background-image: linear-gradient(
     90deg,
     var(--color-brand) 0%, var(--color-brand) 20%,
-    #fcd34d 40%, #fff 50%, #fcd34d 60%,
+    #ffd4a3 40%, #fff 50%, #ffd4a3 60%,
     var(--color-brand) 80%, var(--color-brand) 100%
   );
   background-size: 300% 100%;
@@ -309,8 +336,8 @@
 
 /* ─── Breathing button pulse ─── */
 @keyframes breathing-glow {
-  0%, 100% { box-shadow: 0 8px 15px -3px rgba(245, 158, 11, 0.2); transform: scale(1); }
-  50%      { box-shadow: 0 8px 30px -3px rgba(245, 158, 11, 0.45); transform: scale(1.03); }
+  0%, 100% { box-shadow: 0 8px 15px -3px rgba(255,153,51,0.2); transform: scale(1); }
+  50%      { box-shadow: 0 8px 30px -3px rgba(255,153,51,0.45); transform: scale(1.03); }
 }
 
 .btn-breathing {
@@ -320,7 +347,7 @@
 .btn-breathing:hover {
   animation-play-state: paused;
   transform: scale(1.05);
-  box-shadow: 0 8px 30px -3px rgba(245, 158, 11, 0.5);
+  box-shadow: 0 8px 30px -3px rgba(255,153,51,0.5);
 }
 
 /* ─── Moving border (rotating conic-gradient) ─── */
@@ -397,7 +424,7 @@
     90deg,
     #fff 0%,
     #fff 40%,
-    #f59e0b 50%,
+    #ff9933 50%,
     #fff 60%,
     #fff 100%
   );
@@ -419,7 +446,7 @@
     90deg,
     #111827 0%,
     #111827 40%,
-    #f59e0b 50%,
+    #ff9933 50%,
     #111827 60%,
     #111827 100%
   );
@@ -449,7 +476,7 @@
   left: -30%;
   width: 30%;
   height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.6), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255,153,51,0.6), transparent);
   animation: footer-border-shimmer 3.5s ease-in-out infinite;
   animation-delay: 3s;
   border-radius: 9999px;
@@ -466,7 +493,7 @@
     90deg,
     rgba(255,255,255,0.7) 0%,
     rgba(255,255,255,0.7) 35%,
-    rgba(245,158,11,1) 50%,
+    rgba(255,153,51,1) 50%,
     rgba(255,255,255,0.7) 65%,
     rgba(255,255,255,0.7) 100%
   );
@@ -480,11 +507,11 @@
 .footer-link-shimmer:hover {
   background-image: linear-gradient(
     90deg,
-    rgba(245,158,11,1) 0%,
-    rgba(245,158,11,1) 35%,
+    rgba(255,153,51,1) 0%,
+    rgba(255,153,51,1) 35%,
     #fff 50%,
-    rgba(245,158,11,1) 65%,
-    rgba(245,158,11,1) 100%
+    rgba(255,153,51,1) 65%,
+    rgba(255,153,51,1) 100%
   );
 }
 
@@ -494,7 +521,7 @@
     90deg,
     rgba(55,65,81,1) 0%,
     rgba(55,65,81,1) 35%,
-    rgba(245,158,11,1) 50%,
+    rgba(255,153,51,1) 50%,
     rgba(55,65,81,1) 65%,
     rgba(55,65,81,1) 100%
   );
@@ -508,11 +535,11 @@
 .footer-link-shimmer-light:hover {
   background-image: linear-gradient(
     90deg,
-    rgba(245,158,11,1) 0%,
-    rgba(245,158,11,1) 35%,
+    rgba(255,153,51,1) 0%,
+    rgba(255,153,51,1) 35%,
     rgba(234,88,12,1) 50%,
-    rgba(245,158,11,1) 65%,
-    rgba(245,158,11,1) 100%
+    rgba(255,153,51,1) 65%,
+    rgba(255,153,51,1) 100%
   );
 }
 
@@ -522,7 +549,7 @@
     90deg,
     rgba(255,255,255,0.55) 0%,
     rgba(255,255,255,0.55) 35%,
-    rgba(245,158,11,0.9) 50%,
+    rgba(255,153,51,0.9) 50%,
     rgba(255,255,255,0.55) 65%,
     rgba(255,255,255,0.55) 100%
   );
@@ -536,8 +563,8 @@
 .footer-legal-shimmer:hover {
   background-image: linear-gradient(
     90deg,
-    rgba(245,158,11,1) 0%,
-    rgba(245,158,11,1) 100%
+    rgba(255,153,51,1) 0%,
+    rgba(255,153,51,1) 100%
   );
 }
 
@@ -547,7 +574,7 @@
     90deg,
     rgba(75,85,99,1) 0%,
     rgba(75,85,99,1) 35%,
-    rgba(245,158,11,0.9) 50%,
+    rgba(255,153,51,0.9) 50%,
     rgba(75,85,99,1) 65%,
     rgba(75,85,99,1) 100%
   );
@@ -561,8 +588,8 @@
 .footer-legal-shimmer-light:hover {
   background-image: linear-gradient(
     90deg,
-    rgba(245,158,11,1) 0%,
-    rgba(245,158,11,1) 100%
+    rgba(255,153,51,1) 0%,
+    rgba(255,153,51,1) 100%
   );
 }
 
@@ -701,4 +728,140 @@
   html {
     scroll-behavior: smooth;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   REFERENCE UTILITIES — ported from reference/new_ref/assets/logsabha.css
+
+   Only the pieces this codebase did not already have. The reveal
+   utilities (.rise/.stagger/.words) are deliberately NOT ported: this
+   project drives reveals through Motion's useInView, and a second,
+   CSS-driven reveal system competing for the same elements is how you
+   get elements stuck invisible. .btn-breathing and .moving-border also
+   already existed — they came from the home page the reference itself
+   was ported from.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Heading shimmer — a saffron sweep across the text. Distinct from the
+   nav/footer link shimmers already in this file: those are scoped to
+   small link text, these are for display headings. */
+.shimmer-light {
+  background-image: linear-gradient(90deg, #fff 0, #fff 30%, #ffc27a 45%, #ff9933 50%, #ffc27a 55%, #fff 70%, #fff 100%);
+  background-size: 300% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  /* Devanagari matras and descenders need room inside the painted box,
+     otherwise the gradient clips them. */
+  padding-bottom: 0.08em;
+  animation: shimmer-sweep-reverse 5s ease-in-out infinite;
+}
+
+.shimmer-dark {
+  background-image: linear-gradient(90deg, #0a1e3f 0, #0a1e3f 32%, #ffc27a 46%, #e87d12 50%, #ffc27a 54%, #0a1e3f 68%, #0a1e3f 100%);
+  background-size: 300% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  padding-bottom: 0.08em;
+  animation: shimmer-sweep-reverse 5s ease-in-out infinite;
+}
+
+/* Saffron highlight word — for one word inside a plain heading. */
+.shimmer-word {
+  background-image: linear-gradient(90deg, #ff9933 0, #ff9933 25%, #ffc27a 40%, #fff6ea 50%, #ffc27a 60%, #ff9933 75%, #ff9933 100%);
+  background-size: 300% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 14px rgba(255,153,51,0.55));
+  padding-bottom: 0.08em;
+  animation: shimmer-sweep-reverse 4s ease-in-out infinite;
+}
+
+@keyframes shimmer-sweep-reverse {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+/* The tricolour rule — a 3px saffron/white/green divider. */
+.tri {
+  height: 3px;
+  background: linear-gradient(90deg, #ff9933 0 33.33%, #fff 33.33% 66.66%, #138808 66.66% 100%);
+}
+
+/* One-view section: head and foot take their natural height, the stage
+   takes the rest, and the whole thing fits one screen. This is the
+   layout behind "every section in one view" — svh rather than vh so a
+   mobile browser's collapsing toolbar does not clip the foot. */
+.oneview {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.oneview > .ov-head { flex: 0 0 auto; }
+.oneview > .ov-stage { flex: 1 1 auto; min-height: clamp(210px, 32vh, 420px); position: relative; }
+.oneview > .ov-foot { flex: 0 0 auto; }
+@supports not (min-height: 100svh) {
+  .oneview { min-height: 100vh; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shimmer-light,
+  .shimmer-dark,
+  .shimmer-word {
+    animation: none;
+    /* Without the sweep the gradient would park mid-transition and leave
+       the text part-transparent, so paint it flat instead. */
+    background-image: none;
+    -webkit-text-fill-color: currentColor;
+  }
+}
+
+/* ─── Fixed-header anchor clearance ──────────────────────────────────
+   The header is fixed and up to 112px tall, so every in-page jump used
+   to land with the top of the target tucked underneath it — the deck's
+   eyebrow, and every service block reached from the hero contents list.
+   scroll-margin-top is the native fix and costs nothing; it applies to
+   anchor jumps and scrollIntoView alike. Kept in step with the header's
+   own h-16 / sm:h-20 / md:h-24 / lg:h-28 ramp. */
+:root { --header-h: 64px; }
+@media (min-width: 640px)  { :root { --header-h: 80px; } }
+@media (min-width: 768px)  { :root { --header-h: 96px; } }
+@media (min-width: 1024px) { :root { --header-h: 112px; } }
+
+/* .oneview sections pad for the header themselves, so giving them
+   scroll-margin too would clear it twice and eat the stage. */
+/* Any element can be an anchor target — this page marks its blocks with
+   zero-height <span id> markers, which a section[id] rule missed entirely.
+   scroll-margin-top affects only scrolling, never layout, so applying it
+   broadly is safe. */
+[id]:not(.oneview) {
+  scroll-margin-top: calc(var(--header-h) + 16px);
+}
+
+/* One-view only from lg up. A section that pairs a map with a 36-row state
+   table cannot honestly fit a phone screen, and squeezing it there produces a
+   200px map and an unreadable list. Below lg these sections take the height
+   they need. */
+@media (min-width: 1024px) {
+  .oneview-lg {
+    /* height, not min-height: min-height does not CAP anything, so a tall
+       child (a 36-row state table) simply stretched the section past one
+       screen. A definite height bounds the flex container, which is what lets
+       flex:1 1 auto actually shrink the stage and its panels scroll inside. */
+    height: 100svh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .oneview-lg > .ov-head { flex: 0 0 auto; }
+  /* min-height:0 so this flex item is allowed to shrink below its content —
+     without it the grid inside refuses to give up height and overflows. */
+  .oneview-lg > .ov-stage { flex: 1 1 auto; min-height: 0; position: relative; }
+  .oneview-lg > .ov-foot { flex: 0 0 auto; }
+}
+@supports not (min-height: 100svh) {
+  @media (min-width: 1024px) { .oneview-lg { height: 100vh; } }
 }

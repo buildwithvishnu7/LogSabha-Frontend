@@ -3,7 +3,7 @@ import lottieWeb from "lottie-web";
 
 export function LottieArrow({
   size = 16,
-  color = "#d97706",
+  color = "#e87d12",
 }: {
   size?: number;
   color?: string;

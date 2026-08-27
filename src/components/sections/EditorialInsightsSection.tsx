@@ -423,7 +423,7 @@ function FeaturedCard({ article }: { article: Article }) {
           >
             <motion.span
               className="pointer-events-none absolute inset-[-3px] rounded-xl border-2 border-amber-500/70"
-              style={{ boxShadow: "0 0 8px rgba(245,158,11,0.25)" }}
+              style={{ boxShadow: "0 0 8px rgba(255,153,51,0.25)" }}
               animate={{ scale: [1, 1.06, 1], opacity: [0.8, 0, 0.8] }}
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             />
@@ -461,7 +461,7 @@ function SidebarCard({
         className="pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
         style={{
           background:
-            "linear-gradient(105deg, transparent 40%, rgba(245,158,11,0.08) 50%, transparent 60%)",
+            "linear-gradient(105deg, transparent 40%, rgba(255,153,51,0.08) 50%, transparent 60%)",
           backgroundSize: "200% 100%",
         }}
         animate={inView ? { backgroundPosition: ["-100% 0%", "200% 0%"] } : undefined}
@@ -501,7 +501,7 @@ function SidebarCard({
             className="pointer-events-none absolute inset-0 rounded-md"
             style={{
               background:
-                "linear-gradient(105deg, transparent 30%, rgba(245,158,11,0.15) 50%, transparent 70%)",
+                "linear-gradient(105deg, transparent 30%, rgba(255,153,51,0.15) 50%, transparent 70%)",
               backgroundSize: "200% 100%",
             }}
             animate={inView ? { backgroundPosition: ["-100% 0%", "200% 0%"] } : undefined}

@@ -465,9 +465,9 @@ function DonutChart({
             scale: [1, 1.04, 1],
             opacity: [0.2, 0.5, 0.2],
             borderColor: [
-              "rgba(245,158,11,0.1)",
-              "rgba(245,158,11,0.35)",
-              "rgba(245,158,11,0.1)",
+              "rgba(255,153,51,0.1)",
+              "rgba(255,153,51,0.35)",
+              "rgba(255,153,51,0.1)",
             ],
           }}
           transition={{
@@ -495,7 +495,7 @@ function SeatShareCard({ triggered }: { triggered: boolean }) {
           ? {
               borderColor: [
                 "#e5e7eb",
-                "rgba(245,158,11,0.25)",
+                "rgba(255,153,51,0.25)",
                 "#e5e7eb",
               ],
             }
@@ -727,7 +727,7 @@ function StateDistributionCard({ triggered }: { triggered: boolean }) {
           ? {
               borderColor: [
                 "#e5e7eb",
-                "rgba(245,158,11,0.25)",
+                "rgba(255,153,51,0.25)",
                 "#e5e7eb",
               ],
             }
@@ -1044,7 +1044,7 @@ function HistoricalTrendsCard({ triggered }: { triggered: boolean }) {
           ? {
               borderColor: [
                 "#e5e7eb",
-                "rgba(245,158,11,0.25)",
+                "rgba(255,153,51,0.25)",
                 "#e5e7eb",
               ],
             }

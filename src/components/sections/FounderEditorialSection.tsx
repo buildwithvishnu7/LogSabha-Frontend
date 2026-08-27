@@ -131,7 +131,7 @@ export function CandleFlame({
             width: size * 0.55,
             height: size * 0.9,
             background:
-              "radial-gradient(ellipse at 50% 70%, #f59e0b 0%, #f97316 40%, rgba(239,68,68,0.4) 70%, transparent 100%)",
+              "radial-gradient(ellipse at 50% 70%, #ff9933 0%, #f97316 40%, rgba(239,68,68,0.4) 70%, transparent 100%)",
             borderRadius: "50% 50% 50% 50% / 60% 60% 40% 40%",
           }}
         />
@@ -143,7 +143,7 @@ export function CandleFlame({
             width: size * 0.2,
             height: size * 0.35,
             background:
-              "radial-gradient(ellipse, #fef3c7 0%, #fbbf24 60%, transparent 100%)",
+              "radial-gradient(ellipse, #fff4e6 0%, #ffc27a 60%, transparent 100%)",
             borderRadius: "50% 50% 50% 50% / 60% 60% 40% 40%",
           }}
         />
@@ -192,7 +192,7 @@ function ArticleCard({
           className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
           style={{
             background:
-              "linear-gradient(120deg, transparent 30%, rgba(245,158,11,0.15) 50%, transparent 70%)",
+              "linear-gradient(120deg, transparent 30%, rgba(255,153,51,0.15) 50%, transparent 70%)",
             backgroundSize: "200% 100%",
           }}
           animate={triggered ? { backgroundPosition: ["-200% 0%", "200% 0%"] } : undefined}
@@ -220,7 +220,7 @@ function ArticleCard({
             whileHover={{ scale: 1.15 }}
             whileTap={{ scale: 0.9 }}
           >
-            <FounderLottieIcon src="/lottie/fast-forward.json" size={18} color="#fbbf24" />
+            <FounderLottieIcon src="/lottie/fast-forward.json" size={18} color="#ffc27a" />
           </motion.span>
         </div>
       </div>
@@ -339,7 +339,7 @@ export function FounderEditorialSection() {
               className="inline-block py-1"
               style={{
                 backgroundImage:
-                  "linear-gradient(90deg, #fbbf24 0%, #fbbf24 30%, #fff 45%, #fde68a 50%, #fff 55%, #fbbf24 70%, #fbbf24 100%)",
+                  "linear-gradient(90deg, #ffc27a 0%, #ffc27a 30%, #fff 45%, #fde68a 50%, #fff 55%, #ffc27a 70%, #ffc27a 100%)",
                 backgroundSize: "300% 100%",
                 WebkitBackgroundClip: "text",
                 backgroundClip: "text",
@@ -397,7 +397,7 @@ export function FounderEditorialSection() {
               {/* Pulse rings */}
               <motion.span
                 className="pointer-events-none absolute inset-[-3px] rounded-full border-2 border-amber-500/60"
-                style={{ boxShadow: "0 0 8px rgba(245,158,11,0.2)" }}
+                style={{ boxShadow: "0 0 8px rgba(255,153,51,0.2)" }}
                 animate={triggered ? { scale: [1, 1.06, 1], opacity: [0.7, 0, 0.7] } : undefined}
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
               />
@@ -411,7 +411,7 @@ export function FounderEditorialSection() {
                 className="pointer-events-none absolute inset-0 rounded-full"
                 style={{
                   background:
-                    "linear-gradient(90deg, transparent, rgba(245,158,11,0.3), transparent)",
+                    "linear-gradient(90deg, transparent, rgba(255,153,51,0.3), transparent)",
                   backgroundSize: "200% 100%",
                 }}
                 animate={
@@ -427,7 +427,7 @@ export function FounderEditorialSection() {
               />
               <span className="relative z-10 flex items-center gap-2">
                 {founder.ctaLabel}
-                <FounderLottieIcon src="/lottie/fast-forward.json" size={22} color="#fbbf24" />
+                <FounderLottieIcon src="/lottie/fast-forward.json" size={22} color="#ffc27a" />
               </span>
             </motion.a>
           </div>

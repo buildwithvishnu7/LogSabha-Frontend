@@ -387,7 +387,7 @@ function SocialCard({ post, index }: { post: SocialPost; index: number }) {
           className="pointer-events-none absolute inset-0 z-20 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
           style={{
             background:
-              "linear-gradient(105deg, transparent 40%, rgba(245,158,11,0.06) 50%, transparent 60%)",
+              "linear-gradient(105deg, transparent 40%, rgba(255,153,51,0.06) 50%, transparent 60%)",
             backgroundSize: "200% 100%",
           }}
           animate={inView ? { backgroundPosition: ["-100% 0%", "200% 0%"] } : undefined}
@@ -558,7 +558,7 @@ export function StatsBar() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false, amount: 0.3 }}
             transition={{ delay: 0.4 + i * 0.1, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            whileHover={{ y: -3, borderColor: "rgba(245, 158, 11, 0.5)" }}
+            whileHover={{ y: -3, borderColor: "rgba(255,153,51,0.5)" }}
           >
             <div className="text-2xl font-extrabold text-amber-500">
               <AnimatedStat value={stat.value} className="text-2xl font-extrabold" />
@@ -621,7 +621,7 @@ export function SocialPresenceSection() {
           className="h-full w-full"
           style={{
             backgroundImage:
-              "repeating-linear-gradient(135deg, transparent, transparent 40px, rgba(245,158,11,0.4) 40px, rgba(245,158,11,0.4) 41px)",
+              "repeating-linear-gradient(135deg, transparent, transparent 40px, rgba(255,153,51,0.4) 40px, rgba(255,153,51,0.4) 41px)",
           }}
         />
       </div>
@@ -641,7 +641,7 @@ export function SocialPresenceSection() {
             height: 3 + (i % 3) * 2,
             left: `${8 + i * 9}%`,
             top: `${12 + (i % 5) * 18}%`,
-            background: i % 2 === 0 ? "rgba(245,158,11,0.25)" : "rgba(249,115,22,0.2)",
+            background: i % 2 === 0 ? "rgba(255,153,51,0.25)" : "rgba(249,115,22,0.2)",
           }}
           animate={
             inView

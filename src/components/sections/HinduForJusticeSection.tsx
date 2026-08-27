@@ -33,7 +33,7 @@ function HfjLottieIcon({ src, size = 22 }: { src: string; size?: number }) {
 }
 
 // ─── Color-aware Lottie Icon ───
-function HfjColorLottieIcon({ src, size = 18, color = "#d97706" }: { src: string; size?: number; color?: string }) {
+function HfjColorLottieIcon({ src, size = 18, color = "#e87d12" }: { src: string; size?: number; color?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const colorRef = useRef(color);
   colorRef.current = color;
@@ -198,7 +198,7 @@ function PillarCard({
           className="pointer-events-none absolute inset-0 z-10"
           style={{
             background:
-              "linear-gradient(120deg, transparent 30%, rgba(251,191,36,0.08) 45%, rgba(251,191,36,0.15) 50%, rgba(251,191,36,0.08) 55%, transparent 70%)",
+              "linear-gradient(120deg, transparent 30%, rgba(255,194,122,0.08) 45%, rgba(255,194,122,0.15) 50%, rgba(255,194,122,0.08) 55%, transparent 70%)",
             backgroundSize: "200% 100%",
           }}
           animate={{ backgroundPosition: ["-200% 0%", "200% 0%"] }}
@@ -217,9 +217,9 @@ function PillarCard({
           className="pointer-events-none absolute inset-0 rounded-2xl"
           animate={{
             boxShadow: [
-              "inset 0 0 0 1px rgba(251,191,36,0)",
-              "inset 0 0 0 1.5px rgba(251,191,36,0.35)",
-              "inset 0 0 0 1px rgba(251,191,36,0)",
+              "inset 0 0 0 1px rgba(255,194,122,0)",
+              "inset 0 0 0 1.5px rgba(255,194,122,0.35)",
+              "inset 0 0 0 1px rgba(255,194,122,0)",
             ],
           }}
           transition={{
@@ -351,10 +351,10 @@ export function HinduForJusticeSection() {
                 top: `${15 + (i % 4) * 20}%`,
                 background:
                   i % 3 === 0
-                    ? "rgba(251,191,36,0.3)"
+                    ? "rgba(255,194,122,0.3)"
                     : i % 3 === 1
                       ? "rgba(249,115,22,0.25)"
-                      : "rgba(245,158,11,0.2)",
+                      : "rgba(255,153,51,0.2)",
               }}
               animate={{
                 y: [0, -25 - (i % 3) * 10, 0],
@@ -429,7 +429,7 @@ export function HinduForJusticeSection() {
                       className="inline-block bg-clip-text text-transparent"
                       style={{
                         backgroundImage:
-                          "linear-gradient(90deg, #f59e0b, #ea580c, #fbbf24, #f97316, #f59e0b)",
+                          "linear-gradient(90deg, #ff9933, #ea580c, #ffc27a, #f97316, #ff9933)",
                         backgroundSize: "200% 100%",
                       }}
                       animate={
@@ -527,12 +527,12 @@ export function HinduForJusticeSection() {
                       y: 0,
                       borderColor: [
                         "rgba(229,229,229,1)",
-                        "rgba(251,191,36,0.5)",
+                        "rgba(255,194,122,0.5)",
                         "rgba(229,229,229,1)",
                       ],
                       boxShadow: [
                         "0 1px 3px rgba(0,0,0,0.1)",
-                        "0 4px 20px rgba(251,191,36,0.15)",
+                        "0 4px 20px rgba(255,194,122,0.15)",
                         "0 1px 3px rgba(0,0,0,0.1)",
                       ],
                     }
@@ -574,7 +574,7 @@ export function HinduForJusticeSection() {
               >
                 <motion.span
                   className="pointer-events-none absolute inset-[-3px] rounded-xl border-2 border-amber-500/70"
-                  style={{ boxShadow: "0 0 8px rgba(245,158,11,0.25)" }}
+                  style={{ boxShadow: "0 0 8px rgba(255,153,51,0.25)" }}
                   animate={{ scale: [1, 1.06, 1], opacity: [0.8, 0, 0.8] }}
                   transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                 />

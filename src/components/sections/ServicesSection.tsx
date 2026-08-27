@@ -29,7 +29,7 @@ function SvcLottieIcon({ src, size = 22 }: { src: string; size?: number }) {
   return <div ref={containerRef} style={{ width: size, height: size, display: "inline-flex" }} />;
 }
 
-function SvcColorLottieIcon({ src, size = 18, color = "#d97706" }: { src: string; size?: number; color?: string }) {
+function SvcColorLottieIcon({ src, size = 18, color = "#e87d12" }: { src: string; size?: number; color?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const colorRef = useRef(color);
   colorRef.current = color;
@@ -212,7 +212,7 @@ function ServiceContent({ service }: { service: ServiceItem }) {
         transition={{ duration: 0.2 }}
       >
         Learn more
-        <SvcColorLottieIcon src="/lottie/fast-forward.json" size={22} color="#d97706" />
+        <SvcColorLottieIcon src="/lottie/fast-forward.json" size={22} color="#e87d12" />
       </motion.a>
     </motion.div>
   );
@@ -394,7 +394,7 @@ export function ServicesSection({ data }: { data: ServicesData }) {
                         whileHover={{ x: 4 }}
                       >
                         Learn more
-                        <SvcColorLottieIcon src="/lottie/fast-forward.json" size={20} color="#d97706" />
+                        <SvcColorLottieIcon src="/lottie/fast-forward.json" size={20} color="#e87d12" />
                       </motion.a>
                     </div>
                   </motion.div>

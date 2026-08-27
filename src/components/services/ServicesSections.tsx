@@ -16,7 +16,7 @@ import { SlotNumber } from "@/components/motion/SlotNumber";
 import { servicesData, type ServiceBlock } from "@/data/services";
 
 /* Homepage tokens: ink #0A0A0A · body #6B7280 · muted panel #F5F5F5
-   brand amber #F59E0B · brand dark #D97706 · dark ground #0B1120
+   brand amber #FF9933 · brand dark #E87D12 · dark ground #061428
    Soft shapes — rounded-full on pills, rounded-xl on surfaces. */
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -36,18 +36,33 @@ export function ServicesHero() {
   const fade = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
   return (
-    <section ref={ref} className="relative min-h-[92svh] overflow-hidden bg-[#0B1120]">
+    <section ref={ref} className="relative min-h-[92svh] overflow-hidden bg-[#150E06]">
       {/* Photograph as atmosphere, not subject: heavily tinted and parallaxed, so
-          it carries depth without competing with the type. */}
+          it carries depth without competing with the type.
+
+          A rally microphone, not the old library shot — speech, campaigning and
+          event management are three of the six disciplines, so the subject is
+          on-topic, and its warm gold bokeh sits on the brand amber instead of
+          fighting it. The scrim is warm near-black rather than navy for the same
+          reason: navy over gold turns the whole frame muddy grey. */}
       <motion.div className="absolute inset-0" style={{ y: bgY }}>
+        {/* Blurred hard on purpose. This frame has ONE dominant central subject,
+            which fights a two-column hero: unblurred it reads as a giant sphere
+            sitting between the headline and the contents list, and scaling it
+            aside only made it bigger. Blurred, it contributes what it is
+            actually here for — warm gold light in a hall — and nothing competes
+            with the type. */}
         <img
-          src="/images/editorial-bg.jpg"
+          src="/images/media-bg-2.jpg"
           alt=""
           aria-hidden
-          className="h-[118%] w-full object-cover object-center"
+          className="h-[118%] w-full scale-110 object-cover object-center blur-[14px]"
         />
-        <span className="absolute inset-0 bg-[#0B1120]/82" />
-        <span className="absolute inset-0 bg-[radial-gradient(120%_90%_at_20%_0%,rgba(245,158,11,0.22),transparent_60%)]" />
+        {/* One directional scrim, not a stack. Three stacked layers turned the
+            gold bokeh into flat brown; this keeps contrast where the type is
+            and lets the warmth survive on the right. */}
+        <span className="absolute inset-0 bg-[linear-gradient(100deg,rgba(12,8,3,0.90)_0%,rgba(12,8,3,0.74)_45%,rgba(14,9,4,0.52)_100%)]" />
+        <span className="absolute inset-0 bg-[radial-gradient(110%_80%_at_18%_5%,rgba(255,153,51,0.16),transparent_58%)]" />
       </motion.div>
 
       <motion.div
@@ -57,12 +72,12 @@ export function ServicesHero() {
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,380px)] lg:items-end lg:gap-16">
           <div>
             <motion.span
-              className="inline-flex items-center gap-3 text-[10px] font-bold uppercase tracking-wide text-[#FBBF24]"
+              className="inline-flex items-center gap-3 text-[10px] font-bold uppercase tracking-wide text-[#FFC27A]"
               initial={{ opacity: 0, y: 12 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55 }}
             >
-              <span className="h-px w-10 bg-[#F59E0B]" />
+              <span className="h-px w-10 bg-[#FF9933]" />
               The LogSabha Practice
             </motion.span>
 
@@ -77,11 +92,11 @@ export function ServicesHero() {
                   <motion.span
                     className="block"
                     initial={{ y: "110%" }}
-                    animate={inView ? { y: "0%" } : {}}
+                    animate={{ y: "0%" }}
                     transition={{ duration: 0.9, delay: 0.15 + i * 0.12, ease: EASE }}
                   >
                     {line}
-                    {i === 1 && <span className="text-[#F59E0B]">.</span>}
+                    {i === 1 && <span className="text-[#FF9933]">.</span>}
                   </motion.span>
                 </span>
               ))}
@@ -90,7 +105,7 @@ export function ServicesHero() {
             <motion.p
               className="mt-7 max-w-xl text-sm leading-relaxed text-[#9CA3AF] sm:text-base"
               initial={{ opacity: 0, y: 18 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.55 }}
             >
               {hero.subtitle}
@@ -99,19 +114,19 @@ export function ServicesHero() {
             <motion.div
               className="mt-9 flex flex-wrap items-center gap-3"
               initial={{ opacity: 0, y: 16 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.7 }}
             >
               <a
                 href="#services"
-                className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-[#F59E0B] px-7 py-3.5 text-[13px] font-bold tracking-wide text-white shadow-[0_0_28px_rgba(245,158,11,0.45)] transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0B1120]"
+                className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-[#FF9933] px-7 py-3.5 text-[13px] font-bold tracking-wide text-white shadow-[0_0_28px_rgba(255,153,51,0.45)] transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9933] focus-visible:ring-offset-2 focus-visible:ring-offset-[#061428]"
               >
                 {hero.ctaPrimary.label}
                 <ArrowDown className="h-4 w-4 transition-transform group-hover:translate-y-0.5" />
               </a>
               <a
                 href={hero.ctaSecondary.href}
-                className="inline-flex items-center gap-2 rounded-full border border-white/25 px-7 py-3.5 text-[13px] font-bold tracking-wide text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B]"
+                className="inline-flex items-center gap-2 rounded-full border border-white/25 px-7 py-3.5 text-[13px] font-bold tracking-wide text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9933]"
               >
                 {hero.ctaSecondary.label}
                 <ArrowRight className="h-4 w-4" />
@@ -122,29 +137,34 @@ export function ServicesHero() {
           {/* The six disciplines listed in the hero — the page's contents page,
               so a visitor knows the shape of what follows before scrolling. */}
           <motion.ol
-            className="hidden border-t border-white/10 lg:block"
+            // pr-20 clears the fixed 68px social/chat rail at right-6, which
+            // otherwise sits on top of items 05 and 06 and their arrows.
+            className="hidden border-t border-white/10 lg:block lg:pr-20"
             initial={{ opacity: 0 }}
-            animate={inView ? { opacity: 1 } : {}}
+            animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.8 }}
           >
             {BLOCKS.map((b, i) => (
               <motion.li
                 key={b.id}
                 initial={{ opacity: 0, x: 20 }}
-                animate={inView ? { opacity: 1, x: 0 } : {}}
+                animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: 0.85 + i * 0.08, ease: EASE }}
               >
                 <a
                   href={`#${b.id}`}
-                  className="group flex items-baseline gap-4 border-b border-white/10 py-3 transition-colors hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B]"
+                  className="group flex items-baseline gap-4 border-b border-white/10 py-3 transition-colors hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9933]"
                 >
-                  <span className="w-8 shrink-0 text-[11px] font-bold tabular-nums text-[#F59E0B]">
+                  <span className="w-8 shrink-0 text-[11px] font-bold tabular-nums text-[#FF9933]">
                     {b.number}
                   </span>
-                  <span className="flex-1 text-[13px] font-semibold leading-snug text-white/70 transition-colors group-hover:text-white">
-                    {b.title.split(" ").slice(0, 4).join(" ")}
+                  {/* Full title, CSS-clamped. Slicing by word count ended the
+                      first item on the article "the" ("Choosing & Finalizing
+                      the"), which reads like a bug rather than a summary. */}
+                  <span className="line-clamp-2 flex-1 text-[13px] font-semibold leading-snug text-white/70 transition-colors group-hover:text-white">
+                    {b.title}
                   </span>
-                  <ArrowRight className="h-3.5 w-3.5 shrink-0 text-white/30 transition-all group-hover:translate-x-1 group-hover:text-[#F59E0B]" />
+                  <ArrowRight className="h-3.5 w-3.5 shrink-0 text-white/30 transition-all group-hover:translate-x-1 group-hover:text-[#FF9933]" />
                 </a>
               </motion.li>
             ))}
@@ -186,8 +206,8 @@ export function ServicesIntro() {
         >
           {[...BLOCKS, ...BLOCKS].map((b, i) => (
             <span key={i} className="flex items-center gap-10">
-              {b.title.split(" ").slice(0, 3).join(" ")}
-              <span className="h-1 w-1 rounded-full bg-[#F59E0B]" />
+              {b.title}
+              <span className="h-1 w-1 rounded-full bg-[#FF9933]" />
             </span>
           ))}
         </motion.div>
@@ -206,7 +226,7 @@ function Stage({ block, index }: { block: ServiceBlock; index: number }) {
       {/* left: number, title, photograph */}
       <div className="flex flex-col justify-center">
         <div className="flex items-center gap-4">
-          <span className="text-5xl font-extrabold leading-none text-[#F59E0B] sm:text-6xl">
+          <span className="text-5xl font-extrabold leading-none text-[#FF9933] sm:text-6xl">
             <SlotNumber value={block.number} />
           </span>
           <span className="h-px flex-1 bg-[#0A0A0A]/10" />
@@ -218,7 +238,7 @@ function Stage({ block, index }: { block: ServiceBlock; index: number }) {
         <h2 className="mt-5 text-xl font-bold leading-[1.25] tracking-tight text-[#0A0A0A] sm:text-2xl">
           {block.title}
         </h2>
-        <p className="mt-3 text-sm leading-relaxed text-[#D97706]">{block.lead}</p>
+        <p className="mt-3 text-sm leading-relaxed text-[#E87D12]">{block.lead}</p>
 
         <figure className="mt-7 hidden overflow-hidden rounded-xl sm:block">
           <img
@@ -337,7 +357,7 @@ function PinnedSequence() {
             a flat panel for six screens. Transform-only, so it stays cheap. */}
         <motion.span
           aria-hidden
-          className="pointer-events-none absolute -left-1/4 top-0 h-[70vh] w-[70vh] rounded-full bg-[radial-gradient(circle,rgba(245,158,11,0.16),transparent_65%)] blur-2xl"
+          className="pointer-events-none absolute -left-1/4 top-0 h-[70vh] w-[70vh] rounded-full bg-[radial-gradient(circle,rgba(255,153,51,0.16),transparent_65%)] blur-2xl"
           style={{ x: auroraX, y: auroraY }}
         />
         <motion.span
@@ -359,7 +379,7 @@ function PinnedSequence() {
         {/* progress rail across the top of the stage */}
         <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-6">
           <div className="h-px w-full bg-[#0A0A0A]/10">
-            <motion.div className="h-px origin-left bg-[#F59E0B]" style={{ scaleX: railScale }} />
+            <motion.div className="h-px origin-left bg-[#FF9933]" style={{ scaleX: railScale }} />
           </div>
           {/* Clickable, not just an indicator. Scroll drives this normally, but
               a pinned sequence that only responds to scroll strands the reader
@@ -381,7 +401,7 @@ function PinnedSequence() {
                   }}
                   aria-current={i === active ? "true" : undefined}
                   aria-label={`${b.number} — ${b.title}`}
-                  className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B] ${
+                  className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9933] ${
                     i === active
                       ? "bg-[#0A0A0A] text-white"
                       : "text-[#9CA3AF] hover:bg-[#0A0A0A]/5 hover:text-[#0A0A0A]"
@@ -456,11 +476,11 @@ export function ServiceBlocks() {
 export function ServicesCta() {
   const { cta } = servicesData;
   return (
-    <section className="relative overflow-hidden bg-[#0B1120] py-24 sm:py-32">
-      <span className="absolute inset-0 bg-[radial-gradient(90%_70%_at_50%_100%,rgba(245,158,11,0.2),transparent_65%)]" />
+    <section className="relative overflow-hidden bg-[#061428] py-24 sm:py-32">
+      <span className="absolute inset-0 bg-[radial-gradient(90%_70%_at_50%_100%,rgba(255,153,51,0.2),transparent_65%)]" />
       <div className="relative mx-auto max-w-4xl px-4 text-center sm:px-6">
         <motion.span
-          className="text-[10px] font-bold uppercase tracking-wide text-[#FBBF24]"
+          className="text-[10px] font-bold uppercase tracking-wide text-[#FFC27A]"
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: false, amount: 0.6 }}
@@ -497,7 +517,7 @@ export function ServicesCta() {
 
         <motion.a
           href={cta.button.href}
-          className="group mt-9 inline-flex items-center gap-2 rounded-full bg-[#F59E0B] px-8 py-4 text-[13px] font-bold tracking-wide text-white shadow-[0_0_30px_rgba(245,158,11,0.5)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0B1120]"
+          className="group mt-9 inline-flex items-center gap-2 rounded-full bg-[#FF9933] px-8 py-4 text-[13px] font-bold tracking-wide text-white shadow-[0_0_30px_rgba(255,153,51,0.5)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9933] focus-visible:ring-offset-2 focus-visible:ring-offset-[#061428]"
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: false, amount: 0.6 }}

@@ -15,7 +15,7 @@ function Progress() {
   return (
     <motion.div
       aria-hidden
-      className="fixed inset-x-0 top-0 z-50 h-[3px] origin-left bg-[#F59E0B]"
+      className="fixed inset-x-0 top-0 z-50 h-[3px] origin-left bg-[#FF9933]"
       style={{ scaleX: x }}
     />
   );
@@ -44,12 +44,12 @@ export function PostView({ post }: { post: BlogPost }) {
       <Progress />
 
       {/* masthead */}
-      <section className="bg-[#0B1120] pt-24 pb-10 sm:pt-28 sm:pb-12">
+      <section className="bg-[#061428] pt-24 pb-10 sm:pt-28 sm:pb-12">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <Link
               href="/blog"
-              className="inline-flex items-center gap-2 text-[12px] font-bold tracking-[1px] text-[#FBBF24] transition-colors hover:text-white"
+              className="inline-flex items-center gap-2 text-[12px] font-bold tracking-[1px] text-[#FFC27A] transition-colors hover:text-white"
             >
               <ArrowLeft className="h-4 w-4" />
               {lang === "hi" ? "सभी लेख" : "ALL ARTICLES"}
@@ -58,7 +58,7 @@ export function PostView({ post }: { post: BlogPost }) {
           </div>
 
           <motion.span
-            className="mt-7 flex flex-wrap items-center gap-2 text-[10px] font-bold tracking-wide text-[#FBBF24]"
+            className="mt-7 flex flex-wrap items-center gap-2 text-[10px] font-bold tracking-wide text-[#FFC27A]"
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -66,7 +66,7 @@ export function PostView({ post }: { post: BlogPost }) {
             {c.topic}
             {post.date && (
               <>
-                <span className="h-1 w-1 rounded-full bg-[#F59E0B]" />
+                <span className="h-1 w-1 rounded-full bg-[#FF9933]" />
                 <span className="font-semibold text-[#9CA3AF]">
                   {post.date}
                   {post.time ? ` · ${post.time}` : ""}
@@ -123,7 +123,7 @@ export function PostView({ post }: { post: BlogPost }) {
 
           {c.note && (
             <motion.p
-              className="rounded-xl border-l-[3px] border-[#F59E0B] bg-[#F5F5F5] px-5 py-4 text-base font-medium leading-relaxed text-[#6B7280]"
+              className="rounded-xl border-l-[3px] border-[#FF9933] bg-[#F5F5F5] px-5 py-4 text-base font-medium leading-relaxed text-[#6B7280]"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
@@ -139,7 +139,7 @@ export function PostView({ post }: { post: BlogPost }) {
                   key={i}
                   className={`mt-4 text-base leading-[1.9] text-[#6B7280] ${
                     i === 0
-                      ? "first-letter:mr-2 first-letter:float-left first-letter:text-[3.2rem] first-letter:font-extrabold first-letter:leading-[0.85] first-letter:text-[#F59E0B]"
+                      ? "first-letter:mr-2 first-letter:float-left first-letter:text-[3.2rem] first-letter:font-extrabold first-letter:leading-[0.85] first-letter:text-[#FF9933]"
                       : ""
                   }`}
                   initial={{ opacity: 0, y: 14 }}
@@ -157,7 +157,7 @@ export function PostView({ post }: { post: BlogPost }) {
             <div
               className="mt-8 rounded-xl border border-dashed border-[#E5E7EB] bg-[#F5F5F5] px-6 py-8 text-center"
             >
-              <span className="text-[10px] font-bold tracking-wide text-[#D97706]">
+              <span className="text-[10px] font-bold tracking-wide text-[#E87D12]">
                 {lang === "hi" ? "पूरी रिपोर्ट शीघ्र" : "FULL REPORT COMING"}
               </span>
               <p className="mx-auto mt-2 max-w-lg text-sm leading-relaxed text-[#9CA3AF]">
@@ -167,7 +167,7 @@ export function PostView({ post }: { post: BlogPost }) {
               </p>
               <Link
                 href="/blog#archive"
-                className="mt-5 inline-flex items-center gap-2 text-[13px] font-bold tracking-[1px] text-[#F59E0B] transition-colors hover:text-[#D97706]"
+                className="mt-5 inline-flex items-center gap-2 text-[13px] font-bold tracking-[1px] text-[#FF9933] transition-colors hover:text-[#E87D12]"
               >
                 {lang === "hi" ? "अन्य लेख पढ़ें" : "BROWSE THE ARCHIVE"}
                 <ArrowRight className="h-4 w-4" />
@@ -187,7 +187,7 @@ export function PostView({ post }: { post: BlogPost }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={s.label}
-                className="grid h-9 w-9 place-items-center border border-[#0A0A0A]/15 text-[14px] font-bold text-[#0A0A0A] transition-colors hover:border-[#F59E0B] hover:text-[#F59E0B]"
+                className="grid h-9 w-9 place-items-center border border-[#0A0A0A]/15 text-[14px] font-bold text-[#0A0A0A] transition-colors hover:border-[#FF9933] hover:text-[#FF9933]"
               >
                 {s.id}
               </a>
@@ -205,7 +205,7 @@ export function PostView({ post }: { post: BlogPost }) {
             </h2>
             <Link
               href="/blog#archive"
-              className="text-[12px] font-bold tracking-[1px] text-[#F59E0B] transition-colors hover:text-[#D97706]"
+              className="text-[12px] font-bold tracking-[1px] text-[#FF9933] transition-colors hover:text-[#E87D12]"
             >
               {lang === "hi" ? "सभी" : "ALL"} →
             </Link>
@@ -226,12 +226,12 @@ export function PostView({ post }: { post: BlogPost }) {
                     href={`/blog/${r.slug}`}
                     className="group block h-full rounded-xl border border-[#E5E7EB] bg-white p-5 shadow-lg transition-shadow hover:shadow-xl"
                   >
-                    <span className="flex items-center gap-2 text-[10px] font-bold tracking-[0.18em] text-[#D97706]">
+                    <span className="flex items-center gap-2 text-[10px] font-bold tracking-[0.18em] text-[#E87D12]">
                       {rc.topic}
-                      <span className="h-1 w-1 rounded-full bg-[#F59E0B]" />
+                      <span className="h-1 w-1 rounded-full bg-[#FF9933]" />
                       <span className="font-semibold text-[#9CA3AF]">{r.date}</span>
                     </span>
-                    <h3 className="mt-2.5 text-[15px] font-bold leading-[1.55] text-[#0A0A0A] transition-colors group-hover:text-[#F59E0B]">
+                    <h3 className="mt-2.5 text-[15px] font-bold leading-[1.55] text-[#0A0A0A] transition-colors group-hover:text-[#FF9933]">
                       {rc.title}
                     </h3>
                   </Link>

@@ -17,31 +17,31 @@ import {
 } from "@/data/political-analysis";
 
 /* Reference palette (Political Analysis.dc.html):
-   navy #0A0A0A · heading navy #0A0A0A · deep #0B1120 / #0B1120
-   body #6B7280 · muted #9CA3AF · saffron #F59E0B / #D97706 / #F97316
-   cream-on-dark #FBBF24 · panel #F5F5F5. Sharp 3px shapes throughout. */
+   navy #0A0A0A · heading navy #0A0A0A · deep #061428 / #061428
+   body #6B7280 · muted #9CA3AF · saffron #FF9933 / #E87D12 / #F97316
+   cream-on-dark #FFC27A · panel #F5F5F5. Sharp 3px shapes throughout. */
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 const THEME: Record<PaTheme, { wrap: string; heading: string; body: string; kicker: string }> = {
-  light: { wrap: "bg-white", heading: "text-[#0A0A0A]", body: "text-[#6B7280]", kicker: "text-[#D97706]" },
+  light: { wrap: "bg-white", heading: "text-[#0A0A0A]", body: "text-[#6B7280]", kicker: "text-[#E87D12]" },
   panel: {
     wrap: "bg-[linear-gradient(#FFFFFF,#F5F5F5)]",
     heading: "text-[#0A0A0A]",
     body: "text-[#6B7280]",
-    kicker: "text-[#D97706]",
+    kicker: "text-[#E87D12]",
   },
   dark: {
-    wrap: "bg-[#0B1120] border-y-[3px] border-[#F59E0B]",
+    wrap: "bg-[#061428] border-y-[3px] border-[#FF9933]",
     heading: "text-white",
     body: "text-[#9CA3AF]",
-    kicker: "text-[#FBBF24]",
+    kicker: "text-[#FFC27A]",
   },
   saffron: {
-    wrap: "bg-[linear-gradient(#FEF3C7,#FDE68A)] border-t-[3px] border-[#F59E0B]",
+    wrap: "bg-[linear-gradient(#FFF4E6,#FDE68A)] border-t-[3px] border-[#FF9933]",
     heading: "text-[#0A0A0A]",
     body: "text-[#6B7280]",
-    kicker: "text-[#D97706]",
+    kicker: "text-[#E87D12]",
   },
 };
 
@@ -104,7 +104,7 @@ export function PaHero() {
 
         <motion.a
           href="#results"
-          className="group relative mt-8 inline-flex items-center gap-2 overflow-hidden rounded-full bg-[#F59E0B] px-6 py-3 text-[13px] font-bold tracking-wide text-white shadow-[0_0_20px_rgba(245,158,11,0.5)]"
+          className="group relative mt-8 inline-flex items-center gap-2 overflow-hidden rounded-full bg-[#FF9933] px-6 py-3 text-[13px] font-bold tracking-wide text-white shadow-[0_0_20px_rgba(255,153,51,0.5)]"
           initial={{ opacity: 0, y: 16 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.62 }}
@@ -259,7 +259,7 @@ export function PaParties({ section }: { section: PaSection }) {
   return (
     <section id="parties" className="scroll-mt-24 bg-[linear-gradient(#FFFFFF,#E8EDF6)] py-14 sm:py-20">
       <div className="mx-auto max-w-[1440px] px-4 sm:px-6">
-        <Kicker tone="text-[#D97706]">{section.kicker || "WHO CONTESTED"}</Kicker>
+        <Kicker tone="text-[#E87D12]">{section.kicker || "WHO CONTESTED"}</Kicker>
         <motion.h2
           className="mt-3 text-2xl font-bold leading-[1.25] text-[#0A0A0A] sm:text-3xl"
           initial={{ opacity: 0, y: 22 }}
@@ -361,7 +361,7 @@ export function PaIssues({ section }: { section: PaSection }) {
   const [active, setActive] = useState(0);
 
   return (
-    <section className="border-t-[3px] border-[#F59E0B] bg-[linear-gradient(#FEF3C7,#FDE68A)] py-14 sm:py-20">
+    <section className="border-t-[3px] border-[#FF9933] bg-[linear-gradient(#FFF4E6,#FDE68A)] py-14 sm:py-20">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
         <motion.h2
           className="text-2xl font-bold leading-[1.25] text-[#0A0A0A] sm:text-3xl"
@@ -380,13 +380,13 @@ export function PaIssues({ section }: { section: PaSection }) {
               onClick={() => setActive(i)}
               aria-pressed={i === active}
               className={`relative px-4 py-2 text-[13px] font-bold transition-colors ${
-                i === active ? "text-white" : "text-[#D97706] hover:text-[#0A0A0A]"
-              } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B] focus-visible:ring-offset-2`}
+                i === active ? "text-white" : "text-[#E87D12] hover:text-[#0A0A0A]"
+              } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9933] focus-visible:ring-offset-2`}
             >
               {i === active && (
                 <motion.span
                   layoutId="pa-issue-active"
-                  className="absolute inset-0 -z-10 bg-[#0A0A0A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B] focus-visible:ring-offset-2"
+                  className="absolute inset-0 -z-10 bg-[#0A0A0A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9933] focus-visible:ring-offset-2"
                   transition={{ type: "spring", stiffness: 420, damping: 34 }}
                 />
               )}
@@ -422,7 +422,7 @@ export function PaFactors({ section }: { section: PaSection }) {
   const go = (d: number) => setI((v) => (v + d + paFactors.length) % paFactors.length);
 
   return (
-    <section className="relative overflow-hidden border-y-[3px] border-[#F59E0B] bg-[#0B1120] py-14 sm:py-20">
+    <section className="relative overflow-hidden border-y-[3px] border-[#FF9933] bg-[#061428] py-14 sm:py-20">
       {/* Oversized ghost number — the reference's signature device for this block. */}
       <span
         aria-hidden
@@ -432,7 +432,7 @@ export function PaFactors({ section }: { section: PaSection }) {
       </span>
 
       <div className="relative mx-auto max-w-[1440px] px-4 sm:px-6">
-        <Kicker tone="text-[#FBBF24]">{section.kicker || "WHAT MOVED THE VERDICT"}</Kicker>
+        <Kicker tone="text-[#FFC27A]">{section.kicker || "WHAT MOVED THE VERDICT"}</Kicker>
         <motion.h2
           className="mt-3 text-2xl font-bold leading-[1.25] text-white sm:text-3xl"
           initial={{ opacity: 0, y: 22 }}
@@ -453,17 +453,17 @@ export function PaFactors({ section }: { section: PaSection }) {
                   aria-pressed={n === i}
                   className={`relative flex w-full items-center gap-3 px-3 py-2.5 text-left transition-colors ${
                     n === i ? "text-white" : "text-[#9CA3AF] hover:text-white"
-                  } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B] focus-visible:ring-offset-2`}
+                  } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9933] focus-visible:ring-offset-2`}
                 >
                   {n === i && (
                     <motion.span
                       layoutId="pa-factor-active"
-                      className="absolute inset-0 -z-10 bg-white/[0.07] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B] focus-visible:ring-offset-2"
+                      className="absolute inset-0 -z-10 bg-white/[0.07] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9933] focus-visible:ring-offset-2"
                       style={{ borderLeft: "3px solid #F97316" }}
                       transition={{ type: "spring", stiffness: 420, damping: 34 }}
                     />
                   )}
-                  <span className="text-[12px] font-extrabold text-[#FBBF24]">{x.n}</span>
+                  <span className="text-[12px] font-extrabold text-[#FFC27A]">{x.n}</span>
                   <span className="truncate text-[13px] font-semibold">{x.title}</span>
                 </button>
               </li>
@@ -495,7 +495,7 @@ export function PaFactors({ section }: { section: PaSection }) {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.4, delay: 0.08 + n * 0.06 }}
                       >
-                        <span className="mt-[3px] text-[11px] font-extrabold text-[#FBBF24]">
+                        <span className="mt-[3px] text-[11px] font-extrabold text-[#FFC27A]">
                           {String(n + 1).padStart(2, "0")}
                         </span>
                         <span>{pt}</span>
@@ -509,7 +509,7 @@ export function PaFactors({ section }: { section: PaSection }) {
             <div className="mt-7 flex items-center gap-4">
               <button
                 onClick={() => go(-1)}
-                className="inline-flex items-center gap-2 text-[13px] font-bold text-[#FBBF24] transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B] focus-visible:ring-offset-2"
+                className="inline-flex items-center gap-2 text-[13px] font-bold text-[#FFC27A] transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9933] focus-visible:ring-offset-2"
               >
                 <ArrowLeft className="h-4 w-4" /> PREVIOUS
               </button>
@@ -518,7 +518,7 @@ export function PaFactors({ section }: { section: PaSection }) {
               </span>
               <button
                 onClick={() => go(1)}
-                className="inline-flex items-center gap-2 text-[13px] font-bold text-[#FBBF24] transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B] focus-visible:ring-offset-2"
+                className="inline-flex items-center gap-2 text-[13px] font-bold text-[#FFC27A] transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9933] focus-visible:ring-offset-2"
               >
                 NEXT <ArrowRight className="h-4 w-4" />
               </button>
@@ -532,7 +532,7 @@ export function PaFactors({ section }: { section: PaSection }) {
 
 /* ═══════════════ 2024 results ═══════════════ */
 
-const BLOC: Record<string, string> = { nda: "#F59E0B", india: "#D97706", other: "#9CA3AF" };
+const BLOC: Record<string, string> = { nda: "#FF9933", india: "#E87D12", other: "#9CA3AF" };
 
 export function PaResults() {
   const r = paResults;
@@ -541,7 +541,7 @@ export function PaResults() {
   return (
     <section id="overall-results" className="scroll-mt-24 bg-white py-14 sm:py-20">
       <div className="mx-auto max-w-[1440px] px-4 sm:px-6">
-        <Kicker tone="text-[#D97706]">{r.kicker}</Kicker>
+        <Kicker tone="text-[#E87D12]">{r.kicker}</Kicker>
         <motion.h2
           className="mt-3 text-2xl font-bold leading-[1.25] text-[#0A0A0A] sm:text-3xl"
           initial={{ opacity: 0, y: 22 }}
@@ -566,7 +566,7 @@ export function PaResults() {
               <span className="block text-4xl font-extrabold leading-none text-[#0A0A0A] sm:text-[2.75rem]">
                 <SlotNumber value={s.value} />
               </span>
-              <span className="mt-2 block text-[11px] font-bold tracking-[0.14em] text-[#D97706]">
+              <span className="mt-2 block text-[11px] font-bold tracking-[0.14em] text-[#E87D12]">
                 {s.label}
               </span>
             </motion.div>
@@ -595,11 +595,11 @@ export function PaResults() {
             viewport={{ once: false, amount: 0.4 }}
             transition={{ duration: 0.7, ease: EASE }}
           >
-            <h3 className="text-xl font-bold text-[#D97706]">{r.turnout.title}</h3>
+            <h3 className="text-xl font-bold text-[#E87D12]">{r.turnout.title}</h3>
             <span className="mt-2 block text-5xl font-extrabold leading-none text-[#0A0A0A]">
               <SlotNumber value={`${r.turnout.value}${r.turnout.suffix}`} />
             </span>
-            <span className="mt-1.5 block text-[11px] font-bold tracking-[0.16em] text-[#D97706]">
+            <span className="mt-1.5 block text-[11px] font-bold tracking-[0.16em] text-[#E87D12]">
               {r.turnout.label}
             </span>
             <p className="mt-4 text-sm leading-loose text-[#6B7280]">{r.turnout.body}</p>
@@ -636,7 +636,7 @@ export function PaResults() {
               ))}
             </ul>
 
-            <p className="mt-4 text-[12px] font-bold tracking-[0.14em] text-[#D97706]">
+            <p className="mt-4 text-[12px] font-bold tracking-[0.14em] text-[#E87D12]">
               MAJORITY AT {r.seatChart.majorityAt}
             </p>
           </div>

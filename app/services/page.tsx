@@ -8,12 +8,14 @@ import {
   ServiceBlocks,
   ServicesCta,
 } from "@/components/services/ServicesSections";
+import { ServicesDeckSection } from "@/components/services/ServicesDeckSection";
 import { Footer } from "@/components/Footer";
 
 export default function ServicesPage() {
   return (
     <>
       <ServicesHero />
+      <ServicesDeckSection />
       <ServicesIntro />
       <ServiceBlocks />
       <ServicesCta />

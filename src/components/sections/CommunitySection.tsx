@@ -22,7 +22,7 @@ import MessageCircleIcon from "@/components/ui/message-circle-icon";
 import { useCommunity } from "@/hooks/useCommunity";
 
 // ─── Badge Lottie Icon ───
-function BadgeLottie({ src, size = 16, color = "#d97706", bold = false }: { src: string; size?: number; color?: string | null; bold?: boolean }) {
+function BadgeLottie({ src, size = 16, color = "#e87d12", bold = false }: { src: string; size?: number; color?: string | null; bold?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const el = ref.current;
@@ -725,7 +725,7 @@ export function CommunitySection() {
                   className="moving-border flex items-center gap-1.5 rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-amber-500 transition-colors hover:text-amber-600"
                 >
                   <span>View All</span>
-                  <BadgeLottie src="/lottie/fast-forward.json" size={20} color="#f59e0b" />
+                  <BadgeLottie src="/lottie/fast-forward.json" size={20} color="#ff9933" />
                 </a>
               </div>
             </ScrollReveal>
@@ -786,7 +786,7 @@ export function CommunitySection() {
                 >
                   <motion.span
                     className="pointer-events-none absolute inset-[-3px] rounded-xl border-2 border-amber-500/70"
-                    style={{ boxShadow: "0 0 8px rgba(245,158,11,0.25)" }}
+                    style={{ boxShadow: "0 0 8px rgba(255,153,51,0.25)" }}
                     animate={isInView ? { scale: [1, 1.04, 1], opacity: [0.8, 0.1, 0.8] } : undefined}
                     transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                   />
@@ -832,7 +832,7 @@ export function CommunitySection() {
                   className="moving-border mt-4 flex w-full items-center justify-center gap-1.5 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-amber-600 transition-colors hover:bg-amber-50"
                 >
                   <span>View More</span>
-                  <BadgeLottie src="/lottie/fast-forward.json" size={20} color="#d97706" />
+                  <BadgeLottie src="/lottie/fast-forward.json" size={20} color="#e87d12" />
                 </button>
               </div>
             </ScrollReveal>
