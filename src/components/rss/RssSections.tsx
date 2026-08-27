@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useMemo } from "react";
+import { useRef, useState, useMemo, useEffect } from "react";
 import {
   motion,
   AnimatePresence,
@@ -910,7 +910,13 @@ function YearEntry({ entry, index }: { entry: RssYear; index: number }) {
             <img
               src={entry.image}
               alt={entry.alt || entry.title}
+              // Intrinsic size, so the browser reserves the box before the file
+              // lands. Without it an era of five lazy-loaded plates reflows the
+              // column as each one arrives.
+              width={entry.w}
+              height={entry.h}
               loading="lazy"
+              decoding="async"
               className="h-auto w-full object-cover transition-transform duration-[1.2s] group-hover:scale-[1.05]"
             />
             <motion.span
@@ -968,10 +974,24 @@ function YearEntry({ entry, index }: { entry: RssYear; index: number }) {
   );
 }
 
-export function TimelineSection() {
+export function TimelineSection({ focusYear }: { focusYear?: number | null } = {}) {
   const { timeline } = rssData;
   const [eraIndex, setEraIndex] = useState(0);
   const listRef = useRef<HTMLDivElement>(null);
+
+  // Only one era is on the DOM at a time, so a year picked in the spiral cannot
+  // be reached by an anchor — switch to the era that contains it, then scroll.
+  useEffect(() => {
+    if (focusYear == null) return;
+    const i = rssEras.findIndex((e) => focusYear <= e.start && focusYear >= e.end);
+    if (i < 0) return;
+    setEraIndex(i);
+    const t = setTimeout(
+      () => listRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }),
+      80,
+    );
+    return () => clearTimeout(t);
+  }, [focusYear]);
   const { scrollYProgress } = useScroll({
     target: listRef,
     offset: ["start 0.8", "end 0.65"],

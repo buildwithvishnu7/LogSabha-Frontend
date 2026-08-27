@@ -2,6 +2,7 @@
 
 // RSS (Rashtriya Swayamsevak Sangh) — 100 years. Static-data-first
 // (content bundled in src/data/rss.ts + rss-timeline.ts).
+import { useState } from "react";
 import {
   RssHero,
   FoundationSection,
@@ -10,9 +11,14 @@ import {
   TimelineIntroSection,
   TimelineSection,
 } from "@/components/rss/RssSections";
+import { SpiralSection } from "@/components/rss/SpiralSection";
 import { Footer } from "@/components/Footer";
 
 export default function RssPage() {
+  // Picking a year in the spiral has to reach the timeline, which renders one
+  // era at a time — so the year lives here, between the two.
+  const [focusYear, setFocusYear] = useState<number | null>(null);
+
   return (
     <>
       {/* Reading progress, driven by the document's own scroll timeline — no
@@ -25,8 +31,9 @@ export default function RssPage() {
       <FoundationSection />
       <FounderSection />
       <FoundingSection />
+      <SpiralSection onPickYear={setFocusYear} />
       <TimelineIntroSection />
-      <TimelineSection />
+      <TimelineSection focusYear={focusYear} />
       <Footer />
     </>
   );

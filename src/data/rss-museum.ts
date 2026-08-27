@@ -14,9 +14,9 @@ export const museumData = {
       "राष्ट्रीय स्वयंसेवक संघ की सौ वर्ष की यात्रा — 1925 से 2025 तक — दीवार पर टँगे चित्रों की तरह। प्रत्येक वर्ष एक फ़्रेम, एक घटना, एक स्मृति।",
     /** three tilted preview frames pinned above the title */
     previews: [
-      { year: 1925, image: "/images/rss/y1925.png", rotate: -4.5, drift: 9, delay: 0 },
-      { year: 1963, image: "/images/rss/y1963.png", rotate: 3.2, drift: 11, delay: 0.8 },
-      { year: 2025, image: "/images/rss/y2025.png", rotate: -2.4, drift: 10, delay: 1.6 },
+      { year: 1925, image: "/images/rss/y1925.jpg", rotate: -4.5, drift: 9, delay: 0 },
+      { year: 1963, image: "/images/rss/y1963.jpg", rotate: 3.2, drift: 11, delay: 0.8 },
+      { year: 2025, image: "/images/rss/y2025.jpg", rotate: -2.4, drift: 10, delay: 1.6 },
     ],
     timelineLink: { label: "मूल समयरेखा", href: "/rss" },
   },
