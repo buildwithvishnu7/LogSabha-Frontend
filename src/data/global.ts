@@ -43,7 +43,17 @@ export const globalData: GlobalData = {
           { label: "Museum", href: "/rss-museum", blurb: "The centenary exhibit" },
         ],
       },
-      { label: "Editorial", href: "/blog" },
+      {
+        label: "Media",
+        href: "/blog",
+        children: [
+          { label: "Editorial", href: "/blog", blurb: "Long-form writing and analysis" },
+          { label: "Live Coverage", href: "/live-coverage", blurb: "The live session and the speech library" },
+          { label: "Media Coverage", href: "/media-coverage", blurb: "Broadcast clips and press marks" },
+          { label: "कलम का संकल्प", href: "/sankalp", blurb: "The founder's column" },
+        ],
+      },
+      { label: "Forum", href: "/community-forum" },
       { label: "Contact", href: "/contact" },
     ],
   },

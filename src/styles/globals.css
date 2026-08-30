@@ -865,3 +865,17 @@
 @supports not (min-height: 100svh) {
   @media (min-width: 1024px) { .oneview-lg { height: 100vh; } }
 }
+
+/* ─── Election Database: the chamber's backdrop ──────────────────────────
+   The Ashoka Chakra behind the benches, and the ray fan behind that. Both
+   turn slowly enough to read as ambience rather than motion; both stop
+   entirely under reduced motion. */
+@keyframes ed-chakra-spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+@keyframes ed-rays-spin   { to { transform: rotate(360deg); } }
+
+.ed-chakra { animation: ed-chakra-spin 140s linear infinite; }
+.ed-rays   { animation: ed-rays-spin 150s linear infinite reverse; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ed-chakra, .ed-rays { animation: none; }
+}

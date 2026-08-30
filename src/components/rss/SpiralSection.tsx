@@ -61,7 +61,10 @@ export function SpiralSection({ onPickYear }: { onPickYear: (year: number) => vo
     <section
       ref={ref}
       id="spiral"
-      className="oneview-lg relative overflow-hidden border-y border-[#F0E2CC]"
+      // .oneview, not .oneview-lg: every 3D section in the reference is full
+      // height at every width. The lg-only variant is for the analytics
+      // explorer alone, which pairs its canvas with a 36-row table.
+      className="oneview relative overflow-hidden border-y border-[#F0E2CC]"
       style={{ backgroundImage: "linear-gradient(#FDF8F0, #F7EEDF)" }}
     >
       <div aria-hidden className="pointer-events-none absolute inset-0">
@@ -93,7 +96,7 @@ export function SpiralSection({ onPickYear }: { onPickYear: (year: number) => vo
         </p>
       </div>
 
-      <div className="ov-stage relative z-10 min-h-[46vh] lg:min-h-0">
+      <div className="ov-stage relative z-10">
         {near ? (
           <CenturySpiral index={index} onIndexChange={setIndex} onSelect={onPickYear} />
         ) : (

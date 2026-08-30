@@ -123,24 +123,24 @@ function NodeMesh({
           ))
         ) : node.shape === "mic" ? (
           <>
-            <mesh position={[0, 3.4, 0]}>
-              <sphereGeometry args={[4.6, 20, 16]} />
+            <mesh position={[0, 4.2, 0]}>
+              <sphereGeometry args={[6.2, 20, 16]} />
               <meshStandardMaterial color={colour} roughness={0.42} metalness={0.2} />
             </mesh>
-            <mesh position={[0, -3.2, 0]}>
-              <cylinderGeometry args={[1.1, 1.1, 8, 12]} />
+            <mesh position={[0, -4, 0]}>
+              <cylinderGeometry args={[1.5, 1.5, 10, 12]} />
               <meshStandardMaterial color={colour} roughness={0.42} metalness={0.2} />
             </mesh>
           </>
         ) : node.shape === "pin" ? (
           // Cone pointing down with a ball on top — a map pin.
           <>
-            <mesh position={[0, -4, 0]} rotation={[Math.PI, 0, 0]}>
-              <coneGeometry args={[4.6, 9, 16]} />
+            <mesh position={[0, -5, 0]} rotation={[Math.PI, 0, 0]}>
+              <coneGeometry args={[6.4, 12, 16]} />
               <meshStandardMaterial color={colour} roughness={0.42} metalness={0.14} />
             </mesh>
-            <mesh position={[0, 3, 0]}>
-              <sphereGeometry args={[4.2, 20, 16]} />
+            <mesh position={[0, 3.6, 0]}>
+              <sphereGeometry args={[5.6, 20, 16]} />
               <meshStandardMaterial color={colour} roughness={0.42} metalness={0.14} />
             </mesh>
           </>
@@ -304,12 +304,20 @@ function Rig({ cam }: { cam: React.RefObject<{ az: number; pol: number; azGoal: 
 
 export default function ServiceDeck({
   onSelect,
+  onHoverNode,
   reducedMotion = false,
 }: {
   onSelect?: (id: string) => void;
+  /** The deck kept its hovered node to itself, so hovering a node in the scene
+   *  never lit the read-out — only the legend buttons did. */
+  onHoverNode?: (id: string | null) => void;
   reducedMotion?: boolean;
 }) {
   const [hovered, setHovered] = useState<string | null>(null);
+  const report = (id: string | null) => {
+    setHovered(id);
+    onHoverNode?.(id);
+  };
   const [dragging, setDragging] = useState(false);
   const cam = useRef({ az: 0.35, pol: 0.72, azGoal: 0.35, polGoal: 0.72 });
   const drag = useRef<{ x: number; y: number; az: number; pol: number; moved: number } | null>(null);
@@ -376,7 +384,15 @@ export default function ServiceDeck({
         style={{ width: "100%", height: "100%" }}
         resize={{ scroll: false, debounce: { scroll: 0, resize: 80 } }}
         dpr={[1, 2]}
-        gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+        gl={{
+          antialias: true,
+          alpha: true,
+          powerPreference: "high-performance",
+          // r3f defaults to ACES Filmic tone mapping; the reference is raw three
+          // with none. ACES darkens and desaturates, which is wrong for colours
+          // that carry meaning (party colours, the saffron).
+          toneMapping: THREE.NoToneMapping,
+        }}
         camera={{ fov: 42, near: 0.5, far: 900 }}
       >
         <ambientLight intensity={0.66} />
@@ -386,7 +402,7 @@ export default function ServiceDeck({
         <Deck
           hovered={hovered}
           spin={!reducedMotion}
-          onHover={setHovered}
+          onHover={report}
           onSelect={handleSelect}
         />
       </Canvas>

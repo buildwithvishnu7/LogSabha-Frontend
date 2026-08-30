@@ -238,7 +238,11 @@ export function AnalyticsExplorer() {
         </aside>
 
         {/* the map */}
-        <div className="relative order-1 min-h-[46vh] overflow-hidden rounded-xl border border-[#dce4ef] bg-white lg:order-2 lg:min-h-0">
+        <div // 60vh, not 46: the fit solves against whichever edge binds, and on a wide
+          // short frame that is the height — the country ended up filling 72% of the
+          // width instead of the 90% it is solved for. The reference gives its map
+          // ~64vh for the same reason.
+          className="relative order-1 min-h-[60vh] overflow-hidden rounded-xl border border-[#dce4ef] bg-white lg:order-2 lg:min-h-0">
           {near ? (
             <IndiaMap3D
               metric={metric}
@@ -251,6 +255,34 @@ export function AnalyticsExplorer() {
           ) : (
             <MapFallback />
           )}
+
+          {/* Corner plate marks — coordinates, coverage and a compass, so the
+              frame reads as a chart rather than a picture of a map. */}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute left-4 top-3.5 text-[9.5px] font-semibold uppercase tracking-[0.16em] text-[#5a7091]/50"
+          >
+            8°N – 37°N · 68°E – 97°E
+          </span>
+          <span
+            aria-hidden
+            className="pointer-events-none absolute bottom-3.5 right-4 text-[9.5px] font-semibold uppercase tracking-[0.16em] text-[#5a7091]/50"
+          >
+            36 states &amp; UTs · 759 districts
+          </span>
+          <span
+            aria-hidden
+            className="pointer-events-none absolute right-5 top-14 hidden h-[46px] w-[46px] rounded-full border border-[#5a7091]/28 opacity-55 sm:block"
+          >
+            <span className="absolute left-1/2 top-1.5 -ml-px h-4 w-0.5 rounded-sm bg-[linear-gradient(180deg,#e87d12,rgba(232,125,18,0))]" />
+            <span className="absolute bottom-1 left-1/2 -translate-x-1/2 text-[9px] font-bold tracking-[0.1em] text-[#5a7091]/75">
+              N
+            </span>
+          </span>
+
+          <span className="pointer-events-none absolute bottom-3.5 left-4 rounded-lg border border-[#dce4ef] bg-white/90 px-3 py-1.5 text-[11.5px] text-[#5a7091] backdrop-blur">
+            Drag to rotate · scroll to zoom · click a state to open it
+          </span>
 
           {selected && (
             <button

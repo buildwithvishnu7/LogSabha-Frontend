@@ -5,6 +5,7 @@ import { motion, useInView, useScroll, useSpring } from "motion/react";
 import { ArrowDown, Quote } from "lucide-react";
 import { SlotNumber } from "@/components/motion/SlotNumber";
 import { Typewriter } from "@/components/motion/Typewriter";
+import { HelixSection } from "@/components/about/HelixSection";
 import { HERO_SUB, SECTION_Y } from "@/styles/tokens";
 import {
   aboutSections,
@@ -389,6 +390,9 @@ export function AboutPage() {
       <YearRail />
       <Hero section={hero} />
       <PullQuote section={quote} />
+      {/* The helix sits before the written record, not after: it is the shape of
+          the argument the rest of the page then makes in words. */}
+      <HelixSection />
       {rest.map((s) =>
         s.year ? <YearSection key={s.id} section={s} /> : <FlowSection key={s.id} section={s} />,
       )}

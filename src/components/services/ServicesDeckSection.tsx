@@ -120,7 +120,7 @@ export function ServicesDeckSection() {
       </div>
 
       <div className="ov-stage relative z-10">
-        {near ? <ServiceDeck onSelect={jumpTo} reducedMotion={reduced} /> : <StageFallback />}
+        {near ? <ServiceDeck onSelect={jumpTo} onHoverNode={setHovered} reducedMotion={reduced} /> : <StageFallback />}
 
         {/* Hover read-out. aria-live so the label reaches a screen reader that
             cannot see the canvas at all. */}
@@ -149,9 +149,11 @@ export function ServicesDeckSection() {
             a phone. Insetting the list past it costs a little width; a covered
             control costs the visitor the link entirely. The rail moves out of
             the legend's band at sm and up, so the inset is base-only. */}
-        <ul className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2 pr-24 sm:pr-0">
+        {/* One scrolling row, not a wrapping block. Six pills with these labels wrap
+            to two rows, and that second row comes straight out of the stage. */}
+        <ul className="flex items-center gap-2 overflow-x-auto pb-1 pr-24 sm:pr-0">
           {SERVICE_NODES.map((n) => (
-            <li key={n.id}>
+            <li key={n.id} className="shrink-0">
               <button
                 type="button"
                 onClick={() => jumpTo(n.id)}

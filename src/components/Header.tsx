@@ -309,7 +309,7 @@ export function Header() {
   // the nav simply paints near-white ink on a near-white hero (contrast 1.18)
   // and becomes invisible. It has already happened twice. Every new page built
   // from the reference has a light hero, so add it here as it lands.
-  const LIGHT_HERO_ROUTES = ["/political-analysis", "/election-database", "/political-parties"];
+  const LIGHT_HERO_ROUTES = ["/political-analysis", "/election-database", "/political-parties", "/live-coverage", "/media-coverage"];
   const lightHero = LIGHT_HERO_ROUTES.some(
     (r) => pathname === r || pathname.startsWith(r + "/"),
   );

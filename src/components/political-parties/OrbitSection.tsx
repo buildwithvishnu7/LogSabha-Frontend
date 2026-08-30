@@ -74,7 +74,10 @@ export function OrbitSection({
     <section
       ref={ref}
       id="orbit"
-      className="oneview-lg relative overflow-hidden border-y border-[#dce4ef] bg-[#f6f9fd]"
+      // .oneview, not .oneview-lg: every 3D section in the reference is full
+      // height at every width. The lg-only variant is for the analytics
+      // explorer alone, which pairs its canvas with a 36-row table.
+      className="oneview relative overflow-hidden border-y border-[#dce4ef] bg-[#f6f9fd]"
     >
       <div aria-hidden className="pointer-events-none absolute inset-0">
         <span className="absolute left-1/2 top-1/2 h-[80vh] w-[80vh] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(255,153,51,0.14),transparent_62%)] blur-2xl" />
@@ -106,7 +109,7 @@ export function OrbitSection({
         </p>
       </div>
 
-      <div className="ov-stage relative z-10 min-h-[46vh] lg:min-h-0">
+      <div className="ov-stage relative z-10">
         {near ? (
           <PartyOrbit
             highlight={highlight}

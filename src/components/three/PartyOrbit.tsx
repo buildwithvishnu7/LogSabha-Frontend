@@ -237,12 +237,20 @@ export default function PartyOrbit({
         style={{ width: "100%", height: "100%" }}
         resize={{ scroll: false, debounce: { scroll: 0, resize: 80 } }}
         dpr={[1, 2]}
-        gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+        gl={{
+          antialias: true,
+          alpha: true,
+          powerPreference: "high-performance",
+          // r3f defaults to ACES Filmic tone mapping; the reference is raw three
+          // with none. ACES darkens and desaturates, which is wrong for colours
+          // that carry meaning (party colours, the saffron).
+          toneMapping: THREE.NoToneMapping,
+        }}
         camera={{ fov: 42, near: 0.5, far: 800 }}
       >
         <ambientLight intensity={0.62} />
         <directionalLight position={[-50, 110, 90]} intensity={0.72} />
-        <directionalLight position={[80, 40, -70]} intensity={0.34} color="#ffc27a" />
+        <directionalLight position={[80, 40, -70]} intensity={0.36} color="#ffc27a" />
         <Rig cam={cam} />
 
         {/* the centre — the House the three rings all report to */}

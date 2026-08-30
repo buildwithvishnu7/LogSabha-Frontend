@@ -185,30 +185,23 @@ function Seats({
   );
 }
 
-function Rig({ cam }: { cam: React.RefObject<{ az: number; pol: number; azGoal: number; polGoal: number }> }) {
-  const r = useRef(150);
-  useFrame(({ camera, size }, delta) => {
+/* High and close: the benches arc away from the camera, so a steep look-down is
+   what makes the whole semicircle read at once. This is NOT a spherical orbit —
+   the distance is fixed, only the azimuth swings, and the X component of that
+   swing is halved so dragging pans the chamber rather than throwing the camera
+   round it. A generic orbit put the hemicycle in the middle distance and lost
+   the read entirely. */
+const CAM_R = 104;
+const CAM_Y = 92;
+
+function Rig({ cam }: { cam: React.RefObject<{ az: number; azGoal: number }> }) {
+  useFrame(({ camera }, delta) => {
     const c = cam.current;
     if (!c) return;
-    const persp = camera as THREE.PerspectiveCamera;
-    const need = R_OUT + 14;
-    const vFov = (persp.fov * Math.PI) / 180;
-    const distV = need / Math.tan(vFov / 2);
-    const hFov = 2 * Math.atan(Math.tan(vFov / 2) * (size.width / size.height));
-    const distH = need / Math.tan(hFov / 2);
-    const goal = Math.min(420, Math.max(90, Math.max(distV, distH) * 1.04));
-
-    const k = 1 - Math.pow(0.004, Math.min(delta, 0.05));
+    const k = 1 - Math.pow(0.003, Math.min(delta, 0.05));
     c.az += (c.azGoal - c.az) * k;
-    c.pol += (c.polGoal - c.pol) * k;
-    r.current += (goal - r.current) * k;
-
-    camera.position.set(
-      r.current * Math.sin(c.pol) * Math.sin(c.az),
-      r.current * Math.cos(c.pol),
-      r.current * Math.sin(c.pol) * Math.cos(c.az),
-    );
-    camera.lookAt(0, 0, 0);
+    camera.position.set(Math.sin(c.az) * CAM_R * 0.5, CAM_Y, Math.cos(c.az) * CAM_R);
+    camera.lookAt(0, 0, -R_OUT * 0.42);
   });
   return null;
 }
@@ -226,8 +219,8 @@ export default function LokSabhaChamber({
 }) {
   const order = useMemo(() => partyOrder(), []);
   const slots = useMemo(() => buildSlots(order), [order]);
-  const cam = useRef({ az: 0, pol: 0.78, azGoal: 0, polGoal: 0.78 });
-  const drag = useRef<{ x: number; y: number; az: number; pol: number; moved: number } | null>(null);
+  const cam = useRef({ az: 0, azGoal: 0 });
+  const drag = useRef<{ x: number; y: number; az: number; moved: number } | null>(null);
   const [grabbing, setGrabbing] = useState(false);
 
   const clamp = (v: number, a: number, b: number) => (v < a ? a : v > b ? b : v);
@@ -238,7 +231,7 @@ export default function LokSabhaChamber({
       style={{ cursor: grabbing ? "grabbing" : "grab", touchAction: "pan-y" }}
       onPointerDown={(e) => {
         (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
-        drag.current = { x: e.clientX, y: e.clientY, az: cam.current.azGoal, pol: cam.current.polGoal, moved: 0 };
+        drag.current = { x: e.clientX, y: e.clientY, az: cam.current.azGoal, moved: 0 };
         setGrabbing(true);
       }}
       onPointerMove={(e) => {
@@ -247,8 +240,7 @@ export default function LokSabhaChamber({
         const dx = e.clientX - d.x;
         const dy = e.clientY - d.y;
         d.moved = Math.max(d.moved, Math.abs(dx) + Math.abs(dy));
-        cam.current.azGoal = d.az - dx * 0.005;
-        cam.current.polGoal = clamp(d.pol - dy * 0.004, 0.18, 1.2);
+        cam.current.azGoal = clamp(d.az - dx * 0.005, -0.9, 0.9);
       }}
       onPointerUp={() => {
         drag.current = null;
@@ -260,10 +252,8 @@ export default function LokSabhaChamber({
       }}
       onKeyDown={(e) => {
         const c = cam.current;
-        if (e.key === "ArrowLeft") { c.azGoal -= 0.22; e.preventDefault(); }
-        else if (e.key === "ArrowRight") { c.azGoal += 0.22; e.preventDefault(); }
-        else if (e.key === "ArrowUp") { c.polGoal = clamp(c.polGoal - 0.1, 0.18, 1.2); e.preventDefault(); }
-        else if (e.key === "ArrowDown") { c.polGoal = clamp(c.polGoal + 0.1, 0.18, 1.2); e.preventDefault(); }
+        if (e.key === "ArrowLeft") { c.azGoal = clamp(c.azGoal - 0.22, -0.9, 0.9); e.preventDefault(); }
+        else if (e.key === "ArrowRight") { c.azGoal = clamp(c.azGoal + 0.22, -0.9, 0.9); e.preventDefault(); }
       }}
       tabIndex={0}
       role="group"
@@ -273,12 +263,19 @@ export default function LokSabhaChamber({
         style={{ width: "100%", height: "100%" }}
         resize={{ scroll: false, debounce: { scroll: 0, resize: 80 } }}
         dpr={[1, 2]}
-        gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
-        camera={{ fov: 40, near: 1, far: 900 }}
+        gl={{
+          antialias: true,
+          alpha: true,
+          powerPreference: "high-performance",
+          // r3f defaults to ACES Filmic; the reference is raw three with none.
+          // Party colours have to be the parties' actual colours.
+          toneMapping: THREE.NoToneMapping,
+        }}
+        camera={{ fov: 40, near: 1, far: 800 }}
       >
-        <ambientLight intensity={0.7} />
-        <directionalLight position={[-60, 120, 90]} intensity={0.9} />
-        <directionalLight position={[80, 40, -70]} intensity={0.35} color="#ffc27a" />
+        <ambientLight intensity={0.52} />
+        <directionalLight position={[-40, 120, 90]} intensity={0.72} />
+        <directionalLight position={[90, 40, -40]} intensity={0.3} color="#ffc27a" />
         <Rig cam={cam} />
         <Seats
           slots={slots}

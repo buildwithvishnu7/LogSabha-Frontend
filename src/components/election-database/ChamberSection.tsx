@@ -57,10 +57,44 @@ export function ChamberSection() {
     <section
       ref={ref}
       id="chamber"
-      className="oneview-lg relative overflow-hidden border-y border-[#dce4ef] bg-[#f6f9fd]"
+      // Warm cream, not the cool panel grey the rest of the page uses: the
+      // chamber is lit like a hall, and a blue-grey ground fought the saffron.
+      // .oneview, not .oneview-lg — like the helix, this section is a canvas and a
+      // strip of chips, so it fits a phone. The lg-only variant is for sections
+      // that carry a long table beside the canvas.
+      className="oneview relative overflow-hidden border-y border-[#f0e2cd] bg-[linear-gradient(180deg,#ffffff_0%,#fff8ef_46%,#ffeeda_100%)]"
     >
-      <div aria-hidden className="pointer-events-none absolute inset-0">
-        <span className="absolute left-1/2 top-[46%] h-[70vh] w-[70vh] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(255,153,51,0.13),transparent_64%)] blur-2xl" />
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+        <span className="absolute inset-0 bg-[radial-gradient(52%_58%_at_50%_44%,rgba(255,153,51,0.22),transparent_72%)]" />
+
+        {/* Slow radial rays, masked to a ring so the centre stays clear for the
+            benches. */}
+        <span
+          className="ed-rays absolute -inset-[26%] opacity-50"
+          style={{
+            background:
+              "repeating-conic-gradient(from 0deg, rgba(255,153,51,.10) 0deg 7deg, transparent 7deg 30deg)",
+            maskImage: "radial-gradient(circle,transparent 0 22%,#000 46%,transparent 78%)",
+            WebkitMaskImage: "radial-gradient(circle,transparent 0 22%,#000 46%,transparent 78%)",
+          }}
+        />
+
+        {/* The Ashoka Chakra — 24 spokes at 15°, ring and hub. The chamber is
+            the House; the emblem behind it is the point. */}
+        <span className="ed-chakra absolute left-1/2 top-[46%] h-[min(60vw,660px)] w-[min(60vw,660px)] -translate-x-1/2 -translate-y-1/2 opacity-[0.17]">
+          <i className="absolute inset-0 rounded-full border-[5px] border-[#e87d12]" />
+          <i className="absolute inset-[7%] rounded-full border-2 border-[#ff9933]" />
+          <i
+            className="absolute inset-[8%] rounded-full"
+            style={{
+              background:
+                "repeating-conic-gradient(from 0deg, #e87d12 0deg 1.1deg, transparent 1.1deg 15deg)",
+              maskImage: "radial-gradient(circle,transparent 0 8%,#000 9%)",
+              WebkitMaskImage: "radial-gradient(circle,transparent 0 8%,#000 9%)",
+            }}
+          />
+          <i className="absolute left-1/2 top-1/2 h-[11%] w-[11%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#e87d12]" />
+        </span>
       </div>
 
       <div className="ov-head relative z-10 mx-auto w-full max-w-[1440px] px-4 pt-10 text-center sm:px-6 lg:pt-[calc(var(--header-h)+18px)]">
@@ -83,13 +117,12 @@ export function ChamberSection() {
           All {lsNational.seats} seats, one bench at a time
         </motion.h2>
         <p className="mx-auto mt-2 max-w-[64ch] text-[clamp(12px,1vw,14px)] leading-relaxed text-[#5a7091]">
-          Every member of the {lsNational.house} is a seat in this chamber, coloured by the party
-          holding it. The arrangement is generated from the declared result, so the count on screen
-          is the count in the House.
+          Each block is one seat, coloured by the party holding it. Pick a party below to isolate
+          its benches.
         </p>
       </div>
 
-      <div className="ov-stage relative z-10 min-h-[46vh] lg:min-h-0">
+      <div className="ov-stage relative z-10">
         {near ? (
           <LokSabhaChamber
             highlight={highlight}
@@ -121,8 +154,8 @@ export function ChamberSection() {
         <p className="mb-2.5 text-center text-[11px] text-[#5a7091]">
           Hover a seat · click to isolate that party · drag to swing the chamber · arrow keys also work
         </p>
-        <ul className="flex flex-wrap items-center justify-center gap-1.5">
-          <li>
+        <ul className="flex items-center gap-1.5 overflow-x-auto pb-1">
+          <li className="shrink-0">
             <button
               type="button"
               onClick={() => setHighlight(null)}
@@ -138,7 +171,7 @@ export function ChamberSection() {
             </button>
           </li>
           {strip.map((p) => (
-            <li key={p.key}>
+            <li key={p.key} className="shrink-0">
               <button
                 type="button"
                 onClick={() => setHighlight((cur) => (cur === p.key ? null : p.key))}
@@ -161,26 +194,11 @@ export function ChamberSection() {
             </li>
           ))}
           {tail > 0 && (
-            <li className="rounded-full border border-dashed border-[#dce4ef] px-3 py-1.5 text-[11px] font-semibold text-[#5a7091]">
+            <li className="shrink-0 rounded-full border border-dashed border-[#dce4ef] px-3 py-1.5 text-[11px] font-semibold text-[#5a7091]">
               + {tail} more parties, {tailSeats} seats
             </li>
           )}
         </ul>
-
-        {/* The alliance arithmetic, always on screen — it is the one figure the
-            seating diagram cannot state on its own. */}
-        <div className="mx-auto mt-3 flex max-w-lg overflow-hidden rounded-full">
-          {(["NDA", "INDIA", "OTH"] as const).map((k) => (
-            <span
-              key={k}
-              className="flex h-5 items-center justify-center text-[9px] font-bold text-white"
-              style={{ background: lsAlliance[k].c, width: `${(lsAlliance[k].seats / 543) * 100}%` }}
-              title={`${lsAlliance[k].name} — ${lsAlliance[k].seats}`}
-            >
-              {lsAlliance[k].seats}
-            </span>
-          ))}
-        </div>
       </div>
     </section>
   );
