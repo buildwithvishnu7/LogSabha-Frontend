@@ -134,7 +134,14 @@ export function SpiralSection({ onPickYear }: { onPickYear: (year: number) => vo
               type="button"
               role="tab"
               aria-selected={activeEra === i}
-              onClick={() => onPickYear(e.start)}
+              onClick={() => {
+                // The era strip is the spiral's own control, so it has to move the
+                // spiral as well as the written record below it. It was only
+                // doing the latter, which left the two disagreeing.
+                const i = spiralYears.findIndex((y) => y.year === e.start);
+                if (i >= 0) setIndex(i);
+                onPickYear(e.start);
+              }}
               className={
                 "shrink-0 rounded-full border px-3.5 py-1.5 text-[11px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C2410C] " +
                 (activeEra === i

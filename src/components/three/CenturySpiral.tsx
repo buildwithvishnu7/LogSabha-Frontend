@@ -88,12 +88,14 @@ function Tile({
   year,
   title,
   focus,
+  spin,
   onSelect,
 }: {
   i: number;
   year: number;
   title: string;
   focus: React.RefObject<number>;
+  spin: React.RefObject<number>;
   onSelect: (i: number) => void;
 }) {
   const group = useRef<THREE.Group>(null);
@@ -104,8 +106,7 @@ function Tile({
   useEffect(() => () => { texPlain.dispose(); texLit.dispose(); }, [texPlain, texLit]);
 
   const angle = (i / PER_TURN) * Math.PI * 2;
-  const x = Math.cos(angle) * RADIUS;
-  const z = Math.sin(angle) * RADIUS;
+  
   const y = i * RISE;
 
   useFrame(() => {
@@ -114,19 +115,31 @@ function Tile({
     const f = focus.current ?? 0;
     const near = Math.abs(f - i) < 0.5;
     if (near !== lit) setLit(near);
-    // Fade with distance along the column so the far ends do not clutter.
-    const d = Math.abs(i - f);
+    // Fade by DISTANCE ALONG THE COLUMN, not by index: the reference measures
+    // it in world units so the falloff is the same however far apart the years
+    // are placed.
+    // sin for X and cos for Z, so a = 0 puts the tile on +Z facing the camera.
+    // Swapping those (and negating the rotation) is what made FrontSide cull
+    // every tile in the spiral.
+    const a = angle + (spin.current ?? 0);
+    gp.position.set(Math.sin(a) * RADIUS, y, Math.cos(a) * RADIUS);
+    gp.rotation.y = a * FACING; // turn with the column, but not fully
+
+    const dist = Math.abs(y - f * RISE);
+    const fade = clamp(1 - dist / 92, 0, 1);
     const mesh = gp.children[0] as THREE.Mesh;
-    const mat = mesh?.material as THREE.MeshBasicMaterial | undefined;
-    if (mat) mat.opacity = clamp(1 - Math.max(0, d - 5) * 0.16, 0, 1);
-    gp.visible = d < 14;
+    const mat = mesh?.material as THREE.MeshStandardMaterial | undefined;
+    if (mat) mat.opacity = 0.06 + fade * 0.94;
+    gp.visible = fade > 0.02;
+    gp.scale.setScalar(0.86 + fade * 0.14);
   });
 
   return (
     <group
       ref={group}
-      position={[x, y, z]}
-      rotation={[0, -angle * FACING + Math.PI / 2, 0]}
+      // position and rotation are written every frame in useFrame above,
+      // because both depend on the spin
+
       onClick={(e) => {
         e.stopPropagation();
         onSelect(i);
@@ -141,36 +154,55 @@ function Tile({
     >
       <mesh>
         <planeGeometry args={[TILE_W, TILE_H]} />
-        <meshBasicMaterial map={lit ? texLit : texPlain} transparent side={THREE.DoubleSide} toneMapped={false} />
+        {/* FrontSide, not DoubleSide: a tile on the far side of the column is
+            seen from behind and its label reads mirrored. Culling them leaves
+            the near arc — which is the half you can actually read. */}
+        <meshStandardMaterial
+          map={lit ? texLit : texPlain}
+          roughness={0.55}
+          metalness={0.02}
+          transparent
+          side={THREE.FrontSide}
+          toneMapped={false}
+        />
       </mesh>
     </group>
   );
 }
 
 /** The saffron column the years climb. */
+/** The column the years wind around — the flagstaff the spiral hangs off.
+ *  Open-ended, so it reads as a staff rather than a capped tube. */
 function Column() {
-  const h = YEARS.length * RISE;
+  const h = Math.max(YEARS.length, 1) * RISE + 40;
   return (
-    <mesh position={[0, h / 2, 0]}>
-      <cylinderGeometry args={[2.2, 2.2, h, 16]} />
-      <meshBasicMaterial color="#ff9933" transparent opacity={0.42} />
+    <mesh position={[0, h / 2 - 20, 0]}>
+      <cylinderGeometry args={[2.2, 2.2, h, 20, 1, true]} />
+      <meshStandardMaterial
+        color="#ff9933"
+        roughness={0.5}
+        metalness={0.2}
+        transparent
+        opacity={0.5}
+        side={THREE.DoubleSide}
+      />
     </mesh>
   );
 }
 
-function Rig({ focus, spin }: { focus: React.RefObject<number>; spin: React.RefObject<number> }) {
+/* The camera rides alongside the focused year, looking slightly up the column.
+   It does NOT orbit — horizontal drag turns the world instead. Orbiting with a
+   wide lens kept ten tiles in shot at once, all of them too small to read; a
+   long lens at a fixed offset gives the two or three that matter. */
+function Rig({ focus }: { focus: React.RefObject<number> }) {
   useFrame(({ camera }, delta) => {
     const f = focus.current ?? 0;
-    const a = (f / PER_TURN) * Math.PI * 2 + (spin.current ?? 0);
-    const targetY = f * RISE + 3;
-    const cx = Math.cos(a) * (RADIUS + 46);
-    const cz = Math.sin(a) * (RADIUS + 46);
-
+    const focusY = f * RISE;
     const k = 1 - Math.pow(0.004, Math.min(delta, 0.05));
-    camera.position.x += (cx - camera.position.x) * k;
-    camera.position.y += (targetY - camera.position.y) * k;
-    camera.position.z += (cz - camera.position.z) * k;
-    camera.lookAt(0, f * RISE, 0);
+    camera.position.x += (0 - camera.position.x) * k;
+    camera.position.y += (focusY + 8 - camera.position.y) * k;
+    camera.position.z += (RADIUS + 84 - camera.position.z) * k;
+    camera.lookAt(0, focusY + 2, 0);
   });
   return null;
 }
@@ -192,6 +224,10 @@ export default function CenturySpiral({
 
   useEffect(() => {
     focus.current = index;
+    // Bring the chosen year round to the front. Travelling the column without
+    // this leaves the year you picked facing away, which is the one thing the
+    // control is for.
+    spin.current = -index * ((Math.PI * 2) / PER_TURN);
   }, [index]);
 
   return (
@@ -252,10 +288,12 @@ export default function CenturySpiral({
           // that carry meaning (party colours, the saffron).
           toneMapping: THREE.NoToneMapping,
         }}
-        camera={{ fov: 44, near: 0.5, far: 900 }}
+        camera={{ fov: 34, near: 1, far: 1200 }}
       >
-        <ambientLight intensity={0.95} />
-        <Rig focus={focus} spin={spin} />
+        <ambientLight intensity={0.72} />
+        <directionalLight position={[-40, 90, 120]} intensity={0.62} />
+        <directionalLight position={[70, 40, -60]} intensity={0.3} color="#ffc27a" />
+        <Rig focus={focus} />
         <Column />
         {YEARS.map((y, i) => (
           <Tile
@@ -264,6 +302,7 @@ export default function CenturySpiral({
             year={y.year}
             title={y.title}
             focus={focus}
+            spin={spin}
             onSelect={(idx) => {
               if (drag.current && drag.current.moved > 6) return;
               onSelect(YEARS[idx].year);
