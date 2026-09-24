@@ -212,14 +212,25 @@ function ArchiveCard({ post, lang, i }: { post: BlogPost; lang: Lang; i: number 
     >
       <Link href={`/blog/${post.slug}`} className="flex h-full flex-col">
         {post.img && (
-          <span className="mb-4 block overflow-hidden">
+          /* Fixed 160px window so the grid stays even, but the picture is
+             shown whole: a blurred copy of itself fills the box behind and
+             the sharp image sits on top with object-contain. object-cover
+             alone was cutting a square post image (745×742) in half. */
+          <span className="relative mb-4 block h-40 overflow-hidden bg-[#F3F4F6]">
+            <img
+              src={post.img}
+              alt=""
+              aria-hidden="true"
+              loading="lazy"
+              className="absolute inset-0 h-full w-full scale-110 object-cover opacity-70 blur-[12px]"
+            />
             <img
               src={post.img}
               alt={post.alt || c.title}
               loading="lazy"
               width={post.imgW}
               height={post.imgH}
-              className="block h-40 w-full object-cover transition-transform duration-[1.2s] group-hover:scale-[1.05]"
+              className="relative block h-40 w-full object-contain transition-transform duration-[1.2s] group-hover:scale-[1.03]"
             />
           </span>
         )}

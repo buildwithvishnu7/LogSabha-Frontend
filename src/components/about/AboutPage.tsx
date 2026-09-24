@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { motion, useInView, useScroll, useSpring } from "motion/react";
 import { ArrowDown, Quote } from "lucide-react";
 import { SlotNumber } from "@/components/motion/SlotNumber";
@@ -36,65 +36,64 @@ export function AboutProgress() {
 /* ═══════════════ hero ═══════════════ */
 
 function Hero({ section }: { section: AboutSection }) {
-  const ref = useRef<HTMLElement>(null);
-  const inView = useInView(ref, { once: false, amount: 0.2 });
   const title = "ABOUT US";
+  /* The entrance is CSS (.ls-enter in globals.css), not Motion `initial`.
+     Motion writes opacity:0 into the server HTML, so this first screen
+     painted blank until hydration finished — the "About page appears empty"
+     report (UX feedback #31). A CSS keyframe starts on first paint with no JS.
+     The old `animate={inView ? … : {}}` gate went with it: the hero sits at the
+     top of the page, so it is always in view on load, and that gate parked
+     everything on opacity 0 whenever the observer fired late. */
+  const enter = (d: number, y = "18px", blur = "0px") =>
+    ({ "--d": `${d}s`, "--y": y, "--blur": blur }) as CSSProperties;
   const sub = section.flow.find((n) => n.t === "p") as { text: string } | undefined;
   const img = section.flow.find((n) => n.t === "img") as
     | { src: string; alt: string; w?: number; h?: number }
     | undefined;
 
   return (
-    <section ref={ref} className="relative overflow-hidden bg-[#061428] pt-28 sm:pt-32">
+    <section className="relative overflow-hidden bg-[#061428] pt-28 sm:pt-32">
       <div className="relative z-10 mx-auto max-w-5xl px-4 pb-12 text-center sm:px-6 sm:pb-14">
         <h1 className={`text-3xl font-extrabold leading-[1.22] tracking-tight text-white sm:text-4xl`} aria-label={title}>
           {title.split("").map((ch, i) => (
-            <motion.span
+            <span
               key={i}
               aria-hidden
-              className="inline-block"
-              initial={{ opacity: 0, y: 40, filter: "blur(6px)" }}
-              animate={inView ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
-              transition={{ duration: 0.7, delay: 0.1 + i * 0.05, ease: EASE }}
+              className="ls-enter inline-block"
+              style={enter(0.1 + i * 0.05, "40px", "6px")}
             >
               {ch === " " ? " " : ch}
-            </motion.span>
+            </span>
           ))}
         </h1>
 
         {sub && (
-          <motion.p
-            className={`mx-auto mt-6 max-w-3xl ${HERO_SUB} text-[#9CA3AF]`}
-            initial={{ opacity: 0, y: 18 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.5 }}
+          <p
+            className={`ls-enter mx-auto mt-6 max-w-3xl ${HERO_SUB} text-[#9CA3AF]`}
+            style={enter(0.5)}
           >
             {sub.text}
-          </motion.p>
+          </p>
         )}
 
-        <motion.a
-          href="#journey"
-          className="mt-8 inline-flex h-10 w-10 items-center justify-center border border-white/30 text-white"
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ delay: 0.75 }}
-          whileHover={{ y: -2, backgroundColor: "rgba(255,255,255,0.12)" }}
-          aria-label="Scroll to our journey"
-        >
-          <motion.span animate={{ y: [0, 4, 0] }} transition={{ duration: 1.7, repeat: Infinity }}>
-            <ArrowDown className="h-4 w-4" />
-          </motion.span>
-        </motion.a>
+        {/* Entrance on a wrapper: a CSS animation's fill pins `transform`,
+            and the hover lift on the link is itself a transform. */}
+        <div className="ls-enter inline-block" style={enter(0.75, "0px")}>
+          <motion.a
+            href="#journey"
+            className="mt-8 inline-flex h-10 w-10 items-center justify-center border border-white/30 text-white"
+            whileHover={{ y: -2, backgroundColor: "rgba(255,255,255,0.12)" }}
+            aria-label="Scroll to our journey"
+          >
+            <motion.span animate={{ y: [0, 4, 0] }} transition={{ duration: 1.7, repeat: Infinity }}>
+              <ArrowDown className="h-4 w-4" />
+            </motion.span>
+          </motion.a>
+        </div>
       </div>
 
       {img && (
-        <motion.div
-          className="relative z-0 w-full"
-          initial={{ opacity: 0, y: 26 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.9, delay: 0.35, ease: EASE }}
-        >
+        <div className="ls-enter relative z-0 w-full" style={enter(0.35, "26px")}>
           <img
             src={img.src}
             alt=""
@@ -103,7 +102,7 @@ function Hero({ section }: { section: AboutSection }) {
             height={img.h}
             className="block h-auto w-full select-none opacity-70"
           />
-        </motion.div>
+        </div>
       )}
     </section>
   );

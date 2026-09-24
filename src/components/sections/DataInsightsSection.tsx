@@ -7,6 +7,7 @@ import {
   animate,
 } from "motion/react";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
+import { CountUp } from "@/components/motion/CountUp";
 import { useDataInsights } from "@/hooks/useDataInsights";
 
 // ─── Continuous Looping Typewriter ───
@@ -198,59 +199,10 @@ function AnimatedNumber({
 
 // ─── Slot Machine Number ───
 
-const SLOT_CYCLES = 2;
-const DIGIT_H = 1.15;
-
-function SlotDigit({
-  target,
-  delay,
-  active,
-}: {
-  target: number;
-  delay: number;
-  active: boolean;
-}) {
-  const total = SLOT_CYCLES * 10 + target;
-  const digits: number[] = [];
-  for (let i = 0; i <= total; i++) digits.push(i % 10);
-
-  return (
-    <span
-      className="relative inline-block overflow-hidden align-bottom"
-      style={{
-        height: `${DIGIT_H}em`,
-        width: "0.65em",
-        fontVariantNumeric: "tabular-nums",
-      }}
-    >
-      <motion.span
-        className="block will-change-transform"
-        initial={{ y: 0 }}
-        animate={
-          active
-            ? { y: `${-total * DIGIT_H}em` }
-            : { y: 0 }
-        }
-        transition={{
-          duration: 1.3 + total * 0.012,
-          delay,
-          ease: [0.16, 1, 0.3, 1],
-        }}
-      >
-        {digits.map((d, i) => (
-          <span
-            key={i}
-            className="block text-center"
-            style={{ height: `${DIGIT_H}em`, lineHeight: `${DIGIT_H}em` }}
-          >
-            {d}
-          </span>
-        ))}
-      </motion.span>
-    </span>
-  );
-}
-
+// Kept its name and props (callers below pass value/decimals/suffix/color);
+// the body is now the shared count-up instead of a digit drum, so this
+// section — the client's stated benchmark — sets the counter style the
+// rest of the homepage follows (UX feedback #6, #7, #16).
 function SlotMachineNumber({
   value,
   decimals = 0,
@@ -264,44 +216,13 @@ function SlotMachineNumber({
   color: string;
   baseDelay?: number;
 }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { once: false, amount: 0.5 });
-  const [active, setActive] = useState(false);
-
-  useEffect(() => {
-    if (isInView) {
-      // Reset then re-activate so the slot spins from the top every visit
-      setActive(false);
-      requestAnimationFrame(() => setActive(true));
-    } else {
-      setActive(false);
-    }
-  }, [isInView]);
-
-  const formatted =
-    decimals > 0 ? value.toFixed(decimals) : String(Math.round(value));
-  const chars = formatted.split("");
-
+  void baseDelay; // stagger belonged to the drum; the count-up starts on view
   return (
     <span
-      ref={ref}
       className="inline-flex items-baseline text-2xl font-extrabold sm:text-3xl"
       style={{ color }}
     >
-      {chars.map((ch, i) =>
-        /\d/.test(ch) ? (
-          <SlotDigit
-            key={`${i}-${ch}`}
-            target={parseInt(ch)}
-            delay={baseDelay + i * 0.08}
-            active={active}
-          />
-        ) : (
-          <span key={`${i}-${ch}`} className="inline-block w-[0.25em] text-center">
-            {ch}
-          </span>
-        )
-      )}
+      <CountUp value={value} decimals={decimals} duration={1400} />
       {suffix && <span className="ml-0.5">{suffix}</span>}
     </span>
   );
@@ -313,10 +234,13 @@ function DonutChart({
   triggered,
   hoveredParty,
   onHoverParty,
+  onPinParty,
 }: {
   triggered: boolean;
   hoveredParty: string | null;
   onHoverParty: (p: string | null) => void;
+  /** click/tap: pin (or release) a segment — touch has no hover */
+  onPinParty?: (p: string) => void;
 }) {
   const R = 80;
   const C = 2 * Math.PI * R;
@@ -361,33 +285,12 @@ function DonutChart({
               stroke={s.color}
               strokeLinecap="butt"
               strokeDasharray={`${s.len} ${C - s.len}`}
+              // Draws once when the section comes into view and then holds.
+              // It used to redraw itself on an 8-second loop for ever, which
+              // fought the hover state and read as restless (UX #17, #20).
               initial={{ strokeDashoffset: C }}
-              animate={
-                triggered
-                  ? {
-                      strokeDashoffset: [
-                        C,
-                        C - s.off - s.len,
-                        C - s.off - s.len,
-                        C,
-                        C,
-                      ],
-                    }
-                  : { strokeDashoffset: C }
-              }
-              transition={
-                triggered
-                  ? {
-                      strokeDashoffset: {
-                        duration: 8,
-                        times: [0, 0.22, 0.6, 0.82, 1],
-                        repeat: Infinity,
-                        delay: i * 0.2,
-                        ease: "easeInOut",
-                      },
-                    }
-                  : { duration: 0.3 }
-              }
+              animate={{ strokeDashoffset: triggered ? C - s.off - s.len : C }}
+              transition={{ duration: triggered ? 1.4 : 0.3, delay: triggered ? 0.2 + i * 0.12 : 0, ease: "easeOut" }}
               style={{
                 strokeWidth: hov ? 38 : 28,
                 opacity: dim ? 0.3 : 1,
@@ -400,29 +303,10 @@ function DonutChart({
                   "stroke-width 0.25s ease, opacity 0.3s ease, filter 0.25s ease",
               }}
               onMouseEnter={() => onHoverParty(s.party)}
+              onClick={() => onPinParty?.(s.party)}
             />
           );
         })}
-        {/* Continuous rotating highlight arc */}
-        {triggered && !hoveredParty && (
-          <motion.circle
-            cx="100"
-            cy="100"
-            r={R}
-            fill="none"
-            stroke="rgba(0,0,0,0.06)"
-            strokeWidth="28"
-            strokeDasharray={`${C * 0.08} ${C * 0.92}`}
-            animate={{ strokeDashoffset: [0, -C] }}
-            transition={{
-              duration: 6,
-              repeat: Infinity,
-              ease: "linear",
-              delay: 2.5,
-            }}
-            style={{ transformOrigin: "100px 100px", pointerEvents: "none" }}
-          />
-        )}
       </svg>
 
       <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -457,27 +341,6 @@ function DonutChart({
         </motion.span>
       </div>
 
-      {/* Continuous outer glow ring */}
-      {triggered && (
-        <motion.div
-          className="pointer-events-none absolute inset-[-6px] rounded-full border-2"
-          animate={{
-            scale: [1, 1.04, 1],
-            opacity: [0.2, 0.5, 0.2],
-            borderColor: [
-              "rgba(255,153,51,0.1)",
-              "rgba(255,153,51,0.35)",
-              "rgba(255,153,51,0.1)",
-            ],
-          }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 3,
-          }}
-        />
-      )}
     </div>
   );
 }
@@ -486,27 +349,16 @@ function DonutChart({
 
 function SeatShareCard({ triggered }: { triggered: boolean }) {
   const [hovered, setHovered] = useState<string | null>(null);
+  // A click (or tap) pins a party, so the highlight works without a mouse
+  // and survives moving the pointer away. Click again to release (UX #17).
+  const [pinned, setPinned] = useState<string | null>(null);
+  const active = pinned ?? hovered;
+  const activeRow = PARTY_SEATS.find((p) => p.party === active);
+  const togglePin = (party: string) => setPinned((cur) => (cur === party ? null : party));
 
   return (
-    <motion.div
+    <div
       className="flex h-full flex-col rounded-2xl border border-gray-200 bg-white shadow-sm p-5 sm:p-6"
-      animate={
-        triggered
-          ? {
-              borderColor: [
-                "#e5e7eb",
-                "rgba(255,153,51,0.25)",
-                "#e5e7eb",
-              ],
-            }
-          : {}
-      }
-      transition={{
-        duration: 5,
-        delay: 3,
-        repeat: Infinity,
-        ease: "easeInOut",
-      }}
       onMouseLeave={() => setHovered(null)}
     >
       <div className="mb-3 flex items-center justify-between">
@@ -520,24 +372,30 @@ function SeatShareCard({ triggered }: { triggered: boolean }) {
 
       <DonutChart
         triggered={triggered}
-        hoveredParty={hovered}
+        hoveredParty={active}
         onHoverParty={setHovered}
+        onPinParty={togglePin}
       />
 
       <div className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 border-t border-gray-200 pt-3">
         {PARTY_SEATS.map((p, i) => {
-          const isH = hovered === p.party;
-          const dim = hovered !== null && !isH;
+          const isH = active === p.party;
+          const dim = active !== null && !isH;
           return (
             <motion.div
               key={p.party}
-              className="flex cursor-pointer items-center gap-1.5"
+              role="button"
+              tabIndex={0}
+              aria-pressed={pinned === p.party}
+              className="flex cursor-pointer items-center gap-1.5 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
               initial={{ opacity: 0 }}
               animate={
                 triggered ? { opacity: dim ? 0.35 : 1 } : { opacity: 0 }
               }
               transition={{ opacity: { duration: 0.3 } }}
               onMouseEnter={() => setHovered(p.party)}
+              onClick={() => togglePin(p.party)}
+              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePin(p.party); } }}
             >
               <motion.span
                 className="inline-block h-2 w-2 rounded-full"
@@ -564,11 +422,26 @@ function SeatShareCard({ triggered }: { triggered: boolean }) {
           );
         })}
       </div>
-    </motion.div>
+
+      {/* The readout: what the highlight means, in words. Doubles as the
+          hint that the chart can be touched at all. */}
+      <p className="mt-2 text-center text-[11px] text-gray-500" aria-live="polite">
+        {activeRow ? (
+          <>
+            <span className="font-semibold" style={{ color: activeRow.color }}>{activeRow.party}</span>
+            {" · "}{activeRow.seats} seats{" · "}
+            {Math.round((activeRow.seats / TOTAL_SEATS) * 1000) / 10}% of the House
+            {pinned ? " · click again to release" : ""}
+          </>
+        ) : (
+          "Hover or tap a segment for its share"
+        )}
+      </p>
+    </div>
   );
 }
 
-// ─── Grouped Bar Chart (SVG) — continuous build + hover ───
+// ─── Grouped Bar Chart (SVG) — builds once, then answers hover and tap ───
 
 function GroupedBarChart({ triggered }: { triggered: boolean }) {
   const [hoveredBar, setHoveredBar] = useState<{
@@ -639,41 +512,27 @@ function GroupedBarChart({ triggered }: { triggered: boolean }) {
                 <motion.g
                   key={p.key}
                   onMouseEnter={() => setHoveredBar({ si, pi })}
+                  // tap toggles, for touch (UX #17)
+                  onClick={() => setHoveredBar((cur) => (cur?.si === si && cur?.pi === pi ? null : { si, pi }))}
                   animate={{ y: isHov ? -6 : 0 }}
                   transition={{ duration: 0.25, ease: "easeOut" }}
                   style={{ cursor: "pointer" }}
                 >
-                  {/* Main bar — continuous grow/hold/shrink loop */}
+                  {/* Main bar — grows once on view and stays. The old
+                      7-second grow/hold/shrink loop meant the chart was
+                      empty a third of the time (UX #17, #20). */}
                   <motion.rect
                     x={x}
                     width={BAR.barW}
                     rx={2}
                     fill={p.color}
-                    animate={
-                      triggered
-                        ? {
-                            y: [
-                              bottom,
-                              bottom - h,
-                              bottom - h,
-                              bottom,
-                              bottom,
-                            ],
-                            height: [0, h, h, 0, 0],
-                          }
-                        : { y: bottom, height: 0 }
-                    }
-                    transition={
-                      triggered
-                        ? {
-                            duration: 7,
-                            times: [0, 0.2, 0.65, 0.85, 1],
-                            repeat: Infinity,
-                            delay: si * 0.15 + pi * 0.06,
-                            ease: "easeInOut",
-                          }
-                        : { duration: 0.3 }
-                    }
+                    initial={{ y: bottom, height: 0 }}
+                    animate={triggered ? { y: bottom - h, height: h } : { y: bottom, height: 0 }}
+                    transition={{
+                      duration: triggered ? 0.9 : 0.3,
+                      delay: triggered ? 0.15 + si * 0.08 + pi * 0.05 : 0,
+                      ease: "easeOut",
+                    }}
                     style={{
                       filter: isHov
                         ? `brightness(1.4) drop-shadow(0 0 8px ${p.color})`
@@ -683,6 +542,20 @@ function GroupedBarChart({ triggered }: { triggered: boolean }) {
                         "filter 0.25s ease, opacity 0.3s ease",
                     }}
                   />
+                  {/* value above the highlighted bar — the "tooltip" (UX #17) */}
+                  {isHov && (
+                    <text
+                      x={x + BAR.barW / 2}
+                      y={bottom - h - 6}
+                      textAnchor="middle"
+                      fontSize="10"
+                      fontWeight="700"
+                      fill={p.color}
+                      style={{ pointerEvents: "none" }}
+                    >
+                      {val}
+                    </text>
+                  )}
                 </motion.g>
               );
             })}
@@ -720,26 +593,7 @@ function GroupedBarChart({ triggered }: { triggered: boolean }) {
 
 function StateDistributionCard({ triggered }: { triggered: boolean }) {
   return (
-    <motion.div
-      className="flex h-full flex-col rounded-2xl border border-gray-200 bg-white shadow-sm p-5 sm:p-6"
-      animate={
-        triggered
-          ? {
-              borderColor: [
-                "#e5e7eb",
-                "rgba(255,153,51,0.25)",
-                "#e5e7eb",
-              ],
-            }
-          : {}
-      }
-      transition={{
-        duration: 5,
-        delay: 4,
-        repeat: Infinity,
-        ease: "easeInOut",
-      }}
-    >
+    <div className="flex h-full flex-col rounded-2xl border border-gray-200 bg-white shadow-sm p-5 sm:p-6">
       <div className="mb-2 flex items-center justify-between">
         <h3 className="text-sm font-bold text-gray-900 sm:text-base">
           State-wise Seat Distribution
@@ -751,7 +605,7 @@ function StateDistributionCard({ triggered }: { triggered: boolean }) {
       <div className="flex-1">
         <GroupedBarChart triggered={triggered} />
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -772,16 +626,15 @@ function HistoricalLineChart({ triggered }: { triggered: boolean }) {
     (d, i) => `${i === 0 ? "M" : "L"} ${toX(i)},${toY(d.inc)}`
   ).join(" ");
 
-  const bjpXs = HISTORICAL_DATA.map((_, i) => toX(i));
-  const bjpYs = HISTORICAL_DATA.map((d) => toY(d.bjp));
-  const incXs = HISTORICAL_DATA.map((_, i) => toX(i));
-  const incYs = HISTORICAL_DATA.map((d) => toY(d.inc));
+  // which year column is being read (hover, or pinned by tap)
+  const [hoveredYear, setHoveredYear] = useState<number | null>(null);
 
   return (
     <svg
       viewBox={`0 0 ${LINE.W} ${LINE.H}`}
       className="h-full w-full"
       preserveAspectRatio="xMidYMid meet"
+      onMouseLeave={() => setHoveredYear(null)}
     >
       <defs>
         <filter id="glowBjp" x="-50%" y="-50%" width="200%" height="200%">
@@ -905,7 +758,7 @@ function HistoricalLineChart({ triggered }: { triggered: boolean }) {
           <motion.circle
             cx={toX(i)}
             cy={toY(d.bjp)}
-            r={4}
+            r={hoveredYear === i ? 6.5 : 4}
             fill="#f97316"
             stroke="#ffffff"
             strokeWidth={2}
@@ -925,7 +778,7 @@ function HistoricalLineChart({ triggered }: { triggered: boolean }) {
           <motion.circle
             cx={toX(i)}
             cy={toY(d.inc)}
-            r={4}
+            r={hoveredYear === i ? 6.5 : 4}
             fill="#06b6d4"
             stroke="#ffffff"
             strokeWidth={2}
@@ -943,81 +796,56 @@ function HistoricalLineChart({ triggered }: { triggered: boolean }) {
             style={{ transformOrigin: `${toX(i)}px ${toY(d.inc)}px` }}
           />
 
-          {/* Pulse ring on each BJP dot */}
-          {triggered && (
-            <motion.circle
-              cx={toX(i)}
-              cy={toY(d.bjp)}
-              fill="none"
-              stroke="#f97316"
-              strokeWidth={1.5}
-              initial={{ r: 4, opacity: 0 }}
-              animate={{ r: [4, 12], opacity: [0.5, 0] }}
-              transition={{
-                duration: 1.8,
-                delay: 3 + i * 0.6,
-                repeat: Infinity,
-                repeatDelay: 2.5,
-                ease: "easeOut",
-              }}
-            />
-          )}
-          {/* Pulse ring on each INC dot */}
-          {triggered && (
-            <motion.circle
-              cx={toX(i)}
-              cy={toY(d.inc)}
-              fill="none"
-              stroke="#06b6d4"
-              strokeWidth={1.5}
-              initial={{ r: 4, opacity: 0 }}
-              animate={{ r: [4, 12], opacity: [0.5, 0] }}
-              transition={{
-                duration: 1.8,
-                delay: 3.3 + i * 0.6,
-                repeat: Infinity,
-                repeatDelay: 2.5,
-                ease: "easeOut",
-              }}
-            />
+          {/* Year hit-area: hover or tap a column to read both values.
+              Replaces the twelve pulse rings and two travelling glow dots
+              that used to run here for ever (UX #17, #20). */}
+          <rect
+            x={toX(i) - xStep / 2}
+            y={LINE.mt}
+            width={xStep}
+            height={LINE_CH}
+            fill="transparent"
+            style={{ cursor: "pointer" }}
+            onMouseEnter={() => setHoveredYear(i)}
+            onClick={() => setHoveredYear((cur) => (cur === i ? null : i))}
+          />
+          {hoveredYear === i && (
+            <g style={{ pointerEvents: "none" }}>
+              <line x1={toX(i)} y1={LINE.mt} x2={toX(i)} y2={bottom} stroke="#9ca3af" strokeWidth={1} />
+              <rect
+                x={Math.min(Math.max(toX(i) - 46, LINE.ml), LINE.W - LINE.mr - 92)}
+                y={LINE.mt + 2}
+                width={92}
+                height={34}
+                rx={6}
+                fill="#111827"
+                opacity={0.92}
+              />
+              <text
+                x={Math.min(Math.max(toX(i) - 46, LINE.ml), LINE.W - LINE.mr - 92) + 46}
+                y={LINE.mt + 15}
+                textAnchor="middle"
+                fontSize="9"
+                fontWeight="700"
+                fill="#ffffff"
+              >
+                {d.year}
+              </text>
+              <text
+                x={Math.min(Math.max(toX(i) - 46, LINE.ml), LINE.W - LINE.mr - 92) + 46}
+                y={LINE.mt + 28}
+                textAnchor="middle"
+                fontSize="9"
+                fill="#ffffff"
+              >
+                <tspan fill="#fdba74">BJP {d.bjp}</tspan>
+                <tspan> · </tspan>
+                <tspan fill="#67e8f9">INC {d.inc}</tspan>
+              </text>
+            </g>
           )}
         </g>
       ))}
-
-      {/* Traveling glow dot along BJP line */}
-      {triggered && (
-        <motion.circle
-          r={5}
-          fill="#f97316"
-          opacity={0.7}
-          filter="url(#glowBjp)"
-          animate={{ cx: bjpXs, cy: bjpYs }}
-          transition={{
-            duration: 3.5,
-            delay: 4,
-            repeat: Infinity,
-            repeatDelay: 2,
-            ease: "easeInOut",
-          }}
-        />
-      )}
-      {/* Traveling glow dot along INC line */}
-      {triggered && (
-        <motion.circle
-          r={5}
-          fill="#06b6d4"
-          opacity={0.7}
-          filter="url(#glowInc)"
-          animate={{ cx: incXs, cy: incYs }}
-          transition={{
-            duration: 3.5,
-            delay: 4.5,
-            repeat: Infinity,
-            repeatDelay: 2,
-            ease: "easeInOut",
-          }}
-        />
-      )}
 
       {/* Legend */}
       {[
@@ -1037,26 +865,7 @@ function HistoricalLineChart({ triggered }: { triggered: boolean }) {
 
 function HistoricalTrendsCard({ triggered }: { triggered: boolean }) {
   return (
-    <motion.div
-      className="flex h-full flex-col rounded-2xl border border-gray-200 bg-white shadow-sm p-5 sm:p-6"
-      animate={
-        triggered
-          ? {
-              borderColor: [
-                "#e5e7eb",
-                "rgba(255,153,51,0.25)",
-                "#e5e7eb",
-              ],
-            }
-          : {}
-      }
-      transition={{
-        duration: 5,
-        delay: 6,
-        repeat: Infinity,
-        ease: "easeInOut",
-      }}
-    >
+    <div className="flex h-full flex-col rounded-2xl border border-gray-200 bg-white shadow-sm p-5 sm:p-6">
       <div className="mb-2 flex items-center justify-between">
         <h3 className="text-sm font-bold text-gray-900 sm:text-base">
           Historical Seat Trends
@@ -1068,7 +877,7 @@ function HistoricalTrendsCard({ triggered }: { triggered: boolean }) {
       <div className="flex-1">
         <HistoricalLineChart triggered={triggered} />
       </div>
-    </motion.div>
+    </div>
   );
 }
 

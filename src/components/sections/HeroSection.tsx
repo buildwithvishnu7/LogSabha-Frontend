@@ -95,7 +95,7 @@ function SideBadge({
 
 export function StickyBadges({ badges }: { badges: SideBadgeType[] }) {
   return (
-    <div className="fixed right-6 bottom-[104px] z-50 flex w-[68px] flex-col items-center gap-3">
+    <div className="ls-float fixed right-6 bottom-[104px] z-50 flex w-[68px] flex-col items-center gap-3">
       {badges.map((badge, i) => (
         <SideBadge
           key={badge.id}
@@ -192,14 +192,20 @@ export function HeroSection({ data }: { data: HeroData }) {
       <ScrollLogo src={data.watermarkLogo} sectionRef={sectionRef} />
       <BackgroundVideo src={data.videoSrc} poster={data.posterSrc} onPlaying={() => setVideoPlaying(true)} className="object-contain sm:object-cover" />
 
-      {/* Top vignette — blends with header */}
-      <div className="absolute top-0 left-0 right-0 z-[2] h-40 bg-gradient-to-b from-black/40 via-black/15 to-transparent" />
-
-      {/* Bottom shadow — deep fade into next section */}
-      <div className="absolute bottom-0 left-0 right-0 z-[2] h-48 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-
-      {/* Left/right edge vignette */}
-      <div className="absolute inset-0 z-[2] bg-[radial-gradient(ellipse_at_center,transparent_50%,rgba(0,0,0,0.3)_100%)]" />
+      {/* One overlay instead of four stacked ones (top vignette, bottom
+          shadow, edge vignette, readability wash). Same job — header blend
+          at the top, deep fade into the next section, dark under the copy at
+          bottom-left — in a single element, so the hero stops feeling like
+          layers on layers (UX feedback #3, #4). */}
+      <div
+        className="pointer-events-none absolute inset-0 z-[2]"
+        style={{
+          background:
+            "linear-gradient(to bottom, rgba(0,0,0,0.42), rgba(0,0,0,0.12) 22%, transparent 36%)," +
+            "linear-gradient(to top, rgba(0,0,0,0.72), rgba(0,0,0,0.32) 22%, transparent 48%)," +
+            "linear-gradient(to top right, rgba(0,0,0,0.45), rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.04))",
+        }}
+      />
 
       {/* Outer chevron/arrow — placeholder until video plays */}
       <motion.div
@@ -212,18 +218,9 @@ export function HeroSection({ data }: { data: HeroData }) {
         transition={{ duration: 0.8, ease: "easeOut" }}
       />
 
-      {/* Inner chevron — placeholder until video plays */}
-      <motion.div
-        className="absolute inset-0 z-[1]"
-        style={{
-          clipPath: "polygon(0 0, 42% 0, 68% 50%, 42% 100%, 0 100%)",
-          backgroundColor: "rgba(220,160,80,0.15)",
-        }}
-        animate={{ opacity: videoPlaying ? 0 : 1 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-      />
-
-      <div className="absolute inset-0 z-[1] bg-black/10" />
+      {/* The second, inner chevron is gone: two overlapping arrows plus the
+          emblem plus the video was the "busy" the client named (UX #3). One
+          chevron still stands in until the first frame arrives, then fades. */}
 
       {/* Content */}
       <div

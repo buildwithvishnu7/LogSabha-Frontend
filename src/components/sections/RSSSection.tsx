@@ -391,7 +391,7 @@ export function RSSSection() {
   return (
     <section ref={sectionRef} className="relative overflow-hidden">
       {/* Main Content — warm background */}
-      <div className="relative bg-orange-50/60 py-6 sm:py-10 lg:py-16">
+      <div className="relative bg-orange-50/60 py-8 sm:py-10 lg:py-12">
         {/* RSS background image */}
         <div className="pointer-events-none absolute inset-0">
           <img

@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect, useRef, forwardRef } from "react";
+import { useState, useEffect, useRef, useMemo, forwardRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { Menu, X } from "lucide-react";
+import { searchSite, type SearchHit } from "@/lib/search";
 // AnimatedIcons no longer needed — using Flaticon Lottie for all header icons
 import lottie from "lottie-web";
 
@@ -143,30 +144,48 @@ function NavItemShell({
     return <Link href={link.href}>{children}</Link>;
   }
 
+  /* Why the groups "didn't open on desktop" (UX feedback #24): hover opened
+     the panel, then the click that followed ran `open ? onClose : onOpen` and
+     shut it again — every click closed. On touch it was worse: the tap's
+     focus opened it, and the same tap's click closed it, so it never showed.
+
+     Now the label is a real link to the group's landing page, and the panel
+     is a hover/keyboard convenience on top:
+       mouse    — hover opens, click goes to the page
+       keyboard — Tab opens, Enter goes to the page, Escape closes
+       touch    — first tap opens (no hover exists), second tap goes
+     `lastPointer` is how the focus handler tells a tap from a Tab. */
+  const lastPointer = useRef<string | null>(null);
   return (
     <div
       className="relative"
-      onMouseEnter={onOpen}
-      onMouseLeave={onClose}
-      onFocus={onOpen}
+      onPointerDown={(e) => { lastPointer.current = e.pointerType; }}
+      onPointerEnter={(e) => { if (e.pointerType === "mouse") onOpen(); }}
+      onPointerLeave={(e) => { if (e.pointerType === "mouse") onClose(); }}
+      onFocus={() => { if (lastPointer.current !== "touch") onOpen(); }}
       onBlur={(e) => {
         // Only close once focus has actually left the group, not when it moves
-        // between the button and the items inside the panel.
+        // between the link and the items inside the panel.
         if (!e.currentTarget.contains(e.relatedTarget as Node)) onClose();
       }}
       onKeyDown={(e) => {
         if (e.key === "Escape") onClose();
       }}
     >
-      <button
-        type="button"
+      <Link
+        href={link.href}
         aria-haspopup="true"
         aria-expanded={open}
-        onClick={() => (open ? onClose() : onOpen())}
+        onClick={(e) => {
+          if (!open) {
+            e.preventDefault(); // touch: first tap only opens
+            onOpen();
+          }
+        }}
         className="cursor-pointer"
       >
         {children}
-      </button>
+      </Link>
 
       <AnimatePresence>
         {open && (
@@ -227,8 +246,12 @@ const PLACEHOLDER_PHRASES = [
 
 const TypewriterInput = forwardRef<
   HTMLInputElement,
-  { onKeyDown?: (e: React.KeyboardEvent) => void }
->(({ onKeyDown }, ref) => {
+  {
+    onKeyDown?: (e: React.KeyboardEvent) => void;
+    value: string;
+    onChange: (v: string) => void;
+  }
+>(({ onKeyDown, value, onChange }, ref) => {
   const [placeholder, setPlaceholder] = useState("");
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
@@ -276,11 +299,66 @@ const TypewriterInput = forwardRef<
       type="text"
       placeholder={placeholder + "│"}
       className="w-full bg-transparent text-sm text-gray-900 placeholder-gray-400 outline-none"
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
       onKeyDown={onKeyDown}
+      aria-label="Search the site"
+      autoComplete="off"
     />
   );
 });
 TypewriterInput.displayName = "TypewriterInput";
+
+// ─── Search results panel ───
+// Shared by the desktop bar and the phone drawer. Either a ranked list or an
+// explicit "no results" line — the box never just swallows the query again.
+function SearchResults({
+  hits,
+  query,
+  onPick,
+  className = "",
+}: {
+  hits: SearchHit[];
+  query: string;
+  onPick: (href: string) => void;
+  className?: string;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.18 }}
+      role="listbox"
+      className={cn("overflow-hidden rounded-xl border border-gray-200 bg-white p-1.5 shadow-lg", className)}
+    >
+      {hits.length === 0 ? (
+        <div className="px-3 py-3 text-sm text-gray-500">
+          No results found for{" "}
+          <span className="font-medium text-gray-700">“{query.trim()}”</span>
+        </div>
+      ) : (
+        hits.map((h) => (
+          <button
+            key={`${h.kind}:${h.href}:${h.title}`}
+            type="button"
+            role="option"
+            aria-selected={false}
+            onClick={() => onPick(h.href)}
+            className="flex w-full items-start gap-3 rounded-lg px-3 py-2 text-left transition-colors hover:bg-amber-500/10"
+          >
+            <span className="mt-0.5 shrink-0 rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+              {h.kind}
+            </span>
+            <span className="min-w-0">
+              <span className="block truncate text-sm font-medium text-gray-800">{h.title}</span>
+              {h.sub && <span className="block truncate text-xs text-gray-500">{h.sub}</span>}
+            </span>
+          </button>
+        ))
+      )}
+    </motion.div>
+  );
+}
 
 export function Header() {
   const { data: globalData } = useGlobalData();
@@ -289,6 +367,21 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  // Scanned on every keystroke; the index is a few hundred bundled entries.
+  const hits = useMemo(() => searchSite(query), [query]);
+  const [langOpen, setLangOpen] = useState(false);
+  const langContainerRef = useRef<HTMLDivElement>(null);
+  // One look for the three header controls (search, language, account).
+  // They were three styles — bare icon with breathing rings, bordered pill
+  // with an orbiting arc, bare icon with a spinning orbit — which is UX
+  // feedback #1; the perpetual rings and spins are #20.
+  const CONTROL = cn(
+    "relative flex h-10 items-center justify-center rounded-full border transition-colors duration-300",
+    scrolled
+      ? "border-gray-200 bg-gray-50 text-gray-600 hover:border-amber-300 hover:bg-amber-50/60"
+      : "border-white/20 bg-white/10 text-white/85 hover:border-white/40 hover:bg-white/15",
+  );
   const [accountOpen, setAccountOpen] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
@@ -360,6 +453,14 @@ export function Header() {
     setMobileMenuOpen(false);
   }, [pathname]);
 
+  // The floating chat button and side badges sit bottom-right — under the
+  // drawer's Login / Sign Up row. A body class lets them step aside without
+  // the header having to know about them (UX feedback #25).
+  useEffect(() => {
+    document.body.classList.toggle("ls-menu-open", mobileMenuOpen);
+    return () => document.body.classList.remove("ls-menu-open");
+  }, [mobileMenuOpen]);
+
   useEffect(() => {
     if (searchOpen && searchInputRef.current) {
       searchInputRef.current.focus();
@@ -379,6 +480,12 @@ export function Header() {
         !accountContainerRef.current.contains(e.target as Node)
       ) {
         setAccountOpen(false);
+      }
+      if (
+        langContainerRef.current &&
+        !langContainerRef.current.contains(e.target as Node)
+      ) {
+        setLangOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -436,7 +543,7 @@ export function Header() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden items-center gap-2 xl:flex xl:gap-2">
+        <nav className="hidden items-center gap-2 xl:flex xl:gap-1 2xl:gap-3">
           {navLinks.map((link, i) => (
             <motion.div
               key={link.href}
@@ -458,11 +565,11 @@ export function Header() {
               >
                 <motion.span
                   className={cn(
-                    // xl:px-2 rather than xl:px-3: nine nav items need 831px of
-                    // the 835px between the logo and the action icons at the
-                    // 1280px breakpoint where this nav first appears. Trimming
-                    // 4px a side buys ~72px of breathing room.
-                    "group relative inline-block rounded-lg px-2.5 py-2 text-[13px] font-medium transition-colors duration-500 xl:px-2 xl:text-sm",
+                    // The nav is eight items now (the old nine were grouped
+                    // into dropdowns), which frees ~90px at the 1280px
+                    // breakpoint — spent on px-3 so the items stop touching
+                    // (UX feedback #2).
+                    "group relative inline-block rounded-lg px-2.5 py-2 text-[13px] font-medium transition-colors duration-500 xl:px-3 xl:text-sm",
                     darkNav ? "text-gray-600" : "text-white/90",
                     isGroupActive(link) && "text-amber-600",
                   )}
@@ -472,27 +579,8 @@ export function Header() {
                   }}
                   transition={{ duration: 0.2 }}
                 >
-                  {/* Border — only on active tab with orbiting animation */}
-                  {isGroupActive(link) && (
-                    <span className="pointer-events-none absolute -inset-[2px] rounded-lg">
-                      <span className={cn("absolute inset-0 rounded-lg border", darkNav ? "border-gray-300/60" : "border-white/20")} />
-                      <motion.span
-                        className="absolute inset-[-1px] rounded-lg"
-                        style={{
-                          background:
-                            "conic-gradient(from var(--angle), transparent 0%, transparent 65%, rgba(255,153,51,0.85) 80%, rgba(255,153,51,1) 85%, rgba(255,153,51,0.85) 90%, transparent 100%)",
-                          mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-                          maskComposite: "exclude",
-                          WebkitMaskComposite: "xor",
-                          padding: "2px",
-                        }}
-                        animate={{
-                          "--angle": ["0deg", "360deg"],
-                        } as Record<string, string[]>}
-                        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                      />
-                    </span>
-                  )}
+                  {/* The active tab's orbiting ring is gone; the gliding pill
+                      below already says which tab you are on (UX #1, #20). */}
 
                   {/* Background highlight on hover + active */}
                   {/* One shared pill, not one per link: layoutId lets it travel
@@ -581,15 +669,29 @@ export function Header() {
                   <LottieIcon src="/lottie/search (1).json" size={24} color="#ff9933" className="flex-shrink-0" />
                   <TypewriterInput
                     ref={searchInputRef}
+                    value={query}
+                    onChange={setQuery}
                     onKeyDown={(e: React.KeyboardEvent) => {
-                      if (e.key === "Escape") setSearchOpen(false);
+                      if (e.key === "Escape") {
+                        setSearchOpen(false);
+                        setQuery("");
+                      }
+                      // Enter opens the top match — the box no longer eats the query.
+                      if (e.key === "Enter" && hits[0]) {
+                        setSearchOpen(false);
+                        setQuery("");
+                        go(hits[0].href);
+                      }
                     }}
                   />
                   <motion.button
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.15 }}
-                    onClick={() => setSearchOpen(false)}
+                    onClick={() => {
+                      setSearchOpen(false);
+                      setQuery("");
+                    }}
                     className="flex-shrink-0 text-gray-400 hover:text-gray-700"
                   >
                     <X className="h-3.5 w-3.5" />
@@ -601,97 +703,56 @@ export function Header() {
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.8 }}
-                  whileHover={{
-                    scale: 1.15,
-                    rotate: -15,
-                    backgroundColor: scrolled
-                      ? "rgba(0,0,0,0.05)"
-                      : "rgba(255,255,255,0.1)",
-                  }}
-                  whileTap={{ scale: 0.9 }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   transition={{ duration: 0.2 }}
                   onClick={() => setSearchOpen(true)}
-                  className={cn(
-                    "relative flex h-9 w-9 items-center justify-center rounded-full transition-colors duration-500 sm:h-10 sm:w-10",
-                    darkNav ? "text-gray-500 hover:text-gray-800" : "text-white/80 hover:text-white",
-                  )}
+                  aria-label="Open search"
+                  className={cn(CONTROL, "w-10")}
                 >
-                  {/* Breathing pulse ring — visible on both backgrounds */}
-                  <motion.span
-                    className={cn(
-                      "absolute inset-[-3px] rounded-full",
-                      darkNav ? "border-2 border-amber-500/70" : "border-2 border-amber-400/50",
-                    )}
-                    style={{ boxShadow: darkNav ? "0 0 8px rgba(255,153,51,0.25)" : "0 0 8px rgba(255,153,51,0.15)" }}
-                    animate={{ scale: [1, 1.25, 1], opacity: [0.8, 0.1, 0.8] }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                  />
-                  <motion.span
-                    className={cn(
-                      "absolute inset-[-1px] rounded-full",
-                      darkNav ? "border-2 border-amber-500/50" : "border-2 border-amber-400/35",
-                    )}
-                    animate={{ scale: [1, 1.12, 1], opacity: [1, 0.3, 1] }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
-                  />
-                  <LottieIcon src="/lottie/search (1).json" size={28} color={darkNav ? "#6b7280" : "#ffffff"} />
+                  <LottieIcon src="/lottie/search (1).json" size={24} color={darkNav ? "#6b7280" : "#ffffff"} />
                 </motion.button>
               )}
             </AnimatePresence>
+
+            {/* Results drop below the bar; inside the same ref so the existing
+                click-outside handler closes them with it (UX feedback #21). */}
+            {searchOpen && query.trim().length >= 2 && (
+              <SearchResults
+                hits={hits}
+                query={query}
+                onPick={(href) => {
+                  setSearchOpen(false);
+                  setQuery("");
+                  go(href);
+                }}
+                className="absolute right-0 top-full mt-2 w-[22rem] max-w-[calc(100vw-2rem)]"
+              />
+            )}
           </div>
 
-          {/* Language Selector — with spinning globe */}
+          {/* Language Selector — with spinning globe. A real menu now: English
+              is the one edition that exists, and it says so, instead of a
+              button that swallowed the click (UX feedback #26). */}
+          <div ref={langContainerRef} className="relative hidden lg:block">
           <motion.button
-            className={cn(
-              "relative hidden items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs transition-all duration-500 sm:py-2 sm:text-sm lg:flex lg:px-3",
-              scrolled
-                ? "border border-gray-200 bg-gray-50 text-gray-600"
-                : "border border-white/20 bg-white/10 text-white/80",
-            )}
-            whileHover={{
-              borderColor: "rgba(255,153,51,0.5)",
-              backgroundColor: scrolled
-                ? "rgba(255,153,51,0.05)"
-                : "rgba(255,255,255,0.15)",
-            }}
+            type="button"
+            aria-haspopup="listbox"
+            aria-expanded={langOpen}
+            onClick={() => setLangOpen((v) => !v)}
+            className={cn(CONTROL, "gap-1.5 px-3 text-sm font-medium", langOpen && (scrolled ? "border-amber-300 bg-amber-50" : "border-white/40 bg-white/15"))}
+            whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             transition={{ duration: 0.2 }}
           >
-            {/* Orbiting highlighted border — matches capsule shape exactly */}
-            <span className="pointer-events-none absolute -inset-[2px] rounded-full">
-              {/* Faint full border */}
-              <span className="absolute inset-0 rounded-full border border-amber-500/30" />
-              {/* Rotating arc highlight */}
-              <motion.span
-                className="absolute inset-[-1px] rounded-full"
-                style={{
-                  background:
-                    "conic-gradient(from var(--angle), transparent 0%, transparent 70%, rgba(255,153,51,0.8) 85%, rgba(255,153,51,1) 90%, rgba(255,153,51,0.8) 95%, transparent 100%)",
-                  mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-                  maskComposite: "exclude",
-                  WebkitMaskComposite: "xor",
-                  padding: "2.5px",
-                }}
-                animate={{
-                  "--angle": ["0deg", "360deg"],
-                } as Record<string, string[]>}
-                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-              />
-            </span>
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            >
-              <LottieIcon src="/lottie/worldwide.json" size={24} color={darkNav ? "#6b7280" : "#ffffff"} />
-            </motion.div>
+            <LottieIcon src="/lottie/worldwide.json" size={22} color={darkNav ? "#6b7280" : "#ffffff"} />
             <span>EN</span>
-            <motion.svg
-              className="h-3 w-3 opacity-50"
+            <svg
+              className={cn("h-3 w-3 opacity-60 transition-transform duration-200", langOpen && "rotate-180")}
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
-              animate={{ y: [0, 2, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"
@@ -699,8 +760,48 @@ export function Header() {
                 strokeWidth={2}
                 d="M19 9l-7 7-7-7"
               />
-            </motion.svg>
+            </svg>
           </motion.button>
+
+          <AnimatePresence>
+            {langOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                role="listbox"
+                aria-label="Language"
+                className="absolute right-0 top-full mt-2 w-44 overflow-hidden rounded-xl border border-gray-200 bg-white p-1.5 shadow-lg"
+              >
+                <button
+                  type="button"
+                  role="option"
+                  aria-selected
+                  onClick={() => setLangOpen(false)}
+                  className="flex w-full items-center justify-between rounded-lg bg-amber-500/10 px-3 py-2 text-sm font-medium text-gray-900"
+                >
+                  English
+                  <span className="text-amber-600">✓</span>
+                </button>
+                <button
+                  type="button"
+                  role="option"
+                  aria-selected={false}
+                  aria-disabled
+                  disabled
+                  title="The Hindi edition is being prepared"
+                  className="flex w-full cursor-not-allowed items-center justify-between rounded-lg px-3 py-2 text-sm text-gray-400"
+                >
+                  हिंदी
+                  <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider">
+                    Soon
+                  </span>
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+          </div>
 
           {/* User Icon — with orbit ring */}
           <div ref={accountContainerRef} className="relative hidden md:block">
@@ -714,41 +815,15 @@ export function Header() {
               whileTap={{ scale: 0.9 }}
               transition={{ duration: 0.2 }}
               onClick={() => setAccountOpen(!accountOpen)}
+              aria-label={user ? "Account menu" : "Sign in"}
+              aria-expanded={accountOpen}
               className={cn(
-                "relative flex h-9 w-9 items-center justify-center rounded-full transition-colors duration-500 sm:h-10 sm:w-10",
-                darkNav ? "text-gray-500 hover:text-gray-800" : "text-white/80 hover:text-white",
-                accountOpen && (darkNav ? "bg-gray-100 text-gray-800" : "bg-white/10 text-white"),
+                CONTROL,
+                "w-10",
+                accountOpen && (scrolled ? "border-amber-300 bg-amber-50" : "border-white/40 bg-white/15"),
               )}
             >
-              {/* Orbiting highlighted border arc */}
-              <svg
-                className="absolute inset-[-3px] h-[calc(100%+6px)] w-[calc(100%+6px)]"
-                viewBox="0 0 44 44"
-                style={{ filter: "drop-shadow(0 0 3px rgba(255,153,51,0.2))" }}
-              >
-                <circle
-                  cx="22"
-                  cy="22"
-                  r="20"
-                  fill="none"
-                  stroke="rgba(255,153,51,0.3)"
-                  strokeWidth="2"
-                />
-                <motion.circle
-                  cx="22"
-                  cy="22"
-                  r="20"
-                  fill="none"
-                  stroke="rgb(245,158,11)"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeDasharray="35 90"
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                  style={{ transformOrigin: "center" }}
-                />
-              </svg>
-              <LottieIcon src="/lottie/add-user.json" size={28} color={darkNav ? "#6b7280" : "#ffffff"} />
+              <LottieIcon src="/lottie/add-user.json" size={24} color={darkNav ? "#6b7280" : "#ffffff"} />
             </motion.button>
 
             <AnimatePresence>
@@ -897,15 +972,38 @@ export function Header() {
                 </motion.button>
               </div>
 
-              {/* Search */}
+              {/* Search — same index and results as the desktop bar */}
               <div className="mx-5 mt-4 flex items-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-4 py-2.5">
                 <LottieIcon src="/lottie/search (1).json" size={20} color="#9ca3af" />
                 <input
                   type="text"
                   placeholder="Search elections..."
+                  aria-label="Search the site"
+                  autoComplete="off"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && hits[0]) {
+                      setMobileMenuOpen(false);
+                      setQuery("");
+                      go(hits[0].href);
+                    }
+                  }}
                   className="w-full bg-transparent text-sm text-gray-900 placeholder-gray-400 outline-none"
                 />
               </div>
+              {query.trim().length >= 2 && (
+                <SearchResults
+                  hits={hits}
+                  query={query}
+                  onPick={(href) => {
+                    setMobileMenuOpen(false);
+                    setQuery("");
+                    go(href);
+                  }}
+                  className="mx-5 mt-2"
+                />
+              )}
 
               {/* Nav Links */}
               <nav className="mt-4 flex-1 overflow-y-auto px-5">
@@ -959,17 +1057,18 @@ export function Header() {
 
               {/* Bottom Section */}
               <div className="border-t border-gray-100 px-5 py-5">
-                {/* Language */}
-                <motion.button
-                  className="flex w-full items-center justify-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-gray-600"
-                  whileTap={{ scale: 0.97 }}
+                {/* Language — a status row, not a button: English is the only
+                    edition, so nothing here pretends to switch (UX feedback #26). */}
+                <div
+                  className="flex w-full items-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-gray-600"
+                  aria-label="Language: English. Hindi edition coming soon."
                 >
                   <LottieIcon src="/lottie/worldwide.json" size={20} color="#6b7280" />
                   <span>English</span>
-                  <svg className="ml-auto h-3.5 w-3.5 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </motion.button>
+                  <span className="ml-auto rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-gray-400">
+                    हिंदी · soon
+                  </span>
+                </div>
 
                 {/* Login / Sign Up / Account */}
                 <motion.button

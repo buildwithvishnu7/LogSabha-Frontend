@@ -36,3 +36,17 @@ export const BODY = "text-[15px] leading-loose";
 
 /** Every shape on the site is sharp, not pill-rounded */
 export const RADIUS = 3;
+
+/* ── Homepage card language ─────────────────────────────────────────────
+   The homepage predates the sharp marketing pages and keeps its own softer
+   language (16px radius). Within it, every module had drifted to its own
+   card — dark gradients here, amber borders there, four play-button sizes —
+   which is UX feedback #19. One card, one play button, used everywhere. */
+
+/** The one card every homepage module shares */
+export const HOME_CARD =
+  "rounded-2xl border border-gray-200 bg-white shadow-sm transition-shadow duration-300 hover:shadow-lg";
+
+/** The one play button, over any thumbnail (UX feedback #12) */
+export const HOME_PLAY =
+  "flex h-14 w-14 items-center justify-center rounded-full bg-white/95 text-amber-600 shadow-lg ring-4 ring-white/30";

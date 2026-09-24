@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useInView } from "motion/react";
+import { CountUp } from "@/components/motion/CountUp";
 import {
   SectionInViewProvider,
   useInViewSection,
@@ -256,59 +257,18 @@ const FALLBACK_SOCIAL = {
 
 const POSTS_PER_FILTER = 3;
 
-// ─── Slot Counter for Stats ───
-
-function SlotDigit({ target, delay, triggered }: { target: number; delay: number; triggered: boolean }) {
-  const sequence = [...Array.from({ length: 10 }, (_, i) => i), ...Array.from({ length: 10 }, (_, i) => i), target];
-  const scrollTo = -(sequence.length - 1) * 1.15;
-
-  return (
-    <span className="relative inline-block overflow-hidden" style={{ height: "1.15em", width: "0.62em" }}>
-      <motion.span
-        className="flex flex-col items-center tabular-nums"
-        initial={false}
-        animate={triggered ? { y: `${scrollTo}em` } : { y: "0em" }}
-        transition={{ delay, duration: 1.6, ease: [0.16, 1, 0.3, 1] }}
-      >
-        {sequence.map((d, i) => (
-          <span key={i} className="flex items-center justify-center leading-none" style={{ height: "1.15em" }}>
-            {d}
-          </span>
-        ))}
-      </motion.span>
-    </span>
-  );
-}
-
+// ─── Stat counter ───
+// Takes the display string as before ("1.2M", "45K", "12,400") and counts up
+// the numeric part, keeping the suffix. The per-digit slot drum it replaces
+// was the last odometer on the homepage (UX feedback #6, #7).
 function AnimatedStat({ value, className = "" }: { value: string; className?: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { once: false, amount: 0.5 });
-  const [triggered, setTriggered] = useState(false);
-
-  useEffect(() => {
-    setTriggered(isInView);
-  }, [isInView]);
-
-  const chars = value.split("");
-
+  const m = value.match(/^([\d.,]+)(.*)$/);
+  if (!m) return <span className={`inline-flex items-baseline ${className}`}>{value}</span>;
+  const num = parseFloat(m[1].replace(/,/g, ""));
+  const decimals = (m[1].split(".")[1] ?? "").length;
   return (
-    <span ref={ref} className={`inline-flex items-baseline ${className}`}>
-      {chars.map((char, i) => {
-        if (/\d/.test(char)) {
-          return <SlotDigit key={i} target={parseInt(char)} delay={i * 0.08} triggered={triggered} />;
-        }
-        return (
-          <motion.span
-            key={i}
-            className="inline-block"
-            initial={false}
-            animate={triggered ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
-            transition={{ delay: i * 0.08 + 0.2, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          >
-            {char}
-          </motion.span>
-        );
-      })}
+    <span className={`inline-flex items-baseline ${className}`}>
+      <CountUp value={num} decimals={decimals} suffix={m[2]} duration={1400} />
     </span>
   );
 }
@@ -382,17 +342,6 @@ function SocialCard({ post, index }: { post: SocialPost; index: number }) {
         whileHover={{ y: -6 }}
         transition={{ duration: 0.3 }}
       >
-        {/* Shimmer sweep on hover */}
-        <motion.div
-          className="pointer-events-none absolute inset-0 z-20 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-          style={{
-            background:
-              "linear-gradient(105deg, transparent 40%, rgba(255,153,51,0.06) 50%, transparent 60%)",
-            backgroundSize: "200% 100%",
-          }}
-          animate={inView ? { backgroundPosition: ["-100% 0%", "200% 0%"] } : undefined}
-          transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 1.5, ease: "easeInOut" }}
-        />
         {/* Card Header */}
         <div className="flex items-center justify-between px-4 pt-4 pb-3">
           <div className="flex items-center gap-3">
@@ -603,7 +552,7 @@ export function SocialPresenceSection() {
 
   return (
     <SectionInViewProvider value={inView}>
-    <section ref={sectionRef} className="relative overflow-hidden bg-gradient-to-b from-amber-50/60 via-orange-50/30 to-white py-4 sm:py-6 lg:py-8">
+    <section ref={sectionRef} className="relative overflow-hidden bg-gradient-to-b from-amber-50/60 via-orange-50/30 to-white py-8 sm:py-10 lg:py-12">
       {/* Background dot pattern */}
       <div className="absolute inset-0 opacity-[0.035]">
         <div

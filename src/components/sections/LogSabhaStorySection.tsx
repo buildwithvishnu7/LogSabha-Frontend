@@ -6,62 +6,13 @@ import {
 } from "@/components/motion/InViewSection";
 import { Users, FileText, TrendingUp } from "lucide-react";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
+import { CountUp } from "@/components/motion/CountUp";
 import { useLogSabhaStory } from "@/hooks/useLogSabhaStory";
 
-// ─── Slot Machine Drum Digit (spins through 0-9 twice then lands) ───
-
-const SLOT_CYCLES = 2;
-const DIGIT_H = 1.15;
-
-function SlotDigit({
-  target,
-  delay,
-  active,
-}: {
-  target: number;
-  delay: number;
-  active: boolean;
-}) {
-  const total = SLOT_CYCLES * 10 + target;
-  const digits: number[] = [];
-  for (let i = 0; i <= total; i++) digits.push(i % 10);
-
-  return (
-    <span
-      className="relative inline-block overflow-hidden align-bottom"
-      style={{
-        height: `${DIGIT_H}em`,
-        width: "0.65em",
-        fontVariantNumeric: "tabular-nums",
-      }}
-    >
-      <motion.span
-        className="block will-change-transform"
-        initial={{ y: 0 }}
-        animate={
-          active ? { y: `${-total * DIGIT_H}em` } : { y: 0 }
-        }
-        transition={{
-          duration: 1.3 + total * 0.012,
-          delay,
-          ease: [0.16, 1, 0.3, 1],
-        }}
-      >
-        {digits.map((d, i) => (
-          <span
-            key={i}
-            className="block text-center"
-            style={{ height: `${DIGIT_H}em`, lineHeight: `${DIGIT_H}em` }}
-          >
-            {d}
-          </span>
-        ))}
-      </motion.span>
-    </span>
-  );
-}
-
-// ─── Slot Machine Stat Card ───
+// ─── Stat Card ───
+// The slot-machine drum that spun each digit through 0–9 twice is gone; the
+// client asked for the same plain count-up here as in the hero stats
+// (UX feedback #6, #7 — this section was named).
 
 function SlotMachineStat({
   endValue,
@@ -93,9 +44,6 @@ function SlotMachineStat({
     }
   }, [isInView, triggered]);
 
-  const formatted = String(Math.round(endValue));
-  const chars = formatted.split("");
-
   return (
     <motion.div
       ref={ref}
@@ -114,20 +62,7 @@ function SlotMachineStat({
         <Icon className="h-4 w-4" style={{ color: iconColor }} />
       </motion.div>
       <div className="flex items-baseline text-xl font-extrabold text-amber-400 sm:text-2xl">
-        {chars.map((ch, i) =>
-          /\d/.test(ch) ? (
-            <SlotDigit
-              key={`${i}-${ch}`}
-              target={parseInt(ch)}
-              delay={delay / 1000 + i * 0.08}
-              active={active}
-            />
-          ) : (
-            <span key={`${i}-${ch}`} className="inline-block w-[0.25em] text-center">
-              {ch}
-            </span>
-          )
-        )}
+        <CountUp value={Math.round(endValue)} active={active} duration={1400} />
         <span className="ml-0.5">{suffix}</span>
       </div>
       <span className="text-[10px] font-semibold tracking-wider text-white/70 uppercase sm:text-xs">
@@ -221,7 +156,7 @@ function QuoteBox({
 
         {/* Description */}
         <motion.p
-          className="mx-auto mt-2 max-w-3xl text-center text-[10px] leading-relaxed text-white/75 sm:text-xs lg:text-sm"
+          className="mx-auto mt-3 max-w-3xl text-center text-sm leading-relaxed text-white/75 sm:text-base"
           initial={{ opacity: 0 }}
           animate={triggered ? { opacity: 1 } : {}}
           transition={{ duration: 1, delay: 1.1 }}
@@ -284,37 +219,10 @@ export function LogSabhaStorySection() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/55 to-black/80" />
       </div>
 
-      {/* Floating ambient particles */}
-      {triggered && (
-        <>
-          {[...Array(4)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="pointer-events-none absolute rounded-full bg-amber-400/10"
-              style={{
-                width: 4 + i * 3,
-                height: 4 + i * 3,
-                left: `${8 + i * 11}%`,
-                top: `${15 + (i % 4) * 20}%`,
-              }}
-              animate={{
-                y: [0, -15 - i * 4, 0],
-                x: [0, i % 2 === 0 ? 12 : -12, 0],
-                opacity: [0.15, 0.4, 0.15],
-              }}
-              transition={{
-                duration: 5 + i * 0.7,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: i * 0.5,
-              }}
-            />
-          ))}
-        </>
-      )}
+      {/* (four drifting particles retired — UX #20) */}
 
-      {/* Content */}
-      <div className="relative z-10 mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14 lg:px-10 lg:py-20">
+      {/* Content — same vertical rhythm as the Data Insights benchmark (UX #15) */}
+      <div className="relative z-10 mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10 lg:px-10 lg:py-12">
         {/* Title */}
         <motion.h2
           className="mb-4 text-center text-2xl font-extrabold sm:text-3xl lg:text-4xl"

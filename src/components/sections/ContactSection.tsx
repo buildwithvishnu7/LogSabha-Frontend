@@ -108,8 +108,25 @@ function useTypewriterPlaceholder(phrases: string[], active: boolean) {
   const [charIdx, setCharIdx] = useState(0);
   const [deleting, setDeleting] = useState(false);
 
+  // Start over from the first phrase each time the field goes idle again.
+  // It used to resume mid-word from wherever focus had paused it, which read
+  // as "the animation only runs once" (UX feedback #18). The restart lives
+  // inside the typing effect, not beside it: a separate reset effect raced
+  // this one's stale closure and the typewriter came back on the wrong phrase.
+  const wasActive = useRef(active);
+
   useEffect(() => {
-    if (!active) return;
+    if (!active) {
+      wasActive.current = false;
+      return;
+    }
+    if (!wasActive.current) {
+      wasActive.current = true;
+      setPhraseIdx(0);
+      setCharIdx(0);
+      setDeleting(false);
+      return; // the state change re-runs this effect, which then types from 0
+    }
     const phrase = phrases[phraseIdx];
     let timeout: ReturnType<typeof setTimeout>;
 
@@ -211,25 +228,12 @@ function ContactCard({
       whileHover={{ x: 4 }}
     >
       {/* Icon */}
-      <motion.div
+      <div
         className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl"
         style={{ backgroundColor: `${item.color}15` }}
-        animate={{
-          boxShadow: [
-            `0 0 0px ${item.color}00`,
-            `0 0 12px ${item.color}30`,
-            `0 0 0px ${item.color}00`,
-          ],
-        }}
-        transition={{
-          duration: 3,
-          delay: 2 + index * 0.8,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
       >
         <ContactLottieIcon src={item.lottieSrc} size={24} color={item.color} />
-      </motion.div>
+      </div>
 
       {/* Text */}
       <div className="min-w-0">
@@ -288,7 +292,7 @@ export function ContactSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden bg-[#061428] py-4 sm:py-6 lg:py-8"
+      className="relative overflow-hidden bg-[#061428] py-8 sm:py-10 lg:py-12"
     >
       {/* Geometric grid background */}
       <div className="pointer-events-none absolute inset-0">
@@ -348,23 +352,6 @@ export function ContactSection() {
             <motion.form
               onSubmit={handleSubmit}
               className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.04] p-4 backdrop-blur-md sm:p-5"
-              animate={
-                isInView
-                  ? {
-                      borderColor: [
-                        "rgba(255,255,255,0.08)",
-                        "rgba(255,153,51,0.2)",
-                        "rgba(255,255,255,0.08)",
-                      ],
-                    }
-                  : {}
-              }
-              transition={{
-                duration: 5,
-                delay: 3,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
             >
               {/* Corner accents */}
               <div className="absolute top-0 left-0 h-8 w-8 border-t-2 border-l-2 border-amber-500/30 rounded-tl-2xl" />
@@ -403,23 +390,6 @@ export function ContactSection() {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    {/* Pulse ring */}
-                    <motion.span
-                      className="pointer-events-none absolute inset-[-2px] rounded-xl border-2 border-amber-400/50"
-                      animate={
-                        isInView
-                          ? {
-                              scale: [1, 1.04, 1],
-                              opacity: [0.6, 0, 0.6],
-                            }
-                          : undefined
-                      }
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      }}
-                    />
                     {submitted ? (
                       <>
                         <CheckCircle className="h-4 w-4" />

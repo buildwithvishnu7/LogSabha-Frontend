@@ -17,6 +17,8 @@ import {
   ScrollRevealLine,
 } from "@/components/motion/ScrollReveal";
 import { LoopingIcon } from "@/components/LoopingIcon";
+import { CountUp } from "@/components/motion/CountUp";
+import { HOME_CARD } from "@/styles/tokens";
 import UsersIcon from "@/components/ui/users-icon";
 import MessageCircleIcon from "@/components/ui/message-circle-icon";
 import { useCommunity } from "@/hooks/useCommunity";
@@ -198,126 +200,8 @@ const FALLBACK_COMMUNITY = {
   trendingTopics: TRENDING_TOPICS,
 };
 
-// ─── Slot Machine Animation ───
-
-function SlotDigit({
-  target,
-  delay,
-  triggered,
-}: {
-  target: number;
-  delay: number;
-  triggered: boolean;
-}) {
-  const sequence = [
-    ...Array.from({ length: 10 }, (_, i) => i),
-    ...Array.from({ length: 10 }, (_, i) => i),
-    target,
-  ];
-  const scrollTo = -(sequence.length - 1) * 1.15;
-
-  return (
-    <span
-      className="relative inline-block overflow-hidden"
-      style={{ height: "1.15em", width: "0.62em" }}
-    >
-      <motion.span
-        className="flex flex-col items-center tabular-nums"
-        initial={false}
-        animate={triggered ? { y: `${scrollTo}em` } : { y: "0em" }}
-        transition={{
-          delay,
-          duration: 1.6,
-          ease: [0.16, 1, 0.3, 1],
-        }}
-      >
-        {sequence.map((d, i) => (
-          <span
-            key={i}
-            className="flex items-center justify-center leading-none"
-            style={{ height: "1.15em" }}
-          >
-            {d}
-          </span>
-        ))}
-      </motion.span>
-    </span>
-  );
-}
-
-function SlotMachineNumber({
-  value,
-  suffix,
-  className = "",
-}: {
-  value: string;
-  suffix?: string;
-  className?: string;
-}) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { once: false, amount: 0.5 });
-  const [triggered, setTriggered] = useState(false);
-
-  useEffect(() => {
-    setTriggered(isInView);
-  }, [isInView]);
-
-  const chars = value.split("");
-
-  return (
-    <span ref={ref} className={`inline-flex items-baseline ${className}`}>
-      {chars.map((char, i) => {
-        if (/\d/.test(char)) {
-          return (
-            <SlotDigit
-              key={i}
-              target={parseInt(char)}
-              delay={i * 0.1}
-              triggered={triggered}
-            />
-          );
-        }
-        return (
-          <motion.span
-            key={i}
-            className="inline-block"
-            initial={false}
-            animate={
-              triggered
-                ? { opacity: 1, y: 0 }
-                : { opacity: 0, y: 8 }
-            }
-            transition={{
-              delay: i * 0.1 + 0.2,
-              duration: 0.4,
-              ease: [0.16, 1, 0.3, 1],
-            }}
-          >
-            {char}
-          </motion.span>
-        );
-      })}
-      {suffix && (
-        <motion.span
-          className="inline-block"
-          initial={false}
-          animate={
-            triggered
-              ? { opacity: 1, scale: 1 }
-              : { opacity: 0, scale: 0.5 }
-          }
-          transition={{
-            delay: chars.length * 0.1 + 0.15,
-            duration: 0.5,
-            ease: [0.16, 1, 0.3, 1],
-          }}
-        >
-          {suffix}
-        </motion.span>
-      )}
-    </span>
-  );
-}
+// Stats use the shared <CountUp>; the slot-machine drum that lived here was
+// retired with the rest of the odometers (UX feedback #6, #7).
 
 // ─── Typewriter Text ───
 
@@ -376,7 +260,7 @@ function TypewriterText({
 
 function PostCard({ post }: { post: Post }) {
   return (
-    <div className="group flex-shrink-0 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-shadow duration-300 hover:shadow-lg">
+    <div className={`group flex-shrink-0 overflow-hidden ${HOME_CARD}`}>
       {/* Header image area */}
       <div
         className="relative h-48 overflow-hidden"
@@ -611,43 +495,38 @@ function TrendingTopicCard({
 }) {
   return (
     <ScrollReveal delay={0.2 + index * 0.1} direction="right">
+      {/* Same card as the posts beside it — white, hairline border, one
+          shadow — instead of a dark gradient tile. The topic's colour
+          survives as the rank chip only (UX feedback #11). */}
       <motion.div
-        className={`relative cursor-pointer overflow-hidden rounded-xl bg-gradient-to-br ${topic.gradient} p-4 py-5`}
-        whileHover={{ scale: 1.02, y: -2 }}
+        className={`relative cursor-pointer p-4 ${HOME_CARD}`}
+        whileHover={{ y: -2 }}
         transition={{ duration: 0.25 }}
       >
-        {/* Subtle texture */}
-        <div
-          className="absolute inset-0 opacity-10"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 70% 30%, rgba(255,255,255,0.2) 0%, transparent 50%)",
-          }}
-        />
-
-        <div className="relative flex items-start justify-between">
+        <div className="flex items-start justify-between">
           <div className="flex items-center gap-2">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/20 text-[10px] font-bold text-white">
+            <span className={`flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br ${topic.gradient} text-[10px] font-bold text-white`}>
               #{topic.rank}
             </span>
             <BadgeLottie src="/lottie/fire.json" size={20} />
           </div>
-          <span className="flex items-center gap-0.5 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold text-emerald-400">
+          <span className="flex items-center gap-0.5 rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-600">
             <TrendingUp className="h-3 w-3" />
             {topic.change}
           </span>
         </div>
 
-        <div className="relative mt-3">
-          <p className="flex items-center gap-1 text-sm font-bold text-white">
-            <Hash className="h-3.5 w-3.5 text-white/50" />
+        <div className="mt-3">
+          <p className="flex items-center gap-1 text-sm font-bold text-gray-900">
+            <Hash className="h-3.5 w-3.5 text-amber-500" />
             {topic.name}
           </p>
-          <p className="mt-0.5 text-[11px] text-white/50">
-            <SlotMachineNumber
-              value={topic.discussions}
+          <p className="mt-0.5 text-[11px] text-gray-500">
+            <CountUp
+              value={parseFloat(topic.discussions)}
+              decimals={1}
               suffix="K"
-              className="text-[11px] font-medium text-white/60"
+              className="font-medium text-gray-600"
             />{" "}
             discussions
           </p>
@@ -665,7 +544,7 @@ export function CommunitySection() {
   const { data } = useCommunity();
   const community = data ?? FALLBACK_COMMUNITY;
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-white py-4 sm:py-6 lg:py-8">
+    <section ref={sectionRef} className="relative overflow-hidden bg-white py-8 sm:py-10 lg:py-12">
       {/* Dot pattern background */}
       <div className="absolute inset-0 opacity-[0.025]">
         <div
@@ -738,17 +617,9 @@ export function CommunitySection() {
             {/* Join Our Community Card */}
             <ScrollReveal delay={0.15} direction="right">
               <div className="rounded-2xl border border-gray-200 bg-gradient-to-b from-amber-50/50 to-white p-6 text-center">
-                <motion.div
-                  className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-500 text-white shadow-lg shadow-amber-500/25"
-                  animate={{ y: [0, -5, 0] }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                >
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-500 text-white shadow-lg shadow-amber-500/25">
                   <Users className="h-6 w-6" />
-                </motion.div>
+                </div>
 
                 <h3 className="mt-4 text-lg font-bold text-gray-900">
                   Join Our Community
@@ -762,7 +633,7 @@ export function CommunitySection() {
                 <div className="mt-5 grid grid-cols-2 gap-3">
                   <div className="rounded-xl border border-amber-200/60 bg-amber-50/50 px-3 py-3">
                     <div className="text-xl font-extrabold text-amber-500">
-                      <SlotMachineNumber value="50" suffix="K+" />
+                      <CountUp value={50} suffix="K+" />
                     </div>
                     <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-wider text-gray-400">
                       Members
@@ -770,7 +641,7 @@ export function CommunitySection() {
                   </div>
                   <div className="rounded-xl border border-amber-200/60 bg-amber-50/50 px-3 py-3">
                     <div className="text-xl font-extrabold text-amber-500">
-                      <SlotMachineNumber value="12" suffix="K+" />
+                      <CountUp value={12} suffix="K+" />
                     </div>
                     <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-wider text-gray-400">
                       Daily Posts
@@ -784,17 +655,7 @@ export function CommunitySection() {
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                 >
-                  <motion.span
-                    className="pointer-events-none absolute inset-[-3px] rounded-xl border-2 border-amber-500/70"
-                    style={{ boxShadow: "0 0 8px rgba(255,153,51,0.25)" }}
-                    animate={isInView ? { scale: [1, 1.04, 1], opacity: [0.8, 0.1, 0.8] } : undefined}
-                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                  />
-                  <motion.span
-                    className="pointer-events-none absolute inset-[-1px] rounded-xl border-2 border-amber-500/50"
-                    animate={isInView ? { scale: [1, 1.02, 1], opacity: [1, 0.3, 1] } : undefined}
-                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
-                  />
+                  {/* (breathing rings retired — UX #20) */}
                   <LoopingIcon icon={UsersIcon} size={16} interval={4000} />
                   Join Now
                 </motion.button>
@@ -803,7 +664,7 @@ export function CommunitySection() {
 
             {/* Trending Topics Card — grows to fill remaining height */}
             <ScrollReveal delay={0.25} direction="right" className="flex-1">
-              <div className="flex h-full flex-col rounded-2xl border-2 border-amber-400/60 bg-white p-5">
+              <div className={`flex h-full flex-col p-5 ${HOME_CARD}`}>
                 <div className="mb-4 flex items-center gap-2">
                   <Hash className="h-5 w-5 text-amber-500" />
                   <h3 className="h-6 text-base font-bold text-gray-900">

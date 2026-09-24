@@ -33,6 +33,7 @@ function BadgeLottieIcon({ src, size = 18, color = "#ff9933" }: { src: string; s
 }
 import { AnimatedLucideIcon } from "@/components/AnimatedLucideIcon";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
+import { CountUp } from "@/components/motion/CountUp";
 import { useCountUp } from "@/hooks/useCountUp";
 import { useParties } from "@/hooks/useParties";
 import type { PoliticalParty } from "@/types";
@@ -290,57 +291,9 @@ export function StatCounter({
   );
 }
 
-// ─── Slot Machine Digit Drum ───
-
-const SLOT_CYCLES = 2;
-const DIGIT_H = 1.15;
-
-function SlotDigit({
-  target,
-  delay,
-  active,
-}: {
-  target: number;
-  delay: number;
-  active: boolean;
-}) {
-  const total = SLOT_CYCLES * 10 + target;
-  const digits: number[] = [];
-  for (let i = 0; i <= total; i++) digits.push(i % 10);
-
-  return (
-    <span
-      className="relative inline-block overflow-hidden align-bottom"
-      style={{
-        height: `${DIGIT_H}em`,
-        width: "0.65em",
-        fontVariantNumeric: "tabular-nums",
-      }}
-    >
-      <motion.span
-        className="block will-change-transform"
-        initial={{ y: 0 }}
-        animate={active ? { y: `${-total * DIGIT_H}em` } : { y: 0 }}
-        transition={{
-          duration: 1.3 + total * 0.012,
-          delay,
-          ease: [0.16, 1, 0.3, 1],
-        }}
-      >
-        {digits.map((d, i) => (
-          <span
-            key={i}
-            className="block text-center"
-            style={{ height: `${DIGIT_H}em`, lineHeight: `${DIGIT_H}em` }}
-          >
-            {d}
-          </span>
-        ))}
-      </motion.span>
-    </span>
-  );
-}
-
+// ─── Stat number ───
+// Was a slot-machine drum that spun every digit through 0–9 twice. The
+// client asked for the plain count-up used elsewhere (UX feedback #6, #7).
 function RollingNumber({
   value,
   isActive,
@@ -350,27 +303,9 @@ function RollingNumber({
   isActive: boolean;
   color: string;
 }) {
-  const chars = String(value).split("");
-
   return (
-    <div
-      className="flex text-2xl font-extrabold leading-none sm:text-3xl"
-      style={{ color }}
-    >
-      {chars.map((ch, i) =>
-        /\d/.test(ch) ? (
-          <SlotDigit
-            key={`${i}-${ch}`}
-            target={parseInt(ch)}
-            delay={0.3 + i * 0.08}
-            active={isActive}
-          />
-        ) : (
-          <span key={`${i}-${ch}`} className="inline-block w-[0.25em] text-center">
-            {ch}
-          </span>
-        ),
-      )}
+    <div className="flex text-2xl font-extrabold leading-none sm:text-3xl" style={{ color }}>
+      <CountUp value={value} active={isActive} duration={1200} />
     </div>
   );
 }
@@ -397,7 +332,14 @@ function PartyStrip({
       onMouseEnter={onHoverStart}
       onMouseLeave={onHoverEnd}
       className="relative h-full cursor-pointer overflow-hidden rounded-2xl"
-      animate={{ width: isExpanded ? expandedWidth : collapsedWidth }}
+      // The selected party is the only one at full strength; the rest step
+      // back — a little faded, a little desaturated, a hair soft — so the eye
+      // lands on one card instead of eleven equal ones (UX feedback #9).
+      animate={{
+        width: isExpanded ? expandedWidth : collapsedWidth,
+        opacity: isExpanded ? 1 : 0.7,
+        filter: isExpanded ? "saturate(1) blur(0px)" : "saturate(0.7) blur(0.6px)",
+      }}
       transition={{ duration: 0.6, ease: [0.25, 1, 0.5, 1] }}
       style={{ flexShrink: 0 }}
     >
@@ -528,7 +470,10 @@ function PartyStrip({
             </div>
           </div>
 
-          <p className="line-clamp-3 text-xs leading-relaxed text-white/90 drop-shadow-sm sm:line-clamp-none sm:text-sm md:text-base">{party.description}</p>
+          {/* Two lines by default, three on larger screens — the card leads
+              with name, seats and president; the essay is on the party page
+              (UX feedback #8). */}
+          <p className="line-clamp-2 text-xs leading-relaxed text-white/90 drop-shadow-sm sm:line-clamp-3 sm:text-sm md:text-base">{party.description}</p>
 
           {/* Stats — rolling numbers */}
           <div className="flex gap-2 sm:gap-3">
@@ -584,7 +529,7 @@ export function PoliticalPartiesSection() {
   const getMaxScroll = useCallback(() => {
     const el = scrollContainerRef.current;
     if (!el) return 0;
-    const gap = window.innerWidth < 640 ? 8 : 12;
+    const gap = window.innerWidth < 640 ? 12 : 16; // matches gap-3 / gap-4 below
     const totalWidth =
       (PARTIES.length - 1) * (cardWidths.collapsed + gap) + cardWidths.expanded;
     return Math.max(0, totalWidth - el.clientWidth);
@@ -630,7 +575,7 @@ export function PoliticalPartiesSection() {
     const el = scrollContainerRef.current;
     if (!el) return;
 
-    const gap = window.innerWidth < 640 ? 8 : 12;
+    const gap = window.innerWidth < 640 ? 12 : 16;
     const cardLeftFinal = activeIndex * (cardWidths.collapsed + gap);
     const cardRightFinal = cardLeftFinal + cardWidths.expanded;
     const containerWidth = el.clientWidth;
@@ -667,7 +612,7 @@ export function PoliticalPartiesSection() {
   };
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-white py-4 sm:py-6 lg:py-8">
+    <section ref={sectionRef} className="relative overflow-hidden bg-white py-8 sm:py-10 lg:py-12">
       {/* Top blend from previous dark section */}
       <div className="absolute top-0 left-0 right-0 z-[2] h-24 bg-gradient-to-b from-[#0a1e3f] via-[#0a1e3f]/30 to-transparent" />
       {/* ── Video background ── */}
@@ -700,7 +645,8 @@ export function PoliticalPartiesSection() {
           </ScrollReveal>
 
           <ScrollReveal delay={0.1}>
-            <p className="mx-auto mt-2 max-w-2xl text-[10px] leading-relaxed text-gray-500 sm:text-xs lg:text-sm">
+            {/* 10px on a phone was unreadable; subtitles are 14/16 now (UX #5, #28) */}
+            <p className="mx-auto mt-2 max-w-2xl text-sm leading-relaxed text-gray-500 sm:text-base">
               Comprehensive analysis of India's major political parties, their
               ideologies, strategies, and electoral performance across states.
             </p>
@@ -736,7 +682,7 @@ export function PoliticalPartiesSection() {
               className="h-[380px] overflow-hidden sm:h-[440px] lg:h-[480px]"
             >
               <motion.div
-                className="flex h-full gap-2 sm:gap-3"
+                className="flex h-full gap-3 sm:gap-4"
                 animate={{ x: -scrollOffset }}
                 transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
               >

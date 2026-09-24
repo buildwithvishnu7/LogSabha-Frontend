@@ -248,39 +248,14 @@ function FloatingParticles() {
 
 // ─── Trending Badge ───
 
+// A badge, not a beacon: it used to pulse, shimmer, ring and wag its arrow
+// all at once, for ever (UX feedback #20).
 function TrendingBadge() {
-  const inView = useSectionInView();
   return (
-    <motion.span
-      className="relative inline-flex items-center gap-1 overflow-hidden rounded-full bg-gradient-to-r from-red-500 to-orange-500 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white shadow-md shadow-red-500/20"
-      animate={inView ? { scale: [1, 1.06, 1] } : undefined}
-      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-    >
-      {/* Shimmer sweep */}
-      <motion.span
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.35) 50%, transparent 70%)",
-          backgroundSize: "200% 100%",
-        }}
-        animate={inView ? { backgroundPosition: ["-100% 0%", "200% 0%"] } : undefined}
-        transition={{ duration: 2, repeat: Infinity, repeatDelay: 2, ease: "easeInOut" }}
-      />
-      {/* Glow ring */}
-      <motion.span
-        className="pointer-events-none absolute inset-[-2px] rounded-full border border-red-400/60"
-        animate={inView ? { scale: [1, 1.15, 1], opacity: [0.6, 0, 0.6] } : undefined}
-        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.span
-        animate={inView ? { rotate: [0, -15, 15, 0] } : undefined}
-        transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 1.5, ease: "easeInOut" }}
-      >
-        <TrendingUp className="h-3 w-3" />
-      </motion.span>
+    <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-red-500 to-orange-500 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white shadow-md shadow-red-500/20">
+      <TrendingUp className="h-3 w-3" />
       Trending
-    </motion.span>
+    </span>
   );
 }
 
@@ -319,47 +294,13 @@ function FeaturedCard({ article }: { article: Article }) {
             />
           </div>
 
-          {/* Shimmer sweep overlay */}
-          <motion.div
-            className="pointer-events-none absolute inset-0 z-10"
-            style={{
-              background:
-                "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.18) 50%, transparent 60%)",
-              backgroundSize: "200% 100%",
-            }}
-            animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
-            transition={{
-              duration: 3,
-              delay: 2,
-              repeat: Infinity,
-              repeatDelay: 5,
-              ease: "easeInOut",
-            }}
-          />
-
-          {/* Category badge */}
+          {/* Category badge — the image shimmer and the badge's own shimmer
+              and glow pulse are retired (UX feedback #20) */}
           <motion.span
-            className={`absolute top-4 left-4 z-20 overflow-hidden rounded-lg ${article.categoryColor} px-3 py-1.5 text-xs font-bold text-white shadow-lg`}
+            className={`absolute top-4 left-4 z-20 rounded-lg ${article.categoryColor} px-3 py-1.5 text-xs font-bold text-white shadow-lg`}
             custom={0}
             variants={textReveal}
           >
-            {/* Shimmer sweep */}
-            <motion.span
-              className="pointer-events-none absolute inset-0"
-              style={{
-                background:
-                  "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.3) 50%, transparent 70%)",
-                backgroundSize: "200% 100%",
-              }}
-              animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
-              transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" }}
-            />
-            {/* Glow pulse */}
-            <motion.span
-              className="pointer-events-none absolute inset-[-2px] rounded-lg border border-white/40"
-              animate={{ scale: [1, 1.08, 1], opacity: [0.5, 0, 0.5] }}
-              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-            />
             {article.category}
           </motion.span>
 
@@ -421,17 +362,6 @@ function FeaturedCard({ article }: { article: Article }) {
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
           >
-            <motion.span
-              className="pointer-events-none absolute inset-[-3px] rounded-xl border-2 border-amber-500/70"
-              style={{ boxShadow: "0 0 8px rgba(255,153,51,0.25)" }}
-              animate={{ scale: [1, 1.06, 1], opacity: [0.8, 0, 0.8] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            />
-            <motion.span
-              className="pointer-events-none absolute inset-[-1px] rounded-xl border-2 border-amber-500/50"
-              animate={{ scale: [1, 1.03, 1], opacity: [1, 0.2, 1] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
-            />
             Read More
             <LottieIcon src="/lottie/fast-forward.json" size={22} color="#ffffff" />
           </motion.a>
@@ -449,24 +379,12 @@ function SidebarCard({
   article: Article;
   index: number;
 }) {
-  const inView = useSectionInView();
   return (
     <motion.div
       className="group relative flex cursor-pointer gap-4 overflow-hidden rounded-xl border border-gray-100 bg-white p-3 shadow-sm transition-all duration-300 hover:border-amber-200 hover:shadow-md"
-      whileHover={{ x: -4, scale: 1.01 }}
+      whileHover={{ x: -4 }}
       transition={{ duration: 0.25 }}
     >
-      {/* Shimmer sweep on hover */}
-      <motion.div
-        className="pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-        style={{
-          background:
-            "linear-gradient(105deg, transparent 40%, rgba(255,153,51,0.08) 50%, transparent 60%)",
-          backgroundSize: "200% 100%",
-        }}
-        animate={inView ? { backgroundPosition: ["-100% 0%", "200% 0%"] } : undefined}
-        transition={{ duration: 2, repeat: Infinity, repeatDelay: 1, ease: "easeInOut" }}
-      />
       {/* Thumbnail */}
       <div className="relative flex-shrink-0 overflow-hidden rounded-lg">
         <div className="h-24 w-24 bg-gradient-to-br from-amber-100 via-orange-50 to-amber-50 sm:h-28 sm:w-28">
@@ -496,17 +414,6 @@ function SidebarCard({
           whileHover={{ scale: 1.08 }}
           transition={{ type: "spring", stiffness: 400, damping: 15 }}
         >
-          {/* Shimmer sweep on badge */}
-          <motion.span
-            className="pointer-events-none absolute inset-0 rounded-md"
-            style={{
-              background:
-                "linear-gradient(105deg, transparent 30%, rgba(255,153,51,0.15) 50%, transparent 70%)",
-              backgroundSize: "200% 100%",
-            }}
-            animate={inView ? { backgroundPosition: ["-100% 0%", "200% 0%"] } : undefined}
-            transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 4, ease: "easeInOut", delay: index * 0.3 }}
-          />
           <span className={`relative ${article.categoryColor} bg-clip-text text-transparent`} style={{ WebkitBackgroundClip: "text" }}>
             {article.category}
           </span>
@@ -677,7 +584,7 @@ export function EditorialInsightsSection() {
   const editorial = data ?? FALLBACK_EDITORIAL;
   return (
     <SectionInViewProvider value={inView}>
-    <section ref={ref} className="relative overflow-hidden bg-gradient-to-b from-white via-amber-50/20 to-white py-4 sm:py-6 lg:py-8">
+    <section ref={ref} className="relative overflow-hidden bg-gradient-to-b from-white via-amber-50/20 to-white py-8 sm:py-10 lg:py-12">
       {/* Grid background image */}
       <div className="pointer-events-none absolute inset-0">
         <img

@@ -192,70 +192,13 @@ function PillarCard({
       }}
       whileHover={{ y: -5 }}
     >
-      {/* Continuous shimmer sweep */}
-      {triggered && (
-        <motion.div
-          className="pointer-events-none absolute inset-0 z-10"
-          style={{
-            background:
-              "linear-gradient(120deg, transparent 30%, rgba(255,194,122,0.08) 45%, rgba(255,194,122,0.15) 50%, rgba(255,194,122,0.08) 55%, transparent 70%)",
-            backgroundSize: "200% 100%",
-          }}
-          animate={{ backgroundPosition: ["-200% 0%", "200% 0%"] }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            repeatDelay: 1.5,
-            ease: "easeInOut",
-          }}
-        />
-      )}
-
-      {/* Pulsing border glow */}
-      {triggered && (
-        <motion.div
-          className="pointer-events-none absolute inset-0 rounded-2xl"
-          animate={{
-            boxShadow: [
-              "inset 0 0 0 1px rgba(255,194,122,0)",
-              "inset 0 0 0 1.5px rgba(255,194,122,0.35)",
-              "inset 0 0 0 1px rgba(255,194,122,0)",
-            ],
-          }}
-          transition={{
-            duration: 3,
-            delay: index * 0.7,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-      )}
-
-      {/* Icon with glow pulse */}
-      <motion.div
-        className="relative mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-orange-500"
-        animate={
-          triggered
-            ? {
-                scale: [1, 1.15, 1],
-                boxShadow: [
-                  "0 0 0 0 rgba(249,115,22,0)",
-                  "0 0 12px 4px rgba(249,115,22,0.25)",
-                  "0 0 0 0 rgba(249,115,22,0)",
-                ],
-              }
-            : {}
-        }
-        transition={{
-          duration: 2.5,
-          delay: 1 + index * 0.5,
-          repeat: Infinity,
-          repeatDelay: 1.5,
-          ease: "easeInOut",
-        }}
-      >
+      {/* Three looping effects used to run on every pillar at once — a
+          shimmer sweep, a pulsing inset border and a glowing icon. The hover
+          lift is the card's motion now; the Lottie icon already moves
+          (UX feedback #20). */}
+      <div className="relative mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-orange-500">
         <HfjLottieIcon src={pillar.lottieSrc} size={24} />
-      </motion.div>
+      </div>
 
       {/* Title */}
       <h3 className="text-base font-bold text-gray-900 sm:text-lg">
@@ -317,59 +260,14 @@ export function HinduForJusticeSection() {
           }}
         />
 
-        {/* Animated ambient glows — faster, more visible */}
-        {triggered && (
-          <>
-            <motion.div
-              className="absolute -top-32 -right-32 h-80 w-80 rounded-full bg-amber-300/20 blur-3xl"
-              animate={{ x: [0, 30, 0], y: [0, -20, 0], scale: [1, 1.2, 1] }}
-              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-            />
-            <motion.div
-              className="absolute -bottom-32 -left-32 h-72 w-72 rounded-full bg-orange-200/15 blur-3xl"
-              animate={{ x: [0, -25, 0], y: [0, 25, 0], scale: [1.1, 0.9, 1.1] }}
-              transition={{ duration: 10, delay: 1, repeat: Infinity, ease: "easeInOut" }}
-            />
-            <motion.div
-              className="absolute top-1/2 left-1/2 h-60 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-200/10 blur-3xl"
-              animate={{ scale: [1, 1.3, 1], opacity: [0.1, 0.25, 0.1] }}
-              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            />
-          </>
-        )}
+        {/* Ambient glows — static. Three blur-3xl blobs animating transform
+            for ever was the single most expensive thing on this page, and it
+            read as "busy" rather than "alive" (UX feedback #20). */}
+        <div className="pointer-events-none absolute -top-32 -right-32 h-80 w-80 rounded-full bg-amber-300/20 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-32 -left-32 h-72 w-72 rounded-full bg-orange-200/15 blur-3xl" />
+        <div className="pointer-events-none absolute top-1/2 left-1/2 h-60 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-200/10 blur-3xl" />
 
-        {/* Floating particles */}
-        {triggered &&
-          [...Array(4)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="pointer-events-none absolute rounded-full"
-              style={{
-                width: 4 + (i % 4) * 3,
-                height: 4 + (i % 4) * 3,
-                left: `${8 + i * 9}%`,
-                top: `${15 + (i % 4) * 20}%`,
-                background:
-                  i % 3 === 0
-                    ? "rgba(255,194,122,0.3)"
-                    : i % 3 === 1
-                      ? "rgba(249,115,22,0.25)"
-                      : "rgba(255,153,51,0.2)",
-              }}
-              animate={{
-                y: [0, -25 - (i % 3) * 10, 0],
-                x: [0, i % 2 === 0 ? 15 : -15, 0],
-                opacity: [0.15, 0.5, 0.15],
-                scale: [1, 1.4, 1],
-              }}
-              transition={{
-                duration: 3 + i * 0.5,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: i * 0.3,
-              }}
-            />
-          ))}
+        {/* (four drifting particles retired — UX feedback #20) */}
       </div>
 
       <div className="relative z-10 mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8 xl:px-12">
@@ -380,77 +278,24 @@ export function HinduForJusticeSection() {
             {/* Header with logo */}
             <ScrollReveal>
               <div className="flex items-center gap-4">
-                <motion.div
-                  className="relative"
-                  animate={
-                    triggered
-                      ? {
-                          rotate: [0, 8, -8, 5, -5, 0],
-                          scale: [1, 1.12, 0.95, 1.08, 1],
-                          y: [0, -4, 2, -2, 0],
-                        }
-                      : {}
-                  }
-                  transition={{
-                    duration: 3,
-                    delay: 0.5,
-                    repeat: Infinity,
-                    repeatDelay: 1,
-                    ease: "easeInOut",
-                  }}
-                >
+                {/* The logo used to wiggle and scale for ever inside a
+                    pulsing ring. It sits still now; hover still answers
+                    (UX feedback #20). */}
+                <div className="relative">
                   <motion.img
                     src={hfj.logo}
                     alt="Hindu For Justice"
                     className="h-16 w-16 rounded-xl object-contain shadow-md sm:h-20 sm:w-20"
-                    whileHover={{ scale: 1.2, rotate: 15 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 12 }}
+                    whileHover={{ scale: 1.1, rotate: 6 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 14 }}
                   />
-                  {/* Glow ring pulse */}
-                  {triggered && (
-                    <motion.span
-                      className="pointer-events-none absolute inset-[-4px] rounded-xl border-2 border-amber-400/50"
-                      animate={{
-                        scale: [1, 1.15, 1],
-                        opacity: [0.5, 0, 0.5],
-                      }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      }}
-                    />
-                  )}
-                </motion.div>
+                </div>
                 <div>
                   <h2 className="text-2xl font-extrabold text-gray-900 sm:text-3xl lg:text-4xl">
                     {hfj.title}{" "}
-                    <motion.span
-                      className="inline-block bg-clip-text text-transparent"
-                      style={{
-                        backgroundImage:
-                          "linear-gradient(90deg, #ff9933, #ea580c, #ffc27a, #f97316, #ff9933)",
-                        backgroundSize: "200% 100%",
-                      }}
-                      animate={
-                        triggered
-                          ? {
-                              backgroundPosition: [
-                                "0% 50%",
-                                "100% 50%",
-                                "0% 50%",
-                              ],
-                            }
-                          : undefined
-                      }
-                      transition={{
-                        duration: 4,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      }}
-                    >
+                    <span className="inline-block bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 bg-clip-text text-transparent">
                       {hfj.titleHighlight}
-                    </motion.span>
+                    </span>
                   </h2>
                   <p className="mt-0.5 text-sm font-medium text-gray-500 sm:text-base">
                     <TypewriterText
@@ -492,76 +337,18 @@ export function HinduForJusticeSection() {
                   e.currentTarget.style.display = "none";
                 }}
               />
-              {/* Shimmer sweep — more frequent */}
-              {triggered && (
-                <motion.div
-                  className="pointer-events-none absolute inset-0"
-                  style={{
-                    background:
-                      "linear-gradient(120deg, transparent 25%, rgba(255,255,255,0.2) 45%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.2) 55%, transparent 75%)",
-                    backgroundSize: "200% 100%",
-                  }}
-                  animate={{
-                    backgroundPosition: ["-200% 0%", "200% 0%"],
-                  }}
-                  transition={{
-                    duration: 2.5,
-                    repeat: Infinity,
-                    repeatDelay: 1.5,
-                    ease: "easeInOut",
-                  }}
-                />
-              )}
               {/* Gradient overlay at bottom */}
               <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/30 to-transparent" />
             </motion.div>
 
-            {/* Mission text — pulsing border */}
+            {/* Mission text — one entrance, then still (the border used to
+                breathe amber for ever — UX feedback #20) */}
             <motion.div
-              className="mt-4 rounded-2xl border border-gray-100 bg-white/90 p-5 shadow-sm backdrop-blur-sm sm:p-6"
+              className="mt-4 rounded-2xl border border-gray-200 bg-white/90 p-5 shadow-sm backdrop-blur-sm sm:p-6"
               initial={{ opacity: 0, y: 20 }}
-              animate={
-                triggered
-                  ? {
-                      opacity: 1,
-                      y: 0,
-                      borderColor: [
-                        "rgba(229,229,229,1)",
-                        "rgba(255,194,122,0.5)",
-                        "rgba(229,229,229,1)",
-                      ],
-                      boxShadow: [
-                        "0 1px 3px rgba(0,0,0,0.1)",
-                        "0 4px 20px rgba(255,194,122,0.15)",
-                        "0 1px 3px rgba(0,0,0,0.1)",
-                      ],
-                    }
-                  : {}
-              }
-              transition={{
-                opacity: {
-                  duration: 0.7,
-                  delay: 0.8,
-                  ease: [0.16, 1, 0.3, 1],
-                },
-                y: {
-                  duration: 0.7,
-                  delay: 0.8,
-                  ease: [0.16, 1, 0.3, 1],
-                },
-                borderColor: {
-                  duration: 3,
-                  delay: 1.5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                },
-                boxShadow: {
-                  duration: 3,
-                  delay: 1.5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                },
-              }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, amount: 0.3 }}
+              transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             >
               <p className="text-sm leading-relaxed text-gray-600">
                 {hfj.mission}
@@ -572,17 +359,7 @@ export function HinduForJusticeSection() {
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.97 }}
               >
-                <motion.span
-                  className="pointer-events-none absolute inset-[-3px] rounded-xl border-2 border-amber-500/70"
-                  style={{ boxShadow: "0 0 8px rgba(255,153,51,0.25)" }}
-                  animate={{ scale: [1, 1.06, 1], opacity: [0.8, 0, 0.8] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                />
-                <motion.span
-                  className="pointer-events-none absolute inset-[-1px] rounded-xl border-2 border-amber-500/50"
-                  animate={{ scale: [1, 1.03, 1], opacity: [1, 0.2, 1] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
-                />
+                {/* (the two breathing rings around this button are gone — UX #20) */}
                 {hfj.ctaLabel}
                 <HfjColorLottieIcon src="/lottie/fast-forward.json" size={22} color="#ffffff" />
               </motion.a>

@@ -1,11 +1,27 @@
 import { useRef, useState, useEffect } from "react";
 import { motion, useInView } from "motion/react";
+import Link from "next/link";
 import { Calendar } from "lucide-react";
 import { loadLottieInView } from "@/lib/lottie";
-import { ScrollReveal } from "@/components/motion/ScrollReveal";
+import { ScrollReveal, ScrollRevealLine } from "@/components/motion/ScrollReveal";
+import { HOME_CARD } from "@/styles/tokens";
 import { useFounderEditorial } from "@/hooks/useFounderEditorial";
 
-// ─── Inline Lottie Icon ───
+/* "सत्ता, सियासत और कुरुक्षेत्र" — the founder's analysis series.
+ *
+ * Content and mood come from the same section on logsabha.com: the Kurukshetra
+ * painting behind it, the saffron title with the crossed swords, the navy
+ * strap-line, the three latest posts. The COMPONENTS are the homepage's own —
+ * HOME_CARD, the shared reveal/stagger, the hover lift, the Lottie arrow in
+ * the card footer and the amber CTA every other section uses — so this block
+ * reads as part of the page rather than a page pasted into it.
+ *
+ * The CMS record (useFounderEditorial) can override every field, including
+ * `backgroundImage`: that is where the client's AI Krishna / Kurukshetra scene
+ * lands when they supply it. Until then the live site's painting is used.
+ */
+
+// ─── Inline Lottie Icon (same helper the other sections carry) ───
 function FounderLottieIcon({ src, size = 18, color = "#ffffff" }: { src: string; size?: number; color?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const colorRef = useRef(color);
@@ -40,190 +56,112 @@ interface EditorialArticle {
   title: string;
   image: string;
   date: string;
+  /** e.g. "12:56 pm" — shown after the date, as on the live site */
+  time?: string;
+  link?: string;
 }
 
-// Used until the API responds, or if it's unreachable.
+// Used until the API responds, or if it's unreachable. Titles, dates and
+// thumbnails are the three posts the live site showed on 24 Sept 2026.
 const FALLBACK_FOUNDER = {
-  title: "कलम का संकल्प, संदीप (शिवा) संस्थापक, लोगसभा",
-  subtitle: "ना झुके, ना रुके - धर्म, राष्ट्र और संस्कृति के लिए समर्पित संकल्प |",
-  backgroundVideo: "/videos/candle-bg.mp4",
-  backgroundPoster: "/images/tri-bg.jpg",
+  title: "सत्ता, सियासत और कुरुक्षेत्र | संदीप (शिवा), संस्थापक – लोगसभा",
+  subtitle: "कौन चला चाल, कौन हुआ शिकार— सत्ता और विपक्ष के हर दांव की पड़ताल",
+  backgroundImage: "/images/kurukshetra/bg-satta-politics.png",
   ctaLabel: "Read More",
-  ctaLink: "#",
+  ctaLink: "/blog",
   articles: [
     {
-      title: "निःस्वार्थ सेवा की भावना में अमर हुआ कर्तव्य: लेफ्टिनेंट शशांक तिवारी",
-      image: "/images/editorial/featured.jpg",
-      date: "June 12, 2026",
+      title:
+        "बीजेपी अजेय नहीं विपक्ष ही अनाड़ी है, Episode 7: अल्पसंख्यक हमेशा पीड़ित और बहुसंख्यक हिन्दू हमेशा दंगाई, कांग्रेस द्वारा 2011 में पेश किया गया वो ‘हिंसा रोकथाम बिल’ जो बना उनकी भारी रणनीतिक चूक, और डाल गया BJP की झोली में पूरा हिन्दू वोट",
+      image: "/images/kurukshetra/ep7.jpeg",
+      date: "September 21, 2026",
+      time: "12:56 pm",
+      link: "/blog",
     },
     {
-      title: "रियो से ऋषिकेश: आचार्य विश्वनाथ जोनास मसेती की सनातन धर्म यात्रा",
-      image: "/images/editorial/regional.webp",
-      date: "June 11, 2026",
+      title:
+        "चाणक्य-नीति भी बन जाती घाव, जब सत्ता चल देती गलत दांव Episode 1: ‘सोशल इंजीनियरिंग’ की आड़ में अपनों के ही भरोसे का खात्मा, SC/ST Act को संजीवनी देकर कैसे बीजेपी ने खुद ही तोड़ दी अखंड हिन्दू समाज की एकता",
+      image: "/images/kurukshetra/chanakya-ep1.jpeg",
+      date: "September 18, 2026",
+      time: "11:43 am",
+      link: "/blog",
     },
     {
-      title: "उपरबेड़ा से राष्ट्रपति भवन तक: राष्ट्रपति द्रौपदी मुर्मू की प्रेरणादायक कहानी",
-      image: "/images/editorial/parliament.webp",
-      date: "June 11, 2026",
+      title:
+        "बीजेपी अजेय नहीं विपक्ष ही अनाड़ी है, Episode 6: भगवान राम का अस्तित्व नकारने की गलती और विकास के नाम पर राम सेतु तोड़ने की जिद, कांग्रेस के आत्मघाती फैसले जिन्होंने बहुसंख्यक समाज को बीजेपी के हवाले करके सौंप दी सत्ता की चाबी",
+      image: "/images/kurukshetra/ep6.jpeg",
+      date: "September 14, 2026",
+      time: "2:17 pm",
+      link: "/blog",
     },
   ] as EditorialArticle[],
 };
 
-// ─── Candle Flame (SVG) ───
+type FounderData = typeof FALLBACK_FOUNDER & {
+  /** older CMS records may still carry these; they are simply not used now */
+  backgroundVideo?: string;
+  backgroundPoster?: string;
+};
 
-export function CandleFlame({
-  x,
-  size,
-  delay,
-}: {
-  x: string;
-  size: number;
-  delay: number;
-}) {
-  return (
-    <motion.div
-      className="pointer-events-none absolute bottom-0"
-      style={{ left: x }}
-    >
-      {/* Glow underneath */}
-      <motion.div
-        className="absolute -bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-amber-500/20 blur-xl"
-        style={{ width: size * 3, height: size * 2 }}
-        animate={{
-          opacity: [0.3, 0.6, 0.3],
-          scale: [1, 1.15, 1],
-        }}
-        transition={{
-          duration: 2 + delay * 0.3,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay,
-        }}
-      />
-      {/* Candle body */}
-      <div
-        className="mx-auto rounded-t-sm bg-gradient-to-t from-amber-100 to-amber-50"
-        style={{
-          width: size * 0.35,
-          height: size * 1.2,
-        }}
-      />
-      {/* Flame */}
-      <motion.div
-        className="absolute left-1/2 -translate-x-1/2"
-        style={{ bottom: size * 1.1 }}
-        animate={{
-          scaleX: [1, 0.85, 1.1, 0.9, 1],
-          scaleY: [1, 1.15, 0.9, 1.1, 1],
-          y: [0, -2, 1, -1.5, 0],
-        }}
-        transition={{
-          duration: 1.5 + delay * 0.2,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay,
-        }}
-      >
-        {/* Outer flame */}
-        <div
-          className="rounded-full"
-          style={{
-            width: size * 0.55,
-            height: size * 0.9,
-            background:
-              "radial-gradient(ellipse at 50% 70%, #ff9933 0%, #f97316 40%, rgba(239,68,68,0.4) 70%, transparent 100%)",
-            borderRadius: "50% 50% 50% 50% / 60% 60% 40% 40%",
-          }}
-        />
-        {/* Inner bright core */}
-        <div
-          className="absolute left-1/2 -translate-x-1/2"
-          style={{
-            bottom: size * 0.12,
-            width: size * 0.2,
-            height: size * 0.35,
-            background:
-              "radial-gradient(ellipse, #fff4e6 0%, #ffc27a 60%, transparent 100%)",
-            borderRadius: "50% 50% 50% 50% / 60% 60% 40% 40%",
-          }}
-        />
-      </motion.div>
-    </motion.div>
-  );
-}
+// ─── Article Card — the homepage card, same as Community / Editorial ───
 
-// ─── Article Card ───
-
-function ArticleCard({
-  article,
-  index,
-  triggered,
-}: {
-  article: EditorialArticle;
-  index: number;
-  triggered: boolean;
-}) {
-  return (
-    <motion.div
-      className="group flex w-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.07] backdrop-blur-md transition-all duration-300 hover:border-amber-500/30 hover:bg-white/[0.12]"
-      initial={{ opacity: 0, y: 40, scale: 0.95 }}
-      animate={triggered ? { opacity: 1, y: 0, scale: 1 } : {}}
-      transition={{
-        duration: 0.7,
-        delay: 0.6 + index * 0.15,
-        ease: [0.16, 1, 0.3, 1],
-      }}
-      whileHover={{ y: -6 }}
-    >
-      {/* Image */}
-      <div className="relative aspect-[16/9] overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-900/40 to-orange-900/30">
-          <img
-            src={article.image}
-            alt={article.title}
-            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-            onError={(e) => {
-              e.currentTarget.style.display = "none";
-            }}
-          />
-        </div>
-        {/* Hover shimmer overlay */}
-        <motion.div
-          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-          style={{
-            background:
-              "linear-gradient(120deg, transparent 30%, rgba(255,153,51,0.15) 50%, transparent 70%)",
-            backgroundSize: "200% 100%",
-          }}
-          animate={triggered ? { backgroundPosition: ["-200% 0%", "200% 0%"] } : undefined}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "linear",
+function ArticleCard({ article, index }: { article: EditorialArticle; index: number }) {
+  const body = (
+    <>
+      {/* 16:9 thumbnail, zooms on hover like every other card image here */}
+      <div className="relative aspect-video overflow-hidden bg-amber-50">
+        <img
+          src={article.image}
+          alt={article.title}
+          loading="lazy"
+          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+          onError={(e) => {
+            e.currentTarget.style.display = "none";
           }}
         />
       </div>
 
-      {/* Content */}
-      <div className="flex flex-1 flex-col p-3 sm:p-4">
-        <h3 className="line-clamp-3 text-xs font-bold leading-snug text-white/90 transition-colors group-hover:text-amber-400 sm:text-sm">
+      <div className="flex flex-1 flex-col p-4">
+        <h3 className="line-clamp-4 text-sm font-bold leading-snug text-gray-900 transition-colors group-hover:text-amber-600 sm:text-[15px]">
           {article.title}
         </h3>
 
-        <div className="mt-auto flex items-center justify-between pt-2">
-          <span className="flex items-center gap-1.5 text-xs text-amber-400/70">
-            <Calendar className="h-3.5 w-3.5" />
+        {/* Footer — date on the left, the arrow on the right, as on the
+            Editorial and Community cards */}
+        <div className="mt-auto flex items-center justify-between border-t border-gray-100 pt-3">
+          <span className="flex items-center gap-1.5 text-xs text-gray-400">
+            <Calendar className="h-3.5 w-3.5 text-amber-500" />
             {article.date}
+            {article.time && <span className="text-gray-300">· {article.time}</span>}
           </span>
           <motion.span
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-500/20 text-amber-400 transition-colors group-hover:bg-amber-500 group-hover:text-white"
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-500/10 text-amber-500 transition-colors group-hover:bg-amber-500 group-hover:text-white"
             whileHover={{ scale: 1.15 }}
             whileTap={{ scale: 0.9 }}
           >
-            <FounderLottieIcon src="/lottie/fast-forward.json" size={18} color="#ffc27a" />
+            <FounderLottieIcon src="/lottie/fast-forward.json" size={18} color="#e87d12" />
           </motion.span>
         </div>
       </div>
+    </>
+  );
+
+  const className = `group flex h-full w-full flex-col overflow-hidden ${HOME_CARD}`;
+
+  return (
+    <motion.div
+      className="h-full"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: false, amount: 0.3 }}
+      transition={{ duration: 0.6, delay: index * 0.12, ease: [0.16, 1, 0.3, 1] }}
+      whileHover={{ y: -6 }}
+    >
+      {article.link ? (
+        <Link href={article.link} className={className}>{body}</Link>
+      ) : (
+        <div className={className}>{body}</div>
+      )}
     </motion.div>
   );
 }
@@ -235,201 +173,75 @@ export function FounderEditorialSection() {
   const isInView = useInView(sectionRef, { once: false, amount: 0.15 });
   const [triggered, setTriggered] = useState(false);
   const { data } = useFounderEditorial();
-  const founder = data ?? FALLBACK_FOUNDER;
+  const founder: FounderData = { ...FALLBACK_FOUNDER, ...(data ?? {}) };
 
   useEffect(() => {
     setTriggered(isInView);
   }, [isInView]);
+  void triggered;
 
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden bg-[#0f0a04] py-8 sm:py-12 lg:py-16"
+      className="relative overflow-hidden bg-[#f4ecdc] py-8 sm:py-10 lg:py-12"
     >
-      {/* ── Dark candle-lit background ── */}
+      {/* ── Kurukshetra painting ── */}
       <div className="pointer-events-none absolute inset-0">
-        {/* Candle background image */}
-        {/* <img
-          src="/images/candle.jpg"
+        <img
+          src={founder.backgroundImage}
           alt=""
-          className="absolute inset-0 h-full w-full object-cover"
-        /> */}
-       <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 h-full w-full object-cover"
-          poster={founder.backgroundPoster}
-        >
-          <source src={founder.backgroundVideo} type="video/mp4" />
-        </video>
-        {/* Dark overlay to keep text readable */}
-        <div className="absolute inset-0 bg-black/60" />
-
-        {/* Base warm dark gradient on top */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#1a0e04]/70 via-transparent to-[#0a0602]/80" />
-
-        {/* Vignette */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(ellipse at 50% 40%, transparent 30%, rgba(0,0,0,0.5) 100%)",
-          }}
+          aria-hidden="true"
+          className="h-full w-full object-cover object-center"
         />
-
-        {/* Warm ambient light — static for scroll performance */}
-        {triggered && (
-          <>
-            <div
-              className="absolute top-1/4 left-1/2 h-[500px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-700/[0.06] blur-[120px] opacity-55"
-            />
-            <div
-              className="absolute top-[60%] left-[25%] h-[300px] w-[300px] rounded-full bg-orange-600/[0.04] blur-[100px] opacity-40"
-            />
-            <div
-              className="absolute top-[50%] right-[20%] h-[250px] w-[250px] rounded-full bg-amber-500/[0.03] blur-[80px] opacity-30"
-            />
-          </>
-        )}
-
-        {/* Floating embers / sparks */}
-        {triggered &&
-          [...Array(4)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute rounded-full bg-amber-400"
-              style={{
-                width: 2 + (i % 3),
-                height: 2 + (i % 3),
-                left: `${10 + i * 8}%`,
-                bottom: `${5 + (i % 5) * 12}%`,
-              }}
-              animate={{
-                y: [0, -(60 + i * 20), -(120 + i * 15)],
-                x: [0, (i % 2 === 0 ? 15 : -15), (i % 2 === 0 ? -5 : 5)],
-                opacity: [0, 0.6, 0],
-                scale: [0.5, 1, 0.3],
-              }}
-              transition={{
-                duration: 4 + i * 0.5,
-                delay: i * 0.8,
-                repeat: Infinity,
-                ease: "easeOut",
-              }}
-            />
-          ))}
-
-
+        {/* Pale veil so the cards and the navy strap-line stay readable over
+            the painting; white fades top and bottom blend into the neighbours */}
+        <div className="absolute inset-0 bg-[#fbf7ef]/60" />
+        <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-white/80 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white/80 to-transparent" />
       </div>
 
       {/* ── Content ── */}
-      <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-10">
-        {/* Title */}
-        <ScrollReveal>
-          <h2
-            className="px-2 py-1 text-center text-xl font-extrabold leading-normal sm:text-2xl sm:leading-normal lg:text-3xl lg:leading-normal"
-            style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              letterSpacing: "-0.3px",
-            }}
-          >
-            <motion.span
-              className="inline-block py-1"
-              style={{
-                backgroundImage:
-                  "linear-gradient(90deg, #ffc27a 0%, #ffc27a 30%, #fff 45%, #fde68a 50%, #fff 55%, #ffc27a 70%, #ffc27a 100%)",
-                backgroundSize: "300% 100%",
-                WebkitBackgroundClip: "text",
-                backgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-              }}
-              animate={
-                triggered
-                  ? { backgroundPosition: ["200% center", "-200% center"] }
-                  : undefined
-              }
-              transition={{
-                duration: 5,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            >
+      <div className="relative z-10 mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8 xl:px-12">
+        {/* Header — same scale and rhythm as every other section heading */}
+        <div className="text-center">
+          <ScrollReveal>
+            <h2 className="text-2xl font-extrabold leading-[1.3] text-[#e87d12] sm:text-3xl lg:text-4xl">
+              <span aria-hidden="true" className="mr-2">⚔️</span>
               {founder.title}
-            </motion.span>
-          </h2>
-        </ScrollReveal>
+            </h2>
+          </ScrollReveal>
 
-        {/* Subtitle */}
-        <ScrollReveal delay={0.15}>
-          <p className="mx-auto mt-2 max-w-xl text-center text-[10px] leading-relaxed text-amber-200/50 sm:text-xs lg:text-sm">
-            {founder.subtitle}
-          </p>
-        </ScrollReveal>
+          <ScrollReveal delay={0.1}>
+            <p className="mx-auto mt-2 max-w-3xl text-sm font-semibold leading-relaxed text-[#0a1e3f] sm:text-base">
+              {founder.subtitle}
+            </p>
+          </ScrollReveal>
 
-        {/* Divider line */}
-        <ScrollReveal delay={0.25}>
-          <div className="mx-auto mt-3 h-px w-24 bg-gradient-to-r from-transparent via-amber-500/50 to-transparent" />
-        </ScrollReveal>
+          <ScrollRevealLine
+            delay={0.2}
+            className="mx-auto mt-3 h-[3px] w-12 rounded-full bg-amber-500"
+          />
+        </div>
 
-        {/* Article Cards */}
-        <div className="mt-4 grid gap-3 sm:mt-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-4">
+        {/* Cards */}
+        <div className="mx-auto mt-6 grid max-w-6xl gap-5 sm:mt-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
           {founder.articles.map((article: EditorialArticle, i: number) => (
-            <ArticleCard
-              key={i}
-              article={article}
-              index={i}
-              triggered={triggered}
-            />
+            <ArticleCard key={article.id ?? i} article={article} index={i} />
           ))}
         </div>
 
-        {/* Read More CTA */}
-        <ScrollReveal delay={0.5}>
-          <div className="mt-4 flex justify-center sm:mt-5">
-            <motion.a
-              href={founder.ctaLink}
-              className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full border border-amber-500/50 bg-gradient-to-r from-amber-600/20 to-orange-600/20 px-8 py-3 text-sm font-semibold text-amber-400 backdrop-blur-sm transition-all hover:border-amber-400 hover:text-white"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.97 }}
-            >
-              {/* Pulse rings */}
-              <motion.span
-                className="pointer-events-none absolute inset-[-3px] rounded-full border-2 border-amber-500/60"
-                style={{ boxShadow: "0 0 8px rgba(255,153,51,0.2)" }}
-                animate={triggered ? { scale: [1, 1.06, 1], opacity: [0.7, 0, 0.7] } : undefined}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              />
-              <motion.span
-                className="pointer-events-none absolute inset-[-1px] rounded-full border-2 border-amber-500/40"
-                animate={triggered ? { scale: [1, 1.03, 1], opacity: [1, 0.2, 1] } : undefined}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
-              />
-              {/* Moving border glow */}
-              <motion.span
-                className="pointer-events-none absolute inset-0 rounded-full"
-                style={{
-                  background:
-                    "linear-gradient(90deg, transparent, rgba(255,153,51,0.3), transparent)",
-                  backgroundSize: "200% 100%",
-                }}
-                animate={
-                  triggered
-                    ? { backgroundPosition: ["-200% 0%", "200% 0%"] }
-                    : undefined
-                }
-                transition={{
-                  duration: 2.5,
-                  repeat: Infinity,
-                  ease: "linear",
-                }}
-              />
-              <span className="relative z-10 flex items-center gap-2">
+        {/* CTA — the amber button the Editorial section uses */}
+        <ScrollReveal delay={0.4}>
+          <div className="mt-6 flex justify-center sm:mt-8">
+            <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
+              <Link
+                href={founder.ctaLink}
+                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-amber-500/20 transition-shadow hover:shadow-lg hover:shadow-amber-500/30"
+              >
                 {founder.ctaLabel}
-                <FounderLottieIcon src="/lottie/fast-forward.json" size={22} color="#ffc27a" />
-              </span>
-            </motion.a>
+                <FounderLottieIcon src="/lottie/fast-forward.json" size={22} color="#ffffff" />
+              </Link>
+            </motion.div>
           </div>
         </ScrollReveal>
       </div>

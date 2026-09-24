@@ -10,6 +10,7 @@ import {
   useSectionInView,
 } from "@/components/motion/InViewSection";
 import { useMediaCoverage } from "@/hooks/useMediaCoverage";
+import { HOME_CARD, HOME_PLAY } from "@/styles/tokens";
 
 // ─── News Channel Logos (scrolling ticker) ───
 
@@ -177,36 +178,23 @@ function MediaImageCard({
   index: number;
   onImageClick: (src: string, alt: string) => void;
 }) {
-  const inView = useSectionInView();
   return (
     <motion.div
-      className="group relative cursor-pointer overflow-hidden rounded-2xl bg-gray-900 shadow-lg"
-      initial={{ opacity: 0, y: 40, scale: 0.95 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      // Same card as the rest of the homepage; the orbiting conic ring and
+      // the lift-and-scale hover are gone — "cleaner and softer" (UX #14, #20).
+      className={`group relative cursor-pointer overflow-hidden ${HOME_CARD}`}
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: false, amount: 0.3 }}
       transition={{
-        duration: 0.7,
-        delay: index * 0.12,
+        duration: 0.6,
+        delay: index * 0.1,
         ease: [0.16, 1, 0.3, 1],
       }}
-      whileHover={{ y: -6, scale: 1.02 }}
+      whileHover={{ y: -4 }}
       onClick={() => onImageClick(item.imageSrc!, item.title)}
     >
-      <motion.span
-        className="pointer-events-none absolute inset-[-2px] z-20 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-        style={{
-          background:
-            "conic-gradient(from var(--angle), transparent 0%, transparent 60%, rgba(255,153,51,0.7) 80%, rgba(255,153,51,1) 85%, rgba(255,153,51,0.7) 90%, transparent 100%)",
-          mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-          maskComposite: "exclude",
-          WebkitMaskComposite: "xor",
-          padding: "2px",
-        }}
-        animate={inView ? ({ "--angle": ["0deg", "360deg"] } as Record<string, string[]>) : undefined}
-        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-      />
-
-      <div className="relative aspect-[9/16] max-h-[420px] overflow-hidden sm:aspect-[3/4]">
+      <div className="relative aspect-[9/16] max-h-[420px] overflow-hidden bg-gray-900 sm:aspect-[3/4]">
         <img
           src={item.imageSrc}
           alt={item.title}
@@ -224,24 +212,7 @@ function MediaImageCard({
           </motion.div>
         </div>
 
-        {/* Shimmer sweep overlay */}
-        <motion.div
-          className="pointer-events-none absolute inset-0 z-10"
-          style={{
-            background:
-              "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%)",
-            backgroundSize: "200% 100%",
-          }}
-          animate={inView ? { backgroundPosition: ["-100% 0%", "200% 0%"] } : undefined}
-          transition={{
-            duration: 3,
-            delay: 2 + index * 0.5,
-            repeat: Infinity,
-            repeatDelay: 4,
-            ease: "easeInOut",
-          }}
-        />
-
+        {/* (the looping shimmer sweep that lived here is retired — UX #20) */}
         <div className="absolute inset-x-0 top-0 h-1/4 bg-gradient-to-b from-black/30 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/70 to-transparent" />
 
@@ -272,8 +243,6 @@ function MediaVideoCard({
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const inView = useSectionInView();
-
   const handleMouseEnter = () => {
     const vid = videoRef.current;
     if (!vid) return;
@@ -290,34 +259,20 @@ function MediaVideoCard({
 
   return (
     <motion.div
-      className="group relative overflow-hidden rounded-2xl bg-gray-900 shadow-lg"
-      initial={{ opacity: 0, y: 40, scale: 0.95 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      className={`group relative overflow-hidden ${HOME_CARD}`}
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: false, amount: 0.3 }}
       transition={{
-        duration: 0.7,
-        delay: index * 0.12,
+        duration: 0.6,
+        delay: index * 0.1,
         ease: [0.16, 1, 0.3, 1],
       }}
-      whileHover={{ y: -6, scale: 1.02 }}
+      whileHover={{ y: -4 }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <motion.span
-        className="pointer-events-none absolute inset-[-2px] z-20 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-        style={{
-          background:
-            "conic-gradient(from var(--angle), transparent 0%, transparent 60%, rgba(255,153,51,0.7) 80%, rgba(255,153,51,1) 85%, rgba(255,153,51,0.7) 90%, transparent 100%)",
-          mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-          maskComposite: "exclude",
-          WebkitMaskComposite: "xor",
-          padding: "2px",
-        }}
-        animate={inView ? ({ "--angle": ["0deg", "360deg"] } as Record<string, string[]>) : undefined}
-        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-      />
-
-      <div className="relative aspect-[9/16] max-h-[420px] overflow-hidden sm:aspect-[3/4]">
+      <div className="relative aspect-[9/16] max-h-[420px] overflow-hidden bg-gray-900 sm:aspect-[3/4]">
         <video
           ref={videoRef}
           muted
@@ -334,33 +289,14 @@ function MediaVideoCard({
             isPlaying ? "opacity-0" : "opacity-100"
           }`}
         >
-          <motion.div
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm"
-            animate={{ scale: [1, 1.08, 1] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <svg className="ml-0.5 h-3.5 w-3.5 text-white" viewBox="0 0 24 24" fill="currentColor">
+          {/* The one play button the homepage uses (UX #12); the pulsing
+              8px ghost and the looping shimmer sweep are retired (UX #20). */}
+          <div className={`${HOME_PLAY} transition-transform duration-300 group-hover:scale-110`}>
+            <svg className="ml-1 h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
               <path d="M8 5v14l11-7z" />
             </svg>
-          </motion.div>
+          </div>
         </motion.div>
-
-        <motion.div
-          className="pointer-events-none absolute inset-0 z-10"
-          style={{
-            background:
-              "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%)",
-            backgroundSize: "200% 100%",
-          }}
-          animate={inView ? { backgroundPosition: ["-100% 0%", "200% 0%"] } : undefined}
-          transition={{
-            duration: 3,
-            delay: 2 + index * 0.5,
-            repeat: Infinity,
-            repeatDelay: 4,
-            ease: "easeInOut",
-          }}
-        />
 
         <div className="absolute inset-x-0 top-0 h-1/4 bg-gradient-to-b from-black/30 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/70 to-transparent" />
@@ -435,7 +371,7 @@ export function MediaCoverageSection() {
           src="/images/media-bg-2.jpg"
           alt=""
           aria-hidden="true"
-          className="h-full w-full object-cover opacity-30"
+          className="h-full w-full object-cover opacity-[0.14]"
         />
         {/* Edge vignette to fade into white */}
         <div
@@ -457,19 +393,16 @@ export function MediaCoverageSection() {
         <div className="text-center">
           <ScrollReveal>
             <h2 className="text-2xl font-extrabold sm:text-3xl lg:text-4xl">
-              <motion.span
-                className="inline-block bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 bg-clip-text text-transparent"
-                animate={inView ? { backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] } : undefined}
-                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                style={{ backgroundSize: "200% 200%" }}
-              >
+              {/* static gradient — the 5s shimmer loop on the title was one
+                  animation too many for a section asked to be softer (UX #14) */}
+              <span className="inline-block bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 bg-clip-text text-transparent">
                 {media.title}
-              </motion.span>
+              </span>
             </h2>
           </ScrollReveal>
 
           <ScrollReveal delay={0.1}>
-            <p className="mt-1.5 text-xs text-gray-500 sm:text-sm lg:text-base">
+            <p className="mt-1.5 text-sm text-gray-500 sm:text-base">
               {media.subtitle}
             </p>
           </ScrollReveal>

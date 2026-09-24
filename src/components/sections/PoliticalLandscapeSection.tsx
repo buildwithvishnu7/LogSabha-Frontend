@@ -253,7 +253,7 @@ export function PoliticalLandscapeSection({
             {data.title.split(" ").map((word, i) => (
               <motion.span
                 key={i}
-                className="section-heading-shimmer mr-2 inline-block lg:mr-3"
+                className="mr-2 inline-block text-white lg:mr-3"
                 variants={{
                   hidden: { opacity: 0, y: 40, rotateX: 45 },
                   visible: {
@@ -263,17 +263,17 @@ export function PoliticalLandscapeSection({
                     transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
                   },
                 }}
-                style={{
-                  animationDelay: `${i * 0.5}s`,
-                }}
               >
                 {word}
               </motion.span>
             ))}
             <br />
-            {/* Highlight word with bouncing letters */}
+            {/* Highlight — one gradient word. It used to be nine letters each
+                bouncing for ever on their own CSS loop, over a shimmering
+                heading and a shimmering subtitle: 22 perpetual animations in
+                one section (UX #5, #20). */}
             <motion.span
-              className="inline-block"
+              className="inline-block bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 bg-clip-text text-transparent"
               variants={{
                 hidden: { opacity: 0, y: 40, scale: 0.9 },
                 visible: {
@@ -284,26 +284,13 @@ export function PoliticalLandscapeSection({
                 },
               }}
             >
-              {data.titleHighlight.split("").map((char, ci) => (
-                <motion.span
-                  key={ci}
-                  className="section-highlight-shimmer inline-block"
-                  style={{
-                    animation: char !== " "
-                      ? `letter-bounce 2.5s ease-in-out ${ci * 0.08}s infinite`
-                      : undefined,
-                    width: char === " " ? "0.3em" : undefined,
-                  }}
-                >
-                  {char}
-                </motion.span>
-              ))}
+              {data.titleHighlight}
             </motion.span>
           </motion.h2>
 
-          {/* Subtitle with shimmer */}
+          {/* Subtitle — soft grey, readable at phone size (UX #5, #28) */}
           <ScrollReveal delay={0.5}>
-            <p className="section-subtitle-shimmer mt-4 text-xs leading-relaxed sm:text-sm lg:text-base">
+            <p className="mt-4 text-sm leading-relaxed text-white/75 sm:text-base">
               {data.subtitle}
             </p>
           </ScrollReveal>

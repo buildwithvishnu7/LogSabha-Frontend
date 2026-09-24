@@ -9,9 +9,23 @@ import type {
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 
+// Whether calling the API makes sense at all. With no NEXT_PUBLIC_API_URL the
+// default is a localhost dev server, which only exists on a developer's
+// machine. On any other host — Vercel, a shared static deploy — that request
+// is dead on arrival: from an https page the browser refuses it as mixed
+// content, and either way it is a red failed request on every page load,
+// a dozen of them per page. (UX feedback #29.) So: no configured URL and not
+// on localhost means don't fetch; the bundled content is the page.
+export function apiAvailable(): boolean {
+  if (process.env.NEXT_PUBLIC_API_URL) return true;
+  if (typeof window === "undefined") return false;
+  return /^(localhost|127\.0\.0\.1|\[::1\])$/.test(window.location.hostname);
+}
+
 // Small typed GET against the Public API. Throws on non-2xx so callers can
 // decide whether to fall back.
 async function get<T>(path: string): Promise<T> {
+  if (!apiAvailable()) throw new Error(`GET ${path} skipped: no API configured on this host`);
   const res = await fetch(`${API_URL}/api/v1${path}`);
   if (!res.ok) throw new Error(`GET ${path} → ${res.status}`);
   return res.json() as Promise<T>;
@@ -20,6 +34,9 @@ async function get<T>(path: string): Promise<T> {
 // Fetch, but never explode: on failure log and return null so the page can fall
 // back to bundled static content (a CMS blip must not white-screen the site).
 async function safe<T>(path: string): Promise<T | null> {
+  // Silent, not a warning: "no API here" is the expected state of a static
+  // deploy, and twelve warnings per page load is its own kind of noise.
+  if (!apiAvailable()) return null;
   try {
     return await get<T>(path);
   } catch (e) {

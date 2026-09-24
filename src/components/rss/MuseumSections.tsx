@@ -58,8 +58,8 @@ function MuseumHero() {
                 aria-hidden
                 width={132}
                 height={96}
-                className="block h-[74px] w-[104px] object-cover sm:h-24 sm:w-[132px]"
-                style={{ filter: "sepia(.32) contrast(1.03)" }}
+                className="block h-[74px] w-[104px] object-contain sm:h-24 sm:w-[132px]"
+                style={{ filter: "sepia(.32) contrast(1.03)", background: MUSEUM.mat }}
               />
               <figcaption
                 className="absolute inset-x-0 bottom-1.5 text-center text-[11px] font-bold tracking-[0.14em]"
@@ -167,12 +167,17 @@ function Frame({ entry, i }: { entry: RssYear; i: number }) {
       transition={{ duration: 0.7, delay: Math.min(i, 5) * 0.08, ease: EASE }}
       whileHover={{ rotate: 0, y: -6, boxShadow: "0 22px 44px rgba(88,60,28,0.28)" }}
     >
-      <span className="block overflow-hidden">
+      {/* The window stays 4:3 so the wall keeps its rhythm, but the photo is
+          no longer cropped to fill it: most of these prints are portrait
+          (266×350, 293×300…) and object-cover was cutting 27–43% of each one
+          — heads and captions gone. On a museum mat the print sits whole,
+          with the mat showing either side. */}
+      <span className="block overflow-hidden" style={{ background: MUSEUM.mat }}>
         <img
           src={entry.image}
           alt={entry.alt || entry.title}
           loading="lazy"
-          className="block aspect-[4/3] w-full object-cover transition-transform duration-[1.3s] group-hover:scale-[1.04]"
+          className="block aspect-[4/3] w-full object-contain transition-transform duration-[1.3s] group-hover:scale-[1.04]"
           style={{ filter: "sepia(.22) contrast(1.04)" }}
         />
       </span>

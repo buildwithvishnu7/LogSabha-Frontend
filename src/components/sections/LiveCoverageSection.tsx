@@ -8,6 +8,7 @@ import {
 import { LoopingIcon } from "@/components/LoopingIcon";
 import BroadcastIcon from "@/components/ui/broadcast-icon";
 import { useLiveCoverage } from "@/hooks/useLiveCoverage";
+import { HOME_CARD, HOME_PLAY } from "@/styles/tokens";
 
 // ─── Inline Lottie Icon ───
 function LiveLottieIcon({ src, size = 18, color = "#ff9933" }: { src: string; size?: number; color?: string }) {
@@ -50,6 +51,10 @@ interface MainVideo {
   tag: string;
   title: string;
   youtubeUrl: string;
+  /** Only the CMS may say a session is live; nothing defaults to it. */
+  isLive?: boolean;
+  /** What a recorded session is called instead ("Replay", or a date). */
+  recordedLabel?: string;
 }
 
 // Used until the API responds, or if it's unreachable.
@@ -61,6 +66,9 @@ const FALLBACK_LIVE = {
     tag: "Parliament",
     title: "PM Modi's Remarks in Lok Sabha — Parliament Session",
     youtubeUrl: "https://www.youtube.com/watch?v=kTB6g92Usmw",
+    // A recorded session: the badge must not say LIVE (UX feedback #13).
+    isLive: false,
+    recordedLabel: "Replay",
   } as MainVideo,
   speeches: [
     { title: "PM Modi Makes Akhilesh Yadav Laugh — Witty Remarks Lighten Up Lok Sabha Debate", speaker: "Parliament Session July 2024", videoSrc: "/videos/modis-speech.mp4" },
@@ -78,6 +86,39 @@ function LiveDot() {
       <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75" />
       <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-500" />
     </span>
+  );
+}
+
+// ─── Live / Replay badge ───
+// Says LIVE NOW only when the record says so; a recorded session gets a quiet
+// grey "Replay" (or whatever the CMS names it) instead. It used to read LIVE
+// NOW unconditionally over a YouTube replay (UX feedback #13). The pulse ring
+// is reserved for genuinely live content.
+function CoverageBadge({
+  video,
+  pulse,
+  className = "",
+  textClass = "text-xs",
+}: {
+  video: MainVideo;
+  pulse: boolean;
+  className?: string;
+  textClass?: string;
+}) {
+  const live = video.isLive === true;
+  const label = live ? "Live Now" : (video.recordedLabel ?? "Replay");
+  const tone = live
+    ? "border-red-200 bg-red-50 text-red-600"
+    : "border-gray-200 bg-gray-50/95 text-gray-500";
+  return (
+    <motion.div
+      className={`flex items-center gap-2 rounded-full border shadow-sm ${tone} ${className}`}
+      animate={live && pulse ? { boxShadow: ["0 0 0 0 rgba(239,68,68,0)", "0 0 0 8px rgba(239,68,68,0)"] } : undefined}
+      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+    >
+      {live ? <LiveDot /> : <span className="inline-block h-2 w-2 rounded-full bg-gray-400" />}
+      <span className={`${textClass} font-bold tracking-wider uppercase`}>{label}</span>
+    </motion.div>
   );
 }
 
@@ -172,17 +213,13 @@ function MainVideoPlayer({
         </span>
       </div>
 
-      {/* LIVE NOW badge — visible on mobile only (overlaid on video) */}
-      <motion.div
-        className="pointer-events-none absolute top-3 right-3 z-10 flex items-center gap-1.5 rounded-full border border-red-300/50 bg-red-50/90 px-3 py-1.5 shadow-sm backdrop-blur-sm sm:hidden"
-        animate={inView ? { boxShadow: ["0 0 0 0 rgba(239,68,68,0)", "0 0 0 6px rgba(239,68,68,0)"] } : undefined}
-        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-      >
-        <LiveDot />
-        <span className="text-[10px] font-bold tracking-wider text-red-600 uppercase">
-          Live Now
-        </span>
-      </motion.div>
+      {/* Status badge — visible on mobile only (overlaid on video) */}
+      <CoverageBadge
+        video={mainVideo}
+        pulse={inView}
+        className="pointer-events-none absolute top-3 right-3 z-10 px-3 py-1.5 backdrop-blur-sm sm:hidden"
+        textClass="text-[10px]"
+      />
 
       {/* Title overlay */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 p-5 sm:p-6">
@@ -223,7 +260,7 @@ function SpeechCard({
 
   return (
     <motion.div
-      className="group cursor-pointer"
+      className={`group cursor-pointer overflow-hidden ${HOME_CARD}`}
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: false, amount: 0.3, margin: "0px 0px -50px 0px" }}
@@ -235,15 +272,19 @@ function SpeechCard({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <div className="relative aspect-[16/10] overflow-hidden rounded-xl bg-gray-900">
+      {/* 16:9 with the frame filling it: the old 16:10 letterboxed every
+          clip inside black bars, which is what read as a "poor thumbnail".
+          preload="metadata" still paints the first frame, without pulling
+          four 10–20MB files on page load (UX feedback #12, #20). */}
+      <div className="relative aspect-video overflow-hidden bg-gray-900">
         {/* Video — always mounted, plays/pauses on hover */}
         <video
           ref={videoRef}
           muted
           loop
           playsInline
-          preload="auto"
-          className="absolute inset-0 h-full w-full object-contain"
+          preload="metadata"
+          className="absolute inset-0 h-full w-full object-cover"
         >
           <source src={speech.videoSrc} type="video/mp4" />
         </video>
@@ -261,9 +302,9 @@ function SpeechCard({
             isHovered ? "opacity-0" : "opacity-100"
           }`}
         >
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm transition-transform duration-300 group-hover:scale-110">
+          <div className={`${HOME_PLAY} transition-transform duration-300 group-hover:scale-110`}>
             <svg
-              className="ml-0.5 h-4 w-4 text-white"
+              className="ml-1 h-6 w-6"
               fill="currentColor"
               viewBox="0 0 24 24"
             >
@@ -274,7 +315,7 @@ function SpeechCard({
       </div>
 
       {/* Info */}
-      <div className="mt-3 px-0.5">
+      <div className="p-4">
         <h4 className="line-clamp-1 text-sm font-bold leading-snug text-gray-900 transition-colors duration-200 group-hover:text-amber-600">
           {speech.title}
         </h4>
@@ -298,7 +339,7 @@ export function LiveCoverageSection() {
   const handleSpeechHoverEnd = useCallback(() => setSpeechHovered(false), []);
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-gradient-to-b from-white via-amber-50/20 to-white py-3 sm:py-4 lg:py-6">
+    <section ref={sectionRef} className="relative overflow-hidden bg-gradient-to-b from-white via-amber-50/20 to-white py-8 sm:py-10 lg:py-12">
       {/* Subtle background pattern */}
       <div className="absolute inset-0 opacity-[0.02]">
         <div
@@ -325,24 +366,15 @@ export function LiveCoverageSection() {
             </ScrollReveal>
 
             <ScrollReveal delay={0.15}>
-              <p className="mt-1.5 text-xs leading-relaxed text-gray-500 sm:text-sm lg:text-base">
+              <p className="mt-1.5 text-sm leading-relaxed text-gray-500 sm:text-base">
                 {live.subtitle}
               </p>
             </ScrollReveal>
           </div>
 
-          {/* LIVE NOW badge — hidden on mobile, shown in video overlay instead */}
+          {/* Status badge — hidden on mobile, shown in video overlay instead */}
           <ScrollReveal delay={0.2} className="hidden sm:block">
-            <motion.div
-              className="flex items-center gap-2 rounded-full border border-red-200 bg-red-50 px-4 py-2 shadow-sm"
-              animate={sectionInView ? { boxShadow: ["0 0 0 0 rgba(239,68,68,0)", "0 0 0 8px rgba(239,68,68,0)"] } : undefined}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <LiveDot />
-              <span className="text-xs font-bold tracking-wider text-red-600 uppercase">
-                Live Now
-              </span>
-            </motion.div>
+            <CoverageBadge video={live.mainVideo} pulse={sectionInView} className="px-4 py-2" />
           </ScrollReveal>
         </div>
 
