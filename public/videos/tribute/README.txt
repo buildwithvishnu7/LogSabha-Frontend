@@ -1,0 +1,1 @@
+Drop tribute clips here as <slug>.mp4 (e.g. sardar-patel.mp4). Slugs: ram-lala, bappa-rawal, chhatrapati-shivaji-maharaj, subhash-chandra-bose, sardar-patel, pv-narasimha-rao, kalyan-singh, yogi-adityanath

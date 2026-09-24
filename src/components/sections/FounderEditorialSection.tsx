@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import { motion, useInView } from "motion/react";
+import { motion, useInView, useScroll, useTransform } from "motion/react";
 import Link from "next/link";
 import { Calendar } from "lucide-react";
 import { loadLottieInView } from "@/lib/lottie";
@@ -67,6 +67,10 @@ const FALLBACK_FOUNDER = {
   title: "सत्ता, सियासत और कुरुक्षेत्र | संदीप (शिवा), संस्थापक – लोगसभा",
   subtitle: "कौन चला चाल, कौन हुआ शिकार— सत्ता और विपक्ष के हर दांव की पड़ताल",
   backgroundImage: "/images/kurukshetra/bg-satta-politics.png",
+  /** Bhagwan Krishna / Kurukshetra clip. Drop the client's AI-generated file
+      at this path (or set it from the CMS) and it plays behind the section;
+      until the file exists the painting above stays as the poster. */
+  backgroundVideo: "/videos/krishna-kurukshetra.mp4",
   ctaLabel: "Read More",
   ctaLink: "/blog",
   articles: [
@@ -94,7 +98,38 @@ const FALLBACK_FOUNDER = {
       time: "2:17 pm",
       link: "/blog",
     },
+    {
+      title:
+        "बीजेपी अजेय नहीं विपक्ष ही अनाड़ी है, Episode 5: मुजफ्फरनगर दंगे और सपा की तुष्टिकरण की इंतहा, सिर्फ मुसलमानों को 5 लाख मुआवजा और कार्यवाही ना करके हिंदुओं को अनाथ छोड़ने की भूल जिसने ला दी 2014 में BJP की सुनामी और हो गया UP में सबका सूपड़ा साफ़",
+      image: "/images/kurukshetra/ep5.jpeg",
+      date: "September 11, 2026",
+      time: "9:00 am",
+      link: "/blog",
+    },
+    {
+      title:
+        "बीजेपी अजेय नहीं विपक्ष ही अनाड़ी है, Episode 4: ‘दामाद श्री’ का DLF जमीन घोटाला, 70% बहुसंख्यक गैर-जाट वोटों को नजरअंदाज, क्षेत्रीय पक्षपात, ‘पर्ची-खर्ची’ कल्चर.. विपक्ष के वो ऐतिहासिक ‘सेल्फ-गोल’ जो 4 सीटों वाली बीजेपी को 2014 हरियाणा चुनाव में ले गए 47 के पार",
+      image: "/images/kurukshetra/ep4.jpeg",
+      date: "September 7, 2026",
+      time: "2:47 pm",
+      link: "/blog",
+    },
+    {
+      title:
+        "बीजेपी अजेय नहीं विपक्ष ही अनाड़ी है, Episode 3- किसानों का मजाक, 70 हज़ार करोड़ का सिंचाई घोटाला, चुनाव से पहले गठबंधन तोड़ना, कांग्रेस-NCP के वो तीन ‘सेल्फ-गोल’ जिससे BJP को महाराष्ट्र 2014 चुनाव में मिली 122 सीटों की जीत की दावत",
+      image: "/images/kurukshetra/ep3.jpeg",
+      date: "September 4, 2026",
+      time: "3:08 pm",
+      link: "/blog",
+    },
   ] as EditorialArticle[],
+  /** the strap-line types itself out, then cycles the series' own titles —
+      real post titles from the live site, not invented copy */
+  typewriterPhrases: [
+    "कौन चला चाल, कौन हुआ शिकार— सत्ता और विपक्ष के हर दांव की पड़ताल",
+    "बीजेपी अजेय नहीं, विपक्ष ही अनाड़ी है",
+    "चाणक्य-नीति भी बन जाती घाव, जब सत्ता चल देती गलत दांव",
+  ],
 };
 
 type FounderData = typeof FALLBACK_FOUNDER & {
@@ -102,6 +137,44 @@ type FounderData = typeof FALLBACK_FOUNDER & {
   backgroundVideo?: string;
   backgroundPoster?: string;
 };
+
+// ─── Typewriter strap-line ───
+// Server-renders the first phrase in full (so the copy is in the HTML and
+// nothing flashes empty), then on the client pauses, deletes, and cycles
+// through the rest — the same rhythm the Community and Contact headings use.
+function Typewriter({ phrases }: { phrases: string[] }) {
+  const [phraseIdx, setPhraseIdx] = useState(0);
+  const [charIdx, setCharIdx] = useState(phrases[0]?.length ?? 0);
+  const [deleting, setDeleting] = useState(false);
+  const [started, setStarted] = useState(false);
+
+  // hold the full first line for a beat before the cycle begins
+  useEffect(() => {
+    const t = setTimeout(() => setStarted(true), 2600);
+    return () => clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    if (!started || phrases.length < 2) return;
+    const phrase = phrases[phraseIdx];
+    let t: ReturnType<typeof setTimeout>;
+    if (!deleting && charIdx < phrase.length) t = setTimeout(() => setCharIdx((c) => c + 1), 55);
+    else if (!deleting && charIdx === phrase.length) t = setTimeout(() => setDeleting(true), 2400);
+    else if (deleting && charIdx > 0) t = setTimeout(() => setCharIdx((c) => c - 1), 22);
+    else {
+      setDeleting(false);
+      setPhraseIdx((p) => (p + 1) % phrases.length);
+    }
+    return () => clearTimeout(t);
+  }, [started, charIdx, deleting, phraseIdx, phrases]);
+
+  return (
+    <span aria-label={phrases[0]}>
+      <span aria-hidden="true">{phrases[phraseIdx].slice(0, charIdx)}</span>
+      <span aria-hidden="true" className="typewriter-cursor ml-0.5 inline-block text-amber-500">|</span>
+    </span>
+  );
+}
 
 // ─── Article Card — the homepage card, same as Community / Editorial ───
 
@@ -154,7 +227,9 @@ function ArticleCard({ article, index }: { article: EditorialArticle; index: num
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: false, amount: 0.3 }}
-      transition={{ duration: 0.6, delay: index * 0.12, ease: [0.16, 1, 0.3, 1] }}
+      // 3 per row: the row starts together, then each card follows its
+      // neighbour — reads as two waves rather than six separate arrivals
+      transition={{ duration: 0.6, delay: (index % 3) * 0.12 + Math.floor(index / 3) * 0.1, ease: [0.16, 1, 0.3, 1] }}
       whileHover={{ y: -6 }}
     >
       {article.link ? (
@@ -175,10 +250,31 @@ export function FounderEditorialSection() {
   const { data } = useFounderEditorial();
   const founder: FounderData = { ...FALLBACK_FOUNDER, ...(data ?? {}) };
 
+  // The painting drifts against the scroll — motion only while the reader
+  // moves, so it is "alive" without being one more perpetual loop.
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start end", "end start"] });
+  const bgY = useTransform(scrollYProgress, [0, 1], ["-8%", "8%"]);
+
   useEffect(() => {
     setTriggered(isInView);
   }, [isInView]);
-  void triggered;
+
+  // The Krishna clip only runs while the section is on screen — a looping
+  // video decoding off-screen is the kind of hidden cost the speed review
+  // flagged. `videoOk` drops to false if the file is missing (404), and the
+  // painting shows on its own until the asset arrives.
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoOk, setVideoOk] = useState(true);
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v || !videoOk) return;
+    // The browser starts (and may fail) the load while parsing the server
+    // HTML, before React has attached onError — so an error that already
+    // happened is read here, on mount, or it would be missed for good.
+    if (v.error) { setVideoOk(false); return; }
+    if (triggered) v.play().catch(() => {});
+    else v.pause();
+  }, [triggered, videoOk]);
 
   return (
     <section
@@ -186,18 +282,43 @@ export function FounderEditorialSection() {
       className="relative overflow-hidden bg-[#f4ecdc] py-8 sm:py-10 lg:py-12"
     >
       {/* ── Kurukshetra painting ── */}
-      <div className="pointer-events-none absolute inset-0">
-        <img
-          src={founder.backgroundImage}
-          alt=""
-          aria-hidden="true"
-          className="h-full w-full object-cover object-center"
-        />
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <motion.div className="absolute inset-x-0 -top-[10%] h-[120%] w-full" style={{ y: bgY }}>
+          {/* painting — the poster, and the whole background if the clip is
+              missing or the browser refuses autoplay */}
+          <img
+            src={founder.backgroundImage}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover object-center"
+          />
+          {founder.backgroundVideo && videoOk && (
+            /* src on the element, not a <source> child: a missing file
+               fires `error` on the <source>, which never reaches onError
+               here — on the element itself it does, and the painting takes
+               over cleanly. */
+            <video
+              ref={videoRef}
+              src={founder.backgroundVideo}
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              poster={founder.backgroundImage}
+              aria-hidden="true"
+              className="absolute inset-0 h-full w-full object-cover object-center"
+              onError={() => setVideoOk(false)}
+            />
+          )}
+        </motion.div>
         {/* Pale veil so the cards and the navy strap-line stay readable over
             the painting; white fades top and bottom blend into the neighbours */}
-        <div className="absolute inset-0 bg-[#fbf7ef]/60" />
-        <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-white/80 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white/80 to-transparent" />
+        {/* Lighter veil now that the clip is in: 60% hid it. The white cards
+            carry their own contrast; the title is saffron 800 and the
+            strap-line navy 600, both fine over the softened scene. */}
+        <div className="absolute inset-0 bg-[#fbf7ef]/40" />
+        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-white/75 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-white/75 to-transparent" />
       </div>
 
       {/* ── Content ── */}
@@ -206,14 +327,23 @@ export function FounderEditorialSection() {
         <div className="text-center">
           <ScrollReveal>
             <h2 className="text-2xl font-extrabold leading-[1.3] text-[#e87d12] sm:text-3xl lg:text-4xl">
-              <span aria-hidden="true" className="mr-2">⚔️</span>
+              <motion.span
+                aria-hidden="true"
+                className="mr-2 inline-block"
+                initial={{ opacity: 0, rotate: -40, scale: 0.6 }}
+                whileInView={{ opacity: 1, rotate: 0, scale: 1 }}
+                viewport={{ once: false, amount: 0.6 }}
+                transition={{ type: "spring", stiffness: 260, damping: 16, delay: 0.15 }}
+              >
+                ⚔️
+              </motion.span>
               {founder.title}
             </h2>
           </ScrollReveal>
 
           <ScrollReveal delay={0.1}>
-            <p className="mx-auto mt-2 max-w-3xl text-sm font-semibold leading-relaxed text-[#0a1e3f] sm:text-base">
-              {founder.subtitle}
+            <p className="mx-auto mt-2 min-h-[1.75rem] max-w-3xl text-sm font-semibold leading-relaxed text-[#0a1e3f] sm:text-base">
+              <Typewriter phrases={founder.typewriterPhrases?.length ? founder.typewriterPhrases : [founder.subtitle]} />
             </p>
           </ScrollReveal>
 

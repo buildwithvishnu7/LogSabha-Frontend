@@ -17,6 +17,7 @@ import { ContactSection } from "@/components/sections/ContactSection";
 import { SocialPresenceSection } from "@/components/sections/SocialPresenceSection";
 import { HinduForJusticeSection } from "@/components/sections/HinduForJusticeSection";
 import { FounderEditorialSection } from "@/components/sections/FounderEditorialSection";
+import { TributeSection } from "@/components/sections/TributeSection";
 import { EditorialInsightsSection } from "@/components/sections/EditorialInsightsSection";
 import {
   MediaCoverageSection,
@@ -47,6 +48,7 @@ export default function Home() {
       <RSSSection />
       <LogSabhaStorySection />
       <FounderEditorialSection />
+      <TributeSection />
       <HinduForJusticeSection />
       <EditorialInsightsSection />
       <SocialPresenceSection />
